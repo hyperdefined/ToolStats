@@ -1,0 +1,4 @@
+name: ToolStats
+version: '${project.version}'
+main: lol.hyper.toolstats.ToolStats
+api-version: 1.18
