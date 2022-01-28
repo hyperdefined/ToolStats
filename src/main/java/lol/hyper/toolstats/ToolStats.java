@@ -2,10 +2,7 @@ package lol.hyper.toolstats;
 
 import lol.hyper.githubreleaseapi.GitHubRelease;
 import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
-import lol.hyper.toolstats.events.BlocksMined;
-import lol.hyper.toolstats.events.CraftItem;
-import lol.hyper.toolstats.events.EntityDeath;
-import lol.hyper.toolstats.events.MobKill;
+import lol.hyper.toolstats.events.*;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -30,11 +27,15 @@ public final class ToolStats extends JavaPlugin {
     public final NamespacedKey fishingRodCaught = new NamespacedKey(this, "fish-caught");
     // stores how many times sheep were sheared
     public final NamespacedKey shearsSheared = new NamespacedKey(this, "sheared");
+    // stores how much damage armor has taken
+    public final NamespacedKey armorDamage = new NamespacedKey(this, "damage-taken");
 
     public BlocksMined blocksMined;
     public CraftItem craftItem;
     public EntityDeath entityDeath;
-    public MobKill mobKill;
+    public EntityDamage mobKill;
+    public PlayerFish playerFish;
+    public SheepShear sheepShear;
 
     public Logger logger = this.getLogger();
 
@@ -43,12 +44,16 @@ public final class ToolStats extends JavaPlugin {
         blocksMined = new BlocksMined(this);
         craftItem = new CraftItem(this);
         entityDeath = new EntityDeath(this);
-        mobKill = new MobKill(this);
+        mobKill = new EntityDamage(this);
+        playerFish = new PlayerFish(this);
+        sheepShear = new SheepShear(this);
 
         Bukkit.getServer().getPluginManager().registerEvents(blocksMined, this);
         Bukkit.getServer().getPluginManager().registerEvents(craftItem, this);
         Bukkit.getServer().getPluginManager().registerEvents(entityDeath, this);
         Bukkit.getServer().getPluginManager().registerEvents(mobKill, this);
+        Bukkit.getServer().getPluginManager().registerEvents(playerFish, this);
+        Bukkit.getServer().getPluginManager().registerEvents(sheepShear, this);
 
         new Metrics(this, 14110);
 

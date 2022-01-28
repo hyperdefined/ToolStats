@@ -16,7 +16,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
 
-public class MobKill implements Listener {
+public class EntityDamage implements Listener {
 
     private final ToolStats toolStats;
     private final String[] validTools = {"sword", "trident", "axe"};
@@ -24,7 +24,7 @@ public class MobKill implements Listener {
     private final String mobKillsLore = ChatColor.GRAY + "Mob kills: " + ChatColor.DARK_GRAY + "X";
     public Set<UUID> trackedMobs = new HashSet<>();
 
-    public MobKill(ToolStats toolStats) {
+    public EntityDamage(ToolStats toolStats) {
         this.toolStats = toolStats;
     }
 
