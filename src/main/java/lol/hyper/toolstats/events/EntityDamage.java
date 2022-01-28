@@ -10,10 +10,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class EntityDamage implements Listener {
@@ -22,7 +25,9 @@ public class EntityDamage implements Listener {
     private final String[] validTools = {"sword", "trident", "axe"};
     private final String playerKillsLore = ChatColor.GRAY + "Player kills: " + ChatColor.DARK_GRAY + "X";
     private final String mobKillsLore = ChatColor.GRAY + "Mob kills: " + ChatColor.DARK_GRAY + "X";
-    public Set<UUID> trackedMobs = new HashSet<>();
+    private final String damageTakenLore = ChatColor.GRAY + "Damage taken: " + ChatColor.DARK_GRAY + "X";
+    private final DecimalFormat decimalFormat = new DecimalFormat("0.00");
+    public final Set<UUID> trackedMobs = new HashSet<>();
 
     public EntityDamage(ToolStats toolStats) {
         this.toolStats = toolStats;
@@ -55,6 +60,14 @@ public class EntityDamage implements Listener {
                 // player is killing regular mob
                 updateMobKills(heldItem);
                 trackedMobs.add(livingEntity.getUniqueId());
+            }
+        }
+        // player is taken damage but not being killed
+        if (livingEntity instanceof Player) {
+            Player player = (Player) livingEntity;
+            PlayerInventory inventory = player.getInventory();
+            for (ItemStack armor : inventory.getArmorContents()) {
+                updateArmorDamage(armor, event.getDamage());
             }
         }
     }
@@ -142,6 +155,51 @@ public class EntityDamage implements Listener {
             // if the item has no lore, create a new list and add the string
             lore = new ArrayList<>();
             lore.add(mobKillsLore.replace("X", Integer.toString(mobKills)));
+        }
+        meta.setLore(lore);
+        itemStack.setItemMeta(meta);
+    }
+
+    private void updateArmorDamage(ItemStack itemStack, double damage) {
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta == null) {
+            return;
+        }
+        Double damageTaken = 0.0;
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        if (container.has(toolStats.armorDamage, PersistentDataType.DOUBLE)) {
+            damageTaken = container.get(toolStats.armorDamage, PersistentDataType.DOUBLE);
+        }
+        if (damageTaken == null) {
+            return;
+        } else {
+            damageTaken = damageTaken + damage;
+        }
+        decimalFormat.setRoundingMode(RoundingMode.DOWN);
+        container.set(toolStats.armorDamage, PersistentDataType.DOUBLE, damageTaken);
+
+        List<String> lore;
+        if (meta.hasLore()) {
+            lore = meta.getLore();
+            assert lore != null;
+            boolean hasLore = false;
+            // we do a for loop like this, we can keep track of index
+            // this doesn't mess the lore up of existing items
+            for (int x = 0; x < lore.size(); x++) {
+                if (lore.get(x).contains("Damage taken")) {
+                    hasLore = true;
+                    lore.set(x, damageTakenLore.replace("X", decimalFormat.format(damageTaken)));
+                    break;
+                }
+            }
+            // if the item has lore but doesn't have the tag, add it
+            if (!hasLore) {
+                lore.add(damageTakenLore.replace("X", decimalFormat.format(damageTaken)));
+            }
+        } else {
+            // if the item has no lore, create a new list and add the string
+            lore = new ArrayList<>();
+            lore.add(damageTakenLore.replace("X", decimalFormat.format(damageTaken)));
         }
         meta.setLore(lore);
         itemStack.setItemMeta(meta);

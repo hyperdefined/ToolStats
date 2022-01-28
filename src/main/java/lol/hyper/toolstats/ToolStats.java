@@ -37,7 +37,7 @@ public final class ToolStats extends JavaPlugin {
     public PlayerFish playerFish;
     public SheepShear sheepShear;
 
-    public Logger logger = this.getLogger();
+    public final Logger logger = this.getLogger();
 
     @Override
     public void onEnable() {
