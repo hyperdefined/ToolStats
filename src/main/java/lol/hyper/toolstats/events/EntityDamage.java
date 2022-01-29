@@ -67,7 +67,9 @@ public class EntityDamage implements Listener {
             Player player = (Player) livingEntity;
             PlayerInventory inventory = player.getInventory();
             for (ItemStack armor : inventory.getArmorContents()) {
-                updateArmorDamage(armor, event.getDamage());
+                if (armor != null) {
+                    updateArmorDamage(armor, event.getDamage());
+                }
             }
         }
     }

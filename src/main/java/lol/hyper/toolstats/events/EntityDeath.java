@@ -2,12 +2,14 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import org.bukkit.ChatColor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 
 import java.util.*;
 
@@ -26,6 +28,22 @@ public class EntityDeath implements Listener {
         UUID livingEntityUUID = event.getEntity().getUniqueId();
         if (toolStats.mobKill.trackedMobs.contains(livingEntityUUID)) {
             for (ItemStack current : event.getDrops()) {
+                ItemMeta meta = current.getItemMeta();
+                boolean hasKey = false;
+                // check if the mob has one of our keys
+                // this will prevent the "dropped by" tag from being added
+                if (meta != null) {
+                    PersistentDataContainer container = meta.getPersistentDataContainer();
+                    for (NamespacedKey key : container.getKeys()) {
+                        if (toolStats.keys.contains(key)) {
+                            hasKey = true;
+                            break;
+                        }
+                    }
+                }
+                if (hasKey) {
+                    continue;
+                }
                 String name = current.getType().toString().toLowerCase(Locale.ROOT);
                 for (String item : toolStats.craftItem.validItems) {
                     if (name.contains(item)) {

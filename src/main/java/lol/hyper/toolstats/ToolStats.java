@@ -9,6 +9,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public final class ToolStats extends JavaPlugin {
@@ -29,6 +31,8 @@ public final class ToolStats extends JavaPlugin {
     public final NamespacedKey shearsSheared = new NamespacedKey(this, "sheared");
     // stores how much damage armor has taken
     public final NamespacedKey armorDamage = new NamespacedKey(this, "damage-taken");
+
+    public Set<NamespacedKey> keys = new HashSet<>();
 
     public BlocksMined blocksMined;
     public CraftItem craftItem;
@@ -58,6 +62,15 @@ public final class ToolStats extends JavaPlugin {
         new Metrics(this, 14110);
 
         Bukkit.getScheduler().runTaskAsynchronously(this, this::checkForUpdates);
+
+        keys.add(craftedOwner);
+        keys.add(craftedTime);
+        keys.add(swordPlayerKills);
+        keys.add(swordMobKills);
+        keys.add(genericMined);
+        keys.add(fishingRodCaught);
+        keys.add(shearsSheared);
+        keys.add(armorDamage);
     }
 
     public void checkForUpdates() {
