@@ -20,7 +20,7 @@ import java.util.List;
 public class BlocksMined implements Listener {
 
     private final ToolStats toolStats;
-    private final String[] validTools = {"pickaxe", "axe", "hoe", "shovel"};
+    private final String[] validTools = {"pickaxe", "axe", "hoe", "shovel", "shear"};
     private final String blocksMinedLore = ChatColor.GRAY + "Blocks mined: " + ChatColor.DARK_GRAY + "X";
 
     public BlocksMined(ToolStats toolStats) {

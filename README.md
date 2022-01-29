@@ -7,4 +7,5 @@ A simple plugin to track cool stats for your tools and armor!
 * ~~Track armor damage.~~
 * ~~Track fish caught.~~
 * ~~Track sheep sheared.~~
+* If player kills player, tag their tools and armor with "Dropped by"
 * Properly handle combing of tools. Stats should combine together.
