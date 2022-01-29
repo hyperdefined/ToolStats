@@ -95,7 +95,9 @@ public class PlayerFish implements Listener {
             lore = new ArrayList<>();
             lore.add(fishCaughtLore.replace("X", Integer.toString(fishCaught)));
         }
-        meta.setLore(lore);
+        if (toolStats.config.getBoolean("enabled.fish-caught")) {
+            meta.setLore(lore);
+        }
         itemStack.setItemMeta(meta);
     }
 }

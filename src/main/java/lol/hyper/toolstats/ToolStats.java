@@ -23,8 +23,12 @@ import lol.hyper.toolstats.events.*;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -59,9 +63,17 @@ public final class ToolStats extends JavaPlugin {
     public SheepShear sheepShear;
 
     public final Logger logger = this.getLogger();
+    public final File configFile = new File(this.getDataFolder(), "config.yml");
+    public FileConfiguration config;
+    public final int CONFIG_VERSION = 1;
 
     @Override
     public void onEnable() {
+        if (!configFile.exists()) {
+            this.saveResource("config.yml", true);
+            logger.info("Copying default config!");
+        }
+        loadConfig();
         blocksMined = new BlocksMined(this);
         craftItem = new CraftItem(this);
         entityDeath = new EntityDeath(this);
@@ -90,6 +102,13 @@ public final class ToolStats extends JavaPlugin {
         keys.add(armorDamage);
     }
 
+    public void loadConfig() {
+        config = YamlConfiguration.loadConfiguration(configFile);
+        if (config.getInt("config-version") != CONFIG_VERSION) {
+            logger.warning("Your config file is outdated! Please regenerate the config.");
+        }
+    }
+
     public void checkForUpdates() {
         GitHubReleaseAPI api;
         try {
@@ -111,5 +130,52 @@ public final class ToolStats extends JavaPlugin {
         } else {
             logger.warning("A new version is available (" + latest.getTagVersion() + ")! You are running version " + current.getTagVersion() + ". You are " + buildsBehind + " version(s) behind.");
         }
+    }
+
+    public boolean checkConfig(ItemStack itemStack, String configName) {
+        String itemName = itemStack.getType().toString().toLowerCase();
+        String itemType = null;
+        if (itemName.contains("bow") || itemName.contains("shears")) {
+            if (itemName.contains("bow")) {
+                itemType = "bow";
+            }
+            if (itemName.contains("shears")) {
+                itemType = "shears";
+            }
+        } else {
+            itemType = itemName.substring(itemName.indexOf("_") + 1);
+        }
+
+        if (itemType == null) {
+            return false;
+        }
+
+        switch (itemType) {
+            case "pickaxe": {
+                return config.getBoolean("enabled." + configName + ".pickaxe");
+            }
+            case "sword": {
+                return config.getBoolean("enabled." + configName + ".sword");
+            }
+            case "shovel": {
+                return config.getBoolean("enabled." + configName + ".shovel");
+            }
+            case "axe": {
+                return config.getBoolean("enabled." + configName + ".axe");
+            }
+            case "hoe": {
+                return config.getBoolean("enabled." + configName + ".hoe");
+            }
+            case "shears": {
+                return config.getBoolean("enabled." + configName + ".shears");
+            }
+            case "bow": {
+                return config.getBoolean("enabled." + configName + ".bow");
+            }
+            case "armor": {
+                return config.getBoolean("enabled." + configName + ".armor");
+            }
+        }
+        return false;
     }
 }

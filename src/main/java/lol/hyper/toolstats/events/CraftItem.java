@@ -80,8 +80,12 @@ public class CraftItem implements Listener {
         } else {
             lore = new ArrayList<>();
         }
-        lore.add(timeCreatedLore.replace("X", format.format(finalDate)));
-        lore.add(ownerLore.replace("X", owner.getName()));
+        if (toolStats.checkConfig(itemStack, "crafted-date")) {
+            lore.add(timeCreatedLore.replace("X", format.format(finalDate)));
+        }
+        if (toolStats.checkConfig(itemStack, "crafted-by")) {
+            lore.add(ownerLore.replace("X", owner.getName()));
+        }
         meta.setLore(lore);
         newItem.setItemMeta(meta);
         return newItem;

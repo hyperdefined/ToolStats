@@ -82,7 +82,9 @@ public class EntityDeath implements Listener {
         if (!hasTag) {
             lore.add(droppedLore.replace("X", mob));
         }
-        meta.setLore(lore);
+        if (toolStats.config.getBoolean("enabled.dropped-by")) {
+            meta.setLore(lore);
+        }
         itemStack.setItemMeta(meta);
     }
 }

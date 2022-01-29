@@ -146,7 +146,9 @@ public class EntityDamage implements Listener {
             lore = new ArrayList<>();
             lore.add(playerKillsLore.replace("X", Integer.toString(playerKills)));
         }
-        meta.setLore(lore);
+        if (toolStats.checkConfig(itemStack, "player-kills")) {
+            meta.setLore(lore);
+        }
         finalItem.setItemMeta(meta);
         return finalItem;
     }
@@ -192,7 +194,9 @@ public class EntityDamage implements Listener {
             lore = new ArrayList<>();
             lore.add(mobKillsLore.replace("X", Integer.toString(mobKills)));
         }
-        meta.setLore(lore);
+        if (toolStats.checkConfig(itemStack, "mob-kills")) {
+            meta.setLore(lore);
+        }
         finalItem.setItemMeta(meta);
         return finalItem;
     }
@@ -238,7 +242,9 @@ public class EntityDamage implements Listener {
             lore = new ArrayList<>();
             lore.add(damageTakenLore.replace("X", decimalFormat.format(damageTaken)));
         }
-        meta.setLore(lore);
+        if (toolStats.config.getBoolean("enabled.armor-damage")) {
+            meta.setLore(lore);
+        }
         itemStack.setItemMeta(meta);
     }
 }

@@ -100,7 +100,9 @@ public class SheepShear implements Listener {
             lore = new ArrayList<>();
             lore.add(sheepShearLore.replace("X", Integer.toString(sheepSheared)));
         }
-        meta.setLore(lore);
+        if (toolStats.config.getBoolean("enabled.sheep-sheared")) {
+            meta.setLore(lore);
+        }
         itemStack.setItemMeta(meta);
     }
 }

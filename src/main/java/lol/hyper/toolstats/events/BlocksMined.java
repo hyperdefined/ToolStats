@@ -101,7 +101,9 @@ public class BlocksMined implements Listener {
             lore = new ArrayList<>();
             lore.add(blocksMinedLore.replace("X", Integer.toString(blocksMined)));
         }
-        meta.setLore(lore);
+        if (toolStats.checkConfig(itemStack, "blocks-mined")) {
+            meta.setLore(lore);
+        }
         itemStack.setItemMeta(meta);
     }
 }

@@ -1,0 +1,39 @@
+enabled:
+  crafted-by:
+    pickaxe: true
+    sword: true
+    shovel: true
+    axe: true
+    hoe: true
+    shears: true
+    bow: true
+    armor: true
+  crafted-date:
+    pickaxe: true
+    sword: true
+    shovel: true
+    axe: true
+    hoe: true
+    shears: true
+    bow: true
+    armor: true
+  player-kills:
+    sword: true
+    axe: true
+    trident: true
+  mob-kills:
+    sword: true
+    axe: true
+    trident: true
+  blocks-mined:
+    pickaxe: true
+    shovel: true
+    axe: true
+    hoe: true
+    shears: true
+  fish-caught: true
+  sheep-sheared: true
+  armor-damage: true
+  dropped-by: true
+
+config-version: 1
