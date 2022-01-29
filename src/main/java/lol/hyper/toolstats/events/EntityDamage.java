@@ -1,3 +1,20 @@
+/*
+ * This file is part of ToolStats.
+ *
+ * ToolStats is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ToolStats is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with ToolStats.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
@@ -18,6 +35,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 
 public class EntityDamage implements Listener {
@@ -116,18 +134,18 @@ public class EntityDamage implements Listener {
             for (int x = 0; x < lore.size(); x++) {
                 if (lore.get(x).contains("Player kills")) {
                     hasLore = true;
-                    lore.set(x, playerKillsLore.replace("X", Integer.toString(playerKills)));
+                    lore.set(x, playerKillsLore.replace("X", NumberFormat.getNumberInstance(Locale.US).format(Integer.toString(playerKills))));
                     break;
                 }
             }
             // if the item has lore but doesn't have the tag, add it
             if (!hasLore) {
-                lore.add(playerKillsLore.replace("X", Integer.toString(playerKills)));
+                lore.add(playerKillsLore.replace("X", NumberFormat.getNumberInstance(Locale.US).format(Integer.toString(playerKills))));
             }
         } else {
             // if the item has no lore, create a new list and add the string
             lore = new ArrayList<>();
-            lore.add(playerKillsLore.replace("X", Integer.toString(playerKills)));
+            lore.add(playerKillsLore.replace("X", NumberFormat.getNumberInstance(Locale.US).format(Integer.toString(playerKills))));
         }
         meta.setLore(lore);
         finalItem.setItemMeta(meta);
@@ -162,18 +180,18 @@ public class EntityDamage implements Listener {
             for (int x = 0; x < lore.size(); x++) {
                 if (lore.get(x).contains("Mob kills")) {
                     hasLore = true;
-                    lore.set(x, mobKillsLore.replace("X", Integer.toString(mobKills)));
+                    lore.set(x, mobKillsLore.replace("X", NumberFormat.getNumberInstance(Locale.US).format(Integer.toString(mobKills))));
                     break;
                 }
             }
             // if the item has lore but doesn't have the tag, add it
             if (!hasLore) {
-                lore.add(mobKillsLore.replace("X", Integer.toString(mobKills)));
+                lore.add(mobKillsLore.replace("X", NumberFormat.getNumberInstance(Locale.US).format(Integer.toString(mobKills))));
             }
         } else {
             // if the item has no lore, create a new list and add the string
             lore = new ArrayList<>();
-            lore.add(mobKillsLore.replace("X", Integer.toString(mobKills)));
+            lore.add(mobKillsLore.replace("X", NumberFormat.getNumberInstance(Locale.US).format(Integer.toString(mobKills))));
         }
         meta.setLore(lore);
         finalItem.setItemMeta(meta);

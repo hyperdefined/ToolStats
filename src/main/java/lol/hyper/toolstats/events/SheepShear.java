@@ -1,3 +1,20 @@
+/*
+ * This file is part of ToolStats.
+ *
+ * ToolStats is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ToolStats is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with ToolStats.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
@@ -14,8 +31,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class SheepShear implements Listener {
 
@@ -70,18 +89,18 @@ public class SheepShear implements Listener {
             for (int x = 0; x < lore.size(); x++) {
                 if (lore.get(x).contains("Sheep sheared")) {
                     hasLore = true;
-                    lore.set(x, sheepShearLore.replace("X", Integer.toString(sheepSheared)));
+                    lore.set(x, sheepShearLore.replace("X", NumberFormat.getNumberInstance(Locale.US).format(Integer.toString(sheepSheared))));
                     break;
                 }
             }
             // if the item has lore but doesn't have the tag, add it
             if (!hasLore) {
-                lore.add(sheepShearLore.replace("X", Integer.toString(sheepSheared)));
+                lore.add(sheepShearLore.replace("X", NumberFormat.getNumberInstance(Locale.US).format(Integer.toString(sheepSheared))));
             }
         } else {
             // if the item has no lore, create a new list and add the string
             lore = new ArrayList<>();
-            lore.add(sheepShearLore.replace("X", Integer.toString(sheepSheared)));
+            lore.add(sheepShearLore.replace("X", NumberFormat.getNumberInstance(Locale.US).format(Integer.toString(sheepSheared))));
         }
         meta.setLore(lore);
         itemStack.setItemMeta(meta);
