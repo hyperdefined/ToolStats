@@ -26,7 +26,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -94,6 +96,34 @@ public class EntityDamage implements Listener {
             }
         }
         // player is taken damage but not being killed
+        if (livingEntity instanceof Player) {
+            Player player = (Player) livingEntity;
+            PlayerInventory inventory = player.getInventory();
+            for (ItemStack armor : inventory.getArmorContents()) {
+                if (armor != null) {
+                    updateArmorDamage(armor, event.getDamage());
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageEvent event) {
+        LivingEntity livingEntity = (LivingEntity) event.getEntity();
+        if (livingEntity instanceof Player) {
+            Player player = (Player) livingEntity;
+            PlayerInventory inventory = player.getInventory();
+            for (ItemStack armor : inventory.getArmorContents()) {
+                if (armor != null) {
+                    updateArmorDamage(armor, event.getDamage());
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageByBlockEvent event) {
+        LivingEntity livingEntity = (LivingEntity) event.getEntity();
         if (livingEntity instanceof Player) {
             Player player = (Player) livingEntity;
             PlayerInventory inventory = player.getInventory();
