@@ -19,6 +19,7 @@ package lol.hyper.toolstats;
 
 import lol.hyper.githubreleaseapi.GitHubRelease;
 import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
+import lol.hyper.toolstats.commands.CommandToolStats;
 import lol.hyper.toolstats.events.*;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -61,6 +62,7 @@ public final class ToolStats extends JavaPlugin {
     public EntityDamage mobKill;
     public PlayerFish playerFish;
     public SheepShear sheepShear;
+    public CommandToolStats commandToolStats;
 
     public final Logger logger = this.getLogger();
     public final File configFile = new File(this.getDataFolder(), "config.yml");
@@ -80,6 +82,7 @@ public final class ToolStats extends JavaPlugin {
         mobKill = new EntityDamage(this);
         playerFish = new PlayerFish(this);
         sheepShear = new SheepShear(this);
+        commandToolStats = new CommandToolStats(this);
 
         Bukkit.getServer().getPluginManager().registerEvents(blocksMined, this);
         Bukkit.getServer().getPluginManager().registerEvents(craftItem, this);
@@ -87,6 +90,8 @@ public final class ToolStats extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(mobKill, this);
         Bukkit.getServer().getPluginManager().registerEvents(playerFish, this);
         Bukkit.getServer().getPluginManager().registerEvents(sheepShear, this);
+
+        this.getCommand("toolstats").setExecutor(commandToolStats);
 
         new Metrics(this, 14110);
 
