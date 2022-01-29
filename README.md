@@ -19,8 +19,5 @@ ToolStats is a small plugin that display various stats about tools.
 ![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image5.png)
 ![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image6.png)
 
-## Documentation
-Visit the [wiki](https://docs.hyper.lol/toolstats) for help.
-
 ## License
 This plugin is released under GNU General Public License v3. See [LICENSE](https://github.com/hyperdefined/ToolStats/blob/master/LICENSE).
