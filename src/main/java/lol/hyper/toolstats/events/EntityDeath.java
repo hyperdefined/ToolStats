@@ -26,25 +26,12 @@ public class EntityDeath implements Listener {
     @EventHandler
     public void onDeath(EntityDeathEvent event) {
         LivingEntity livingEntity = event.getEntity();
+        if (livingEntity instanceof Player) {
+            return;
+        }
         UUID livingEntityUUID = event.getEntity().getUniqueId();
         if (toolStats.mobKill.trackedMobs.contains(livingEntityUUID)) {
             for (ItemStack current : event.getDrops()) {
-                ItemMeta meta = current.getItemMeta();
-                boolean hasKey = false;
-                // check if the mob has one of our keys
-                // this will prevent the "dropped by" tag from being added
-                if (meta != null) {
-                    PersistentDataContainer container = meta.getPersistentDataContainer();
-                    for (NamespacedKey key : container.getKeys()) {
-                        if (toolStats.keys.contains(key)) {
-                            hasKey = true;
-                            break;
-                        }
-                    }
-                }
-                if (hasKey && !(livingEntity instanceof Player)) {
-                    continue;
-                }
                 String name = current.getType().toString().toLowerCase(Locale.ROOT);
                 for (String item : toolStats.craftItem.validItems) {
                     if (name.contains(item)) {
@@ -61,15 +48,25 @@ public class EntityDeath implements Listener {
         if (meta == null) {
             return;
         }
+        boolean hasTag = false;
         List<String> lore;
         if (meta.hasLore()) {
             lore = meta.getLore();
             assert lore != null;
+            for (int x = 0; x < lore.size(); x++) {
+                if (lore.get(x).contains("Dropped by")) {
+                    // replace existing tag
+                    lore.set(x, droppedLore.replace("X", mob));
+                    hasTag = true;
+                }
+            }
         } else {
             // if the item has no lore, create a new list and add the string
             lore = new ArrayList<>();
         }
-        lore.add(droppedLore.replace("X", mob));
+        if (!hasTag) {
+            lore.add(droppedLore.replace("X", mob));
+        }
         meta.setLore(lore);
         itemStack.setItemMeta(meta);
     }
