@@ -32,7 +32,7 @@ public final class ToolStats extends JavaPlugin {
     // stores how much damage armor has taken
     public final NamespacedKey armorDamage = new NamespacedKey(this, "damage-taken");
 
-    public Set<NamespacedKey> keys = new HashSet<>();
+    public final Set<NamespacedKey> keys = new HashSet<>();
 
     public BlocksMined blocksMined;
     public CraftItem craftItem;
