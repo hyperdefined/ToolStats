@@ -6,6 +6,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Trident;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -54,12 +55,25 @@ public class EntityDamage implements Listener {
                 }
                 // a player is killing another player
                 if (livingEntity instanceof Player) {
-                    updatePlayerKills(heldItem);
+                    player.getInventory().setItem(player.getInventory().getHeldItemSlot(), updatePlayerKills(heldItem));
                     return;
                 }
                 // player is killing regular mob
-                updateMobKills(heldItem);
+                player.getInventory().setItem(player.getInventory().getHeldItemSlot(), updateMobKills(heldItem));
                 trackedMobs.add(livingEntity.getUniqueId());
+            }
+            if (event.getDamager() instanceof Trident) {
+                Trident trident = (Trident) event.getDamager();
+                ItemStack clone;
+                if (livingEntity instanceof Player) {
+                    clone = updatePlayerKills(trident.getItem());
+                } else {
+                    clone = updateMobKills(trident.getItem());
+                }
+                if (clone == null) {
+                    return;
+                }
+                trident.setItem(clone);
             }
         }
         // player is taken damage but not being killed
@@ -74,10 +88,11 @@ public class EntityDamage implements Listener {
         }
     }
 
-    private void updatePlayerKills(ItemStack itemStack) {
-        ItemMeta meta = itemStack.getItemMeta();
+    private ItemStack updatePlayerKills(ItemStack itemStack) {
+        ItemStack finalItem = itemStack.clone();
+        ItemMeta meta = finalItem.getItemMeta();
         if (meta == null) {
-            return;
+            return null;
         }
         Integer playerKills = 0;
         PersistentDataContainer container = meta.getPersistentDataContainer();
@@ -85,7 +100,7 @@ public class EntityDamage implements Listener {
             playerKills = container.get(toolStats.swordPlayerKills, PersistentDataType.INTEGER);
         }
         if (playerKills == null) {
-            return;
+            return null;
         } else {
             playerKills++;
         }
@@ -99,7 +114,7 @@ public class EntityDamage implements Listener {
             // we do a for loop like this, we can keep track of index
             // this doesn't mess the lore up of existing items
             for (int x = 0; x < lore.size(); x++) {
-                if (lore.get(x).contains("Mob kills")) {
+                if (lore.get(x).contains("Player kills")) {
                     hasLore = true;
                     lore.set(x, playerKillsLore.replace("X", Integer.toString(playerKills)));
                     break;
@@ -115,13 +130,15 @@ public class EntityDamage implements Listener {
             lore.add(playerKillsLore.replace("X", Integer.toString(playerKills)));
         }
         meta.setLore(lore);
-        itemStack.setItemMeta(meta);
+        finalItem.setItemMeta(meta);
+        return finalItem;
     }
 
-    private void updateMobKills(ItemStack itemStack) {
-        ItemMeta meta = itemStack.getItemMeta();
+    private ItemStack updateMobKills(ItemStack itemStack) {
+        ItemStack finalItem = itemStack.clone();
+        ItemMeta meta = finalItem.getItemMeta();
         if (meta == null) {
-            return;
+            return null;
         }
         Integer mobKills = 0;
         PersistentDataContainer container = meta.getPersistentDataContainer();
@@ -129,7 +146,7 @@ public class EntityDamage implements Listener {
             mobKills = container.get(toolStats.swordMobKills, PersistentDataType.INTEGER);
         }
         if (mobKills == null) {
-            return;
+            return null;
         } else {
             mobKills++;
         }
@@ -159,7 +176,8 @@ public class EntityDamage implements Listener {
             lore.add(mobKillsLore.replace("X", Integer.toString(mobKills)));
         }
         meta.setLore(lore);
-        itemStack.setItemMeta(meta);
+        finalItem.setItemMeta(meta);
+        return finalItem;
     }
 
     private void updateArmorDamage(ItemStack itemStack, double damage) {
