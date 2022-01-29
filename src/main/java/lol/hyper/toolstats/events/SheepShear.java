@@ -37,7 +37,11 @@ public class SheepShear implements Listener {
         if (heldItem == null || heldItem.getType() == Material.AIR || heldItem.getType() != Material.SHEARS) {
             return;
         }
-        addLore(heldItem);
+
+        Sheep sheep = (Sheep) entity;
+        if (!sheep.isSheared()) {
+            addLore(heldItem);
+        }
     }
 
     private void addLore(ItemStack itemStack) {
