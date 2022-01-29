@@ -4,6 +4,7 @@ import lol.hyper.toolstats.ToolStats;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -41,7 +42,7 @@ public class EntityDeath implements Listener {
                         }
                     }
                 }
-                if (hasKey) {
+                if (hasKey && !(livingEntity instanceof Player)) {
                     continue;
                 }
                 String name = current.getType().toString().toLowerCase(Locale.ROOT);
