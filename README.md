@@ -10,7 +10,7 @@
 	<a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
 </p>
 
-ToolStats is a small plugin that display various stats about tools.
+ToolStats is a small plugin that display various stats about tools. This plugin is inspired off of [GearStats](https://www.spigotmc.org/resources/gearstats.12960/).
 
 ![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image.png)
 ![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image2.png)
