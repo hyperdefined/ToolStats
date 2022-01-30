@@ -26,7 +26,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.LootGenerateEvent;
-import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -61,10 +60,7 @@ public class GenerateLoot implements Listener {
             return;
         }
         Inventory chest = inventoryHolder.getInventory();
-        toolStats.logger.info(String.valueOf(chest.getContents().length));
-        toolStats.logger.info(String.valueOf(chest.getViewers()));
         Bukkit.getScheduler().runTaskLater(toolStats, () -> {
-            toolStats.logger.info("Later: " + chest.getViewers());
             Player player = (Player) chest.getViewers().get(0);
             for (int i = 0; i < chest.getContents().length; i++) {
                 ItemStack itemStack = chest.getItem(i);
@@ -73,9 +69,7 @@ public class GenerateLoot implements Listener {
                 }
                 String name = itemStack.getType().toString().toLowerCase(Locale.ROOT);
                 for (String x : validItems) {
-                    toolStats.logger.info("Checking " + name);
                     if (name.contains(x)) {
-                        toolStats.logger.info("contains");
                         chest.setItem(i, addLore(itemStack, player));
                     }
                 }
@@ -103,7 +97,6 @@ public class GenerateLoot implements Listener {
             lore = new ArrayList<>();
         }
         if (toolStats.checkConfig(newItem, "looted-tag")) {
-            toolStats.logger.info("adding lore to new item in chest");
             lore.add(LOOT_TIME.replace("X", format.format(finalDate)));
             lore.add(LOOT_OWNER.replace("X", owner.getName()));
         }

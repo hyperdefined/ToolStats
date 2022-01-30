@@ -21,6 +21,7 @@ import lol.hyper.toolstats.ToolStats;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
@@ -112,6 +113,9 @@ public class EntityDamage implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
+        if (!(event.getEntity() instanceof LivingEntity)) {
+            return;
+        }
         LivingEntity livingEntity = (LivingEntity) event.getEntity();
         if (livingEntity instanceof Player) {
             Player player = (Player) livingEntity;
