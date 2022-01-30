@@ -1,5 +1,6 @@
 enabled:
-  crafted-by:
+  # Will show ownership of items when they are created/found.
+  created-by:
     pickaxe: true
     sword: true
     shovel: true
@@ -8,7 +9,38 @@ enabled:
     shears: true
     bow: true
     armor: true
-  crafted-date:
+   # Will show time the item is created
+  created-date:
+    pickaxe: true
+    sword: true
+    shovel: true
+    axe: true
+    hoe: true
+    shears: true
+    bow: true
+    armor: true
+  # Will show "Fished by <player>"
+  fished-tag:
+    pickaxe: true
+    sword: true
+    shovel: true
+    axe: true
+    hoe: true
+    shears: true
+    bow: true
+    armor: true
+  # Will show "Found by <player>"
+  looted-tag:
+    pickaxe: true
+    sword: true
+    shovel: true
+    axe: true
+    hoe: true
+    shears: true
+    bow: true
+    armor: true
+  # Will show "Trade by <player>"
+  traded-tag:
     pickaxe: true
     sword: true
     shovel: true
@@ -36,4 +68,4 @@ enabled:
   armor-damage: true
   dropped-by: true
 
-config-version: 1
+config-version: 2

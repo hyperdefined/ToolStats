@@ -18,8 +18,10 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
+import lol.hyper.toolstats.UUIDDataType;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,13 +31,22 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class PlayerFish implements Listener {
 
     private final ToolStats toolStats;
     private final String fishCaughtLore = ChatColor.GRAY + "Fish caught: " + ChatColor.DARK_GRAY + "X";
+    private final String FISH_OWNER = ChatColor.GRAY + "Caught by: " + ChatColor.DARK_GRAY + "X";
+    private final String FISH_TIME = ChatColor.GRAY + "Caught on: " + ChatColor.DARK_GRAY + "X";
+    public final String[] validItems = {
+            "pickaxe", "sword", "shovel", "axe", "hoe", "bow", "helmet", "chestplate", "leggings", "boots", "fishing"
+    };
+    private final SimpleDateFormat format = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
 
     public PlayerFish(ToolStats toolStats) {
         this.toolStats = toolStats;
@@ -53,10 +64,19 @@ public class PlayerFish implements Listener {
         if (heldItem == null || heldItem.getType() == Material.AIR || heldItem.getType() != Material.FISHING_ROD) {
             return;
         }
-        addLore(heldItem);
+        updateFishCount(heldItem);
+        if (event.getCaught() == null) {
+            return;
+        }
+        ItemStack caughtItem = ((Item) event.getCaught()).getItemStack();
+        for (String x : validItems) {
+            if (caughtItem.getType().toString().toLowerCase(Locale.ROOT).contains(x)) {
+                addNewLore(caughtItem, player);
+            }
+        }
     }
 
-    private void addLore(ItemStack itemStack) {
+    private void updateFishCount(ItemStack itemStack) {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) {
             return;
@@ -98,6 +118,31 @@ public class PlayerFish implements Listener {
         if (toolStats.config.getBoolean("enabled.fish-caught")) {
             meta.setLore(lore);
         }
+        itemStack.setItemMeta(meta);
+    }
+
+    private void addNewLore(ItemStack itemStack, Player owner) {
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta == null) {
+            return;
+        }
+        long timeCreated = System.currentTimeMillis();
+        Date finalDate = new Date(timeCreated);
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
+        container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
+        List<String> lore;
+        if (meta.hasLore()) {
+            lore = meta.getLore();
+            assert lore != null;
+        } else {
+            lore = new ArrayList<>();
+        }
+        if (toolStats.checkConfig(itemStack, "fished-tag")) {
+            lore.add(FISH_TIME.replace("X", format.format(finalDate)));
+            lore.add(FISH_OWNER.replace("X", owner.getName()));
+        }
+        meta.setLore(lore);
         itemStack.setItemMeta(meta);
     }
 }

@@ -37,10 +37,10 @@ import java.util.logging.Logger;
 
 public final class ToolStats extends JavaPlugin {
 
-    // stores who crafted an item
-    public final NamespacedKey craftedOwner = new NamespacedKey(this, "owner");
-    // stores when an item was crafted
-    public final NamespacedKey craftedTime = new NamespacedKey(this, "time-created");
+    // stores who created an item
+    public final NamespacedKey genericOwner = new NamespacedKey(this, "owner");
+    // stores when an item was created
+    public final NamespacedKey timeCreated = new NamespacedKey(this, "time-created");
     // stores how many player kills by sword
     public final NamespacedKey swordPlayerKills = new NamespacedKey(this, "player-kills");
     // stores how many mob kills by sword
@@ -59,15 +59,17 @@ public final class ToolStats extends JavaPlugin {
     public BlocksMined blocksMined;
     public CraftItem craftItem;
     public EntityDeath entityDeath;
+    public GenerateLoot generateLoot;
     public EntityDamage mobKill;
     public PlayerFish playerFish;
     public SheepShear sheepShear;
+    public VillagerTrade villagerTrade;
     public CommandToolStats commandToolStats;
 
     public final Logger logger = this.getLogger();
     public final File configFile = new File(this.getDataFolder(), "config.yml");
     public FileConfiguration config;
-    public final int CONFIG_VERSION = 1;
+    public final int CONFIG_VERSION = 2;
 
     @Override
     public void onEnable() {
@@ -79,17 +81,21 @@ public final class ToolStats extends JavaPlugin {
         blocksMined = new BlocksMined(this);
         craftItem = new CraftItem(this);
         entityDeath = new EntityDeath(this);
+        generateLoot = new GenerateLoot(this);
         mobKill = new EntityDamage(this);
         playerFish = new PlayerFish(this);
         sheepShear = new SheepShear(this);
+        villagerTrade = new VillagerTrade(this);
         commandToolStats = new CommandToolStats(this);
 
         Bukkit.getServer().getPluginManager().registerEvents(blocksMined, this);
         Bukkit.getServer().getPluginManager().registerEvents(craftItem, this);
         Bukkit.getServer().getPluginManager().registerEvents(entityDeath, this);
+        Bukkit.getServer().getPluginManager().registerEvents(generateLoot, this);
         Bukkit.getServer().getPluginManager().registerEvents(mobKill, this);
         Bukkit.getServer().getPluginManager().registerEvents(playerFish, this);
         Bukkit.getServer().getPluginManager().registerEvents(sheepShear, this);
+        Bukkit.getServer().getPluginManager().registerEvents(villagerTrade, this);
 
         this.getCommand("toolstats").setExecutor(commandToolStats);
 
@@ -97,8 +103,8 @@ public final class ToolStats extends JavaPlugin {
 
         Bukkit.getScheduler().runTaskAsynchronously(this, this::checkForUpdates);
 
-        keys.add(craftedOwner);
-        keys.add(craftedTime);
+        keys.add(genericOwner);
+        keys.add(timeCreated);
         keys.add(swordPlayerKills);
         keys.add(swordMobKills);
         keys.add(genericMined);
@@ -177,7 +183,10 @@ public final class ToolStats extends JavaPlugin {
             case "bow": {
                 return config.getBoolean("enabled." + configName + ".bow");
             }
-            case "armor": {
+            case "helmet":
+            case "chestplate":
+            case "leggings":
+            case "boots": {
                 return config.getBoolean("enabled." + configName + ".armor");
             }
         }

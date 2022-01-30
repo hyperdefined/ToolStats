@@ -20,51 +20,61 @@ package lol.hyper.toolstats.events;
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.UUIDDataType;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import org.bukkit.entity.Cat;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Merchant;
+import org.bukkit.inventory.MerchantInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
-public class CraftItem implements Listener {
+public class VillagerTrade implements Listener {
 
     private final ToolStats toolStats;
+    private final String TRADED_OWNER = ChatColor.GRAY + "Traded by: " + ChatColor.DARK_GRAY + "X";
+    private final String TRADED_TIME = ChatColor.GRAY + "Traded on: " + ChatColor.DARK_GRAY + "X";
     public final String[] validItems = {
             "pickaxe", "sword", "shovel", "axe", "hoe", "bow", "helmet", "chestplate", "leggings", "boots", "fishing"
     };
-    private final String timeCreatedLore = ChatColor.GRAY + "Crafted on: " + ChatColor.DARK_GRAY + "X";
-    private final String ownerLore = ChatColor.GRAY + "Crafted by: " + ChatColor.DARK_GRAY + "X";
     private final SimpleDateFormat format = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
 
-    public CraftItem(ToolStats toolStats) {
+    public VillagerTrade(ToolStats toolStats) {
         this.toolStats = toolStats;
     }
 
     @EventHandler
-    public void onCraft(CraftItemEvent event) {
-        Player player = (Player) event.getWhoClicked();
-        ItemStack itemStack = event.getCurrentItem();
-        if (itemStack == null || itemStack.getType() == Material.AIR) {
+    public void onTrade(InventoryClickEvent event) {
+        if (event.isCancelled() || event.getCurrentItem() == null) {
             return;
         }
-        String name = itemStack.getType().toString().toLowerCase(Locale.ROOT);
-        for (String x : validItems) {
-            if (name.contains(x)) {
-                event.setCurrentItem(addLore(itemStack, player));
+        Inventory inventory = event.getClickedInventory();
+        if (inventory instanceof MerchantInventory) {
+            if (event.getSlotType() == InventoryType.SlotType.RESULT) {
+                ItemStack item = event.getCurrentItem();
+                for (String x : validItems) {
+                    if (item.getType().toString().toLowerCase(Locale.ROOT).contains(x)) {
+                        ItemStack newItem = addLore(item, (Player) event.getWhoClicked());
+                        event.getView().setCursor(newItem);
+                    }
+                }
             }
         }
     }
 
     private ItemStack addLore(ItemStack itemStack, Player owner) {
-        ItemStack newItem = itemStack.clone();
-        ItemMeta meta = newItem.getItemMeta();
+        ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) {
             return null;
         }
@@ -80,14 +90,12 @@ public class CraftItem implements Listener {
         } else {
             lore = new ArrayList<>();
         }
-        if (toolStats.checkConfig(itemStack, "created-date")) {
-            lore.add(timeCreatedLore.replace("X", format.format(finalDate)));
-        }
-        if (toolStats.checkConfig(itemStack, "created-by")) {
-            lore.add(ownerLore.replace("X", owner.getName()));
+        if (toolStats.checkConfig(itemStack, "traded-tag")) {
+            lore.add(TRADED_TIME.replace("X", format.format(finalDate)));
+            lore.add(TRADED_OWNER.replace("X", owner.getName()));
         }
         meta.setLore(lore);
-        newItem.setItemMeta(meta);
-        return newItem;
+        itemStack.setItemMeta(meta);
+        return itemStack;
     }
 }
