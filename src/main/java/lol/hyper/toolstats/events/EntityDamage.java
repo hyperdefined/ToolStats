@@ -55,6 +55,9 @@ public class EntityDamage implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof LivingEntity)) {
+            return;
+        }
         LivingEntity livingEntity = (LivingEntity) event.getEntity();
         // mob is going to die
         if (livingEntity.getHealth() - event.getFinalDamage() <= 0) {
