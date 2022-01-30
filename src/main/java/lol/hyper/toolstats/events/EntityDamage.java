@@ -21,10 +21,7 @@ import lol.hyper.toolstats.ToolStats;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Trident;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
@@ -97,6 +94,23 @@ public class EntityDamage implements Listener {
                     return;
                 }
                 trident.setItem(clone);
+            }
+            if (event.getDamager() instanceof Arrow) {
+                Arrow arrow = (Arrow) event.getDamager();
+                if (arrow.getShooter() instanceof Player) {
+                    Player player = (Player) arrow.getShooter();
+                    ItemStack heldItem = player.getInventory().getItem(player.getInventory().getHeldItemSlot());
+                    if (heldItem == null) {
+                        return;
+                    }
+                    if (heldItem.getType() == Material.BOW || heldItem.getType() == Material.CROSSBOW) {
+                        if (livingEntity instanceof Player) {
+                            player.getInventory().setItem(player.getInventory().getHeldItemSlot(), updatePlayerKills(heldItem));
+                        } else {
+                            player.getInventory().setItem(player.getInventory().getHeldItemSlot(), updateMobKills(heldItem));
+                        }
+                    }
+                }
             }
         }
         // player is taken damage but not being killed

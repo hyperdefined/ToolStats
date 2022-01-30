@@ -9,7 +9,7 @@ enabled:
     shears: true
     bow: true
     armor: true
-   # Will show time the item is created
+  # Will show time the item is created
   created-date:
     pickaxe: true
     sword: true
@@ -53,10 +53,12 @@ enabled:
     sword: true
     axe: true
     trident: true
+    bow: true
   mob-kills:
     sword: true
     axe: true
     trident: true
+    bow: true
   blocks-mined:
     pickaxe: true
     shovel: true
