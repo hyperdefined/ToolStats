@@ -11,7 +11,17 @@
 	<a href="https://wakatime.com/badge/user/992a7647-176a-477c-8086-e1abfba87ff4/project/0200f07a-f303-4103-a5f2-34b38c9c1fa4"><img src="https://wakatime.com/badge/user/992a7647-176a-477c-8086-e1abfba87ff4/project/0200f07a-f303-4103-a5f2-34b38c9c1fa4.svg" alt="wakatime"></a>
 </p>
 
-ToolStats is a small plugin that display various stats about tools. This plugin is inspired off of [GearStats](https://www.spigotmc.org/resources/gearstats.12960/). You can disable/enable which stats are shown on which tools via the config. Note: stats are tracked regardless of config setting.
+ToolStats is a small plugin that display various stats about tools. This plugin is inspired off of [GearStats](https://www.spigotmc.org/resources/gearstats.12960/). You can disable/enable which stats are shown on which tools via the config. Note: stats are tracked regardless of config setting. The config is to disable the lore on the item.
+
+Here is everything it tracks:
+* Blocks mined (pickaxes, shovels, axes, hoes, shears)
+* Player/mob kills (swords, axes, tridents, bows/crossbows)
+* Ownership of items when crafted, looted (from chests), traded, and caught from fishing.
+* Armor damage taken.
+* Fish caught.
+* Sheep sheared.
+
+The best part is, this data is stored on the item itself.
 
 ![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image.png)
 ![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image2.png)
