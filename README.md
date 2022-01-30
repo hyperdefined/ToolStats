@@ -8,6 +8,7 @@
 	<a href="https://en.cryptobadges.io/donate/0xF3b4e87E4c11f586949ca8740eD33A1e473F924c"><img src="https://en.cryptobadges.io/badge/micro/0xF3b4e87E4c11f586949ca8740eD33A1e473F924c" alt="Donate with Ethereum"></a>
 	<a href="https://ko-fi.com/hyperdefined"><img src="https://img.shields.io/badge/Donate-Ko--fi-red" alt="Donate via Ko-fi"></a>
 	<a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a>
+	<a href="https://wakatime.com/badge/user/992a7647-176a-477c-8086-e1abfba87ff4/project/0200f07a-f303-4103-a5f2-34b38c9c1fa4"><img src="https://wakatime.com/badge/user/992a7647-176a-477c-8086-e1abfba87ff4/project/0200f07a-f303-4103-a5f2-34b38c9c1fa4.svg" alt="wakatime"></a>
 </p>
 
 ToolStats is a small plugin that display various stats about tools. This plugin is inspired off of [GearStats](https://www.spigotmc.org/resources/gearstats.12960/). You can disable/enable which stats are shown on which tools via the config. Note: stats are tracked regardless of config setting.
