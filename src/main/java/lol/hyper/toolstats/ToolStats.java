@@ -53,13 +53,17 @@ public final class ToolStats extends JavaPlugin {
     public final NamespacedKey shearsSheared = new NamespacedKey(this, "sheared");
     // stores how much damage armor has taken
     public final NamespacedKey armorDamage = new NamespacedKey(this, "damage-taken");
+    // used for tracking new elytras
+    public final NamespacedKey newElytra = new NamespacedKey(this, "new");
 
     public final Set<NamespacedKey> keys = new HashSet<>();
 
     public BlocksMined blocksMined;
+    public ChunkPopulate chunkPopulate;
     public CraftItem craftItem;
     public EntityDeath entityDeath;
     public GenerateLoot generateLoot;
+    public PickupItem pickupItem;
     public EntityDamage mobKill;
     public PlayerFish playerFish;
     public SheepShear sheepShear;
@@ -80,8 +84,10 @@ public final class ToolStats extends JavaPlugin {
         loadConfig();
         blocksMined = new BlocksMined(this);
         craftItem = new CraftItem(this);
+        chunkPopulate = new ChunkPopulate(this);
         entityDeath = new EntityDeath(this);
         generateLoot = new GenerateLoot(this);
+        pickupItem = new PickupItem(this);
         mobKill = new EntityDamage(this);
         playerFish = new PlayerFish(this);
         sheepShear = new SheepShear(this);
@@ -89,9 +95,11 @@ public final class ToolStats extends JavaPlugin {
         commandToolStats = new CommandToolStats(this);
 
         Bukkit.getServer().getPluginManager().registerEvents(blocksMined, this);
+        Bukkit.getServer().getPluginManager().registerEvents(chunkPopulate, this);
         Bukkit.getServer().getPluginManager().registerEvents(craftItem, this);
         Bukkit.getServer().getPluginManager().registerEvents(entityDeath, this);
         Bukkit.getServer().getPluginManager().registerEvents(generateLoot, this);
+        Bukkit.getServer().getPluginManager().registerEvents(pickupItem, this);
         Bukkit.getServer().getPluginManager().registerEvents(mobKill, this);
         Bukkit.getServer().getPluginManager().registerEvents(playerFish, this);
         Bukkit.getServer().getPluginManager().registerEvents(sheepShear, this);

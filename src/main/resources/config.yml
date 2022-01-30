@@ -67,5 +67,6 @@ enabled:
   sheep-sheared: true
   armor-damage: true
   dropped-by: true
+  elytra-tag: true
 
 config-version: 2
