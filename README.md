@@ -21,7 +21,7 @@ Here is everything it tracks:
 * Fish caught.
 * Sheep sheared.
 
-The best part is, this data is stored on the item itself.
+The best part is, this data is stored on the item itself. You can also change how the lore is displayed on the items!
 
 ![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image.png)
 ![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image2.png)
