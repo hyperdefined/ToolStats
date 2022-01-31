@@ -19,7 +19,6 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.UUIDDataType;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -39,8 +38,6 @@ public class CraftItem implements Listener {
     public final String[] validItems = {
             "pickaxe", "sword", "shovel", "axe", "hoe", "bow", "helmet", "chestplate", "leggings", "boots", "fishing"
     };
-    private final String timeCreatedLore = ChatColor.GRAY + "Crafted on: " + ChatColor.DARK_GRAY + "X";
-    private final String ownerLore = ChatColor.GRAY + "Crafted by: " + ChatColor.DARK_GRAY + "X";
     private final SimpleDateFormat format = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
 
     public CraftItem(ToolStats toolStats) {
@@ -57,6 +54,9 @@ public class CraftItem implements Listener {
         String name = itemStack.getType().toString().toLowerCase(Locale.ROOT);
         for (String x : validItems) {
             if (name.contains(x)) {
+                if (addLore(itemStack, player) == null) {
+                    return;
+                }
                 event.setCurrentItem(addLore(itemStack, player));
             }
         }
@@ -73,6 +73,19 @@ public class CraftItem implements Listener {
         PersistentDataContainer container = meta.getPersistentDataContainer();
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
         container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
+
+        String createdByRaw = toolStats.getLoreFromConfig("created.created-by", true);
+        String createdOnRaw = toolStats.getLoreFromConfig("created.created-on", true);
+
+        if (createdOnRaw == null) {
+            toolStats.logger.warning("There is no lore message for messages.created.created-on!");
+            return null;
+        }
+        if (createdByRaw == null) {
+            toolStats.logger.warning("There is no lore message for messages.created.created-by!");
+            return null;
+        }
+
         List<String> lore;
         if (meta.hasLore()) {
             lore = meta.getLore();
@@ -81,10 +94,10 @@ public class CraftItem implements Listener {
             lore = new ArrayList<>();
         }
         if (toolStats.checkConfig(itemStack, "created-date")) {
-            lore.add(timeCreatedLore.replace("X", format.format(finalDate)));
+            lore.add(createdOnRaw.replace("{date}", format.format(finalDate)));
         }
         if (toolStats.checkConfig(itemStack, "created-by")) {
-            lore.add(ownerLore.replace("X", owner.getName()));
+            lore.add(createdByRaw.replace("{player}", owner.getName()));
         }
         meta.setLore(lore);
         newItem.setItemMeta(meta);

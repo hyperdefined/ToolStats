@@ -19,7 +19,6 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.UUIDDataType;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -40,9 +39,6 @@ import java.util.Locale;
 public class PlayerFish implements Listener {
 
     private final ToolStats toolStats;
-    private final String fishCaughtLore = ChatColor.GRAY + "Fish caught: " + ChatColor.DARK_GRAY + "X";
-    private final String FISH_OWNER = ChatColor.GRAY + "Caught by: " + ChatColor.DARK_GRAY + "X";
-    private final String FISH_TIME = ChatColor.GRAY + "Caught on: " + ChatColor.DARK_GRAY + "X";
     public final String[] validItems = {
             "pickaxe", "sword", "shovel", "axe", "hoe", "bow", "helmet", "chestplate", "leggings", "boots", "fishing"
     };
@@ -92,6 +88,15 @@ public class PlayerFish implements Listener {
             fishCaught++;
         }
         container.set(toolStats.fishingRodCaught, PersistentDataType.INTEGER, fishCaught);
+
+        String fishCaughtLore = toolStats.getLoreFromConfig("fished.fish-caught", false);
+        String fishCaughtLoreRaw = toolStats.getLoreFromConfig("fished.fish-caught", true);
+
+        if (fishCaughtLore == null || fishCaughtLoreRaw == null) {
+            toolStats.logger.warning("There is no lore message for messages.fish-caught!");
+            return;
+        }
+
         List<String> lore;
         if (meta.hasLore()) {
             lore = meta.getLore();
@@ -100,20 +105,20 @@ public class PlayerFish implements Listener {
             // we do a for loop like this, we can keep track of index
             // this doesn't mess the lore up of existing items
             for (int x = 0; x < lore.size(); x++) {
-                if (lore.get(x).contains("Fish caught")) {
+                if (lore.get(x).contains(fishCaughtLore)) {
                     hasLore = true;
-                    lore.set(x, fishCaughtLore.replace("X", Integer.toString(fishCaught)));
+                    lore.set(x, fishCaughtLoreRaw.replace("{fish}", Integer.toString(fishCaught)));
                     break;
                 }
             }
             // if the item has lore but doesn't have the tag, add it
             if (!hasLore) {
-                lore.add(fishCaughtLore.replace("X", Integer.toString(fishCaught)));
+                lore.add(fishCaughtLoreRaw.replace("{fish}", Integer.toString(fishCaught)));
             }
         } else {
             // if the item has no lore, create a new list and add the string
             lore = new ArrayList<>();
-            lore.add(fishCaughtLore.replace("X", Integer.toString(fishCaught)));
+            lore.add(fishCaughtLoreRaw.replace("{fish}", Integer.toString(fishCaught)));
         }
         if (toolStats.config.getBoolean("enabled.fish-caught")) {
             meta.setLore(lore);
@@ -131,6 +136,15 @@ public class PlayerFish implements Listener {
         PersistentDataContainer container = meta.getPersistentDataContainer();
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
         container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
+
+        String caughtByLoreRaw = toolStats.getLoreFromConfig("fished.caught-by", true);
+        String caughtOnLoreRaw = toolStats.getLoreFromConfig("fished.caught-on", true);
+
+        if (caughtByLoreRaw == null || caughtOnLoreRaw == null) {
+            toolStats.logger.warning("There is no lore message for messages.fished!");
+            return;
+        }
+
         List<String> lore;
         if (meta.hasLore()) {
             lore = meta.getLore();
@@ -139,8 +153,8 @@ public class PlayerFish implements Listener {
             lore = new ArrayList<>();
         }
         if (toolStats.checkConfig(itemStack, "fished-tag")) {
-            lore.add(FISH_TIME.replace("X", format.format(finalDate)));
-            lore.add(FISH_OWNER.replace("X", owner.getName()));
+            lore.add(caughtOnLoreRaw.replace("{date}", format.format(finalDate)));
+            lore.add(caughtByLoreRaw.replace("{player}", owner.getName()));
         }
         meta.setLore(lore);
         itemStack.setItemMeta(meta);

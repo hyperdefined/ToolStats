@@ -71,4 +71,26 @@ enabled:
   dropped-by: true
   elytra-tag: true
 
+messages:
+  created:
+    created-by: "&7Crafted by: &8{player}"
+    created-on: "&7Crafted on: &8{date}"
+  fished:
+    caught-by: "&7Caught by: &8{player}"
+    caught-on: "&7Caught on: &8{date}"
+    fish-caught: "&7Fish caught: &8{fish}"
+  looted:
+    found-by: "&7Found by: &8{player}"
+    found-on: "&7Found on: &8{date}"
+  traded:
+    traded-by: "&7Traded by: &8{player}"
+    traded-on: "&7Traded on: &8{date}"
+  kills:
+    mob: "&7Mob kills: &8{kills}"
+    player: "&7Player kills: &8{kills}"
+  blocks-mined: "&7Blocks mined: &8{blocks}"
+  sheep-sheared: "&7Sheep sheared: &8{sheep}"
+  dropped-by: "&7Dropped by: &8{name}" # name will be player/mob name
+  damage-taken: "&7Damage taken: &8{damage}"
+
 config-version: 2

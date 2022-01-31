@@ -18,7 +18,6 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
@@ -41,9 +40,6 @@ public class EntityDamage implements Listener {
 
     private final ToolStats toolStats;
     private final String[] validTools = {"sword", "trident", "axe"};
-    private final String playerKillsLore = ChatColor.GRAY + "Player kills: " + ChatColor.DARK_GRAY + "X";
-    private final String mobKillsLore = ChatColor.GRAY + "Mob kills: " + ChatColor.DARK_GRAY + "X";
-    private final String damageTakenLore = ChatColor.GRAY + "Damage taken: " + ChatColor.DARK_GRAY + "X";
     private final DecimalFormat decimalFormat = new DecimalFormat("0.00");
     public final Set<UUID> trackedMobs = new HashSet<>();
 
@@ -174,6 +170,14 @@ public class EntityDamage implements Listener {
         }
         container.set(toolStats.swordPlayerKills, PersistentDataType.INTEGER, playerKills);
 
+        String playerKillsLore = toolStats.getLoreFromConfig("kills.player", false);
+        String playerKillsLoreRaw = toolStats.getLoreFromConfig("kills.player", true);
+
+        if (playerKillsLore == null || playerKillsLoreRaw == null) {
+            toolStats.logger.warning("There is no lore message for messages.kills.player!");
+            return null;
+        }
+
         List<String> lore;
         if (meta.hasLore()) {
             lore = meta.getLore();
@@ -182,20 +186,20 @@ public class EntityDamage implements Listener {
             // we do a for loop like this, we can keep track of index
             // this doesn't mess the lore up of existing items
             for (int x = 0; x < lore.size(); x++) {
-                if (lore.get(x).contains("Player kills")) {
+                if (lore.get(x).contains(playerKillsLore)) {
                     hasLore = true;
-                    lore.set(x, playerKillsLore.replace("X", Integer.toString(playerKills)));
+                    lore.set(x, playerKillsLoreRaw.replace("{kills}", Integer.toString(playerKills)));
                     break;
                 }
             }
             // if the item has lore but doesn't have the tag, add it
             if (!hasLore) {
-                lore.add(playerKillsLore.replace("X", Integer.toString(playerKills)));
+                lore.add(playerKillsLoreRaw.replace("{kills}", Integer.toString(playerKills)));
             }
         } else {
             // if the item has no lore, create a new list and add the string
             lore = new ArrayList<>();
-            lore.add(playerKillsLore.replace("X", Integer.toString(playerKills)));
+            lore.add(playerKillsLoreRaw.replace("{kills}", Integer.toString(playerKills)));
         }
         if (toolStats.checkConfig(itemStack, "player-kills")) {
             meta.setLore(lore);
@@ -222,6 +226,14 @@ public class EntityDamage implements Listener {
         }
         container.set(toolStats.swordMobKills, PersistentDataType.INTEGER, mobKills);
 
+        String mobKillsLore = toolStats.getLoreFromConfig("kills.mob", false);
+        String mobKillsLoreRaw = toolStats.getLoreFromConfig("kills.mob", true);
+
+        if (mobKillsLore == null || mobKillsLoreRaw == null) {
+            toolStats.logger.warning("There is no lore message for messages.kills.mob!");
+            return null;
+        }
+
         List<String> lore;
         if (meta.hasLore()) {
             lore = meta.getLore();
@@ -230,20 +242,20 @@ public class EntityDamage implements Listener {
             // we do a for loop like this, we can keep track of index
             // this doesn't mess the lore up of existing items
             for (int x = 0; x < lore.size(); x++) {
-                if (lore.get(x).contains("Mob kills")) {
+                if (lore.get(x).contains(mobKillsLore)) {
                     hasLore = true;
-                    lore.set(x, mobKillsLore.replace("X", Integer.toString(mobKills)));
+                    lore.set(x, mobKillsLoreRaw.replace("{kills}", Integer.toString(mobKills)));
                     break;
                 }
             }
             // if the item has lore but doesn't have the tag, add it
             if (!hasLore) {
-                lore.add(mobKillsLore.replace("X", Integer.toString(mobKills)));
+                lore.add(mobKillsLoreRaw.replace("{kills}", Integer.toString(mobKills)));
             }
         } else {
             // if the item has no lore, create a new list and add the string
             lore = new ArrayList<>();
-            lore.add(mobKillsLore.replace("X", Integer.toString(mobKills)));
+            lore.add(mobKillsLoreRaw.replace("{kills}", Integer.toString(mobKills)));
         }
         if (toolStats.checkConfig(itemStack, "mob-kills")) {
             meta.setLore(lore);
@@ -270,6 +282,14 @@ public class EntityDamage implements Listener {
         decimalFormat.setRoundingMode(RoundingMode.DOWN);
         container.set(toolStats.armorDamage, PersistentDataType.DOUBLE, damageTaken);
 
+        String damageTakenLore = toolStats.getLoreFromConfig("damage-taken", false);
+        String damageTakenLoreRaw = toolStats.getLoreFromConfig("damage-taken", true);
+
+        if (damageTakenLore == null || damageTakenLoreRaw == null) {
+            toolStats.logger.warning("There is no lore message for messages.damage-taken!");
+            return;
+        }
+
         List<String> lore;
         if (meta.hasLore()) {
             lore = meta.getLore();
@@ -278,20 +298,20 @@ public class EntityDamage implements Listener {
             // we do a for loop like this, we can keep track of index
             // this doesn't mess the lore up of existing items
             for (int x = 0; x < lore.size(); x++) {
-                if (lore.get(x).contains("Damage taken")) {
+                if (lore.get(x).contains(damageTakenLore)) {
                     hasLore = true;
-                    lore.set(x, damageTakenLore.replace("X", decimalFormat.format(damageTaken)));
+                    lore.set(x, damageTakenLoreRaw.replace("{damage}", decimalFormat.format(damageTaken)));
                     break;
                 }
             }
             // if the item has lore but doesn't have the tag, add it
             if (!hasLore) {
-                lore.add(damageTakenLore.replace("X", decimalFormat.format(damageTaken)));
+                lore.add(damageTakenLoreRaw.replace("{damage}", decimalFormat.format(damageTaken)));
             }
         } else {
             // if the item has no lore, create a new list and add the string
             lore = new ArrayList<>();
-            lore.add(damageTakenLore.replace("X", decimalFormat.format(damageTaken)));
+            lore.add(damageTakenLoreRaw.replace("{damage}", decimalFormat.format(damageTaken)));
         }
         if (toolStats.config.getBoolean("enabled.armor-damage")) {
             meta.setLore(lore);

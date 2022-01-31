@@ -19,7 +19,7 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.UUIDDataType;
-import org.bukkit.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -41,8 +41,6 @@ import java.util.Locale;
 public class VillagerTrade implements Listener {
 
     private final ToolStats toolStats;
-    private final String TRADED_OWNER = ChatColor.GRAY + "Traded by: " + ChatColor.DARK_GRAY + "X";
-    private final String TRADED_TIME = ChatColor.GRAY + "Traded on: " + ChatColor.DARK_GRAY + "X";
     public final String[] validItems = {
             "pickaxe", "sword", "shovel", "axe", "hoe", "bow", "helmet", "chestplate", "leggings", "boots", "fishing"
     };
@@ -64,7 +62,10 @@ public class VillagerTrade implements Listener {
                 for (String x : validItems) {
                     if (item.getType().toString().toLowerCase(Locale.ROOT).contains(x)) {
                         ItemStack newItem = addLore(item, (Player) event.getWhoClicked());
-                        event.getView().setCursor(newItem);
+                        if (newItem == null) {
+                            return;
+                        }
+                        Bukkit.getScheduler().runTaskLater(toolStats, ()-> event.setCurrentItem(newItem), 5);
                     }
                 }
             }
@@ -81,6 +82,15 @@ public class VillagerTrade implements Listener {
         PersistentDataContainer container = meta.getPersistentDataContainer();
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
         container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
+
+        String tradedByLoreRaw = toolStats.getLoreFromConfig("traded.traded-by", true);
+        String tradedOnLoreRaw = toolStats.getLoreFromConfig("traded.traded-on", true);
+
+        if (tradedByLoreRaw == null || tradedOnLoreRaw == null) {
+            toolStats.logger.warning("There is no lore message for messages.traded!");
+            return null;
+        }
+
         List<String> lore;
         if (meta.hasLore()) {
             lore = meta.getLore();
@@ -89,8 +99,8 @@ public class VillagerTrade implements Listener {
             lore = new ArrayList<>();
         }
         if (toolStats.checkConfig(itemStack, "traded-tag")) {
-            lore.add(TRADED_TIME.replace("X", format.format(finalDate)));
-            lore.add(TRADED_OWNER.replace("X", owner.getName()));
+            lore.add(tradedOnLoreRaw.replace("{date}", format.format(finalDate)));
+            lore.add(tradedByLoreRaw.replace("{player}", owner.getName()));
         }
         meta.setLore(lore);
         itemStack.setItemMeta(meta);

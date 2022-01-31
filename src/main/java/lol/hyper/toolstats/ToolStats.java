@@ -23,6 +23,7 @@ import lol.hyper.toolstats.commands.CommandToolStats;
 import lol.hyper.toolstats.events.*;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -199,5 +200,42 @@ public final class ToolStats extends JavaPlugin {
             }
         }
         return false;
+    }
+
+    public String getLoreFromConfig(String configName, boolean raw) {
+        String lore = config.getString("messages." + configName);
+        if (lore == null) {
+            return null;
+        }
+        if (raw) {
+            return ChatColor.translateAlternateColorCodes('&', lore);
+        } else {
+            // we basically add the color codes then remove them
+            // this is a dirty trick to remove color codes
+            lore = ChatColor.translateAlternateColorCodes('&', lore);
+            lore = ChatColor.stripColor(lore);
+            if (lore.contains("{player}")) {
+                lore = lore.replace("{player}", "");
+            }
+            if (lore.contains("{date}")) {
+                lore = lore.replace("{date}", "");
+            }
+            if (lore.contains("{name}")) {
+                lore = lore.replace("{name}", "");
+            }
+            if (lore.contains("{kills}")) {
+                lore = lore.replace("{kills}", "");
+            }
+            if (lore.contains("{blocks}")) {
+                lore = lore.replace("{blocks}", "");
+            }
+            if (lore.contains("{sheep}")) {
+                lore = lore.replace("{sheep}", "");
+            }
+            if (lore.contains("{damage}")) {
+                lore = lore.replace("{damage}", "");
+            }
+        }
+        return lore;
     }
 }

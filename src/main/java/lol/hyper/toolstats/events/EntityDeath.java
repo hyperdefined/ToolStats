@@ -18,7 +18,6 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,7 +31,6 @@ import java.util.*;
 public class EntityDeath implements Listener {
 
     private final ToolStats toolStats;
-    private final String droppedLore = ChatColor.GRAY + "Dropped by: " + ChatColor.DARK_GRAY + "X";
 
     public EntityDeath(ToolStats toolStats) {
         this.toolStats = toolStats;
@@ -64,14 +62,23 @@ public class EntityDeath implements Listener {
             return;
         }
         boolean hasTag = false;
+
+        String droppedByLore = toolStats.getLoreFromConfig("dropped-by", false);
+        String droppedByLoreRaw = toolStats.getLoreFromConfig("dropped-by", true);
+
+        if (droppedByLore == null || droppedByLoreRaw == null) {
+            toolStats.logger.warning("There is no lore message for messages.dropped-by!");
+            return;
+        }
+
         List<String> lore;
         if (meta.hasLore()) {
             lore = meta.getLore();
             assert lore != null;
             for (int x = 0; x < lore.size(); x++) {
-                if (lore.get(x).contains("Dropped by")) {
+                if (lore.get(x).contains(droppedByLore)) {
                     // replace existing tag
-                    lore.set(x, droppedLore.replace("X", mob));
+                    lore.set(x, droppedByLoreRaw.replace("{name}", mob));
                     hasTag = true;
                 }
             }
@@ -80,7 +87,7 @@ public class EntityDeath implements Listener {
             lore = new ArrayList<>();
         }
         if (!hasTag) {
-            lore.add(droppedLore.replace("X", mob));
+            lore.add(droppedByLoreRaw.replace("X", mob));
         }
         if (toolStats.config.getBoolean("enabled.dropped-by")) {
             meta.setLore(lore);

@@ -18,7 +18,6 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -38,7 +37,6 @@ public class BlocksMined implements Listener {
 
     private final ToolStats toolStats;
     private final String[] validTools = {"pickaxe", "axe", "hoe", "shovel", "shear"};
-    private final String blocksMinedLore = ChatColor.GRAY + "Blocks mined: " + ChatColor.DARK_GRAY + "X";
 
     public BlocksMined(ToolStats toolStats) {
         this.toolStats = toolStats;
@@ -78,6 +76,9 @@ public class BlocksMined implements Listener {
         }
         container.set(toolStats.genericMined, PersistentDataType.INTEGER, blocksMined);
 
+        String configLore = toolStats.getLoreFromConfig("blocks-mined", false);
+        String configLoreRaw = toolStats.getLoreFromConfig("blocks-mined", true);
+
         List<String> lore;
         if (meta.hasLore()) {
             lore = meta.getLore();
@@ -85,21 +86,25 @@ public class BlocksMined implements Listener {
             boolean hasLore = false;
             // we do a for loop like this, we can keep track of index
             // this doesn't mess the lore up of existing items
+            if (configLore == null || configLoreRaw == null) {
+                toolStats.logger.warning("There is no lore message for messages.blocks-mined!");
+                return;
+            }
             for (int x = 0; x < lore.size(); x++) {
-                if (lore.get(x).contains("Blocks mined")) {
+                if (lore.get(x).contains(configLore)) {
                     hasLore = true;
-                    lore.set(x, blocksMinedLore.replace("X", Integer.toString(blocksMined)));
+                    lore.set(x, configLoreRaw.replace("{blocks}", Integer.toString(blocksMined)));
                     break;
                 }
             }
             // if the item has lore but doesn't have the tag, add it
             if (!hasLore) {
-                lore.add(blocksMinedLore.replace("X", Integer.toString(blocksMined)));
+                lore.add(configLoreRaw.replace("{blocks}", Integer.toString(blocksMined)));
             }
         } else {
             // if the item has no lore, create a new list and add the string
             lore = new ArrayList<>();
-            lore.add(blocksMinedLore.replace("X", Integer.toString(blocksMined)));
+            lore.add(configLoreRaw.replace("{blocks}", Integer.toString(blocksMined)));
         }
         if (toolStats.checkConfig(itemStack, "blocks-mined")) {
             meta.setLore(lore);

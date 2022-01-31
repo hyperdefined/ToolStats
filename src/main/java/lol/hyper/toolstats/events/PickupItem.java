@@ -19,7 +19,6 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.UUIDDataType;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -40,8 +39,6 @@ import java.util.Locale;
 public class PickupItem implements Listener {
 
     private final ToolStats toolStats;
-    private final String FOUND_BY = ChatColor.GRAY + "Found by: " + ChatColor.DARK_GRAY + "X";
-    private final String FOUND_ON = ChatColor.GRAY + "Found on: " + ChatColor.DARK_GRAY + "X";
     private final SimpleDateFormat format = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
 
     public PickupItem(ToolStats toolStats) {
@@ -78,6 +75,15 @@ public class PickupItem implements Listener {
         PersistentDataContainer container = meta.getPersistentDataContainer();
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
         container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
+
+        String foundByLoreRaw = toolStats.getLoreFromConfig("looted.found-by", true);
+        String foundOnLoreRaw = toolStats.getLoreFromConfig("looted.found-on", true);
+
+        if (foundByLoreRaw == null || foundOnLoreRaw == null) {
+            toolStats.logger.warning("There is no lore message for messages.looted!");
+            return;
+        }
+
         List<String> lore;
         if (meta.hasLore()) {
             lore = meta.getLore();
@@ -86,8 +92,8 @@ public class PickupItem implements Listener {
             lore = new ArrayList<>();
         }
         if (toolStats.config.getBoolean("enabled.elytra-tag")) {
-            lore.add(FOUND_ON.replace("X", format.format(finalDate)));
-            lore.add(FOUND_BY.replace("X", owner.getName()));
+            lore.add(foundOnLoreRaw.replace("{date}", format.format(finalDate)));
+            lore.add(foundByLoreRaw.replace("{player}", owner.getName()));
         }
         meta.setLore(lore);
         itemStack.setItemMeta(meta);
