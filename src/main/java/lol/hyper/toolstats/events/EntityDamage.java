@@ -140,6 +140,9 @@ public class EntityDamage implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageByBlockEvent event) {
+        if (!(event.getEntity() instanceof LivingEntity)) {
+            return;
+        }
         LivingEntity livingEntity = (LivingEntity) event.getEntity();
         if (livingEntity instanceof Player) {
             Player player = (Player) livingEntity;
