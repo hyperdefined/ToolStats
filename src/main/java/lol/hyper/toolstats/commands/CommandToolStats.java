@@ -46,6 +46,10 @@ public class CommandToolStats implements TabExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (!sender.hasPermission("toolstats.use")) {
+            sender.sendMessage(ChatColor.RED + "You do not have permission for this command.");
+            return true;
+        }
         if (args.length == 0) {
             sender.sendMessage(ChatColor.GREEN + "ToolStats version " + toolStats.getDescription().getVersion() + ". Created by hyperdefined.");
         }
