@@ -61,7 +61,9 @@ public class CraftItem implements Listener {
                 if (event.isShiftClick()) {
                     String configMessage = toolStats.config.getString("messages.shift-click-warning.crafting");
                     if (configMessage != null) {
-                        event.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&', configMessage));
+                        if (configMessage.length() != 0) {
+                            event.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&', configMessage));
+                        }
                     }
                 }
                 if (addLore(itemStack, player) == null) {
