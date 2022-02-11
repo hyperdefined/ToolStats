@@ -87,7 +87,7 @@ public class EntityDeath implements Listener {
             lore = new ArrayList<>();
         }
         if (!hasTag) {
-            lore.add(droppedByLoreRaw.replace("X", mob));
+            lore.add(droppedByLoreRaw.replace("{name}", mob));
         }
         if (toolStats.config.getBoolean("enabled.dropped-by")) {
             meta.setLore(lore);
