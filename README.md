@@ -23,6 +23,8 @@ Here is everything it tracks:
 
 The best part is, this data is stored on the item itself. You can also change how the lore is displayed on the items!
 
+If item lore is ever incorrect, you can run `/toolstats reset` to reset the item lore so it's correct.
+
 ![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image.png)
 ![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image2.png)
 ![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image3.png)
