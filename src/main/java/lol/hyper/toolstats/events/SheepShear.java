@@ -43,6 +43,9 @@ public class SheepShear implements Listener {
 
     @EventHandler
     public void onShear(PlayerInteractEntityEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
         Player player = event.getPlayer();
         Entity entity = event.getRightClicked();
         if (!(entity instanceof Sheep)) {

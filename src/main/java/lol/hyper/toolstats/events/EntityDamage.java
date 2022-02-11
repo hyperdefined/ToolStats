@@ -49,6 +49,9 @@ public class EntityDamage implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
         if (!(event.getEntity() instanceof LivingEntity)) {
             return;
         }

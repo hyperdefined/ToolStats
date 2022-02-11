@@ -50,6 +50,9 @@ public class PlayerFish implements Listener {
 
     @EventHandler
     public void onFish(PlayerFishEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
         // only listen to when a player catches a fish
         if (event.getState() != PlayerFishEvent.State.CAUGHT_FISH) {
             return;
@@ -134,6 +137,11 @@ public class PlayerFish implements Listener {
         long timeCreated = System.currentTimeMillis();
         Date finalDate = new Date(timeCreated);
         PersistentDataContainer container = meta.getPersistentDataContainer();
+
+        if (container.has(toolStats.timeCreated, PersistentDataType.LONG) || container.has(toolStats.genericOwner, PersistentDataType.LONG)) {
+            return;
+        }
+
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
         container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
 

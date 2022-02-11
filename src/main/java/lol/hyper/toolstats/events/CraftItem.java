@@ -19,6 +19,7 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.UUIDDataType;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -46,6 +47,9 @@ public class CraftItem implements Listener {
 
     @EventHandler
     public void onCraft(CraftItemEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
         Player player = (Player) event.getWhoClicked();
         ItemStack itemStack = event.getCurrentItem();
         if (itemStack == null || itemStack.getType() == Material.AIR) {
@@ -54,6 +58,12 @@ public class CraftItem implements Listener {
         String name = itemStack.getType().toString().toLowerCase(Locale.ROOT);
         for (String x : validItems) {
             if (name.contains(x)) {
+                if (event.isShiftClick()) {
+                    String configMessage = toolStats.config.getString("messages.shift-click-warning.crafting");
+                    if (configMessage != null) {
+                        event.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&', configMessage));
+                    }
+                }
                 if (addLore(itemStack, player) == null) {
                     return;
                 }
@@ -71,6 +81,11 @@ public class CraftItem implements Listener {
         long timeCreated = System.currentTimeMillis();
         Date finalDate = new Date(timeCreated);
         PersistentDataContainer container = meta.getPersistentDataContainer();
+
+        if (container.has(toolStats.timeCreated, PersistentDataType.LONG) || container.has(toolStats.genericOwner, PersistentDataType.LONG)) {
+            return null;
+        }
+
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
         container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
 
