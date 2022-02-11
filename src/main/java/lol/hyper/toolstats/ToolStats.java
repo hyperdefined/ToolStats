@@ -235,6 +235,9 @@ public final class ToolStats extends JavaPlugin {
             if (lore.contains("{damage}")) {
                 lore = lore.replace("{damage}", "");
             }
+            if (lore.contains("{fish}")) {
+                lore = lore.replace("{fish}", "");
+            }
         }
         return lore;
     }
