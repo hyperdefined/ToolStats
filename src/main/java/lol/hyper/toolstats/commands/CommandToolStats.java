@@ -23,17 +23,19 @@ import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class CommandToolStats implements CommandExecutor {
+public class CommandToolStats implements TabExecutor {
 
     private final ToolStats toolStats;
 
@@ -221,5 +223,23 @@ public class CommandToolStats implements CommandExecutor {
         finalMeta.setLore(lore);
         finalItem.setItemMeta(finalMeta);
         return finalItem;
+    }
+
+    @Nullable
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        if (args.length == 1) {
+            if (sender.hasPermission("toolstats.reload")) {
+                return Arrays.asList("reset", "reload");
+            } else {
+                return Collections.singletonList("reset");
+            }
+        }
+        if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("reset")) {
+                return Collections.singletonList("confirm");
+            }
+        }
+        return null;
     }
 }
