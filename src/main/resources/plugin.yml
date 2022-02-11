@@ -8,8 +8,11 @@ commands:
   toolstats:
     usage: /toolstats
     description: Main command.
-    permission: randomenchant.reload
+    permission: toolstats.main
 permissions:
-  randomenchant.reload:
-    description: Allows the usage of /randomenchant reload
+  toolstats.main:
+    description: Allows the usage of /toolstats
+    default: true
+  toolstats.reload:
+    description: Allows the usage of /toolstats reload
     default: op
