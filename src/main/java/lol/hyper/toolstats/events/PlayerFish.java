@@ -75,6 +75,10 @@ public class PlayerFish implements Listener {
         }
     }
 
+    /**
+     * Updates a fishing rod's count.
+     * @param itemStack The fishing rod to update.
+     */
     private void updateFishCount(ItemStack itemStack) {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) {
@@ -129,6 +133,11 @@ public class PlayerFish implements Listener {
         itemStack.setItemMeta(meta);
     }
 
+    /**
+     * Adds "caught by" tags to newly fished items.
+     * @param itemStack The item to add lore to.
+     * @param owner The player who caught the item.
+     */
     private void addNewLore(ItemStack itemStack, Player owner) {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) {

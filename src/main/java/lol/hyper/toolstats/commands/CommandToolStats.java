@@ -21,7 +21,6 @@ import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.UUIDDataType;
 import org.bukkit.*;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
@@ -88,11 +87,16 @@ public class CommandToolStats implements TabExecutor {
         return true;
     }
 
-    private ItemStack fixItemLore(ItemStack original, Player player) {
+    /**
+     * Fixes lore on a given item. This will wipe all lore and reapply our custom ones.
+     * @param original The item we are fixing.
+     * @param player The player running the command.
+     */
+    private void fixItemLore(ItemStack original, Player player) {
         ItemStack finalItem = original.clone();
         ItemMeta finalMeta = finalItem.getItemMeta();
         if (finalMeta == null) {
-            return null;
+            return;
         }
         PersistentDataContainer container = finalMeta.getPersistentDataContainer();
         List<String> lore = new ArrayList<>();
@@ -101,10 +105,14 @@ public class CommandToolStats implements TabExecutor {
         String lootedByLore = toolStats.getLoreFromConfig("looted.found-by", false);
         String tradedByLore = toolStats.getLoreFromConfig("traded.traded-by", false);
 
+        // make sure the config messages are not null
         if (caughtByLore == null || lootedByLore == null || tradedByLore == null) {
-            return null;
+            return;
         }
 
+        // determine how the item was originally created
+        // this doesn't get saved, so we just rely on the lore
+        // if there isn't a tag, default to crafted
         String type = "DEFAULT";
         if (finalMeta.hasLore()) {
             if (finalMeta.getLore() != null) {
@@ -124,6 +132,7 @@ public class CommandToolStats implements TabExecutor {
         if (toolStats.checkConfig(original, "created-by")) {
             if (container.has(toolStats.genericOwner, new UUIDDataType())) {
                 container.set(toolStats.genericOwner, new UUIDDataType(), player.getUniqueId());
+                // show how the item was created based on the previous lore
                 switch (type) {
                     case "DEFAULT": {
                         lore.add(toolStats.getLoreFromConfig("created.created-by", true).replace("{player}", player.getName()));
@@ -148,8 +157,9 @@ public class CommandToolStats implements TabExecutor {
             if (container.has(toolStats.timeCreated, PersistentDataType.LONG)) {
                 Long time = container.get(toolStats.timeCreated, PersistentDataType.LONG);
                 if (time == null) {
-                    return null;
+                    return;
                 }
+                // show how when the item was created based on the previous lore
                 switch (type) {
                     case "DEFAULT": {
                         lore.add(toolStats.getLoreFromConfig("created.created-by", true).replace("{date}", format.format(new Date(time))));
@@ -174,7 +184,7 @@ public class CommandToolStats implements TabExecutor {
             if (container.has(toolStats.swordPlayerKills, PersistentDataType.INTEGER)) {
                 Integer kills = container.get(toolStats.swordPlayerKills, PersistentDataType.INTEGER);
                 if (kills == null) {
-                    return null;
+                    return;
                 }
                 lore.add(toolStats.getLoreFromConfig("kills.player", true).replace("{kills}", Integer.toString(kills)));
             }
@@ -183,7 +193,7 @@ public class CommandToolStats implements TabExecutor {
             if (container.has(toolStats.swordMobKills, PersistentDataType.INTEGER)) {
                 Integer kills = container.get(toolStats.swordMobKills, PersistentDataType.INTEGER);
                 if (kills == null) {
-                    return null;
+                    return;
                 }
                 lore.add(toolStats.getLoreFromConfig("kills.mob", true).replace("{kills}", Integer.toString(kills)));
             }
@@ -192,7 +202,7 @@ public class CommandToolStats implements TabExecutor {
             if (container.has(toolStats.genericMined, PersistentDataType.INTEGER)) {
                 Integer blocksMined = container.get(toolStats.genericMined, PersistentDataType.INTEGER);
                 if (blocksMined == null) {
-                    return null;
+                    return;
                 }
                 lore.add(toolStats.getLoreFromConfig("blocks-mined", true).replace("{blocks}", Integer.toString(blocksMined)));
             }
@@ -201,7 +211,7 @@ public class CommandToolStats implements TabExecutor {
             if (container.has(toolStats.fishingRodCaught, PersistentDataType.INTEGER)) {
                 Integer fish = container.get(toolStats.fishingRodCaught, PersistentDataType.INTEGER);
                 if (fish == null) {
-                    return null;
+                    return;
                 }
                 lore.add(toolStats.getLoreFromConfig("fished.fish-caught", true).replace("{fish}", Integer.toString(fish)));
             }
@@ -210,7 +220,7 @@ public class CommandToolStats implements TabExecutor {
             if (container.has(toolStats.shearsSheared, PersistentDataType.INTEGER)) {
                 Integer sheep = container.get(toolStats.shearsSheared, PersistentDataType.INTEGER);
                 if (sheep == null) {
-                    return null;
+                    return;
                 }
                 lore.add(toolStats.getLoreFromConfig("sheep-sheared", true).replace("{sheep}", Integer.toString(sheep)));
             }
@@ -219,14 +229,13 @@ public class CommandToolStats implements TabExecutor {
             if (container.has(toolStats.armorDamage, PersistentDataType.INTEGER)) {
                 Integer damage = container.get(toolStats.armorDamage, PersistentDataType.INTEGER);
                 if (damage == null) {
-                    return null;
+                    return;
                 }
                 lore.add(toolStats.getLoreFromConfig("damage-taken", true).replace("{damage}", Integer.toString(damage)));
             }
         }
         finalMeta.setLore(lore);
         finalItem.setItemMeta(finalMeta);
-        return finalItem;
     }
 
     @Nullable

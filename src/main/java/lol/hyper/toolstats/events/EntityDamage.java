@@ -64,10 +64,12 @@ public class EntityDamage implements Listener {
                 if (player.getGameMode() != GameMode.SURVIVAL) {
                     return;
                 }
+                // a player killed something with their fist
                 ItemStack heldItem = player.getInventory().getItem(player.getInventory().getHeldItemSlot());
                 if (heldItem == null || heldItem.getType() == Material.AIR) {
                     return;
                 }
+                // check items we want
                 String itemName = heldItem.getType().toString().toLowerCase();
                 if (Arrays.stream(validTools).noneMatch(itemName::contains)) {
                     return;
@@ -81,9 +83,11 @@ public class EntityDamage implements Listener {
                 player.getInventory().setItem(player.getInventory().getHeldItemSlot(), updateMobKills(heldItem));
                 trackedMobs.add(livingEntity.getUniqueId());
             }
+            // trident is being thrown at something
             if (event.getDamager() instanceof Trident) {
                 Trident trident = (Trident) event.getDamager();
                 ItemStack clone;
+                // trident is killing player
                 if (livingEntity instanceof Player) {
                     clone = updatePlayerKills(trident.getItem());
                 } else {
@@ -94,14 +98,18 @@ public class EntityDamage implements Listener {
                 }
                 trident.setItem(clone);
             }
+            // arrow is being shot
             if (event.getDamager() instanceof Arrow) {
                 Arrow arrow = (Arrow) event.getDamager();
+                // if the shooter is a player
                 if (arrow.getShooter() instanceof Player) {
                     Player player = (Player) arrow.getShooter();
                     ItemStack heldItem = player.getInventory().getItem(player.getInventory().getHeldItemSlot());
                     if (heldItem == null) {
                         return;
                     }
+                    // if the player is holding the bow/crossbow
+                    // if they switch then oh well
                     if (heldItem.getType() == Material.BOW || heldItem.getType() == Material.CROSSBOW) {
                         if (livingEntity instanceof Player) {
                             player.getInventory().setItem(player.getInventory().getHeldItemSlot(), updatePlayerKills(heldItem));
@@ -130,6 +138,7 @@ public class EntityDamage implements Listener {
             return;
         }
         LivingEntity livingEntity = (LivingEntity) event.getEntity();
+        // player is taken damage but not being killed
         if (livingEntity instanceof Player) {
             Player player = (Player) livingEntity;
             PlayerInventory inventory = player.getInventory();
@@ -147,6 +156,7 @@ public class EntityDamage implements Listener {
             return;
         }
         LivingEntity livingEntity = (LivingEntity) event.getEntity();
+        // player is taken damage but not being killed
         if (livingEntity instanceof Player) {
             Player player = (Player) livingEntity;
             PlayerInventory inventory = player.getInventory();
@@ -158,6 +168,11 @@ public class EntityDamage implements Listener {
         }
     }
 
+    /**
+     * Updates a weapon's player kills.
+     * @param itemStack The item to update.
+     * @return A copy of the item.
+     */
     private ItemStack updatePlayerKills(ItemStack itemStack) {
         ItemStack finalItem = itemStack.clone();
         ItemMeta meta = finalItem.getItemMeta();
@@ -207,6 +222,7 @@ public class EntityDamage implements Listener {
             lore = new ArrayList<>();
             lore.add(playerKillsLoreRaw.replace("{kills}", Integer.toString(playerKills)));
         }
+        // do we add the lore based on the config?
         if (toolStats.checkConfig(itemStack, "player-kills")) {
             meta.setLore(lore);
         }
@@ -214,6 +230,11 @@ public class EntityDamage implements Listener {
         return finalItem;
     }
 
+    /**
+     * Updates a weapon's mob kills.
+     * @param itemStack The item to update.
+     * @return A copy of the item.
+     */
     private ItemStack updateMobKills(ItemStack itemStack) {
         ItemStack finalItem = itemStack.clone();
         ItemMeta meta = finalItem.getItemMeta();
@@ -263,6 +284,7 @@ public class EntityDamage implements Listener {
             lore = new ArrayList<>();
             lore.add(mobKillsLoreRaw.replace("{kills}", Integer.toString(mobKills)));
         }
+        // do we add the lore based on the config?
         if (toolStats.checkConfig(itemStack, "mob-kills")) {
             meta.setLore(lore);
         }
@@ -270,6 +292,11 @@ public class EntityDamage implements Listener {
         return finalItem;
     }
 
+    /**
+     * Updates a player's armor damage stats.
+     * @param itemStack The armor piece.
+     * @param damage How much damage is being added.
+     */
     private void updateArmorDamage(ItemStack itemStack, double damage) {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) {

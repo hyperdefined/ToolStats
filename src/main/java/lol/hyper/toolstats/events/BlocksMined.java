@@ -48,17 +48,21 @@ public class BlocksMined implements Listener {
             return;
         }
         Player player = event.getPlayer();
+        // ignore creative mode
         if (player.getGameMode() != GameMode.SURVIVAL) {
             return;
         }
+        // if the player mines something with their fist
         ItemStack heldItem = player.getInventory().getItem(player.getInventory().getHeldItemSlot());
         if (heldItem == null || heldItem.getType() == Material.AIR) {
             return;
         }
+        // only check certain items
         String itemName = heldItem.getType().toString().toLowerCase();
         if (Arrays.stream(validTools).noneMatch(itemName::contains)) {
             return;
         }
+        // if it's an item we want, update the stats
         updateBlocksMined(heldItem);
     }
 
@@ -67,6 +71,8 @@ public class BlocksMined implements Listener {
         if (meta == null) {
             return;
         }
+        // read the current stats from the item
+        // if they don't exist, then start from 0
         Integer blocksMined = 0;
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(toolStats.genericMined, PersistentDataType.INTEGER)) {
@@ -82,6 +88,11 @@ public class BlocksMined implements Listener {
         String configLore = toolStats.getLoreFromConfig("blocks-mined", false);
         String configLoreRaw = toolStats.getLoreFromConfig("blocks-mined", true);
 
+        if (configLore == null || configLoreRaw == null) {
+            toolStats.logger.warning("There is no lore message for messages.blocks-mined!");
+            return;
+        }
+
         List<String> lore;
         if (meta.hasLore()) {
             lore = meta.getLore();
@@ -89,10 +100,6 @@ public class BlocksMined implements Listener {
             boolean hasLore = false;
             // we do a for loop like this, we can keep track of index
             // this doesn't mess the lore up of existing items
-            if (configLore == null || configLoreRaw == null) {
-                toolStats.logger.warning("There is no lore message for messages.blocks-mined!");
-                return;
-            }
             for (int x = 0; x < lore.size(); x++) {
                 if (lore.get(x).contains(configLore)) {
                     hasLore = true;
@@ -109,6 +116,7 @@ public class BlocksMined implements Listener {
             lore = new ArrayList<>();
             lore.add(configLoreRaw.replace("{blocks}", Integer.toString(blocksMined)));
         }
+        // do we add the lore based on the config?
         if (toolStats.checkConfig(itemStack, "blocks-mined")) {
             meta.setLore(lore);
         }

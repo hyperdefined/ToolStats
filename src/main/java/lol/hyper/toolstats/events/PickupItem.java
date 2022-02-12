@@ -68,6 +68,11 @@ public class PickupItem implements Listener {
         }
     }
 
+    /**
+     * Adds "looted by" tags for elytras.
+     * @param itemStack The elytra to add lore to.
+     * @param owner The player who found it.
+     */
     private void addLore(ItemStack itemStack, Player owner) {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) {

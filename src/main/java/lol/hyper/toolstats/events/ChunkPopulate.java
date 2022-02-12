@@ -53,14 +53,17 @@ public class ChunkPopulate implements Listener {
         Bukkit.getScheduler().runTaskLater(toolStats, () -> {
             Chunk chunk = event.getChunk();
             for (Entity entity : chunk.getEntities()) {
+                // if there is a new item frame
                 if (entity instanceof ItemFrame) {
                     ItemFrame itemFrame = (ItemFrame) entity;
+                    // if the item frame has an elytra
                     if (itemFrame.getItem().getType() == Material.ELYTRA) {
                         ItemStack elytraCopy = itemFrame.getItem();
                         ItemMeta meta = elytraCopy.getItemMeta();
                         if (meta == null) {
                             return;
                         }
+                        // add the new tag so we know it's new
                         PersistentDataContainer container = meta.getPersistentDataContainer();
                         container.set(toolStats.newElytra, PersistentDataType.INTEGER, 1);
                         elytraCopy.setItemMeta(meta);

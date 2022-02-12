@@ -56,8 +56,10 @@ public class CraftItem implements Listener {
             return;
         }
         String name = itemStack.getType().toString().toLowerCase(Locale.ROOT);
+        // only check for items we want
         for (String x : validItems) {
             if (name.contains(x)) {
+                // if the player shift clicks, send them this warning
                 if (event.isShiftClick()) {
                     String configMessage = toolStats.config.getString("messages.shift-click-warning.crafting");
                     if (configMessage != null) {
@@ -66,24 +68,36 @@ public class CraftItem implements Listener {
                         }
                     }
                 }
+                // test the item before setting it
                 if (addLore(itemStack, player) == null) {
                     return;
                 }
+                // set the result
                 event.setCurrentItem(addLore(itemStack, player));
             }
         }
     }
 
+    /**
+     * Adds crafted tags to item.
+     * @param itemStack The item add item to.
+     * @param owner The player crafting.
+     * @return A copy of the item with the tags + lore.
+     */
     private ItemStack addLore(ItemStack itemStack, Player owner) {
+        // clone the item
         ItemStack newItem = itemStack.clone();
         ItemMeta meta = newItem.getItemMeta();
         if (meta == null) {
             return null;
         }
+        // get the current time
         long timeCreated = System.currentTimeMillis();
         Date finalDate = new Date(timeCreated);
         PersistentDataContainer container = meta.getPersistentDataContainer();
 
+        // if the item already has the tag
+        // this is to prevent duplicate tags
         if (container.has(toolStats.timeCreated, PersistentDataType.LONG) || container.has(toolStats.genericOwner, PersistentDataType.LONG)) {
             return null;
         }
@@ -104,12 +118,14 @@ public class CraftItem implements Listener {
         }
 
         List<String> lore;
+        // get the current lore the item
         if (meta.hasLore()) {
             lore = meta.getLore();
             assert lore != null;
         } else {
             lore = new ArrayList<>();
         }
+        // do we add the lore based on the config?
         if (toolStats.checkConfig(itemStack, "created-date")) {
             lore.add(createdOnRaw.replace("{date}", format.format(finalDate)));
         }

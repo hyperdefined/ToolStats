@@ -57,11 +57,15 @@ public class VillagerTrade implements Listener {
             return;
         }
         Inventory inventory = event.getClickedInventory();
+        // only check villager inventories
         if (inventory instanceof MerchantInventory) {
+            // only check the result slot (the item you receive)
             if (event.getSlotType() == InventoryType.SlotType.RESULT) {
                 ItemStack item = event.getCurrentItem();
+                // only check items we want
                 for (String x : validItems) {
                     if (item.getType().toString().toLowerCase(Locale.ROOT).contains(x)) {
+                        // if the player shift clicks show the warning
                         if (event.isShiftClick()) {
                             String configMessage = toolStats.config.getString("messages.shift-click-warning.trading");
                             if (configMessage != null) {
@@ -72,6 +76,8 @@ public class VillagerTrade implements Listener {
                         if (newItem == null) {
                             return;
                         }
+                        // this gets delayed since villager inventories suck for no reason
+                        // if you don't delay this it doesn't work idk
                         Bukkit.getScheduler().runTaskLater(toolStats, ()-> event.setCurrentItem(newItem), 5);
                     }
                 }
@@ -79,6 +85,12 @@ public class VillagerTrade implements Listener {
         }
     }
 
+    /**
+     * Adds "traded by" tags to item.
+     * @param itemStack The item to add lore.
+     * @param owner The player who traded.
+     * @return The item with lore.
+     */
     private ItemStack addLore(ItemStack itemStack, Player owner) {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) {

@@ -57,10 +57,13 @@ public class GenerateLoot implements Listener {
             return;
         }
         Inventory chest = inventoryHolder.getInventory();
+        // run task later since if it runs on the same tick it breaks idk
         Bukkit.getScheduler().runTaskLater(toolStats, () -> {
             Player player = (Player) chest.getViewers().get(0);
+            // do a classic for loot so we keep track of chest index of item
             for (int i = 0; i < chest.getContents().length; i++) {
                 ItemStack itemStack = chest.getItem(i);
+                // ignore air
                 if (itemStack == null || itemStack.getType() == Material.AIR) {
                     continue;
                 }
@@ -75,6 +78,12 @@ public class GenerateLoot implements Listener {
         },1);
     }
 
+    /**
+     * Adds lore to newly generated items.
+     * @param itemStack The item to add lore to.
+     * @param owner The player that found the item.
+     * @return The item with the lore.
+     */
     private ItemStack addLore(ItemStack itemStack, Player owner) {
         ItemStack newItem = itemStack.clone();
         ItemMeta meta = itemStack.getItemMeta();

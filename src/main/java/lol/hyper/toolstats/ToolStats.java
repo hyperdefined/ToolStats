@@ -152,6 +152,12 @@ public final class ToolStats extends JavaPlugin {
         }
     }
 
+    /**
+     * Checks the config to see if we want to show lore on certain items.
+     * @param itemStack The item to check.
+     * @param configName The config we are checking under.
+     * @return If we want to allow lore or not.
+     */
     public boolean checkConfig(ItemStack itemStack, String configName) {
         String itemName = itemStack.getType().toString().toLowerCase();
         String itemType = null;
@@ -202,6 +208,12 @@ public final class ToolStats extends JavaPlugin {
         return false;
     }
 
+    /**
+     * Gets the lore message from the config.
+     * @param configName The config name, "messages." is already in front.
+     * @param raw If you want the raw message with the formatting codes and placeholders.
+     * @return The lore message.
+     */
     public String getLoreFromConfig(String configName, boolean raw) {
         String lore = config.getString("messages." + configName);
         if (lore == null) {

@@ -51,17 +51,23 @@ public class SheepShear implements Listener {
         if (!(entity instanceof Sheep)) {
             return;
         }
+        // check if the player is right-clicking with shears only
         ItemStack heldItem = player.getInventory().getItem(player.getInventory().getHeldItemSlot());
         if (heldItem == null || heldItem.getType() == Material.AIR || heldItem.getType() != Material.SHEARS) {
             return;
         }
 
         Sheep sheep = (Sheep) entity;
+        // make sure the sheep is not sheared
         if (!sheep.isSheared()) {
             addLore(heldItem);
         }
     }
 
+    /**
+     * Adds tags to shears.
+     * @param itemStack The shears.
+     */
     private void addLore(ItemStack itemStack) {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) {

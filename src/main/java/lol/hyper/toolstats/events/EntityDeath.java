@@ -43,6 +43,7 @@ public class EntityDeath implements Listener {
             return;
         }
         UUID livingEntityUUID = event.getEntity().getUniqueId();
+        // if it's a mob we are tracking that matters
         if (toolStats.mobKill.trackedMobs.contains(livingEntityUUID)) {
             for (ItemStack current : event.getDrops()) {
                 String name = current.getType().toString().toLowerCase(Locale.ROOT);
@@ -56,6 +57,11 @@ public class EntityDeath implements Listener {
         }
     }
 
+    /**
+     * Adds "drop by" tag to item.
+     * @param itemStack The item to add lore to.
+     * @param mob The mob or player name.
+     */
     private void addLore(ItemStack itemStack, String mob) {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) {
