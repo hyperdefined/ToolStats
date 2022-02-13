@@ -162,7 +162,7 @@ public class CommandToolStats implements TabExecutor {
                 // show how when the item was created based on the previous lore
                 switch (type) {
                     case "DEFAULT": {
-                        lore.add(toolStats.getLoreFromConfig("created.created-by", true).replace("{date}", format.format(new Date(time))));
+                        lore.add(toolStats.getLoreFromConfig("created.created-on", true).replace("{date}", format.format(new Date(time))));
                         break;
                     }
                     case "CAUGHT": {
