@@ -61,7 +61,6 @@ public class PickupItem implements Listener {
                 PersistentDataContainer container = meta.getPersistentDataContainer();
                 // the elytra has the new key, set the lore to it
                 if (container.has(toolStats.newElytra, PersistentDataType.INTEGER)) {
-                    container.remove(toolStats.newElytra);
                     addLore(itemStack, (Player) event.getEntity());
                 }
             }
@@ -83,6 +82,7 @@ public class PickupItem implements Listener {
         PersistentDataContainer container = meta.getPersistentDataContainer();
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
         container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
+        container.remove(toolStats.newElytra);
 
         String foundByLoreRaw = toolStats.getLoreFromConfig("looted.found-by", true);
         String foundOnLoreRaw = toolStats.getLoreFromConfig("looted.found-on", true);
