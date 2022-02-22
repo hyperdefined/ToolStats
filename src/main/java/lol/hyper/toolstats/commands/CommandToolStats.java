@@ -129,6 +129,25 @@ public class CommandToolStats implements TabExecutor {
                 }
             }
         }
+
+        // hard code elytras
+        if (finalItem.getType() == Material.ELYTRA) {
+            if (toolStats.config.getBoolean("enabled.elytra-tag")) {
+                lore.add(toolStats.getLoreFromConfig("looted.found-by", true).replace("{player}", player.getName()));
+                if (container.has(toolStats.timeCreated, PersistentDataType.LONG)) {
+                    Long time = container.get(toolStats.timeCreated, PersistentDataType.LONG);
+                    if (time != null) {
+                        lore.add(toolStats.getLoreFromConfig("looted.found-on", true).replace("{date}", format.format(new Date(time))));
+                    }
+                }
+                finalMeta.setLore(lore);
+                finalItem.setItemMeta(finalMeta);
+                int slot = player.getInventory().getHeldItemSlot();
+                player.getInventory().setItem(slot, finalItem);
+                return;
+            }
+        }
+
         if (toolStats.checkConfig(original, "created-by")) {
             if (container.has(toolStats.genericOwner, new UUIDDataType())) {
                 container.set(toolStats.genericOwner, new UUIDDataType(), player.getUniqueId());
@@ -143,7 +162,7 @@ public class CommandToolStats implements TabExecutor {
                         break;
                     }
                     case "LOOTED": {
-                        lore.add(toolStats.getLoreFromConfig("looted.looted-by", true).replace("{player}", player.getName()));
+                        lore.add(toolStats.getLoreFromConfig("looted.found-by", true).replace("{player}", player.getName()));
                         break;
                     }
                     case "TRADED": {
@@ -156,26 +175,25 @@ public class CommandToolStats implements TabExecutor {
         if (toolStats.checkConfig(original, "created-date")) {
             if (container.has(toolStats.timeCreated, PersistentDataType.LONG)) {
                 Long time = container.get(toolStats.timeCreated, PersistentDataType.LONG);
-                if (time == null) {
-                    return;
-                }
-                // show how when the item was created based on the previous lore
-                switch (type) {
-                    case "DEFAULT": {
-                        lore.add(toolStats.getLoreFromConfig("created.created-on", true).replace("{date}", format.format(new Date(time))));
-                        break;
-                    }
-                    case "CAUGHT": {
-                        lore.add(toolStats.getLoreFromConfig("fished.caught-on", true).replace("{date}", format.format(new Date(time))));
-                        break;
-                    }
-                    case "LOOTED": {
-                        lore.add(toolStats.getLoreFromConfig("looted.looted-on", true).replace("{date}", format.format(new Date(time))));
-                        break;
-                    }
-                    case "TRADED": {
-                        lore.add(toolStats.getLoreFromConfig("traded.traded-on", true).replace("{date}", format.format(new Date(time))));
-                        break;
+                if (time != null) {
+                    // show how when the item was created based on the previous lore
+                    switch (type) {
+                        case "DEFAULT": {
+                            lore.add(toolStats.getLoreFromConfig("created.created-on", true).replace("{date}", format.format(new Date(time))));
+                            break;
+                        }
+                        case "CAUGHT": {
+                            lore.add(toolStats.getLoreFromConfig("fished.caught-on", true).replace("{date}", format.format(new Date(time))));
+                            break;
+                        }
+                        case "LOOTED": {
+                            lore.add(toolStats.getLoreFromConfig("looted.foundon", true).replace("{date}", format.format(new Date(time))));
+                            break;
+                        }
+                        case "TRADED": {
+                            lore.add(toolStats.getLoreFromConfig("traded.traded-on", true).replace("{date}", format.format(new Date(time))));
+                            break;
+                        }
                     }
                 }
             }
@@ -183,59 +201,55 @@ public class CommandToolStats implements TabExecutor {
         if (toolStats.checkConfig(original, "player-kills")) {
             if (container.has(toolStats.swordPlayerKills, PersistentDataType.INTEGER)) {
                 Integer kills = container.get(toolStats.swordPlayerKills, PersistentDataType.INTEGER);
-                if (kills == null) {
-                    return;
+                if (kills != null) {
+                    lore.add(toolStats.getLoreFromConfig("kills.player", true).replace("{kills}", Integer.toString(kills)));
                 }
-                lore.add(toolStats.getLoreFromConfig("kills.player", true).replace("{kills}", Integer.toString(kills)));
             }
         }
         if (toolStats.checkConfig(original, "mob-kills")) {
             if (container.has(toolStats.swordMobKills, PersistentDataType.INTEGER)) {
                 Integer kills = container.get(toolStats.swordMobKills, PersistentDataType.INTEGER);
-                if (kills == null) {
-                    return;
+                if (kills != null) {
+                    lore.add(toolStats.getLoreFromConfig("kills.mob", true).replace("{kills}", Integer.toString(kills)));
                 }
-                lore.add(toolStats.getLoreFromConfig("kills.mob", true).replace("{kills}", Integer.toString(kills)));
             }
         }
         if (toolStats.checkConfig(original, "blocks-mined")) {
             if (container.has(toolStats.genericMined, PersistentDataType.INTEGER)) {
                 Integer blocksMined = container.get(toolStats.genericMined, PersistentDataType.INTEGER);
-                if (blocksMined == null) {
-                    return;
+                if (blocksMined != null) {
+                    lore.add(toolStats.getLoreFromConfig("blocks-mined", true).replace("{blocks}", Integer.toString(blocksMined)));
                 }
-                lore.add(toolStats.getLoreFromConfig("blocks-mined", true).replace("{blocks}", Integer.toString(blocksMined)));
             }
         }
         if (toolStats.config.getBoolean("enabled.fish-caught")) {
             if (container.has(toolStats.fishingRodCaught, PersistentDataType.INTEGER)) {
                 Integer fish = container.get(toolStats.fishingRodCaught, PersistentDataType.INTEGER);
-                if (fish == null) {
-                    return;
+                if (fish != null) {
+                    lore.add(toolStats.getLoreFromConfig("fished.fish-caught", true).replace("{fish}", Integer.toString(fish)));
                 }
-                lore.add(toolStats.getLoreFromConfig("fished.fish-caught", true).replace("{fish}", Integer.toString(fish)));
             }
         }
         if (toolStats.config.getBoolean("enabled.sheep-sheared")) {
             if (container.has(toolStats.shearsSheared, PersistentDataType.INTEGER)) {
                 Integer sheep = container.get(toolStats.shearsSheared, PersistentDataType.INTEGER);
-                if (sheep == null) {
-                    return;
+                if (sheep != null) {
+                    lore.add(toolStats.getLoreFromConfig("sheep-sheared", true).replace("{sheep}", Integer.toString(sheep)));
                 }
-                lore.add(toolStats.getLoreFromConfig("sheep-sheared", true).replace("{sheep}", Integer.toString(sheep)));
             }
         }
         if (toolStats.config.getBoolean("enabled.armor-damage")) {
             if (container.has(toolStats.armorDamage, PersistentDataType.INTEGER)) {
                 Integer damage = container.get(toolStats.armorDamage, PersistentDataType.INTEGER);
-                if (damage == null) {
-                    return;
+                if (damage != null) {
+                    lore.add(toolStats.getLoreFromConfig("damage-taken", true).replace("{damage}", Integer.toString(damage)));
                 }
-                lore.add(toolStats.getLoreFromConfig("damage-taken", true).replace("{damage}", Integer.toString(damage)));
             }
         }
         finalMeta.setLore(lore);
         finalItem.setItemMeta(finalMeta);
+        int slot = player.getInventory().getHeldItemSlot();
+        player.getInventory().setItem(slot, finalItem);
     }
 
     @Nullable
