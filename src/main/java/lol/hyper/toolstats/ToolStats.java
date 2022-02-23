@@ -57,8 +57,6 @@ public final class ToolStats extends JavaPlugin {
     // used for tracking new elytras
     public final NamespacedKey newElytra = new NamespacedKey(this, "new");
 
-    public final Set<NamespacedKey> keys = new HashSet<>();
-
     public BlocksMined blocksMined;
     public ChunkPopulate chunkPopulate;
     public CraftItem craftItem;
@@ -111,15 +109,6 @@ public final class ToolStats extends JavaPlugin {
         new Metrics(this, 14110);
 
         Bukkit.getScheduler().runTaskAsynchronously(this, this::checkForUpdates);
-
-        keys.add(genericOwner);
-        keys.add(timeCreated);
-        keys.add(swordPlayerKills);
-        keys.add(swordMobKills);
-        keys.add(genericMined);
-        keys.add(fishingRodCaught);
-        keys.add(shearsSheared);
-        keys.add(armorDamage);
     }
 
     public void loadConfig() {
