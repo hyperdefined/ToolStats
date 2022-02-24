@@ -126,7 +126,9 @@ public class EntityDamage implements Listener {
             PlayerInventory inventory = player.getInventory();
             for (ItemStack armor : inventory.getArmorContents()) {
                 if (armor != null) {
-                    updateArmorDamage(armor, event.getDamage());
+                    if (isArmor(armor.getType().toString().toLowerCase(Locale.ROOT))) {
+                        updateArmorDamage(armor, event.getDamage());
+                    }
                 }
             }
         }
@@ -144,7 +146,9 @@ public class EntityDamage implements Listener {
             PlayerInventory inventory = player.getInventory();
             for (ItemStack armor : inventory.getArmorContents()) {
                 if (armor != null) {
-                    updateArmorDamage(armor, event.getDamage());
+                    if (isArmor(armor.getType().toString().toLowerCase(Locale.ROOT))) {
+                        updateArmorDamage(armor, event.getDamage());
+                    }
                 }
             }
         }
@@ -162,7 +166,9 @@ public class EntityDamage implements Listener {
             PlayerInventory inventory = player.getInventory();
             for (ItemStack armor : inventory.getArmorContents()) {
                 if (armor != null) {
-                    updateArmorDamage(armor, event.getFinalDamage());
+                    if (isArmor(armor.getType().toString().toLowerCase(Locale.ROOT))) {
+                        updateArmorDamage(armor, event.getDamage());
+                    }
                 }
             }
         }
@@ -350,5 +356,14 @@ public class EntityDamage implements Listener {
             meta.setLore(lore);
         }
         itemStack.setItemMeta(meta);
+    }
+
+    /**
+     * Check if item is an armor piece.
+     * @param itemType The item type, not name.
+     * @return If the item is an armor piece.
+     */
+    private boolean isArmor(String itemType) {
+        return itemType.endsWith("_helmet") || itemType.endsWith("_chestplate") || itemType.endsWith("_leggings") || itemType.endsWith("_boots");
     }
 }
