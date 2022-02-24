@@ -51,6 +51,7 @@ public class CommandToolStats implements TabExecutor {
         }
         if (args.length == 0) {
             sender.sendMessage(ChatColor.GREEN + "ToolStats version " + toolStats.getDescription().getVersion() + ". Created by hyperdefined.");
+            return true;
         }
         switch (args[0]) {
             case "reload": {
