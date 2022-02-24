@@ -127,7 +127,7 @@ public class EntityDamage implements Listener {
             for (ItemStack armor : inventory.getArmorContents()) {
                 if (armor != null) {
                     if (isArmor(armor.getType().toString().toLowerCase(Locale.ROOT))) {
-                        updateArmorDamage(armor, event.getDamage());
+                        updateArmorDamage(armor, event.getFinalDamage());
                     }
                 }
             }
@@ -147,7 +147,7 @@ public class EntityDamage implements Listener {
             for (ItemStack armor : inventory.getArmorContents()) {
                 if (armor != null) {
                     if (isArmor(armor.getType().toString().toLowerCase(Locale.ROOT))) {
-                        updateArmorDamage(armor, event.getDamage());
+                        updateArmorDamage(armor, event.getFinalDamage());
                     }
                 }
             }
@@ -167,7 +167,7 @@ public class EntityDamage implements Listener {
             for (ItemStack armor : inventory.getArmorContents()) {
                 if (armor != null) {
                     if (isArmor(armor.getType().toString().toLowerCase(Locale.ROOT))) {
-                        updateArmorDamage(armor, event.getDamage());
+                        updateArmorDamage(armor, event.getFinalDamage());
                     }
                 }
             }
