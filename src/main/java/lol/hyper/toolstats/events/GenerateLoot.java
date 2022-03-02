@@ -20,7 +20,9 @@ package lol.hyper.toolstats.events;
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.UUIDDataType;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -56,13 +58,31 @@ public class GenerateLoot implements Listener {
         if (inventoryHolder == null) {
             return;
         }
-        Inventory chest = inventoryHolder.getInventory();
+        Location lootLocation = event.getLootContext().getLocation();
+        Inventory chestInv = inventoryHolder.getInventory();
+        Block openedChest = null;
+        // look at the current list of opened chest and get the distance
+        // between the lootcontext location and chest location
+        // if the distance is less than 1, it's the same chest
+        for (Block chest : toolStats.playerInteract.openedChests.keySet()) {
+            Location chestLocation = chest.getLocation();
+            double distance = lootLocation.distance(chestLocation);
+            if (distance <= 1.0) {
+                openedChest = chest;
+            }
+        }
+        // ignore if the chest is not in the same location
+        if (openedChest == null) {
+            return;
+        }
+
         // run task later since if it runs on the same tick it breaks idk
+        Block finalOpenedChest = openedChest;
         Bukkit.getScheduler().runTaskLater(toolStats, () -> {
-            Player player = (Player) chest.getViewers().get(0);
-            // do a classic for loot so we keep track of chest index of item
-            for (int i = 0; i < chest.getContents().length; i++) {
-                ItemStack itemStack = chest.getItem(i);
+            Player player = toolStats.playerInteract.openedChests.get(finalOpenedChest);
+            // do a classic for loop, so we keep track of chest index of item
+            for (int i = 0; i < chestInv.getContents().length; i++) {
+                ItemStack itemStack = chestInv.getItem(i);
                 // ignore air
                 if (itemStack == null || itemStack.getType() == Material.AIR) {
                     continue;
@@ -70,7 +90,7 @@ public class GenerateLoot implements Listener {
                 String name = itemStack.getType().toString().toLowerCase(Locale.ROOT);
                 for (String x : validItems) {
                     if (name.contains(x)) {
-                        chest.setItem(i, addLore(itemStack, player));
+                        chestInv.setItem(i, addLore(itemStack, player));
                     }
                 }
             }

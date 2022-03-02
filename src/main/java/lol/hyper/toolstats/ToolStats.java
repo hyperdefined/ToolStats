@@ -32,8 +32,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.Logger;
 
 public final class ToolStats extends JavaPlugin {
@@ -65,6 +63,7 @@ public final class ToolStats extends JavaPlugin {
     public PickupItem pickupItem;
     public EntityDamage mobKill;
     public PlayerFish playerFish;
+    public PlayerInteract playerInteract;
     public SheepShear sheepShear;
     public VillagerTrade villagerTrade;
     public CommandToolStats commandToolStats;
@@ -89,6 +88,7 @@ public final class ToolStats extends JavaPlugin {
         pickupItem = new PickupItem(this);
         mobKill = new EntityDamage(this);
         playerFish = new PlayerFish(this);
+        playerInteract = new PlayerInteract(this);
         sheepShear = new SheepShear(this);
         villagerTrade = new VillagerTrade(this);
         commandToolStats = new CommandToolStats(this);
@@ -101,6 +101,7 @@ public final class ToolStats extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(pickupItem, this);
         Bukkit.getServer().getPluginManager().registerEvents(mobKill, this);
         Bukkit.getServer().getPluginManager().registerEvents(playerFish, this);
+        Bukkit.getServer().getPluginManager().registerEvents(playerInteract, this);
         Bukkit.getServer().getPluginManager().registerEvents(sheepShear, this);
         Bukkit.getServer().getPluginManager().registerEvents(villagerTrade, this);
 
