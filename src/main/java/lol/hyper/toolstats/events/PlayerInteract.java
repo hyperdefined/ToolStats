@@ -33,7 +33,7 @@ public class PlayerInteract implements Listener {
 
     private final ToolStats toolStats;
 
-    public HashMap<Block, Player> openedChests = new HashMap<>();
+    public final HashMap<Block, Player> openedChests = new HashMap<>();
 
     public PlayerInteract(ToolStats toolStats) {
         this.toolStats = toolStats;
