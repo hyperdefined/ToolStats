@@ -36,7 +36,6 @@ import java.util.List;
 public class BlocksMined implements Listener {
 
     private final ToolStats toolStats;
-    private final String[] validTools = {"pickaxe", "axe", "hoe", "shovel", "shear"};
 
     public BlocksMined(ToolStats toolStats) {
         this.toolStats = toolStats;
@@ -59,7 +58,7 @@ public class BlocksMined implements Listener {
         }
         // only check certain items
         String itemName = heldItem.getType().toString().toLowerCase();
-        if (Arrays.stream(validTools).noneMatch(itemName::contains)) {
+        if (Arrays.stream(toolStats.mineItems).noneMatch(itemName::contains)) {
             return;
         }
         // if it's an item we want, update the stats

@@ -30,16 +30,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class CraftItem implements Listener {
 
     private final ToolStats toolStats;
-    public final String[] validItems = {
-            "pickaxe", "sword", "shovel", "axe", "hoe", "bow", "helmet", "chestplate", "leggings", "boots", "fishing"
-    };
-    private final SimpleDateFormat format = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
 
     public CraftItem(ToolStats toolStats) {
         this.toolStats = toolStats;
@@ -57,7 +52,7 @@ public class CraftItem implements Listener {
         }
         String name = itemStack.getType().toString().toLowerCase(Locale.ROOT);
         // only check for items we want
-        for (String x : validItems) {
+        for (String x : toolStats.allValidItems) {
             if (name.contains(x)) {
                 // if the player shift clicks, send them this warning
                 if (event.isShiftClick()) {
@@ -80,8 +75,9 @@ public class CraftItem implements Listener {
 
     /**
      * Adds crafted tags to item.
+     *
      * @param itemStack The item add item to.
-     * @param owner The player crafting.
+     * @param owner     The player crafting.
      * @return A copy of the item with the tags + lore.
      */
     private ItemStack addLore(ItemStack itemStack, Player owner) {
@@ -127,7 +123,7 @@ public class CraftItem implements Listener {
         }
         // do we add the lore based on the config?
         if (toolStats.checkConfig(itemStack, "created-date")) {
-            lore.add(createdOnRaw.replace("{date}", format.format(finalDate)));
+            lore.add(createdOnRaw.replace("{date}", toolStats.dateFormat.format(finalDate)));
         }
         if (toolStats.checkConfig(itemStack, "created-by")) {
             lore.add(createdByRaw.replace("{player}", owner.getName()));

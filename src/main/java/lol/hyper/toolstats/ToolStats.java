@@ -32,6 +32,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 public final class ToolStats extends JavaPlugin {
@@ -54,6 +56,13 @@ public final class ToolStats extends JavaPlugin {
     public final NamespacedKey armorDamage = new NamespacedKey(this, "damage-taken");
     // used for tracking new elytras
     public final NamespacedKey newElytra = new NamespacedKey(this, "new");
+
+    public final String[] allValidItems = {
+            "pickaxe", "sword", "shovel", "axe", "hoe", "bow", "helmet", "chestplate", "leggings", "boots", "fishing"
+    };
+    public final String[] meleeItems = {"sword", "trident", "axe"};
+    public final String[] mineItems = {"pickaxe", "axe", "hoe", "shovel", "shear"};
+    public final SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
 
     public BlocksMined blocksMined;
     public ChunkPopulate chunkPopulate;
@@ -144,7 +153,8 @@ public final class ToolStats extends JavaPlugin {
 
     /**
      * Checks the config to see if we want to show lore on certain items.
-     * @param itemStack The item to check.
+     *
+     * @param itemStack  The item to check.
      * @param configName The config we are checking under.
      * @return If we want to allow lore or not.
      */
@@ -200,8 +210,9 @@ public final class ToolStats extends JavaPlugin {
 
     /**
      * Gets the lore message from the config.
+     *
      * @param configName The config name, "messages." is already in front.
-     * @param raw If you want the raw message with the formatting codes and placeholders.
+     * @param raw        If you want the raw message with the formatting codes and placeholders.
      * @return The lore message.
      */
     public String getLoreFromConfig(String configName, boolean raw) {

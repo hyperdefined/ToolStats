@@ -66,6 +66,7 @@ public class SheepShear implements Listener {
 
     /**
      * Adds tags to shears.
+     *
      * @param itemStack The shears.
      */
     private void addLore(ItemStack itemStack) {

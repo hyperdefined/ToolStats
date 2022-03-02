@@ -39,7 +39,6 @@ import java.util.*;
 public class EntityDamage implements Listener {
 
     private final ToolStats toolStats;
-    private final String[] validTools = {"sword", "trident", "axe"};
     private final DecimalFormat decimalFormat = new DecimalFormat("0.00");
     public final Set<UUID> trackedMobs = new HashSet<>();
 
@@ -71,7 +70,7 @@ public class EntityDamage implements Listener {
                 }
                 // check items we want
                 String itemName = heldItem.getType().toString().toLowerCase();
-                if (Arrays.stream(validTools).noneMatch(itemName::contains)) {
+                if (Arrays.stream(toolStats.meleeItems).noneMatch(itemName::contains)) {
                     return;
                 }
                 // a player is killing another player
@@ -176,6 +175,7 @@ public class EntityDamage implements Listener {
 
     /**
      * Updates a weapon's player kills.
+     *
      * @param itemStack The item to update.
      * @return A copy of the item.
      */
@@ -238,6 +238,7 @@ public class EntityDamage implements Listener {
 
     /**
      * Updates a weapon's mob kills.
+     *
      * @param itemStack The item to update.
      * @return A copy of the item.
      */
@@ -300,8 +301,9 @@ public class EntityDamage implements Listener {
 
     /**
      * Updates a player's armor damage stats.
+     *
      * @param itemStack The armor piece.
-     * @param damage How much damage is being added.
+     * @param damage    How much damage is being added.
      */
     private void updateArmorDamage(ItemStack itemStack, double damage) {
         ItemMeta meta = itemStack.getItemMeta();
@@ -360,6 +362,7 @@ public class EntityDamage implements Listener {
 
     /**
      * Check if item is an armor piece.
+     *
      * @param itemType The item type, not name.
      * @return If the item is an armor piece.
      */

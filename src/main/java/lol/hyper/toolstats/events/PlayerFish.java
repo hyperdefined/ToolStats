@@ -39,10 +39,6 @@ import java.util.Locale;
 public class PlayerFish implements Listener {
 
     private final ToolStats toolStats;
-    public final String[] validItems = {
-            "pickaxe", "sword", "shovel", "axe", "hoe", "bow", "helmet", "chestplate", "leggings", "boots", "fishing"
-    };
-    private final SimpleDateFormat format = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
 
     public PlayerFish(ToolStats toolStats) {
         this.toolStats = toolStats;
@@ -68,7 +64,7 @@ public class PlayerFish implements Listener {
             return;
         }
         ItemStack caughtItem = ((Item) event.getCaught()).getItemStack();
-        for (String x : validItems) {
+        for (String x : toolStats.allValidItems) {
             if (caughtItem.getType().toString().toLowerCase(Locale.ROOT).contains(x)) {
                 addNewLore(caughtItem, player);
             }
@@ -77,6 +73,7 @@ public class PlayerFish implements Listener {
 
     /**
      * Updates a fishing rod's count.
+     *
      * @param itemStack The fishing rod to update.
      */
     private void updateFishCount(ItemStack itemStack) {
@@ -135,8 +132,9 @@ public class PlayerFish implements Listener {
 
     /**
      * Adds "caught by" tags to newly fished items.
+     *
      * @param itemStack The item to add lore to.
-     * @param owner The player who caught the item.
+     * @param owner     The player who caught the item.
      */
     private void addNewLore(ItemStack itemStack, Player owner) {
         ItemMeta meta = itemStack.getItemMeta();
@@ -170,7 +168,7 @@ public class PlayerFish implements Listener {
             lore = new ArrayList<>();
         }
         if (toolStats.checkConfig(itemStack, "fished-tag")) {
-            lore.add(caughtOnLoreRaw.replace("{date}", format.format(finalDate)));
+            lore.add(caughtOnLoreRaw.replace("{date}", toolStats.dateFormat.format(finalDate)));
             lore.add(caughtByLoreRaw.replace("{player}", owner.getName()));
         }
         meta.setLore(lore);

@@ -33,7 +33,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,10 +41,6 @@ import java.util.Locale;
 public class VillagerTrade implements Listener {
 
     private final ToolStats toolStats;
-    public final String[] validItems = {
-            "pickaxe", "sword", "shovel", "axe", "hoe", "bow", "helmet", "chestplate", "leggings", "boots", "fishing"
-    };
-    private final SimpleDateFormat format = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
 
     public VillagerTrade(ToolStats toolStats) {
         this.toolStats = toolStats;
@@ -63,7 +58,7 @@ public class VillagerTrade implements Listener {
             if (event.getSlotType() == InventoryType.SlotType.RESULT) {
                 ItemStack item = event.getCurrentItem();
                 // only check items we want
-                for (String x : validItems) {
+                for (String x : toolStats.allValidItems) {
                     if (item.getType().toString().toLowerCase(Locale.ROOT).contains(x)) {
                         // if the player shift clicks show the warning
                         if (event.isShiftClick()) {
@@ -78,7 +73,7 @@ public class VillagerTrade implements Listener {
                         }
                         // this gets delayed since villager inventories suck for no reason
                         // if you don't delay this it doesn't work idk
-                        Bukkit.getScheduler().runTaskLater(toolStats, ()-> event.setCurrentItem(newItem), 5);
+                        Bukkit.getScheduler().runTaskLater(toolStats, () -> event.setCurrentItem(newItem), 5);
                     }
                 }
             }
@@ -87,8 +82,9 @@ public class VillagerTrade implements Listener {
 
     /**
      * Adds "traded by" tags to item.
+     *
      * @param itemStack The item to add lore.
-     * @param owner The player who traded.
+     * @param owner     The player who traded.
      * @return The item with lore.
      */
     private ItemStack addLore(ItemStack itemStack, Player owner) {
@@ -123,7 +119,7 @@ public class VillagerTrade implements Listener {
             lore = new ArrayList<>();
         }
         if (toolStats.checkConfig(itemStack, "traded-tag")) {
-            lore.add(tradedOnLoreRaw.replace("{date}", format.format(finalDate)));
+            lore.add(tradedOnLoreRaw.replace("{date}", toolStats.dateFormat.format(finalDate)));
             lore.add(tradedByLoreRaw.replace("{player}", owner.getName()));
         }
         meta.setLore(lore);

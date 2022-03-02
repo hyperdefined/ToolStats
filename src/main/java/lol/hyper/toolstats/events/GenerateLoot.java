@@ -43,10 +43,6 @@ import java.util.Locale;
 public class GenerateLoot implements Listener {
 
     private final ToolStats toolStats;
-    public final String[] validItems = {
-            "pickaxe", "sword", "shovel", "axe", "hoe", "bow", "helmet", "chestplate", "leggings", "boots", "fishing"
-    };
-    private final SimpleDateFormat format = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
 
     public GenerateLoot(ToolStats toolStats) {
         this.toolStats = toolStats;
@@ -88,20 +84,21 @@ public class GenerateLoot implements Listener {
                     continue;
                 }
                 String name = itemStack.getType().toString().toLowerCase(Locale.ROOT);
-                for (String x : validItems) {
+                for (String x : toolStats.allValidItems) {
                     if (name.contains(x)) {
                         chestInv.setItem(i, addLore(itemStack, player));
                     }
                 }
             }
 
-        },1);
+        }, 1);
     }
 
     /**
      * Adds lore to newly generated items.
+     *
      * @param itemStack The item to add lore to.
-     * @param owner The player that found the item.
+     * @param owner     The player that found the item.
      * @return The item with the lore.
      */
     private ItemStack addLore(ItemStack itemStack, Player owner) {
@@ -137,7 +134,7 @@ public class GenerateLoot implements Listener {
             lore = new ArrayList<>();
         }
         if (toolStats.checkConfig(newItem, "looted-tag")) {
-            lore.add(foundOnLoreRaw.replace("{date}", format.format(finalDate)));
+            lore.add(foundOnLoreRaw.replace("{date}", toolStats.dateFormat.format(finalDate)));
             lore.add(foundByLoreRaw.replace("{player}", owner.getName()));
         }
         meta.setLore(lore);

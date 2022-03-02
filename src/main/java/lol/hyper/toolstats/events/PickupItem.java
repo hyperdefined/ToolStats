@@ -30,16 +30,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class PickupItem implements Listener {
 
     private final ToolStats toolStats;
-    private final SimpleDateFormat format = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
 
     public PickupItem(ToolStats toolStats) {
         this.toolStats = toolStats;
@@ -69,8 +66,9 @@ public class PickupItem implements Listener {
 
     /**
      * Adds "looted by" tags for elytras.
+     *
      * @param itemStack The elytra to add lore to.
-     * @param owner The player who found it.
+     * @param owner     The player who found it.
      */
     private void addLore(ItemStack itemStack, Player owner) {
         ItemMeta meta = itemStack.getItemMeta();
@@ -100,7 +98,7 @@ public class PickupItem implements Listener {
             lore = new ArrayList<>();
         }
         if (toolStats.config.getBoolean("enabled.elytra-tag")) {
-            lore.add(foundOnLoreRaw.replace("{date}", format.format(finalDate)));
+            lore.add(foundOnLoreRaw.replace("{date}", toolStats.dateFormat.format(finalDate)));
             lore.add(foundByLoreRaw.replace("{player}", owner.getName()));
         }
         meta.setLore(lore);

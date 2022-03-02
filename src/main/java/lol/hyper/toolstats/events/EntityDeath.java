@@ -47,7 +47,7 @@ public class EntityDeath implements Listener {
         if (toolStats.mobKill.trackedMobs.contains(livingEntityUUID)) {
             for (ItemStack current : event.getDrops()) {
                 String name = current.getType().toString().toLowerCase(Locale.ROOT);
-                for (String item : toolStats.craftItem.validItems) {
+                for (String item : toolStats.allValidItems) {
                     if (name.contains(item)) {
                         addLore(current, livingEntity.getName());
                     }
@@ -59,8 +59,9 @@ public class EntityDeath implements Listener {
 
     /**
      * Adds "drop by" tag to item.
+     *
      * @param itemStack The item to add lore to.
-     * @param mob The mob or player name.
+     * @param mob       The mob or player name.
      */
     private void addLore(ItemStack itemStack, String mob) {
         ItemMeta meta = itemStack.getItemMeta();
