@@ -31,7 +31,6 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class CommandToolStats implements TabExecutor {
@@ -41,7 +40,6 @@ public class CommandToolStats implements TabExecutor {
     public CommandToolStats(ToolStats toolStats) {
         this.toolStats = toolStats;
     }
-    private final SimpleDateFormat format = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -90,8 +88,9 @@ public class CommandToolStats implements TabExecutor {
 
     /**
      * Fixes lore on a given item. This will wipe all lore and reapply our custom ones.
+     *
      * @param original The item we are fixing.
-     * @param player The player running the command.
+     * @param player   The player running the command.
      */
     private void fixItemLore(ItemStack original, Player player) {
         ItemStack finalItem = original.clone();
@@ -138,7 +137,7 @@ public class CommandToolStats implements TabExecutor {
                 if (container.has(toolStats.timeCreated, PersistentDataType.LONG)) {
                     Long time = container.get(toolStats.timeCreated, PersistentDataType.LONG);
                     if (time != null) {
-                        lore.add(toolStats.getLoreFromConfig("looted.found-on", true).replace("{date}", format.format(new Date(time))));
+                        lore.add(toolStats.getLoreFromConfig("looted.found-on", true).replace("{date}", toolStats.dateFormat.format(new Date(time))));
                     }
                 }
                 finalMeta.setLore(lore);
@@ -180,19 +179,19 @@ public class CommandToolStats implements TabExecutor {
                     // show how when the item was created based on the previous lore
                     switch (type) {
                         case "DEFAULT": {
-                            lore.add(toolStats.getLoreFromConfig("created.created-on", true).replace("{date}", format.format(new Date(time))));
+                            lore.add(toolStats.getLoreFromConfig("created.created-on", true).replace("{date}", toolStats.dateFormat.format(new Date(time))));
                             break;
                         }
                         case "CAUGHT": {
-                            lore.add(toolStats.getLoreFromConfig("fished.caught-on", true).replace("{date}", format.format(new Date(time))));
+                            lore.add(toolStats.getLoreFromConfig("fished.caught-on", true).replace("{date}", toolStats.dateFormat.format(new Date(time))));
                             break;
                         }
                         case "LOOTED": {
-                            lore.add(toolStats.getLoreFromConfig("looted.foundon", true).replace("{date}", format.format(new Date(time))));
+                            lore.add(toolStats.getLoreFromConfig("looted.foundon", true).replace("{date}", toolStats.dateFormat.format(new Date(time))));
                             break;
                         }
                         case "TRADED": {
-                            lore.add(toolStats.getLoreFromConfig("traded.traded-on", true).replace("{date}", format.format(new Date(time))));
+                            lore.add(toolStats.getLoreFromConfig("traded.traded-on", true).replace("{date}", toolStats.dateFormat.format(new Date(time))));
                             break;
                         }
                     }
