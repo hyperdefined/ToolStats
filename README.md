@@ -36,5 +36,8 @@ If item lore is ever incorrect, you can run `/toolstats reset` to reset the item
 ![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image9.png)
 ![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image10.png)
 
+## Documentation
+Visit the [wiki](https://github.com/hyperdefined/ToolStats/wiki) for help.
+
 ## License
 This plugin is released under GNU General Public License v3. See [LICENSE](https://github.com/hyperdefined/ToolStats/blob/master/LICENSE).
