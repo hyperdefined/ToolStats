@@ -20,8 +20,7 @@ package lol.hyper.toolstats.events;
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.UUIDDataType;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
@@ -49,16 +48,20 @@ public class PickupItem implements Listener {
         }
         Entity entity = event.getEntity();
         if (entity instanceof Player) {
-            ItemStack itemStack = event.getItem().getItemStack();
-            if (itemStack.getType() == Material.ELYTRA) {
+            Item item = event.getItem();
+            if (item.getType() == EntityType.DROPPED_ITEM) {
+                ItemStack itemStack = event.getItem().getItemStack();
                 ItemMeta meta = itemStack.getItemMeta();
                 if (meta == null) {
+                    toolStats.logger.info("null");
                     return;
                 }
                 PersistentDataContainer container = meta.getPersistentDataContainer();
-                // the elytra has the new key, set the lore to it
-                if (container.has(toolStats.newElytra, PersistentDataType.INTEGER)) {
-                    addLore(itemStack, (Player) event.getEntity());
+                if (itemStack.getType() == Material.ELYTRA) {
+                    // the elytra has the new key, set the lore to it
+                    if (container.has(toolStats.newElytra, PersistentDataType.INTEGER)) {
+                        addLore(itemStack, (Player) event.getEntity());
+                    }
                 }
             }
         }
