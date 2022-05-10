@@ -19,7 +19,10 @@ package lol.hyper.toolstats.commands;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.UUIDDataType;
-import org.bukkit.*;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -36,28 +39,30 @@ import java.util.*;
 public class CommandToolStats implements TabExecutor {
 
     private final ToolStats toolStats;
+    private final BukkitAudiences audiences;
 
     public CommandToolStats(ToolStats toolStats) {
         this.toolStats = toolStats;
+        this.audiences = toolStats.getAdventure();
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!sender.hasPermission("toolstats.use")) {
-            sender.sendMessage(ChatColor.RED + "You do not have permission for this command.");
+            audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.").color(NamedTextColor.RED));
             return true;
         }
         if (args.length == 0) {
-            sender.sendMessage(ChatColor.GREEN + "ToolStats version " + toolStats.getDescription().getVersion() + ". Created by hyperdefined.");
+            audiences.sender(sender).sendMessage(Component.text("ToolStats version " + toolStats.getDescription().getVersion() + ". Created by hyperdefined.").color(NamedTextColor.GREEN));
             return true;
         }
         switch (args[0]) {
             case "reload": {
                 if (sender.isOp() || sender.hasPermission("toolstats.reload")) {
                     toolStats.loadConfig();
-                    sender.sendMessage(ChatColor.GREEN + "Configuration reloaded!");
+                    audiences.sender(sender).sendMessage(Component.text("Configuration reloaded!").color(NamedTextColor.GREEN));
                 } else {
-                    sender.sendMessage(ChatColor.RED + "You do not have permission for this command.");
+                    audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.").color(NamedTextColor.RED));
                 }
                 return true;
             }
@@ -66,21 +71,21 @@ public class CommandToolStats implements TabExecutor {
                     Player player = (Player) sender;
                     ItemStack heldItem = player.getInventory().getItemInMainHand();
                     if (heldItem.getType() == Material.AIR) {
-                        sender.sendMessage(ChatColor.RED + "You must hold an item!");
+                        audiences.sender(sender).sendMessage(Component.text("You must hold an item!").color(NamedTextColor.RED));
                         return true;
                     }
                     fixItemLore(heldItem, player);
-                    sender.sendMessage(ChatColor.GREEN + "The lore was reset!");
+                    audiences.sender(sender).sendMessage(Component.text("The lore was reset!").color(NamedTextColor.GREEN));
                     return true;
                 }
-                sender.sendMessage(ChatColor.GREEN + "This will remove ALL current lore from the held item and replace it with the correct lore.");
-                sender.sendMessage(ChatColor.GREEN + "The item owner will be who ever is currently running this command.");
-                sender.sendMessage(ChatColor.GREEN + "Only use this if the tags on the tool are incorrect.");
-                sender.sendMessage(ChatColor.GREEN + "Type /toolstats reset confirm to confirm this.");
+                audiences.sender(sender).sendMessage(Component.text("This will remove ALL current lore from the held item and replace it with the correct lore.").color(NamedTextColor.GREEN));
+                audiences.sender(sender).sendMessage(Component.text("The item owner will be who ever is currently running this command.").color(NamedTextColor.GREEN));
+                audiences.sender(sender).sendMessage(Component.text("Only use this if the tags on the tool are incorrect.").color(NamedTextColor.GREEN));
+                audiences.sender(sender).sendMessage(Component.text("Type /toolstats reset confirm to confirm this.").color(NamedTextColor.GREEN));
                 return true;
             }
             default: {
-                sender.sendMessage(ChatColor.RED + "Invalid sub-command.");
+                audiences.sender(sender).sendMessage(Component.text("Invalid sub-command.").color(NamedTextColor.RED));
             }
         }
         return true;

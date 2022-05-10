@@ -21,6 +21,8 @@ import lol.hyper.githubreleaseapi.GitHubRelease;
 import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
 import lol.hyper.toolstats.commands.CommandToolStats;
 import lol.hyper.toolstats.events.*;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -82,8 +84,12 @@ public final class ToolStats extends JavaPlugin {
     public FileConfiguration config;
     public final int CONFIG_VERSION = 3;
 
+    private BukkitAudiences adventure;
+    public MiniMessage miniMessage = MiniMessage.miniMessage();
+
     @Override
     public void onEnable() {
+        this.adventure = BukkitAudiences.create(this);
         if (!configFile.exists()) {
             this.saveResource("config.yml", true);
             logger.info("Copying default config!");
@@ -253,5 +259,12 @@ public final class ToolStats extends JavaPlugin {
             }
         }
         return lore;
+    }
+
+    public BukkitAudiences getAdventure() {
+        if(this.adventure == null) {
+            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
+        }
+        return this.adventure;
     }
 }

@@ -16,3 +16,7 @@ permissions:
   toolstats.reload:
     description: Allows the usage of /toolstats reload
     default: op
+libraries:
+  - lol.hyper:github-release-api:1.0.1
+  - net.kyori:adventure-text-minimessage:4.10.1
+  - net.kyori:adventure-platform-bukkit:4.1.0
