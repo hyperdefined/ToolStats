@@ -85,7 +85,6 @@ public final class ToolStats extends JavaPlugin {
     public final int CONFIG_VERSION = 3;
 
     private BukkitAudiences adventure;
-    public MiniMessage miniMessage = MiniMessage.miniMessage();
 
     @Override
     public void onEnable() {
@@ -167,12 +166,15 @@ public final class ToolStats extends JavaPlugin {
     public boolean checkConfig(ItemStack itemStack, String configName) {
         String itemName = itemStack.getType().toString().toLowerCase();
         String itemType = null;
-        if (itemName.contains("bow") || itemName.contains("shears")) {
+        if (itemName.contains("bow") || itemName.contains("shears") || itemName.contains("trident")) {
             if (itemName.contains("bow")) {
                 itemType = "bow";
             }
             if (itemName.contains("shears")) {
                 itemType = "shears";
+            }
+            if (itemName.contains("trident")) {
+                itemType = "trident";
             }
         } else {
             itemType = itemName.substring(itemName.indexOf("_") + 1);
@@ -203,6 +205,9 @@ public final class ToolStats extends JavaPlugin {
             }
             case "bow": {
                 return config.getBoolean("enabled." + configName + ".bow");
+            }
+            case "trident": {
+                return config.getBoolean("enabled." + configName + ".trident");
             }
             case "helmet":
             case "chestplate":
