@@ -65,11 +65,10 @@ public class CraftItem implements Listener {
                 }
                 // test the item before setting it
                 ItemStack newItem = addLore(itemStack, player);
-                if (newItem == null) {
-                    return;
+                if (newItem != null) {
+                    // set the result
+                    event.setCurrentItem(newItem);
                 }
-                // set the result
-                event.setCurrentItem(newItem);
             }
         }
     }

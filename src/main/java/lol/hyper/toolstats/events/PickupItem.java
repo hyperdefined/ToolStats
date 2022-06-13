@@ -59,7 +59,10 @@ public class PickupItem implements Listener {
                 if (itemStack.getType() == Material.ELYTRA) {
                     // the elytra has the new key, set the lore to it
                     if (container.has(toolStats.newElytra, PersistentDataType.INTEGER)) {
-                        addLore(itemStack, (Player) event.getEntity());
+                        ItemStack newElytra = addLore(itemStack, (Player) event.getEntity());
+                        if (newElytra != null) {
+                            item.setItemStack(newElytra);
+                        }
                     }
                 }
             }
@@ -72,10 +75,11 @@ public class PickupItem implements Listener {
      * @param itemStack The elytra to add lore to.
      * @param owner     The player who found it.
      */
-    private void addLore(ItemStack itemStack, Player owner) {
-        ItemMeta meta = itemStack.getItemMeta();
+    private ItemStack addLore(ItemStack itemStack, Player owner) {
+        ItemStack finalItem = itemStack.clone();
+        ItemMeta meta = finalItem.getItemMeta();
         if (meta == null) {
-            return;
+            return null;
         }
         long timeCreated = System.currentTimeMillis();
         Date finalDate = new Date(timeCreated);
@@ -89,7 +93,7 @@ public class PickupItem implements Listener {
 
         if (foundByLoreRaw == null || foundOnLoreRaw == null) {
             toolStats.logger.warning("There is no lore message for messages.looted!");
-            return;
+            return null;
         }
 
         List<String> lore;
@@ -104,6 +108,7 @@ public class PickupItem implements Listener {
             lore.add(foundByLoreRaw.replace("{player}", owner.getName()));
         }
         meta.setLore(lore);
-        itemStack.setItemMeta(meta);
+        finalItem.setItemMeta(meta);
+        return finalItem;
     }
 }

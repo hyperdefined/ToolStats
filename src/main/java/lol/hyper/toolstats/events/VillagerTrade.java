@@ -68,12 +68,12 @@ public class VillagerTrade implements Listener {
                             }
                         }
                         ItemStack newItem = addLore(item, (Player) event.getWhoClicked());
-                        if (newItem == null) {
+                        if (newItem != null) {
+                            // this gets delayed since villager inventories suck for no reason
+                            // if you don't delay this it doesn't work idk
+                            Bukkit.getScheduler().runTaskLater(toolStats, () -> event.setCurrentItem(newItem), 5);
                             return;
                         }
-                        // this gets delayed since villager inventories suck for no reason
-                        // if you don't delay this it doesn't work idk
-                        Bukkit.getScheduler().runTaskLater(toolStats, () -> event.setCurrentItem(newItem), 5);
                     }
                 }
             }

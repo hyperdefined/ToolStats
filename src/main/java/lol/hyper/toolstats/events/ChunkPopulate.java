@@ -35,7 +35,7 @@ import org.bukkit.persistence.PersistentDataType;
 public class ChunkPopulate implements Listener {
 
     // this tags all elytras with a "new" tag
-    // this let's use tag any new elytras player loot
+    // this let's us track any new elytras player loot
 
     private final ToolStats toolStats;
 

@@ -85,7 +85,10 @@ public class GenerateLoot implements Listener {
                 String name = itemStack.getType().toString().toLowerCase(Locale.ROOT);
                 for (String x : toolStats.allValidItems) {
                     if (name.contains(x)) {
-                        chestInv.setItem(i, addLore(itemStack, player));
+                        ItemStack newItem = addLore(itemStack, player);
+                        if (newItem != null) {
+                            chestInv.setItem(i, newItem);
+                        }
                     }
                 }
             }
