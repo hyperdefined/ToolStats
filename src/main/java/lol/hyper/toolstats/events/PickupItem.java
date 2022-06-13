@@ -53,7 +53,6 @@ public class PickupItem implements Listener {
                 ItemStack itemStack = event.getItem().getItemStack();
                 ItemMeta meta = itemStack.getItemMeta();
                 if (meta == null) {
-                    toolStats.logger.info("null");
                     return;
                 }
                 PersistentDataContainer container = meta.getPersistentDataContainer();
