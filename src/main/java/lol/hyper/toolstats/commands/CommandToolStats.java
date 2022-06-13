@@ -58,7 +58,7 @@ public class CommandToolStats implements TabExecutor {
         }
         switch (args[0]) {
             case "reload": {
-                if (sender.isOp() || sender.hasPermission("toolstats.reload")) {
+                if (sender.hasPermission("toolstats.reload")) {
                     toolStats.loadConfig();
                     audiences.sender(sender).sendMessage(Component.text("Configuration reloaded!").color(NamedTextColor.GREEN));
                 } else {
