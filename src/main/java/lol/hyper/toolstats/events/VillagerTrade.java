@@ -21,6 +21,7 @@ import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.UUIDDataType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -52,6 +53,13 @@ public class VillagerTrade implements Listener {
             return;
         }
         Inventory inventory = event.getClickedInventory();
+        if (!(event.getWhoClicked() instanceof Player)) {
+            return;
+        }
+        Player player = (Player) event.getWhoClicked();
+        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+            return;
+        }
         // only check villager inventories
         if (inventory instanceof MerchantInventory) {
             // only check the result slot (the item you receive)
@@ -60,17 +68,16 @@ public class VillagerTrade implements Listener {
                 // only check items we want
                 for (String x : toolStats.allValidItems) {
                     if (item.getType().toString().toLowerCase(Locale.ROOT).contains(x)) {
-                        // if the player shift clicks show the warning
+                        // if the player shift clicks, show the warning
                         if (event.isShiftClick()) {
                             String configMessage = toolStats.config.getString("messages.shift-click-warning.trading");
                             if (configMessage != null) {
                                 event.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&', configMessage));
                             }
                         }
-                        ItemStack newItem = addLore(item, (Player) event.getWhoClicked());
+                        ItemStack newItem = addLore(item, player);
                         if (newItem != null) {
                             // this gets delayed since villager inventories suck for no reason
-                            // if you don't delay this it doesn't work idk
                             Bukkit.getScheduler().runTaskLater(toolStats, () -> event.setCurrentItem(newItem), 5);
                             return;
                         }

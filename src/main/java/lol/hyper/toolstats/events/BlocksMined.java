@@ -47,8 +47,7 @@ public class BlocksMined implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        // ignore creative mode
-        if (player.getGameMode() != GameMode.SURVIVAL) {
+        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         // if the player mines something with their fist

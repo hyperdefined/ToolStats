@@ -19,6 +19,7 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.UUIDDataType;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -48,6 +49,10 @@ public class PickupItem implements Listener {
         }
         Entity entity = event.getEntity();
         if (entity instanceof Player) {
+            Player player = (Player) entity;
+            if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+                return;
+            }
             Item item = event.getItem();
             if (item.getType() == EntityType.DROPPED_ITEM) {
                 ItemStack itemStack = event.getItem().getItemStack();

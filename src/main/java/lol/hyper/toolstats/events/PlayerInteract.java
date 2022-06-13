@@ -19,6 +19,7 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -49,11 +50,16 @@ public class PlayerInteract implements Listener {
         if (block == null) {
             return;
         }
+
+        Player player = event.getPlayer();
+        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+            return;
+        }
         // store when a player opens a chest
         // this is used to detect who opens a newly spawned chest
         // since that is not really tracked on the lootevent
         if (block.getType() != Material.AIR && block.getType() == Material.CHEST) {
-            openedChests.put(block, event.getPlayer());
+            openedChests.put(block, player);
             Bukkit.getScheduler().runTaskLater(toolStats, () -> openedChests.remove(block), 20);
         }
     }

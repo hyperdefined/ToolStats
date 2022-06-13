@@ -60,7 +60,7 @@ public class EntityDamage implements Listener {
             // a player is killing something
             if (event.getDamager() instanceof Player) {
                 Player player = (Player) event.getDamager();
-                if (player.getGameMode() != GameMode.SURVIVAL) {
+                if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
                     return;
                 }
                 // a player killed something with their fist
@@ -103,6 +103,9 @@ public class EntityDamage implements Listener {
                 // if the shooter is a player
                 if (arrow.getShooter() instanceof Player) {
                     Player player = (Player) arrow.getShooter();
+                    if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+                        return;
+                    }
                     ItemStack heldItem = player.getInventory().getItem(player.getInventory().getHeldItemSlot());
                     if (heldItem == null) {
                         return;
@@ -122,6 +125,9 @@ public class EntityDamage implements Listener {
         // player is taken damage but not being killed
         if (livingEntity instanceof Player) {
             Player player = (Player) livingEntity;
+            if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+                return;
+            }
             PlayerInventory inventory = player.getInventory();
             for (ItemStack armor : inventory.getArmorContents()) {
                 if (armor != null) {
@@ -142,6 +148,9 @@ public class EntityDamage implements Listener {
         // player is taken damage but not being killed
         if (livingEntity instanceof Player) {
             Player player = (Player) livingEntity;
+            if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+                return;
+            }
             PlayerInventory inventory = player.getInventory();
             for (ItemStack armor : inventory.getArmorContents()) {
                 if (armor != null) {
@@ -162,6 +171,9 @@ public class EntityDamage implements Listener {
         // player is taken damage but not being killed
         if (livingEntity instanceof Player) {
             Player player = (Player) livingEntity;
+            if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+                return;
+            }
             PlayerInventory inventory = player.getInventory();
             for (ItemStack armor : inventory.getArmorContents()) {
                 if (armor != null) {
