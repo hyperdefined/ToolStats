@@ -244,8 +244,8 @@ public class CommandToolStats implements TabExecutor {
             }
         }
         if (toolStats.config.getBoolean("enabled.armor-damage")) {
-            if (container.has(toolStats.armorDamage, PersistentDataType.INTEGER)) {
-                Integer damage = container.get(toolStats.armorDamage, PersistentDataType.INTEGER);
+            if (container.has(toolStats.armorDamage, PersistentDataType.DOUBLE)) {
+                Double damage = container.get(toolStats.armorDamage, PersistentDataType.DOUBLE);
                 if (damage != null) {
                     lore.add(toolStats.getLoreFromConfig("damage-taken", true).replace("{damage}", toolStats.commaFormat.format(damage)));
                 }
