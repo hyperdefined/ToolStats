@@ -192,7 +192,7 @@ public class CommandToolStats implements TabExecutor {
                             break;
                         }
                         case "LOOTED": {
-                            lore.add(toolStats.getLoreFromConfig("looted.foundon", true).replace("{date}", toolStats.dateFormat.format(new Date(time))));
+                            lore.add(toolStats.getLoreFromConfig("looted.found-on", true).replace("{date}", toolStats.dateFormat.format(new Date(time))));
                             break;
                         }
                         case "TRADED": {
