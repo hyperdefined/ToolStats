@@ -81,7 +81,6 @@ public class BlocksMined implements Listener {
             blocksMined++;
         }
         container.set(toolStats.genericMined, PersistentDataType.INTEGER, blocksMined);
-
         String configLore = toolStats.getLoreFromConfig("blocks-mined", false);
         String configLoreRaw = toolStats.getLoreFromConfig("blocks-mined", true);
 
@@ -100,18 +99,18 @@ public class BlocksMined implements Listener {
             for (int x = 0; x < lore.size(); x++) {
                 if (lore.get(x).contains(configLore)) {
                     hasLore = true;
-                    lore.set(x, configLoreRaw.replace("{blocks}", Integer.toString(blocksMined)));
+                    lore.set(x, configLoreRaw.replace("{blocks}", toolStats.commaFormat.format(blocksMined)));
                     break;
                 }
             }
             // if the item has lore but doesn't have the tag, add it
             if (!hasLore) {
-                lore.add(configLoreRaw.replace("{blocks}", Integer.toString(blocksMined)));
+                lore.add(configLoreRaw.replace("{blocks}", toolStats.commaFormat.format(blocksMined)));
             }
         } else {
             // if the item has no lore, create a new list and add the string
             lore = new ArrayList<>();
-            lore.add(configLoreRaw.replace("{blocks}", Integer.toString(blocksMined)));
+            lore.add(configLoreRaw.replace("{blocks}", toolStats.commaFormat.format(blocksMined)));
         }
         // do we add the lore based on the config?
         if (toolStats.checkConfig(itemStack, "blocks-mined")) {

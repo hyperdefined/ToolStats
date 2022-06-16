@@ -207,7 +207,7 @@ public class CommandToolStats implements TabExecutor {
             if (container.has(toolStats.swordPlayerKills, PersistentDataType.INTEGER)) {
                 Integer kills = container.get(toolStats.swordPlayerKills, PersistentDataType.INTEGER);
                 if (kills != null) {
-                    lore.add(toolStats.getLoreFromConfig("kills.player", true).replace("{kills}", Integer.toString(kills)));
+                    lore.add(toolStats.getLoreFromConfig("kills.player", true).replace("{kills}", toolStats.commaFormat.format(kills)));
                 }
             }
         }
@@ -215,7 +215,7 @@ public class CommandToolStats implements TabExecutor {
             if (container.has(toolStats.swordMobKills, PersistentDataType.INTEGER)) {
                 Integer kills = container.get(toolStats.swordMobKills, PersistentDataType.INTEGER);
                 if (kills != null) {
-                    lore.add(toolStats.getLoreFromConfig("kills.mob", true).replace("{kills}", Integer.toString(kills)));
+                    lore.add(toolStats.getLoreFromConfig("kills.mob", true).replace("{kills}", toolStats.commaFormat.format(kills)));
                 }
             }
         }
@@ -223,7 +223,7 @@ public class CommandToolStats implements TabExecutor {
             if (container.has(toolStats.genericMined, PersistentDataType.INTEGER)) {
                 Integer blocksMined = container.get(toolStats.genericMined, PersistentDataType.INTEGER);
                 if (blocksMined != null) {
-                    lore.add(toolStats.getLoreFromConfig("blocks-mined", true).replace("{blocks}", Integer.toString(blocksMined)));
+                    lore.add(toolStats.getLoreFromConfig("blocks-mined", true).replace("{blocks}", toolStats.commaFormat.format(blocksMined)));
                 }
             }
         }
@@ -231,7 +231,7 @@ public class CommandToolStats implements TabExecutor {
             if (container.has(toolStats.fishingRodCaught, PersistentDataType.INTEGER)) {
                 Integer fish = container.get(toolStats.fishingRodCaught, PersistentDataType.INTEGER);
                 if (fish != null) {
-                    lore.add(toolStats.getLoreFromConfig("fished.fish-caught", true).replace("{fish}", Integer.toString(fish)));
+                    lore.add(toolStats.getLoreFromConfig("fished.fish-caught", true).replace("{fish}", toolStats.commaFormat.format(fish)));
                 }
             }
         }
@@ -239,7 +239,7 @@ public class CommandToolStats implements TabExecutor {
             if (container.has(toolStats.shearsSheared, PersistentDataType.INTEGER)) {
                 Integer sheep = container.get(toolStats.shearsSheared, PersistentDataType.INTEGER);
                 if (sheep != null) {
-                    lore.add(toolStats.getLoreFromConfig("sheep-sheared", true).replace("{sheep}", Integer.toString(sheep)));
+                    lore.add(toolStats.getLoreFromConfig("sheep-sheared", true).replace("{sheep}", toolStats.commaFormat.format(sheep)));
                 }
             }
         }
@@ -247,7 +247,7 @@ public class CommandToolStats implements TabExecutor {
             if (container.has(toolStats.armorDamage, PersistentDataType.INTEGER)) {
                 Integer damage = container.get(toolStats.armorDamage, PersistentDataType.INTEGER);
                 if (damage != null) {
-                    lore.add(toolStats.getLoreFromConfig("damage-taken", true).replace("{damage}", Integer.toString(damage)));
+                    lore.add(toolStats.getLoreFromConfig("damage-taken", true).replace("{damage}", toolStats.commaFormat.format(damage)));
                 }
             }
         }

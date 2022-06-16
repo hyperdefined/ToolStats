@@ -112,18 +112,18 @@ public class PlayerFish implements Listener {
             for (int x = 0; x < lore.size(); x++) {
                 if (lore.get(x).contains(fishCaughtLore)) {
                     hasLore = true;
-                    lore.set(x, fishCaughtLoreRaw.replace("{fish}", Integer.toString(fishCaught)));
+                    lore.set(x, fishCaughtLoreRaw.replace("{fish}", toolStats.commaFormat.format(fishCaught)));
                     break;
                 }
             }
             // if the item has lore but doesn't have the tag, add it
             if (!hasLore) {
-                lore.add(fishCaughtLoreRaw.replace("{fish}", Integer.toString(fishCaught)));
+                lore.add(fishCaughtLoreRaw.replace("{fish}", toolStats.commaFormat.format(fishCaught)));
             }
         } else {
             // if the item has no lore, create a new list and add the string
             lore = new ArrayList<>();
-            lore.add(fishCaughtLoreRaw.replace("{fish}", Integer.toString(fishCaught)));
+            lore.add(fishCaughtLoreRaw.replace("{fish}", toolStats.commaFormat.format(fishCaught)));
         }
         if (toolStats.config.getBoolean("enabled.fish-caught")) {
             meta.setLore(lore);

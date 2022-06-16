@@ -33,14 +33,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.*;
 
 public class EntityDamage implements Listener {
 
     private final ToolStats toolStats;
-    private final DecimalFormat decimalFormat = new DecimalFormat("0.00");
     public final Set<UUID> trackedMobs = new HashSet<>();
 
     public EntityDamage(ToolStats toolStats) {
@@ -227,18 +224,18 @@ public class EntityDamage implements Listener {
             for (int x = 0; x < lore.size(); x++) {
                 if (lore.get(x).contains(playerKillsLore)) {
                     hasLore = true;
-                    lore.set(x, playerKillsLoreRaw.replace("{kills}", Integer.toString(playerKills)));
+                    lore.set(x, playerKillsLoreRaw.replace("{kills}", toolStats.commaFormat.format(playerKills)));
                     break;
                 }
             }
             // if the item has lore but doesn't have the tag, add it
             if (!hasLore) {
-                lore.add(playerKillsLoreRaw.replace("{kills}", Integer.toString(playerKills)));
+                lore.add(playerKillsLoreRaw.replace("{kills}", toolStats.commaFormat.format(playerKills)));
             }
         } else {
             // if the item has no lore, create a new list and add the string
             lore = new ArrayList<>();
-            lore.add(playerKillsLoreRaw.replace("{kills}", Integer.toString(playerKills)));
+            lore.add(playerKillsLoreRaw.replace("{kills}", toolStats.commaFormat.format(playerKills)));
         }
         // do we add the lore based on the config?
         if (toolStats.checkConfig(itemStack, "player-kills")) {
@@ -290,18 +287,18 @@ public class EntityDamage implements Listener {
             for (int x = 0; x < lore.size(); x++) {
                 if (lore.get(x).contains(mobKillsLore)) {
                     hasLore = true;
-                    lore.set(x, mobKillsLoreRaw.replace("{kills}", Integer.toString(mobKills)));
+                    lore.set(x, mobKillsLoreRaw.replace("{kills}", toolStats.commaFormat.format(mobKills)));
                     break;
                 }
             }
             // if the item has lore but doesn't have the tag, add it
             if (!hasLore) {
-                lore.add(mobKillsLoreRaw.replace("{kills}", Integer.toString(mobKills)));
+                lore.add(mobKillsLoreRaw.replace("{kills}", toolStats.commaFormat.format(mobKills)));
             }
         } else {
             // if the item has no lore, create a new list and add the string
             lore = new ArrayList<>();
-            lore.add(mobKillsLoreRaw.replace("{kills}", Integer.toString(mobKills)));
+            lore.add(mobKillsLoreRaw.replace("{kills}", toolStats.commaFormat.format(mobKills)));
         }
         // do we add the lore based on the config?
         if (toolStats.checkConfig(itemStack, "mob-kills")) {
@@ -332,7 +329,6 @@ public class EntityDamage implements Listener {
         } else {
             damageTaken = damageTaken + damage;
         }
-        decimalFormat.setRoundingMode(RoundingMode.DOWN);
         container.set(toolStats.armorDamage, PersistentDataType.DOUBLE, damageTaken);
 
         String damageTakenLore = toolStats.getLoreFromConfig("damage-taken", false);
@@ -353,18 +349,18 @@ public class EntityDamage implements Listener {
             for (int x = 0; x < lore.size(); x++) {
                 if (lore.get(x).contains(damageTakenLore)) {
                     hasLore = true;
-                    lore.set(x, damageTakenLoreRaw.replace("{damage}", decimalFormat.format(damageTaken)));
+                    lore.set(x, damageTakenLoreRaw.replace("{damage}", toolStats.decimalFormat.format(damageTaken)));
                     break;
                 }
             }
             // if the item has lore but doesn't have the tag, add it
             if (!hasLore) {
-                lore.add(damageTakenLoreRaw.replace("{damage}", decimalFormat.format(damageTaken)));
+                lore.add(damageTakenLoreRaw.replace("{damage}", toolStats.decimalFormat.format(damageTaken)));
             }
         } else {
             // if the item has no lore, create a new list and add the string
             lore = new ArrayList<>();
-            lore.add(damageTakenLoreRaw.replace("{damage}", decimalFormat.format(damageTaken)));
+            lore.add(damageTakenLoreRaw.replace("{damage}", toolStats.decimalFormat.format(damageTaken)));
         }
         if (toolStats.config.getBoolean("enabled.armor-damage")) {
             meta.setLore(lore);

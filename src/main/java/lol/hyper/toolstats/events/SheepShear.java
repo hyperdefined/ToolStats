@@ -108,18 +108,18 @@ public class SheepShear implements Listener {
             for (int x = 0; x < lore.size(); x++) {
                 if (lore.get(x).contains(sheepShearedLore)) {
                     hasLore = true;
-                    lore.set(x, sheepShearedLoreRaw.replace("{sheep}", Integer.toString(sheepSheared)));
+                    lore.set(x, sheepShearedLoreRaw.replace("{sheep}", toolStats.commaFormat.format(sheepSheared)));
                     break;
                 }
             }
             // if the item has lore but doesn't have the tag, add it
             if (!hasLore) {
-                lore.add(sheepShearedLoreRaw.replace("{sheep}", Integer.toString(sheepSheared)));
+                lore.add(sheepShearedLoreRaw.replace("{sheep}", toolStats.commaFormat.format(sheepSheared)));
             }
         } else {
             // if the item has no lore, create a new list and add the string
             lore = new ArrayList<>();
-            lore.add(sheepShearedLoreRaw.replace("{sheep}", Integer.toString(sheepSheared)));
+            lore.add(sheepShearedLoreRaw.replace("{sheep}", toolStats.commaFormat.format(sheepSheared)));
         }
         if (toolStats.config.getBoolean("enabled.sheep-sheared")) {
             meta.setLore(lore);

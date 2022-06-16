@@ -33,6 +33,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.logging.Logger;
@@ -59,6 +60,8 @@ public final class ToolStats extends JavaPlugin {
     public final NamespacedKey newElytra = new NamespacedKey(this, "new");
 
     public final SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
+    public final DecimalFormat decimalFormat = new DecimalFormat("#,###.00");
+    public final DecimalFormat commaFormat = new DecimalFormat("#,###");
 
     public BlocksMined blocksMined;
     public ChunkPopulate chunkPopulate;
