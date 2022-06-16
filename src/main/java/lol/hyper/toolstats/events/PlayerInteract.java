@@ -22,10 +22,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.HashMap;
@@ -35,6 +39,7 @@ public class PlayerInteract implements Listener {
     private final ToolStats toolStats;
 
     public final HashMap<Block, Player> openedChests = new HashMap<>();
+    public final HashMap<StorageMinecart, Player> openedMineCarts = new HashMap<>();
 
     public PlayerInteract(ToolStats toolStats) {
         this.toolStats = toolStats;
@@ -56,11 +61,24 @@ public class PlayerInteract implements Listener {
             return;
         }
         // store when a player opens a chest
-        // this is used to detect who opens a newly spawned chest
-        // since that is not really tracked on the lootevent
         if (block.getType() != Material.AIR && block.getType() == Material.CHEST) {
             openedChests.put(block, player);
             Bukkit.getScheduler().runTaskLater(toolStats, () -> openedChests.remove(block), 20);
+        }
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEntityEvent event) {
+        Entity clicked = event.getRightClicked();
+        Player player = event.getPlayer();
+        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+            return;
+        }
+        // store when a player opens a minecart
+        if (clicked.getType() == EntityType.MINECART_CHEST) {
+            StorageMinecart storageMinecart = (StorageMinecart) clicked;
+            openedMineCarts.put(storageMinecart, player);
+            Bukkit.getScheduler().runTaskLater(toolStats, () -> openedMineCarts.remove(storageMinecart), 20);
         }
     }
 }

@@ -23,7 +23,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.LootGenerateEvent;
@@ -55,45 +57,71 @@ public class GenerateLoot implements Listener {
         }
         Location lootLocation = event.getLootContext().getLocation();
         Inventory chestInv = inventoryHolder.getInventory();
-        Block openedChest = null;
-        // look at the current list of opened chest and get the distance
-        // between the lootcontext location and chest location
-        // if the distance is less than 1, it's the same chest
-        for (Block chest : toolStats.playerInteract.openedChests.keySet()) {
-            Location chestLocation = chest.getLocation();
-            double distance = lootLocation.distance(chestLocation);
-            if (distance <= 1.0) {
-                openedChest = chest;
-            }
-        }
-        // ignore if the chest is not in the same location
-        if (openedChest == null) {
-            return;
-        }
 
-        // run task later since if it runs on the same tick it breaks idk
-        Block finalOpenedChest = openedChest;
-        Bukkit.getScheduler().runTaskLater(toolStats, () -> {
-            Player player = toolStats.playerInteract.openedChests.get(finalOpenedChest);
-            // do a classic for loop, so we keep track of chest index of item
-            for (int i = 0; i < chestInv.getContents().length; i++) {
-                ItemStack itemStack = chestInv.getItem(i);
-                // ignore air
-                if (itemStack == null || itemStack.getType() == Material.AIR) {
-                    continue;
+        if (inventoryHolder instanceof Chest) {
+            Block openedChest = null;
+            // look at the current list of opened chest and get the distance
+            // between the lootcontext location and chest location
+            // if the distance is less than 1, it's the same chest
+            for (Block chest : toolStats.playerInteract.openedChests.keySet()) {
+                Location chestLocation = chest.getLocation();
+                double distance = lootLocation.distance(chestLocation);
+                if (distance <= 1.0) {
+                    openedChest = chest;
                 }
-                String name = itemStack.getType().toString().toLowerCase(Locale.ROOT);
-                for (String x : toolStats.allValidItems) {
-                    if (name.contains(x)) {
-                        ItemStack newItem = addLore(itemStack, player);
-                        if (newItem != null) {
-                            chestInv.setItem(i, newItem);
+            }
+            // ignore if the chest is not in the same location
+            if (openedChest == null) {
+                return;
+            }
+
+            // run task later since if it runs on the same tick it breaks idk
+            Block finalOpenedChest = openedChest;
+            Bukkit.getScheduler().runTaskLater(toolStats, () -> {
+                Player player = toolStats.playerInteract.openedChests.get(finalOpenedChest);
+                // do a classic for loop, so we keep track of chest index of item
+                for (int i = 0; i < chestInv.getContents().length; i++) {
+                    ItemStack itemStack = chestInv.getItem(i);
+                    // ignore air
+                    if (itemStack == null || itemStack.getType() == Material.AIR) {
+                        continue;
+                    }
+                    String name = itemStack.getType().toString().toLowerCase(Locale.ROOT);
+                    for (String x : toolStats.allValidItems) {
+                        if (name.contains(x)) {
+                            ItemStack newItem = addLore(itemStack, player);
+                            if (newItem != null) {
+                                chestInv.setItem(i, newItem);
+                            }
+                        }
+                    }
+                }
+
+            }, 1);
+        }
+        if (inventoryHolder instanceof StorageMinecart) {
+            StorageMinecart mineCart = (StorageMinecart) inventoryHolder;
+            if (toolStats.playerInteract.openedMineCarts.containsKey(mineCart)) {
+                Player player = toolStats.playerInteract.openedMineCarts.get(mineCart);
+                // player clicked this minecart
+                for (int i = 0; i < chestInv.getContents().length; i++) {
+                    ItemStack itemStack = chestInv.getItem(i);
+                    // ignore air
+                    if (itemStack == null || itemStack.getType() == Material.AIR) {
+                        continue;
+                    }
+                    String name = itemStack.getType().toString().toLowerCase(Locale.ROOT);
+                    for (String x : toolStats.allValidItems) {
+                        if (name.contains(x)) {
+                            ItemStack newItem = addLore(itemStack, player);
+                            if (newItem != null) {
+                                chestInv.setItem(i, newItem);
+                            }
                         }
                     }
                 }
             }
-
-        }, 1);
+        }
     }
 
     /**
