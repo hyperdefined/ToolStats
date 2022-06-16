@@ -58,11 +58,6 @@ public final class ToolStats extends JavaPlugin {
     // used for tracking new elytras
     public final NamespacedKey newElytra = new NamespacedKey(this, "new");
 
-    public final String[] allValidItems = {
-            "pickaxe", "sword", "shovel", "axe", "hoe", "bow", "helmet", "chestplate", "leggings", "boots", "fishing"
-    };
-    public final String[] meleeItems = {"sword", "trident", "axe"};
-    public final String[] mineItems = {"pickaxe", "axe", "hoe", "shovel", "shear"};
     public final SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
 
     public BlocksMined blocksMined;

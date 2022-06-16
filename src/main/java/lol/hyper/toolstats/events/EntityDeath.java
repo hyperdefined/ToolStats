@@ -18,6 +18,7 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
+import lol.hyper.toolstats.tools.ItemChecker;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -46,11 +47,8 @@ public class EntityDeath implements Listener {
         // if it's a mob we are tracking that matters
         if (toolStats.mobKill.trackedMobs.contains(livingEntityUUID)) {
             for (ItemStack current : event.getDrops()) {
-                String name = current.getType().toString().toLowerCase(Locale.ROOT);
-                for (String item : toolStats.allValidItems) {
-                    if (name.contains(item)) {
-                        addLore(current, livingEntity.getName());
-                    }
+                if (ItemChecker.isValidItem(current.getType())) {
+                    addLore(current, livingEntity.getName());
                 }
             }
             toolStats.mobKill.trackedMobs.remove(livingEntityUUID);

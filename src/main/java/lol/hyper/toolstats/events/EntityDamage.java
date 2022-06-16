@@ -18,6 +18,7 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
+import lol.hyper.toolstats.tools.ItemChecker;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
@@ -68,9 +69,8 @@ public class EntityDamage implements Listener {
                 if (heldItem == null || heldItem.getType() == Material.AIR) {
                     return;
                 }
-                // check items we want
-                String itemName = heldItem.getType().toString().toLowerCase();
-                if (Arrays.stream(toolStats.meleeItems).noneMatch(itemName::contains)) {
+                // only check certain items
+                if (!ItemChecker.isMeleeWeapon(heldItem.getType())) {
                     return;
                 }
                 // a player is killing another player
@@ -131,7 +131,7 @@ public class EntityDamage implements Listener {
             PlayerInventory inventory = player.getInventory();
             for (ItemStack armor : inventory.getArmorContents()) {
                 if (armor != null) {
-                    if (isArmor(armor.getType().toString().toLowerCase(Locale.ROOT))) {
+                    if (ItemChecker.isArmor(armor.getType())) {
                         updateArmorDamage(armor, event.getFinalDamage());
                     }
                 }
@@ -154,7 +154,7 @@ public class EntityDamage implements Listener {
             PlayerInventory inventory = player.getInventory();
             for (ItemStack armor : inventory.getArmorContents()) {
                 if (armor != null) {
-                    if (isArmor(armor.getType().toString().toLowerCase(Locale.ROOT))) {
+                    if (ItemChecker.isArmor(armor.getType())) {
                         updateArmorDamage(armor, event.getFinalDamage());
                     }
                 }
@@ -177,7 +177,7 @@ public class EntityDamage implements Listener {
             PlayerInventory inventory = player.getInventory();
             for (ItemStack armor : inventory.getArmorContents()) {
                 if (armor != null) {
-                    if (isArmor(armor.getType().toString().toLowerCase(Locale.ROOT))) {
+                    if (ItemChecker.isArmor(armor.getType())) {
                         updateArmorDamage(armor, event.getFinalDamage());
                     }
                 }
@@ -370,15 +370,5 @@ public class EntityDamage implements Listener {
             meta.setLore(lore);
         }
         itemStack.setItemMeta(meta);
-    }
-
-    /**
-     * Check if item is an armor piece.
-     *
-     * @param itemType The item type, not name.
-     * @return If the item is an armor piece.
-     */
-    private boolean isArmor(String itemType) {
-        return itemType.endsWith("_helmet") || itemType.endsWith("_chestplate") || itemType.endsWith("_leggings") || itemType.endsWith("_boots");
     }
 }

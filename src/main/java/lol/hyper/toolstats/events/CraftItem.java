@@ -18,6 +18,7 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
+import lol.hyper.toolstats.tools.ItemChecker;
 import lol.hyper.toolstats.tools.UUIDDataType;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -54,26 +55,25 @@ public class CraftItem implements Listener {
         if (itemStack == null || itemStack.getType() == Material.AIR) {
             return;
         }
-        String name = itemStack.getType().toString().toLowerCase(Locale.ROOT);
-        // only check for items we want
-        for (String x : toolStats.allValidItems) {
-            if (name.contains(x)) {
-                // if the player shift clicks, send them this warning
-                if (event.isShiftClick()) {
-                    String configMessage = toolStats.config.getString("messages.shift-click-warning.crafting");
-                    if (configMessage != null) {
-                        if (configMessage.length() != 0) {
-                            event.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&', configMessage));
-                        }
-                    }
-                }
-                // test the item before setting it
-                ItemStack newItem = addLore(itemStack, player);
-                if (newItem != null) {
-                    // set the result
-                    event.setCurrentItem(newItem);
+        // only check certain items
+        if (!ItemChecker.isValidItem(itemStack.getType())) {
+            return;
+        }
+
+        // if the player shift clicks, send them this warning
+        if (event.isShiftClick()) {
+            String configMessage = toolStats.config.getString("messages.shift-click-warning.crafting");
+            if (configMessage != null) {
+                if (configMessage.length() != 0) {
+                    event.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&', configMessage));
                 }
             }
+        }
+        // test the item before setting it
+        ItemStack newItem = addLore(itemStack, player);
+        if (newItem != null) {
+            // set the result
+            event.setCurrentItem(newItem);
         }
     }
 

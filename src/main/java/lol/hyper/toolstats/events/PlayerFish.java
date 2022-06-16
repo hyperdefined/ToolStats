@@ -18,7 +18,8 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import lol.hyper.toolstats.UUIDDataType;
+import lol.hyper.toolstats.tools.ItemChecker;
+import lol.hyper.toolstats.tools.UUIDDataType;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -34,7 +35,6 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class PlayerFish implements Listener {
 
@@ -67,10 +67,8 @@ public class PlayerFish implements Listener {
             return;
         }
         ItemStack caughtItem = ((Item) event.getCaught()).getItemStack();
-        for (String x : toolStats.allValidItems) {
-            if (caughtItem.getType().toString().toLowerCase(Locale.ROOT).contains(x)) {
-                addNewLore(caughtItem, player);
-            }
+        if (ItemChecker.isValidItem(caughtItem.getType())) {
+            addNewLore(caughtItem, player);
         }
     }
 

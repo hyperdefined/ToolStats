@@ -18,7 +18,8 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import lol.hyper.toolstats.UUIDDataType;
+import lol.hyper.toolstats.tools.ItemChecker;
+import lol.hyper.toolstats.tools.UUIDDataType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -37,7 +38,6 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class VillagerTrade implements Listener {
 
@@ -66,21 +66,19 @@ public class VillagerTrade implements Listener {
             if (event.getSlotType() == InventoryType.SlotType.RESULT) {
                 ItemStack item = event.getCurrentItem();
                 // only check items we want
-                for (String x : toolStats.allValidItems) {
-                    if (item.getType().toString().toLowerCase(Locale.ROOT).contains(x)) {
-                        // if the player shift clicks, show the warning
-                        if (event.isShiftClick()) {
-                            String configMessage = toolStats.config.getString("messages.shift-click-warning.trading");
-                            if (configMessage != null) {
-                                event.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&', configMessage));
-                            }
+                if (ItemChecker.isValidItem(item.getType())) {
+                    // if the player shift clicks, show the warning
+                    if (event.isShiftClick()) {
+                        String configMessage = toolStats.config.getString("messages.shift-click-warning.trading");
+                        if (configMessage != null) {
+                            event.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&', configMessage));
                         }
-                        ItemStack newItem = addLore(item, player);
-                        if (newItem != null) {
-                            // this gets delayed since villager inventories suck for no reason
-                            Bukkit.getScheduler().runTaskLater(toolStats, () -> event.setCurrentItem(newItem), 5);
-                            return;
-                        }
+                    }
+                    ItemStack newItem = addLore(item, player);
+                    if (newItem != null) {
+                        // this gets delayed since villager inventories suck for no reason
+                        Bukkit.getScheduler().runTaskLater(toolStats, () -> event.setCurrentItem(newItem), 5);
+                        return;
                     }
                 }
             }

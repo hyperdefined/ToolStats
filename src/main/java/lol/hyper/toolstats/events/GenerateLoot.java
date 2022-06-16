@@ -18,7 +18,8 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import lol.hyper.toolstats.UUIDDataType;
+import lol.hyper.toolstats.tools.ItemChecker;
+import lol.hyper.toolstats.tools.UUIDDataType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -39,7 +40,6 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class GenerateLoot implements Listener {
 
@@ -86,13 +86,10 @@ public class GenerateLoot implements Listener {
                     if (itemStack == null || itemStack.getType() == Material.AIR) {
                         continue;
                     }
-                    String name = itemStack.getType().toString().toLowerCase(Locale.ROOT);
-                    for (String x : toolStats.allValidItems) {
-                        if (name.contains(x)) {
-                            ItemStack newItem = addLore(itemStack, player);
-                            if (newItem != null) {
-                                chestInv.setItem(i, newItem);
-                            }
+                    if (ItemChecker.isValidItem(itemStack.getType())) {
+                        ItemStack newItem = addLore(itemStack, player);
+                        if (newItem != null) {
+                            chestInv.setItem(i, newItem);
                         }
                     }
                 }
@@ -110,13 +107,10 @@ public class GenerateLoot implements Listener {
                     if (itemStack == null || itemStack.getType() == Material.AIR) {
                         continue;
                     }
-                    String name = itemStack.getType().toString().toLowerCase(Locale.ROOT);
-                    for (String x : toolStats.allValidItems) {
-                        if (name.contains(x)) {
-                            ItemStack newItem = addLore(itemStack, player);
-                            if (newItem != null) {
-                                chestInv.setItem(i, newItem);
-                            }
+                    if (ItemChecker.isValidItem(itemStack.getType())) {
+                        ItemStack newItem = addLore(itemStack, player);
+                        if (newItem != null) {
+                            chestInv.setItem(i, newItem);
                         }
                     }
                 }

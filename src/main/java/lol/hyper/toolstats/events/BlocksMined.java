@@ -18,6 +18,7 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
+import lol.hyper.toolstats.tools.ItemChecker;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -30,7 +31,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class BlocksMined implements Listener {
@@ -56,8 +56,7 @@ public class BlocksMined implements Listener {
             return;
         }
         // only check certain items
-        String itemName = heldItem.getType().toString().toLowerCase();
-        if (Arrays.stream(toolStats.mineItems).noneMatch(itemName::contains)) {
+        if (!ItemChecker.isMineTool(heldItem.getType())) {
             return;
         }
         // if it's an item we want, update the stats
