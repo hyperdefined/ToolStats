@@ -65,9 +65,11 @@ public class GenerateLoot implements Listener {
             // if the distance is less than 1, it's the same chest
             for (Block chest : toolStats.playerInteract.openedChests.keySet()) {
                 Location chestLocation = chest.getLocation();
-                double distance = lootLocation.distance(chestLocation);
-                if (distance <= 1.0) {
-                    openedChest = chest;
+                if (chest.getWorld() == lootLocation.getWorld()) {
+                    double distance = lootLocation.distance(chestLocation);
+                    if (distance <= 1.0) {
+                        openedChest = chest;
+                    }
                 }
             }
             // ignore if the chest is not in the same location
