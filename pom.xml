@@ -121,14 +121,8 @@
         <dependency>
             <groupId>lol.hyper</groupId>
             <artifactId>github-release-api</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.3</version>
             <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.json</groupId>
-                    <artifactId>json</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>net.kyori</groupId>
