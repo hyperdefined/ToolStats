@@ -48,7 +48,7 @@ public class CommandToolStats implements TabExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!sender.hasPermission("toolstats.use")) {
+        if (!sender.hasPermission("toolstats.command")) {
             audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.").color(NamedTextColor.RED));
             return true;
         }
@@ -67,7 +67,15 @@ public class CommandToolStats implements TabExecutor {
                 return true;
             }
             case "reset": {
+                if (!sender.hasPermission("toolstats.reset")) {
+                    audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.").color(NamedTextColor.RED));
+                    return true;
+                }
                 if (args.length == 2 && args[1].equalsIgnoreCase("confirm")) {
+                    if (!sender.hasPermission("toolstats.reset.confirm")) {
+                        audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.").color(NamedTextColor.RED));
+                        return true;
+                    }
                     Player player = (Player) sender;
                     ItemStack heldItem = player.getInventory().getItemInMainHand();
                     if (heldItem.getType() == Material.AIR) {

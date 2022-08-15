@@ -7,12 +7,17 @@ description: Track various tool stats!
 commands:
   toolstats:
     usage: /toolstats
-    description: Main command.
-    permission: toolstats.main
+    permission: toolstats.command
 permissions:
-  toolstats.main:
-    description: Allows the usage of /toolstats
+  toolstats.command:
+    description: Allows the usage of /toolstats.
     default: true
   toolstats.reload:
-    description: Allows the usage of /toolstats reload
+    description: Allows the usage of /toolstats reload.
     default: op
+  toolstats.reset:
+    description: Allows the usage of /toolstats reset.
+    default: true
+  toolstats.reset.confirm:
+    description: Allows the usage of /toolstats reset confirm.
+    default: true
