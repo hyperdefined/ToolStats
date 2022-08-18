@@ -53,6 +53,13 @@ public class EntityDamage implements Listener {
             return;
         }
         LivingEntity livingEntity = (LivingEntity) event.getEntity();
+
+        // ignore void and /kill damage
+        EntityDamageEvent.DamageCause cause = event.getCause();
+        if (cause == EntityDamageEvent.DamageCause.SUICIDE || cause == EntityDamageEvent.DamageCause.VOID) {
+            return;
+        }
+
         // mob is going to die
         if (livingEntity.getHealth() - event.getFinalDamage() <= 0) {
             // a player is killing something
