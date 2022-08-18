@@ -78,7 +78,6 @@ public class VillagerTrade implements Listener {
                     if (newItem != null) {
                         // this gets delayed since villager inventories suck for no reason
                         Bukkit.getScheduler().runTaskLater(toolStats, () -> event.setCurrentItem(newItem), 5);
-                        return;
                     }
                 }
             }

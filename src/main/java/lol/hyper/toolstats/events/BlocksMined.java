@@ -70,17 +70,18 @@ public class BlocksMined implements Listener {
         }
         // read the current stats from the item
         // if they don't exist, then start from 0
-        Integer blocksMined = 0;
+        Integer blocksMined = null;
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(toolStats.genericMined, PersistentDataType.INTEGER)) {
             blocksMined = container.get(toolStats.genericMined, PersistentDataType.INTEGER);
         }
         if (blocksMined == null) {
-            return;
-        } else {
-            blocksMined++;
+            blocksMined = 0;
         }
+
+        blocksMined++;
         container.set(toolStats.genericMined, PersistentDataType.INTEGER, blocksMined);
+
         String configLore = toolStats.getLoreFromConfig("blocks-mined", false);
         String configLoreRaw = toolStats.getLoreFromConfig("blocks-mined", true);
 

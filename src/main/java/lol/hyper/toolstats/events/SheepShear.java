@@ -84,10 +84,10 @@ public class SheepShear implements Listener {
             sheepSheared = container.get(toolStats.shearsSheared, PersistentDataType.INTEGER);
         }
         if (sheepSheared == null) {
-            return;
-        } else {
-            sheepSheared++;
+            sheepSheared = 0;
         }
+
+        sheepSheared++;
         container.set(toolStats.shearsSheared, PersistentDataType.INTEGER, sheepSheared);
 
         String sheepShearedLore = toolStats.getLoreFromConfig("sheep-sheared", false);

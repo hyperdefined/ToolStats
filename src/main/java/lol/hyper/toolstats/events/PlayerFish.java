@@ -82,16 +82,16 @@ public class PlayerFish implements Listener {
         if (meta == null) {
             return;
         }
-        Integer fishCaught = 0;
+        Integer fishCaught = null;
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(toolStats.fishingRodCaught, PersistentDataType.INTEGER)) {
             fishCaught = container.get(toolStats.fishingRodCaught, PersistentDataType.INTEGER);
         }
         if (fishCaught == null) {
-            return;
-        } else {
-            fishCaught++;
+            fishCaught = 0;
         }
+
+        fishCaught++;
         container.set(toolStats.fishingRodCaught, PersistentDataType.INTEGER, fishCaught);
 
         String fishCaughtLore = toolStats.getLoreFromConfig("fished.fish-caught", false);

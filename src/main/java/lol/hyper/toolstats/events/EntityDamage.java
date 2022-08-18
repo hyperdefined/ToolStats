@@ -201,16 +201,16 @@ public class EntityDamage implements Listener {
         if (meta == null) {
             return null;
         }
-        Integer playerKills = 0;
+        Integer playerKills = null;
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(toolStats.swordPlayerKills, PersistentDataType.INTEGER)) {
             playerKills = container.get(toolStats.swordPlayerKills, PersistentDataType.INTEGER);
         }
         if (playerKills == null) {
-            return null;
-        } else {
-            playerKills++;
+            playerKills = 0;
         }
+
+        playerKills++;
         container.set(toolStats.swordPlayerKills, PersistentDataType.INTEGER, playerKills);
 
         String playerKillsLore = toolStats.getLoreFromConfig("kills.player", false);
@@ -264,16 +264,16 @@ public class EntityDamage implements Listener {
         if (meta == null) {
             return null;
         }
-        Integer mobKills = 0;
+        Integer mobKills = null;
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(toolStats.swordMobKills, PersistentDataType.INTEGER)) {
             mobKills = container.get(toolStats.swordMobKills, PersistentDataType.INTEGER);
         }
         if (mobKills == null) {
-            return null;
-        } else {
-            mobKills++;
+            mobKills = 0;
         }
+
+        mobKills++;
         container.set(toolStats.swordMobKills, PersistentDataType.INTEGER, mobKills);
 
         String mobKillsLore = toolStats.getLoreFromConfig("kills.mob", false);
@@ -326,16 +326,16 @@ public class EntityDamage implements Listener {
         if (meta == null) {
             return;
         }
-        Double damageTaken = 0.0;
+        Double damageTaken = null;
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(toolStats.armorDamage, PersistentDataType.DOUBLE)) {
             damageTaken = container.get(toolStats.armorDamage, PersistentDataType.DOUBLE);
         }
         if (damageTaken == null) {
-            return;
-        } else {
-            damageTaken = damageTaken + damage;
+            damageTaken = 0.0;
         }
+
+        damageTaken = damageTaken + damage;
         container.set(toolStats.armorDamage, PersistentDataType.DOUBLE, damageTaken);
 
         String damageTakenLore = toolStats.getLoreFromConfig("damage-taken", false);
