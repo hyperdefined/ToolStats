@@ -49,6 +49,7 @@ public class EntityDamage implements Listener {
         if (event.isCancelled()) {
             return;
         }
+
         if (!(event.getEntity() instanceof LivingEntity)) {
             return;
         }
@@ -148,6 +149,13 @@ public class EntityDamage implements Listener {
         if (!(event.getEntity() instanceof LivingEntity)) {
             return;
         }
+
+        // ignore void and /kill damage
+        EntityDamageEvent.DamageCause cause = event.getCause();
+        if (cause == EntityDamageEvent.DamageCause.SUICIDE || cause == EntityDamageEvent.DamageCause.VOID) {
+            return;
+        }
+
         LivingEntity livingEntity = (LivingEntity) event.getEntity();
         // player is taken damage but not being killed
         if (livingEntity instanceof Player) {
@@ -171,6 +179,13 @@ public class EntityDamage implements Listener {
         if (!(event.getEntity() instanceof LivingEntity)) {
             return;
         }
+
+        // ignore void and /kill damage
+        EntityDamageEvent.DamageCause cause = event.getCause();
+        if (cause == EntityDamageEvent.DamageCause.SUICIDE || cause == EntityDamageEvent.DamageCause.VOID) {
+            return;
+        }
+
         LivingEntity livingEntity = (LivingEntity) event.getEntity();
         // player is taken damage but not being killed
         if (livingEntity instanceof Player) {
