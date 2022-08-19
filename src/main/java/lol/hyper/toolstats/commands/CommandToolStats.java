@@ -271,13 +271,16 @@ public class CommandToolStats implements TabExecutor {
         if (args.length == 1) {
             if (sender.hasPermission("toolstats.reload")) {
                 return Arrays.asList("reset", "reload");
-            } else {
+            }
+            if (sender.hasPermission("toolstats.reset")) {
                 return Collections.singletonList("reset");
             }
         }
         if (args.length == 2) {
             if (args[0].equalsIgnoreCase("reset")) {
-                return Collections.singletonList("confirm");
+                if (sender.hasPermission("toolstats.reset.confirm")) {
+                    return Collections.singletonList("confirm");
+                }
             }
         }
         return null;
