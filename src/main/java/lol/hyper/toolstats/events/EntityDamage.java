@@ -39,6 +39,7 @@ public class EntityDamage implements Listener {
 
     private final ToolStats toolStats;
     public final Set<UUID> trackedMobs = new HashSet<>();
+    private final List<EntityDamageEvent.DamageCause> ignoredCauses = Arrays.asList(EntityDamageEvent.DamageCause.SUICIDE, EntityDamageEvent.DamageCause.VOID, EntityDamageEvent.DamageCause.CUSTOM);
 
     public EntityDamage(ToolStats toolStats) {
         this.toolStats = toolStats;
@@ -57,7 +58,7 @@ public class EntityDamage implements Listener {
 
         // ignore void and /kill damage
         EntityDamageEvent.DamageCause cause = event.getCause();
-        if (cause == EntityDamageEvent.DamageCause.SUICIDE || cause == EntityDamageEvent.DamageCause.VOID) {
+        if (ignoredCauses.contains(cause)) {
             return;
         }
 
@@ -152,7 +153,7 @@ public class EntityDamage implements Listener {
 
         // ignore void and /kill damage
         EntityDamageEvent.DamageCause cause = event.getCause();
-        if (cause == EntityDamageEvent.DamageCause.SUICIDE || cause == EntityDamageEvent.DamageCause.VOID) {
+        if (ignoredCauses.contains(cause)) {
             return;
         }
 
@@ -182,7 +183,7 @@ public class EntityDamage implements Listener {
 
         // ignore void and /kill damage
         EntityDamageEvent.DamageCause cause = event.getCause();
-        if (cause == EntityDamageEvent.DamageCause.SUICIDE || cause == EntityDamageEvent.DamageCause.VOID) {
+        if (ignoredCauses.contains(cause)) {
             return;
         }
 
