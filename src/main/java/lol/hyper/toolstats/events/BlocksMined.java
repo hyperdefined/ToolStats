@@ -93,7 +93,6 @@ public class BlocksMined implements Listener {
         List<String> lore;
         if (meta.hasLore()) {
             lore = meta.getLore();
-            assert lore != null;
             boolean hasLore = false;
             // we do a for loop like this, we can keep track of index
             // this doesn't mess the lore up of existing items

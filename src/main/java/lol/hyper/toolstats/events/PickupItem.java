@@ -104,7 +104,6 @@ public class PickupItem implements Listener {
         List<String> lore;
         if (meta.hasLore()) {
             lore = meta.getLore();
-            assert lore != null;
         } else {
             lore = new ArrayList<>();
         }

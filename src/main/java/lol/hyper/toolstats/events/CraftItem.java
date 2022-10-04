@@ -121,7 +121,6 @@ public class CraftItem implements Listener {
         // get the current lore the item
         if (meta.hasLore()) {
             lore = meta.getLore();
-            assert lore != null;
         } else {
             lore = new ArrayList<>();
         }

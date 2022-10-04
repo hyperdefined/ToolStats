@@ -79,7 +79,6 @@ public class EntityDeath implements Listener {
         List<String> lore;
         if (meta.hasLore()) {
             lore = meta.getLore();
-            assert lore != null;
             for (int x = 0; x < lore.size(); x++) {
                 if (lore.get(x).contains(droppedByLore)) {
                     // replace existing tag
