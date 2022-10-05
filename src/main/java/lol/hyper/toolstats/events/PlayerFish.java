@@ -25,6 +25,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
@@ -44,7 +45,7 @@ public class PlayerFish implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onFish(PlayerFishEvent event) {
         if (event.isCancelled()) {
             return;
@@ -58,37 +59,54 @@ public class PlayerFish implements Listener {
         if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
+        // make sure the player is holding a fishing rod
         ItemStack heldItem = player.getInventory().getItem(player.getInventory().getHeldItemSlot());
+        int heldItemSlot = player.getInventory().getHeldItemSlot();
         if (heldItem == null || heldItem.getType() == Material.AIR || heldItem.getType() != Material.FISHING_ROD) {
             return;
         }
-        updateFishCount(heldItem);
+        // update the fishing rod to the new one
+        ItemStack newRod = updateFishCount(heldItem);
+        if (newRod != null) {
+            player.getInventory().setItem(heldItemSlot, newRod);
+        }
+        // check if the player caught an item
         if (event.getCaught() == null) {
             return;
         }
         ItemStack caughtItem = ((Item) event.getCaught()).getItemStack();
+        Item caughtItemEntity = (Item) event.getCaught();
         if (ItemChecker.isValidItem(caughtItem.getType())) {
-            addNewLore(caughtItem, player);
+            ItemStack newItem = addNewLore(caughtItem, player);
+            if (newItem != null) {
+                caughtItemEntity.setItemStack(newItem);
+            }
         }
     }
 
     /**
-     * Updates a fishing rod's count.
-     *
-     * @param itemStack The fishing rod to update.
+     * Update a fishing rod's fish count.
+     * @param originalRod The fishing rod to update.
+     * @return A new fishing rod with update counts.
      */
-    private void updateFishCount(ItemStack itemStack) {
-        ItemMeta meta = itemStack.getItemMeta();
+    private ItemStack updateFishCount(ItemStack originalRod) {
+        ItemStack newRod = originalRod.clone();
+        ItemMeta meta = newRod.getItemMeta();
         if (meta == null) {
-            return;
+            toolStats.logger.warning(originalRod + " does NOT have any meta! Unable to update stats.");
+            return null;
         }
-        Integer fishCaught = null;
+        Integer fishCaught;
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(toolStats.fishingRodCaught, PersistentDataType.INTEGER)) {
             fishCaught = container.get(toolStats.fishingRodCaught, PersistentDataType.INTEGER);
+        } else {
+            fishCaught = 0;
         }
+
         if (fishCaught == null) {
             fishCaught = 0;
+            toolStats.logger.warning(originalRod + " does not have valid fish-caught set! Resting to zero. This should NEVER happen.");
         }
 
         fishCaught++;
@@ -99,7 +117,7 @@ public class PlayerFish implements Listener {
 
         if (fishCaughtLore == null || fishCaughtLoreRaw == null) {
             toolStats.logger.warning("There is no lore message for messages.fish-caught!");
-            return;
+            return null;
         }
 
         List<String> lore;
@@ -127,26 +145,28 @@ public class PlayerFish implements Listener {
         if (toolStats.config.getBoolean("enabled.fish-caught")) {
             meta.setLore(lore);
         }
-        itemStack.setItemMeta(meta);
+        newRod.setItemMeta(meta);
+        return newRod;
     }
 
     /**
-     * Adds "caught by" tags to newly fished items.
-     *
-     * @param itemStack The item to add lore to.
-     * @param owner     The player who caught the item.
+     * Add lore to newly caught item.
+     * @param originalItem The original item to add lore.
+     * @param owner The player who caught it.
+     * @return A copy of the new item with lore.
      */
-    private void addNewLore(ItemStack itemStack, Player owner) {
-        ItemMeta meta = itemStack.getItemMeta();
+    private ItemStack addNewLore(ItemStack originalItem, Player owner) {
+        ItemStack newItem = originalItem.clone();
+        ItemMeta meta = originalItem.getItemMeta();
         if (meta == null) {
-            return;
+            return null;
         }
         long timeCreated = System.currentTimeMillis();
         Date finalDate = new Date(timeCreated);
         PersistentDataContainer container = meta.getPersistentDataContainer();
 
         if (container.has(toolStats.timeCreated, PersistentDataType.LONG) || container.has(toolStats.genericOwner, PersistentDataType.LONG)) {
-            return;
+            return null;
         }
 
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
@@ -157,7 +177,7 @@ public class PlayerFish implements Listener {
 
         if (caughtByLoreRaw == null || caughtOnLoreRaw == null) {
             toolStats.logger.warning("There is no lore message for messages.fished!");
-            return;
+            return null;
         }
 
         List<String> lore;
@@ -167,11 +187,12 @@ public class PlayerFish implements Listener {
         } else {
             lore = new ArrayList<>();
         }
-        if (toolStats.checkConfig(itemStack, "fished-tag")) {
+        if (toolStats.checkConfig(newItem, "fished-tag")) {
             lore.add(caughtOnLoreRaw.replace("{date}", toolStats.dateFormat.format(finalDate)));
             lore.add(caughtByLoreRaw.replace("{player}", owner.getName()));
+            meta.setLore(lore);
         }
-        meta.setLore(lore);
-        itemStack.setItemMeta(meta);
+        newItem.setItemMeta(meta);
+        return newItem;
     }
 }

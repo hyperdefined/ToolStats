@@ -23,6 +23,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -45,7 +46,7 @@ public class EntityDamage implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageByEntityEvent event) {
         if (event.isCancelled()) {
             return;
@@ -145,7 +146,7 @@ public class EntityDamage implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof LivingEntity)) {
             return;
@@ -175,7 +176,7 @@ public class EntityDamage implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageByBlockEvent event) {
         if (!(event.getEntity() instanceof LivingEntity)) {
             return;
@@ -215,15 +216,19 @@ public class EntityDamage implements Listener {
         ItemStack finalItem = itemStack.clone();
         ItemMeta meta = finalItem.getItemMeta();
         if (meta == null) {
+            toolStats.logger.warning(itemStack + " does NOT have any meta! Unable to update stats.");
             return null;
         }
         Integer playerKills = null;
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(toolStats.swordPlayerKills, PersistentDataType.INTEGER)) {
             playerKills = container.get(toolStats.swordPlayerKills, PersistentDataType.INTEGER);
+        } else {
+            playerKills = 0;
         }
         if (playerKills == null) {
             playerKills = 0;
+            toolStats.logger.warning(itemStack + " does not have valid player-kills set! Resting to zero. This should NEVER happen.");
         }
 
         playerKills++;
@@ -277,15 +282,20 @@ public class EntityDamage implements Listener {
         ItemStack finalItem = itemStack.clone();
         ItemMeta meta = finalItem.getItemMeta();
         if (meta == null) {
+            toolStats.logger.warning(itemStack + " does NOT have any meta! Unable to update stats.");
             return null;
         }
         Integer mobKills = null;
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(toolStats.swordMobKills, PersistentDataType.INTEGER)) {
             mobKills = container.get(toolStats.swordMobKills, PersistentDataType.INTEGER);
+        } else {
+            mobKills = 0;
         }
+
         if (mobKills == null) {
             mobKills = 0;
+            toolStats.logger.warning(itemStack + " does not have valid mob-kills set! Resting to zero. This should NEVER happen.");
         }
 
         mobKills++;
@@ -338,15 +348,20 @@ public class EntityDamage implements Listener {
     private void updateArmorDamage(ItemStack itemStack, double damage) {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) {
+            toolStats.logger.warning(itemStack + " does NOT have any meta! Unable to update stats.");
             return;
         }
-        Double damageTaken = null;
+        Double damageTaken;
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(toolStats.armorDamage, PersistentDataType.DOUBLE)) {
             damageTaken = container.get(toolStats.armorDamage, PersistentDataType.DOUBLE);
+        } else {
+            damageTaken = 0.0;
         }
+
         if (damageTaken == null) {
             damageTaken = 0.0;
+            toolStats.logger.warning(itemStack + " does not have valid damage-taken set! Resting to zero. This should NEVER happen.");
         }
 
         damageTaken = damageTaken + damage;

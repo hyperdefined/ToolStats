@@ -24,6 +24,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Sheep;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
@@ -42,7 +43,7 @@ public class SheepShear implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onShear(PlayerInteractEntityEvent event) {
         if (event.isCancelled()) {
             return;
@@ -56,7 +57,8 @@ public class SheepShear implements Listener {
             return;
         }
         // check if the player is right-clicking with shears only
-        ItemStack heldItem = player.getInventory().getItem(player.getInventory().getHeldItemSlot());
+        int heldItemSlot = player.getInventory().getHeldItemSlot();
+        ItemStack heldItem = player.getInventory().getItem(heldItemSlot);
         if (heldItem == null || heldItem.getType() == Material.AIR || heldItem.getType() != Material.SHEARS) {
             return;
         }
@@ -64,27 +66,36 @@ public class SheepShear implements Listener {
         Sheep sheep = (Sheep) entity;
         // make sure the sheep is not sheared
         if (!sheep.isSheared()) {
-            addLore(heldItem);
+            ItemStack newShears = addLore(heldItem);
+            if (newShears != null) {
+                player.getInventory().setItem(heldItemSlot, newShears);
+            }
         }
     }
 
     /**
      * Adds tags to shears.
      *
-     * @param itemStack The shears.
+     * @param oldShears The shears.
      */
-    private void addLore(ItemStack itemStack) {
-        ItemMeta meta = itemStack.getItemMeta();
+    private ItemStack addLore(ItemStack oldShears) {
+        ItemStack newShears = oldShears.clone();
+        ItemMeta meta = newShears.getItemMeta();
         if (meta == null) {
-            return;
+            toolStats.logger.warning(newShears + " does NOT have any meta! Unable to update stats.");
+            return null;
         }
-        Integer sheepSheared = 0;
+        Integer sheepSheared;
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(toolStats.shearsSheared, PersistentDataType.INTEGER)) {
             sheepSheared = container.get(toolStats.shearsSheared, PersistentDataType.INTEGER);
+        } else {
+            sheepSheared = 0;
         }
+
         if (sheepSheared == null) {
             sheepSheared = 0;
+            toolStats.logger.warning(newShears + " does not have valid sheared set! Resting to zero. This should NEVER happen.");
         }
 
         sheepSheared++;
@@ -95,7 +106,7 @@ public class SheepShear implements Listener {
 
         if (sheepShearedLore == null || sheepShearedLoreRaw == null) {
             toolStats.logger.warning("There is no lore message for messages.sheep-sheared!");
-            return;
+            return null;
         }
 
         List<String> lore;
@@ -123,6 +134,7 @@ public class SheepShear implements Listener {
         if (toolStats.config.getBoolean("enabled.sheep-sheared")) {
             meta.setLore(lore);
         }
-        itemStack.setItemMeta(meta);
+        newShears.setItemMeta(meta);
+        return newShears;
     }
 }

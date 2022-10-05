@@ -25,6 +25,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkPopulateEvent;
 import org.bukkit.inventory.ItemStack;
@@ -43,7 +44,7 @@ public class ChunkPopulate implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPopulate(ChunkPopulateEvent event) {
         if (event.getChunk().getWorld().getEnvironment() != World.Environment.THE_END) {
             return;

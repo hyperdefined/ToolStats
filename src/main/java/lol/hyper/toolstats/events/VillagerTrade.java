@@ -25,6 +25,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -47,7 +48,7 @@ public class VillagerTrade implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onTrade(InventoryClickEvent event) {
         if (event.isCancelled() || event.getCurrentItem() == null) {
             return;
@@ -87,13 +88,15 @@ public class VillagerTrade implements Listener {
     /**
      * Adds "traded by" tags to item.
      *
-     * @param itemStack The item to add lore.
-     * @param owner     The player who traded.
+     * @param oldItem The item to add lore.
+     * @param owner   The player who traded.
      * @return The item with lore.
      */
-    private ItemStack addLore(ItemStack itemStack, Player owner) {
-        ItemMeta meta = itemStack.getItemMeta();
+    private ItemStack addLore(ItemStack oldItem, Player owner) {
+        ItemStack newItem = oldItem.clone();
+        ItemMeta meta = newItem.getItemMeta();
         if (meta == null) {
+            toolStats.logger.warning(newItem + " does NOT have any meta! Unable to update stats.");
             return null;
         }
         long timeCreated = System.currentTimeMillis();
@@ -121,12 +124,12 @@ public class VillagerTrade implements Listener {
         } else {
             lore = new ArrayList<>();
         }
-        if (toolStats.checkConfig(itemStack, "traded-tag")) {
+        if (toolStats.checkConfig(newItem, "traded-tag")) {
             lore.add(tradedOnLoreRaw.replace("{date}", toolStats.dateFormat.format(finalDate)));
             lore.add(tradedByLoreRaw.replace("{player}", owner.getName()));
+            meta.setLore(lore);
         }
-        meta.setLore(lore);
-        itemStack.setItemMeta(meta);
-        return itemStack;
+        newItem.setItemMeta(meta);
+        return newItem;
     }
 }

@@ -25,6 +25,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.ItemStack;
@@ -42,7 +43,7 @@ public class CraftItem implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onCraft(CraftItemEvent event) {
         if (event.isCancelled()) {
             return;
@@ -89,6 +90,7 @@ public class CraftItem implements Listener {
         ItemStack newItem = itemStack.clone();
         ItemMeta meta = newItem.getItemMeta();
         if (meta == null) {
+            toolStats.logger.warning(itemStack + " does NOT have any meta! Unable to update stats.");
             return null;
         }
         // get the current time

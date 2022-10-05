@@ -23,6 +23,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
@@ -41,7 +42,7 @@ public class BlocksMined implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOWEST)
     public void onBreak(BlockBreakEvent event) {
         if (event.isCancelled()) {
             return;
@@ -51,7 +52,8 @@ public class BlocksMined implements Listener {
             return;
         }
         // if the player mines something with their fist
-        ItemStack heldItem = player.getInventory().getItem(player.getInventory().getHeldItemSlot());
+        int heldItemSlot = player.getInventory().getHeldItemSlot();
+        ItemStack heldItem = player.getInventory().getItem(heldItemSlot);
         if (heldItem == null || heldItem.getType() == Material.AIR) {
             return;
         }
@@ -60,23 +62,32 @@ public class BlocksMined implements Listener {
             return;
         }
         // if it's an item we want, update the stats
-        updateBlocksMined(heldItem);
+        ItemStack newTool = updateBlocksMined(heldItem);
+        if (newTool != null) {
+            player.getInventory().setItem(heldItemSlot, newTool);
+        }
     }
 
-    private void updateBlocksMined(ItemStack itemStack) {
-        ItemMeta meta = itemStack.getItemMeta();
+    private ItemStack updateBlocksMined(ItemStack originalTool) {
+        ItemStack newTool = originalTool.clone();
+        ItemMeta meta = newTool.getItemMeta();
         if (meta == null) {
-            return;
+            toolStats.logger.warning(originalTool + " does NOT have any meta! Unable to update stats.");
+            return null;
         }
         // read the current stats from the item
         // if they don't exist, then start from 0
-        Integer blocksMined = null;
+        Integer blocksMined = 0;
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(toolStats.genericMined, PersistentDataType.INTEGER)) {
             blocksMined = container.get(toolStats.genericMined, PersistentDataType.INTEGER);
+        } else {
+            blocksMined = 0;
         }
+
         if (blocksMined == null) {
             blocksMined = 0;
+            toolStats.logger.warning(originalTool + " does not have valid generic-mined set! Resting to zero. This should NEVER happen.");
         }
 
         blocksMined++;
@@ -87,7 +98,7 @@ public class BlocksMined implements Listener {
 
         if (configLore == null || configLoreRaw == null) {
             toolStats.logger.warning("There is no lore message for messages.blocks-mined!");
-            return;
+            return null;
         }
 
         List<String> lore;
@@ -113,9 +124,10 @@ public class BlocksMined implements Listener {
             lore.add(configLoreRaw.replace("{blocks}", toolStats.commaFormat.format(blocksMined)));
         }
         // do we add the lore based on the config?
-        if (toolStats.checkConfig(itemStack, "blocks-mined")) {
+        if (toolStats.checkConfig(newTool, "blocks-mined")) {
             meta.setLore(lore);
         }
-        itemStack.setItemMeta(meta);
+        newTool.setItemMeta(meta);
+        return newTool;
     }
 }

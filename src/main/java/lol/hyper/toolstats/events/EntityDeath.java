@@ -22,6 +22,7 @@ import lol.hyper.toolstats.tools.ItemChecker;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
@@ -37,7 +38,7 @@ public class EntityDeath implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onDeath(EntityDeathEvent event) {
         LivingEntity livingEntity = event.getEntity();
         if (livingEntity instanceof Player) {
@@ -46,9 +47,13 @@ public class EntityDeath implements Listener {
         UUID livingEntityUUID = event.getEntity().getUniqueId();
         // if it's a mob we are tracking that matters
         if (toolStats.mobKill.trackedMobs.contains(livingEntityUUID)) {
-            for (ItemStack current : event.getDrops()) {
+            for (int i = 0; i < event.getDrops().size(); i++) {
+                ItemStack current = event.getDrops().get(i);
                 if (ItemChecker.isValidItem(current.getType())) {
-                    addLore(current, livingEntity.getName());
+                    ItemStack newItem = addLore(current, livingEntity.getName());
+                    if (newItem != null) {
+                        event.getDrops().set(i, newItem);
+                    }
                 }
             }
             toolStats.mobKill.trackedMobs.remove(livingEntityUUID);
@@ -58,13 +63,14 @@ public class EntityDeath implements Listener {
     /**
      * Adds "drop by" tag to item.
      *
-     * @param itemStack The item to add lore to.
+     * @param oldItem The item to add lore to.
      * @param mob       The mob or player name.
      */
-    private void addLore(ItemStack itemStack, String mob) {
-        ItemMeta meta = itemStack.getItemMeta();
+    private ItemStack addLore(ItemStack oldItem, String mob) {
+        ItemStack newItem = oldItem.clone();
+        ItemMeta meta = newItem.getItemMeta();
         if (meta == null) {
-            return;
+            return null;
         }
         boolean hasTag = false;
 
@@ -73,7 +79,7 @@ public class EntityDeath implements Listener {
 
         if (droppedByLore == null || droppedByLoreRaw == null) {
             toolStats.logger.warning("There is no lore message for messages.dropped-by!");
-            return;
+            return null;
         }
 
         List<String> lore;
@@ -96,6 +102,7 @@ public class EntityDeath implements Listener {
         if (toolStats.config.getBoolean("enabled.dropped-by")) {
             meta.setLore(lore);
         }
-        itemStack.setItemMeta(meta);
+        newItem.setItemMeta(meta);
+        return newItem;
     }
 }
