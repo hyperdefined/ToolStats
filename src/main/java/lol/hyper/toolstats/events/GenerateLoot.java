@@ -50,7 +50,7 @@ public class GenerateLoot implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onGenerateLoot(LootGenerateEvent event) {
         InventoryHolder inventoryHolder = event.getInventoryHolder();
         if (inventoryHolder == null) {

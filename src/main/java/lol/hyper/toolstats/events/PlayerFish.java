@@ -45,7 +45,7 @@ public class PlayerFish implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onFish(PlayerFishEvent event) {
         if (event.isCancelled()) {
             return;

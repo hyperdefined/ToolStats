@@ -43,7 +43,7 @@ public class CraftItem implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onCraft(CraftItemEvent event) {
         if (event.isCancelled()) {
             return;

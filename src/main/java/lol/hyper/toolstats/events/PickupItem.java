@@ -43,7 +43,7 @@ public class PickupItem implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPickup(EntityPickupItemEvent event) {
         if (event.isCancelled()) {
             return;

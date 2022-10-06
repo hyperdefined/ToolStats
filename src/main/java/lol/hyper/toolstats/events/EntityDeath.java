@@ -38,7 +38,7 @@ public class EntityDeath implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onDeath(EntityDeathEvent event) {
         LivingEntity livingEntity = event.getEntity();
         if (livingEntity instanceof Player) {

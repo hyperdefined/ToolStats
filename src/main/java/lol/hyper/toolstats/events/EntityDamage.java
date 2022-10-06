@@ -46,7 +46,7 @@ public class EntityDamage implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onDamage(EntityDamageByEntityEvent event) {
         if (event.isCancelled()) {
             return;

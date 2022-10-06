@@ -48,7 +48,7 @@ public class VillagerTrade implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onTrade(InventoryClickEvent event) {
         if (event.isCancelled() || event.getCurrentItem() == null) {
             return;
