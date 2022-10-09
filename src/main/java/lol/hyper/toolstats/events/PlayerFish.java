@@ -20,6 +20,7 @@ package lol.hyper.toolstats.events;
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.ItemChecker;
 import lol.hyper.toolstats.tools.UUIDDataType;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -36,6 +37,7 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.ListIterator;
 
 public class PlayerFish implements Listener {
 
@@ -45,7 +47,7 @@ public class PlayerFish implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onFish(PlayerFishEvent event) {
         if (event.isCancelled()) {
             return;
@@ -66,10 +68,7 @@ public class PlayerFish implements Listener {
             return;
         }
         // update the fishing rod to the new one
-        ItemStack newRod = updateFishCount(heldItem);
-        if (newRod != null) {
-            player.getInventory().setItem(heldItemSlot, newRod);
-        }
+        updateFishCount(heldItem);
         // check if the player caught an item
         if (event.getCaught() == null) {
             return;
@@ -86,15 +85,14 @@ public class PlayerFish implements Listener {
 
     /**
      * Update a fishing rod's fish count.
-     * @param originalRod The fishing rod to update.
+     * @param fishingRod The fishing rod to update.
      * @return A new fishing rod with update counts.
      */
-    private ItemStack updateFishCount(ItemStack originalRod) {
-        ItemStack newRod = originalRod.clone();
-        ItemMeta meta = newRod.getItemMeta();
+    private void updateFishCount(ItemStack fishingRod) {
+        ItemMeta meta = fishingRod.getItemMeta();
         if (meta == null) {
-            toolStats.logger.warning(originalRod + " does NOT have any meta! Unable to update stats.");
-            return null;
+            toolStats.logger.warning(fishingRod + " does NOT have any meta! Unable to update stats.");
+            return;
         }
         Integer fishCaught;
         PersistentDataContainer container = meta.getPersistentDataContainer();
@@ -106,7 +104,7 @@ public class PlayerFish implements Listener {
 
         if (fishCaught == null) {
             fishCaught = 0;
-            toolStats.logger.warning(originalRod + " does not have valid fish-caught set! Resting to zero. This should NEVER happen.");
+            toolStats.logger.warning(fishingRod + " does not have valid fish-caught set! Resting to zero. This should NEVER happen.");
         }
 
         fishCaught++;
@@ -117,7 +115,7 @@ public class PlayerFish implements Listener {
 
         if (fishCaughtLore == null || fishCaughtLoreRaw == null) {
             toolStats.logger.warning("There is no lore message for messages.fish-caught!");
-            return null;
+            return;
         }
 
         List<String> lore;
@@ -142,11 +140,23 @@ public class PlayerFish implements Listener {
             lore = new ArrayList<>();
             lore.add(fishCaughtLoreRaw.replace("{fish}", toolStats.commaFormat.format(fishCaught)));
         }
+
+        /*
+        if (Bukkit.getPluginManager().isPluginEnabled("EvenMoreFish")) {
+            ListIterator<String> iterator = lore.listIterator();
+            while (iterator.hasNext()) {
+                String line = iterator.next();
+                toolStats.logger.info(line);
+                if (line.equalsIgnoreCase("§f")) {
+                    iterator.remove();
+                }
+            }
+        }*/
+
         if (toolStats.config.getBoolean("enabled.fish-caught")) {
             meta.setLore(lore);
         }
-        newRod.setItemMeta(meta);
-        return newRod;
+        fishingRod.setItemMeta(meta);
     }
 
     /**

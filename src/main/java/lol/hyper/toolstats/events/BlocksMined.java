@@ -62,18 +62,14 @@ public class BlocksMined implements Listener {
             return;
         }
         // if it's an item we want, update the stats
-        ItemStack newTool = updateBlocksMined(heldItem);
-        if (newTool != null) {
-            player.getInventory().setItem(heldItemSlot, newTool);
-        }
+        updateBlocksMined(heldItem);
     }
 
-    private ItemStack updateBlocksMined(ItemStack originalTool) {
-        ItemStack newTool = originalTool.clone();
-        ItemMeta meta = newTool.getItemMeta();
+    private void updateBlocksMined(ItemStack playerTool) {
+        ItemMeta meta = playerTool.getItemMeta();
         if (meta == null) {
-            toolStats.logger.warning(originalTool + " does NOT have any meta! Unable to update stats.");
-            return null;
+            toolStats.logger.warning(playerTool + " does NOT have any meta! Unable to update stats.");
+            return;
         }
         // read the current stats from the item
         // if they don't exist, then start from 0
@@ -87,7 +83,7 @@ public class BlocksMined implements Listener {
 
         if (blocksMined == null) {
             blocksMined = 0;
-            toolStats.logger.warning(originalTool + " does not have valid generic-mined set! Resting to zero. This should NEVER happen.");
+            toolStats.logger.warning(playerTool + " does not have valid generic-mined set! Resting to zero. This should NEVER happen.");
         }
 
         blocksMined++;
@@ -98,7 +94,7 @@ public class BlocksMined implements Listener {
 
         if (configLore == null || configLoreRaw == null) {
             toolStats.logger.warning("There is no lore message for messages.blocks-mined!");
-            return null;
+            return;
         }
 
         List<String> lore;
@@ -124,10 +120,9 @@ public class BlocksMined implements Listener {
             lore.add(configLoreRaw.replace("{blocks}", toolStats.commaFormat.format(blocksMined)));
         }
         // do we add the lore based on the config?
-        if (toolStats.checkConfig(newTool, "blocks-mined")) {
+        if (toolStats.checkConfig(playerTool, "blocks-mined")) {
             meta.setLore(lore);
         }
-        newTool.setItemMeta(meta);
-        return newTool;
+        playerTool.setItemMeta(meta);
     }
 }
