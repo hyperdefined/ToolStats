@@ -98,4 +98,9 @@ messages:
     crafting: "&cCrafting items via shift clicking does not fully apply tags to each item. This is a limitation with the Bukkit API."
     trading: "&cTrading items via shift clicking does not fully apply tags to each item. This is a limitation with the Bukkit API."
 
+# Change the default formatting for dates.
+# See: https://www.digitalocean.com/community/tutorials/java-simpledateformat-java-date-format
+# Example: "dd/mm/yyyy"
+date-format: "M/dd/yyyy"
+
 config-version: 3

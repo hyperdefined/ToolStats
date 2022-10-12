@@ -60,7 +60,7 @@ public final class ToolStats extends JavaPlugin {
     // used for tracking new elytras
     public final NamespacedKey newElytra = new NamespacedKey(this, "new");
 
-    public final SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
+    public SimpleDateFormat dateFormat;
     public final DecimalFormat decimalFormat = new DecimalFormat("#,###.00", new DecimalFormatSymbols(Locale.getDefault()));
     public final DecimalFormat commaFormat = new DecimalFormat("#,###", new DecimalFormatSymbols(Locale.getDefault()));
     public BlocksMined blocksMined;
@@ -129,6 +129,20 @@ public final class ToolStats extends JavaPlugin {
         config = YamlConfiguration.loadConfiguration(configFile);
         if (config.getInt("config-version") != CONFIG_VERSION) {
             logger.warning("Your config file is outdated! Please regenerate the config.");
+        }
+
+        String dateFormatConfig = config.getString("date-format");
+        if (dateFormatConfig != null) {
+            try {
+                dateFormat = new SimpleDateFormat(dateFormatConfig, Locale.getDefault());
+            } catch (IllegalArgumentException exception) {
+                logger.severe("date-format is NOT a valid format! Using default American English format.");
+                exception.printStackTrace();
+                dateFormat = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
+            }
+        } else {
+            logger.warning("date-format is missing from your config! Using default American English format.");
+            dateFormat = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
         }
     }
 
