@@ -219,7 +219,7 @@ public class EntityDamage implements Listener {
             toolStats.logger.warning(itemStack + " does NOT have any meta! Unable to update stats.");
             return null;
         }
-        Integer playerKills = null;
+        Integer playerKills;
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(toolStats.swordPlayerKills, PersistentDataType.INTEGER)) {
             playerKills = container.get(toolStats.swordPlayerKills, PersistentDataType.INTEGER);
@@ -243,6 +243,7 @@ public class EntityDamage implements Listener {
         }
 
         List<String> lore;
+        String newLine = playerKillsLoreRaw.replace("{kills}", toolStats.commaFormat.format(playerKills));
         if (meta.hasLore()) {
             lore = meta.getLore();
             boolean hasLore = false;
@@ -251,18 +252,18 @@ public class EntityDamage implements Listener {
             for (int x = 0; x < lore.size(); x++) {
                 if (lore.get(x).contains(playerKillsLore)) {
                     hasLore = true;
-                    lore.set(x, playerKillsLoreRaw.replace("{kills}", toolStats.commaFormat.format(playerKills)));
+                    lore.set(x, newLine);
                     break;
                 }
             }
             // if the item has lore but doesn't have the tag, add it
             if (!hasLore) {
-                lore.add(playerKillsLoreRaw.replace("{kills}", toolStats.commaFormat.format(playerKills)));
+                lore.add(newLine);
             }
         } else {
             // if the item has no lore, create a new list and add the string
             lore = new ArrayList<>();
-            lore.add(playerKillsLoreRaw.replace("{kills}", toolStats.commaFormat.format(playerKills)));
+            lore.add(newLine);
         }
         // do we add the lore based on the config?
         if (toolStats.checkConfig(itemStack, "player-kills")) {
@@ -285,7 +286,7 @@ public class EntityDamage implements Listener {
             toolStats.logger.warning(itemStack + " does NOT have any meta! Unable to update stats.");
             return null;
         }
-        Integer mobKills = null;
+        Integer mobKills;
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(toolStats.swordMobKills, PersistentDataType.INTEGER)) {
             mobKills = container.get(toolStats.swordMobKills, PersistentDataType.INTEGER);
@@ -310,6 +311,7 @@ public class EntityDamage implements Listener {
         }
 
         List<String> lore;
+        String newLine = mobKillsLoreRaw.replace("{kills}", toolStats.commaFormat.format(mobKills));
         if (meta.hasLore()) {
             lore = meta.getLore();
             boolean hasLore = false;
@@ -318,18 +320,18 @@ public class EntityDamage implements Listener {
             for (int x = 0; x < lore.size(); x++) {
                 if (lore.get(x).contains(mobKillsLore)) {
                     hasLore = true;
-                    lore.set(x, mobKillsLoreRaw.replace("{kills}", toolStats.commaFormat.format(mobKills)));
+                    lore.set(x, newLine);
                     break;
                 }
             }
             // if the item has lore but doesn't have the tag, add it
             if (!hasLore) {
-                lore.add(mobKillsLoreRaw.replace("{kills}", toolStats.commaFormat.format(mobKills)));
+                lore.add(newLine);
             }
         } else {
             // if the item has no lore, create a new list and add the string
             lore = new ArrayList<>();
-            lore.add(mobKillsLoreRaw.replace("{kills}", toolStats.commaFormat.format(mobKills)));
+            lore.add(newLine);
         }
         // do we add the lore based on the config?
         if (toolStats.checkConfig(itemStack, "mob-kills")) {
@@ -376,6 +378,7 @@ public class EntityDamage implements Listener {
         }
 
         List<String> lore;
+        String newLine = damageTakenLoreRaw.replace("{damage}", toolStats.decimalFormat.format(damageTaken));
         if (meta.hasLore()) {
             lore = meta.getLore();
             boolean hasLore = false;
@@ -384,18 +387,18 @@ public class EntityDamage implements Listener {
             for (int x = 0; x < lore.size(); x++) {
                 if (lore.get(x).contains(damageTakenLore)) {
                     hasLore = true;
-                    lore.set(x, damageTakenLoreRaw.replace("{damage}", toolStats.decimalFormat.format(damageTaken)));
+                    lore.set(x, newLine);
                     break;
                 }
             }
             // if the item has lore but doesn't have the tag, add it
             if (!hasLore) {
-                lore.add(damageTakenLoreRaw.replace("{damage}", toolStats.decimalFormat.format(damageTaken)));
+                lore.add(newLine);
             }
         } else {
             // if the item has no lore, create a new list and add the string
             lore = new ArrayList<>();
-            lore.add(damageTakenLoreRaw.replace("{damage}", toolStats.decimalFormat.format(damageTaken)));
+            lore.add(newLine);
         }
         if (toolStats.config.getBoolean("enabled.armor-damage")) {
             meta.setLore(lore);

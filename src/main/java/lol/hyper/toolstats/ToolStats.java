@@ -34,6 +34,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.logging.Logger;
@@ -60,9 +61,8 @@ public final class ToolStats extends JavaPlugin {
     public final NamespacedKey newElytra = new NamespacedKey(this, "new");
 
     public final SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
-    public final DecimalFormat decimalFormat = new DecimalFormat("#,###.00");
-    public final DecimalFormat commaFormat = new DecimalFormat("#,###");
-
+    public final DecimalFormat decimalFormat = new DecimalFormat("#,###.00", new DecimalFormatSymbols(Locale.getDefault()));
+    public final DecimalFormat commaFormat = new DecimalFormat("#,###", new DecimalFormatSymbols(Locale.getDefault()));
     public BlocksMined blocksMined;
     public ChunkPopulate chunkPopulate;
     public CraftItem craftItem;
@@ -121,6 +121,8 @@ public final class ToolStats extends JavaPlugin {
         new Metrics(this, 14110);
 
         Bukkit.getScheduler().runTaskAsynchronously(this, this::checkForUpdates);
+
+        logger.info("Locale: " + Locale.getDefault());
     }
 
     public void loadConfig() {
@@ -264,7 +266,7 @@ public final class ToolStats extends JavaPlugin {
     }
 
     public BukkitAudiences getAdventure() {
-        if(this.adventure == null) {
+        if (this.adventure == null) {
             throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
         }
         return this.adventure;

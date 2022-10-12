@@ -73,7 +73,7 @@ public class BlocksMined implements Listener {
         }
         // read the current stats from the item
         // if they don't exist, then start from 0
-        Integer blocksMined = 0;
+        Integer blocksMined;
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(toolStats.genericMined, PersistentDataType.INTEGER)) {
             blocksMined = container.get(toolStats.genericMined, PersistentDataType.INTEGER);
@@ -98,6 +98,7 @@ public class BlocksMined implements Listener {
         }
 
         List<String> lore;
+        String newLine = configLoreRaw.replace("{blocks}", toolStats.thousandsFormat.format(blocksMined));
         if (meta.hasLore()) {
             lore = meta.getLore();
             boolean hasLore = false;
@@ -106,18 +107,18 @@ public class BlocksMined implements Listener {
             for (int x = 0; x < lore.size(); x++) {
                 if (lore.get(x).contains(configLore)) {
                     hasLore = true;
-                    lore.set(x, configLoreRaw.replace("{blocks}", toolStats.commaFormat.format(blocksMined)));
+                    lore.set(x, newLine);
                     break;
                 }
             }
             // if the item has lore but doesn't have the tag, add it
             if (!hasLore) {
-                lore.add(configLoreRaw.replace("{blocks}", toolStats.commaFormat.format(blocksMined)));
+                lore.add(newLine);
             }
         } else {
             // if the item has no lore, create a new list and add the string
             lore = new ArrayList<>();
-            lore.add(configLoreRaw.replace("{blocks}", toolStats.commaFormat.format(blocksMined)));
+            lore.add(newLine);
         }
         // do we add the lore based on the config?
         if (toolStats.checkConfig(playerTool, "blocks-mined")) {

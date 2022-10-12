@@ -20,7 +20,6 @@ package lol.hyper.toolstats.events;
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.ItemChecker;
 import lol.hyper.toolstats.tools.UUIDDataType;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -37,7 +36,6 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.ListIterator;
 
 public class PlayerFish implements Listener {
 
@@ -63,7 +61,6 @@ public class PlayerFish implements Listener {
         }
         // make sure the player is holding a fishing rod
         ItemStack heldItem = player.getInventory().getItem(player.getInventory().getHeldItemSlot());
-        int heldItemSlot = player.getInventory().getHeldItemSlot();
         if (heldItem == null || heldItem.getType() == Material.AIR || heldItem.getType() != Material.FISHING_ROD) {
             return;
         }
@@ -86,7 +83,6 @@ public class PlayerFish implements Listener {
     /**
      * Update a fishing rod's fish count.
      * @param fishingRod The fishing rod to update.
-     * @return A new fishing rod with update counts.
      */
     private void updateFishCount(ItemStack fishingRod) {
         ItemMeta meta = fishingRod.getItemMeta();
@@ -119,6 +115,7 @@ public class PlayerFish implements Listener {
         }
 
         List<String> lore;
+        String newLine = fishCaughtLoreRaw.replace("{fish}", toolStats.commaFormat.format(fishCaught));
         if (meta.hasLore()) {
             lore = meta.getLore();
             boolean hasLore = false;
@@ -127,18 +124,18 @@ public class PlayerFish implements Listener {
             for (int x = 0; x < lore.size(); x++) {
                 if (lore.get(x).contains(fishCaughtLore)) {
                     hasLore = true;
-                    lore.set(x, fishCaughtLoreRaw.replace("{fish}", toolStats.commaFormat.format(fishCaught)));
+                    lore.set(x, newLine);
                     break;
                 }
             }
             // if the item has lore but doesn't have the tag, add it
             if (!hasLore) {
-                lore.add(fishCaughtLoreRaw.replace("{fish}", toolStats.commaFormat.format(fishCaught)));
+                lore.add(newLine);
             }
         } else {
             // if the item has no lore, create a new list and add the string
             lore = new ArrayList<>();
-            lore.add(fishCaughtLoreRaw.replace("{fish}", toolStats.commaFormat.format(fishCaught)));
+            lore.add(newLine);
         }
 
         /*
