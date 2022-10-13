@@ -86,12 +86,10 @@ public class SheepShear implements Listener {
             toolStats.logger.warning(newShears + " does NOT have any meta! Unable to update stats.");
             return null;
         }
-        Integer sheepSheared;
+        Integer sheepSheared = 0;
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(toolStats.shearsSheared, PersistentDataType.INTEGER)) {
             sheepSheared = container.get(toolStats.shearsSheared, PersistentDataType.INTEGER);
-        } else {
-            sheepSheared = 0;
         }
 
         if (sheepSheared == null) {

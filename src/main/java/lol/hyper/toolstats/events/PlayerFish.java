@@ -91,12 +91,10 @@ public class PlayerFish implements Listener {
             toolStats.logger.warning(fishingRod + " does NOT have any meta! Unable to update stats.");
             return;
         }
-        Integer fishCaught;
+        Integer fishCaught = 0;
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(toolStats.fishingRodCaught, PersistentDataType.INTEGER)) {
             fishCaught = container.get(toolStats.fishingRodCaught, PersistentDataType.INTEGER);
-        } else {
-            fishCaught = 0;
         }
 
         if (fishCaught == null) {

@@ -186,7 +186,7 @@ public final class ToolStats extends JavaPlugin {
                 itemType = "trident";
             }
         } else {
-            itemType = itemName.substring(itemName.indexOf("_") + 1);
+            itemType = itemName.substring(itemName.indexOf('_') + 1);
         }
 
         if (itemType == null) {

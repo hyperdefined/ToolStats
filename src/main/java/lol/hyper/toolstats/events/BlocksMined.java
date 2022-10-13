@@ -74,12 +74,10 @@ public class BlocksMined implements Listener {
         }
         // read the current stats from the item
         // if they don't exist, then start from 0
-        Integer blocksMined;
+        Integer blocksMined = 0;
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(toolStats.genericMined, PersistentDataType.INTEGER)) {
             blocksMined = container.get(toolStats.genericMined, PersistentDataType.INTEGER);
-        } else {
-            blocksMined = 0;
         }
 
         if (blocksMined == null) {
