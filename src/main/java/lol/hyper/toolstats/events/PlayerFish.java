@@ -19,6 +19,7 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.ItemChecker;
+import lol.hyper.toolstats.tools.NumberFormat;
 import lol.hyper.toolstats.tools.UUIDDataType;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -115,7 +116,7 @@ public class PlayerFish implements Listener {
         }
 
         List<String> lore;
-        String newLine = fishCaughtLoreRaw.replace("{fish}", toolStats.commaFormat.format(fishCaught));
+        String newLine = fishCaughtLoreRaw.replace("{fish}", NumberFormat.formatInt(fishCaught));
         if (meta.hasLore()) {
             lore = meta.getLore();
             boolean hasLore = false;

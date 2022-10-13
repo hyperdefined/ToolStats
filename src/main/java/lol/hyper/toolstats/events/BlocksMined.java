@@ -19,6 +19,7 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.ItemChecker;
+import lol.hyper.toolstats.tools.NumberFormat;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -98,7 +99,7 @@ public class BlocksMined implements Listener {
         }
 
         List<String> lore;
-        String newLine = configLoreRaw.replace("{blocks}", toolStats.thousandsFormat.format(blocksMined));
+        String newLine = configLoreRaw.replace("{blocks}", NumberFormat.formatInt(blocksMined));
         if (meta.hasLore()) {
             lore = meta.getLore();
             boolean hasLore = false;

@@ -61,8 +61,6 @@ public final class ToolStats extends JavaPlugin {
     public final NamespacedKey newElytra = new NamespacedKey(this, "new");
 
     public SimpleDateFormat dateFormat;
-    public final DecimalFormat decimalFormat = new DecimalFormat("#,###.00", new DecimalFormatSymbols(Locale.getDefault()));
-    public final DecimalFormat commaFormat = new DecimalFormat("#,###", new DecimalFormatSymbols(Locale.getDefault()));
     public BlocksMined blocksMined;
     public ChunkPopulate chunkPopulate;
     public CraftItem craftItem;
@@ -121,8 +119,6 @@ public final class ToolStats extends JavaPlugin {
         new Metrics(this, 14110);
 
         Bukkit.getScheduler().runTaskAsynchronously(this, this::checkForUpdates);
-
-        logger.info("Locale: " + Locale.getDefault());
     }
 
     public void loadConfig() {
