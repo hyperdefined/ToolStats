@@ -27,6 +27,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
 
@@ -48,9 +50,17 @@ public class EntityDeath implements Listener {
         // if it's a mob we are tracking that matters
         if (toolStats.mobKill.trackedMobs.contains(livingEntityUUID)) {
             for (int i = 0; i < event.getDrops().size(); i++) {
-                ItemStack current = event.getDrops().get(i);
-                if (ItemChecker.isValidItem(current.getType())) {
-                    ItemStack newItem = addLore(current, livingEntity.getName());
+                ItemStack droppedItem = event.getDrops().get(i);
+                ItemMeta droppedItemMeta = droppedItem.getItemMeta();
+                if (droppedItemMeta != null) {
+                    PersistentDataContainer container = droppedItemMeta.getPersistentDataContainer();
+                    if (container.has(toolStats.timeCreated, PersistentDataType.LONG)) {
+                        continue; // ignore any items that have our tags
+                    }
+
+                }
+                if (ItemChecker.isValidItem(droppedItem.getType())) {
+                    ItemStack newItem = addLore(droppedItem, livingEntity.getName());
                     if (newItem != null) {
                         event.getDrops().set(i, newItem);
                     }
