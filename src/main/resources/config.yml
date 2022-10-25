@@ -100,7 +100,7 @@ messages:
 
 # Change the default formatting for dates.
 # See: https://www.digitalocean.com/community/tutorials/java-simpledateformat-java-date-format
-# Example: "dd/mm/yyyy"
+# Example: "dd/MM/yyyy"
 date-format: "M/dd/yyyy"
 
 config-version: 3
