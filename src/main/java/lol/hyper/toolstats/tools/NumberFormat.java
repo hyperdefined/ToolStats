@@ -33,10 +33,7 @@ public class NumberFormat {
      */
     public static String formatInt(int number) {
         String finalNumber = COMMA_FORMAT.format(number);
-        // hardcode French system because Minecraft bad
-        if (Locale.getDefault() == Locale.FRANCE || Locale.getDefault() == Locale.FRENCH) {
-            finalNumber = finalNumber.replaceAll("[\\x{202f}\\x{00A0}]", " ");
-        }
+        finalNumber = finalNumber.replaceAll("[\\x{202f}\\x{00A0}]", " ");
         return finalNumber;
     }
 
@@ -47,10 +44,7 @@ public class NumberFormat {
      */
     public static String formatDouble(double number) {
         String finalNumber = DECIMAL_FORMAT.format(number);
-        // hardcode French system because Minecraft bad
-        if (Locale.getDefault() == Locale.FRANCE || Locale.getDefault() == Locale.FRENCH) {
-            finalNumber = finalNumber.replaceAll("[\\x{202f}\\x{00A0}]", " ");
-        }
+        finalNumber = finalNumber.replaceAll("[\\x{202f}\\x{00A0}]", " ");
         return finalNumber;
     }
 }
