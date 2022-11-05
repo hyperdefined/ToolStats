@@ -19,6 +19,7 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.NumberFormat;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -69,7 +70,7 @@ public class SheepShear implements Listener {
         if (!sheep.isSheared()) {
             ItemStack newShears = addLore(heldItem);
             if (newShears != null) {
-                player.getInventory().setItem(heldItemSlot, newShears);
+                Bukkit.getScheduler().runTaskLater(toolStats, () -> player.getInventory().setItem(heldItemSlot, newShears), 1);
             }
         }
     }

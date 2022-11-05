@@ -20,6 +20,7 @@ package lol.hyper.toolstats.events;
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.ItemChecker;
 import lol.hyper.toolstats.tools.NumberFormat;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
@@ -29,6 +30,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -56,7 +58,7 @@ public class EntityDamage implements Listener {
         if (!(event.getEntity() instanceof LivingEntity)) {
             return;
         }
-        LivingEntity livingEntity = (LivingEntity) event.getEntity();
+        LivingEntity mobBeingAttacked = (LivingEntity) event.getEntity();
 
         // ignore void and /kill damage
         EntityDamageEvent.DamageCause cause = event.getCause();
@@ -65,15 +67,17 @@ public class EntityDamage implements Listener {
         }
 
         // mob is going to die
-        if (livingEntity.getHealth() - event.getFinalDamage() <= 0) {
+        if (mobBeingAttacked.getHealth() - event.getFinalDamage() <= 0) {
             // a player is killing something
             if (event.getDamager() instanceof Player) {
-                Player player = (Player) event.getDamager();
-                if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+                Player attackingPlayer = (Player) event.getDamager();
+                if (attackingPlayer.getGameMode() == GameMode.CREATIVE || attackingPlayer.getGameMode() == GameMode.SPECTATOR) {
                     return;
                 }
+                PlayerInventory attackingPlayerInventory = attackingPlayer.getInventory();
+                int heldItemSlot = attackingPlayerInventory.getHeldItemSlot();
+                ItemStack heldItem = attackingPlayerInventory.getItem(attackingPlayer.getInventory().getHeldItemSlot());
                 // a player killed something with their fist
-                ItemStack heldItem = player.getInventory().getItem(player.getInventory().getHeldItemSlot());
                 if (heldItem == null || heldItem.getType() == Material.AIR) {
                     return;
                 }
@@ -82,20 +86,20 @@ public class EntityDamage implements Listener {
                     return;
                 }
                 // a player is killing another player
-                if (livingEntity instanceof Player) {
-                    player.getInventory().setItem(player.getInventory().getHeldItemSlot(), updatePlayerKills(heldItem));
+                if (mobBeingAttacked instanceof Player) {
+                    Bukkit.getScheduler().runTaskLater(toolStats, () -> attackingPlayerInventory.setItem(heldItemSlot, updatePlayerKills(heldItem)), 1);
                     return;
                 }
                 // player is killing regular mob
-                player.getInventory().setItem(player.getInventory().getHeldItemSlot(), updateMobKills(heldItem));
-                trackedMobs.add(livingEntity.getUniqueId());
+                Bukkit.getScheduler().runTaskLater(toolStats, () -> attackingPlayerInventory.setItem(heldItemSlot, updateMobKills(heldItem)), 1);
+                trackedMobs.add(mobBeingAttacked.getUniqueId());
             }
             // trident is being thrown at something
             if (event.getDamager() instanceof Trident) {
                 Trident trident = (Trident) event.getDamager();
                 ItemStack clone;
                 // trident is killing player
-                if (livingEntity instanceof Player) {
+                if (mobBeingAttacked instanceof Player) {
                     clone = updatePlayerKills(trident.getItem());
                 } else {
                     clone = updateMobKills(trident.getItem());
@@ -103,44 +107,46 @@ public class EntityDamage implements Listener {
                 if (clone == null) {
                     return;
                 }
-                trident.setItem(clone);
+                Bukkit.getScheduler().runTaskLater(toolStats, () -> trident.setItem(clone), 1);
             }
             // arrow is being shot
             if (event.getDamager() instanceof Arrow) {
                 Arrow arrow = (Arrow) event.getDamager();
                 // if the shooter is a player
                 if (arrow.getShooter() instanceof Player) {
-                    Player player = (Player) arrow.getShooter();
-                    if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+                    Player shootingPlayer = (Player) arrow.getShooter();
+                    if (shootingPlayer.getGameMode() == GameMode.CREATIVE || shootingPlayer.getGameMode() == GameMode.SPECTATOR) {
                         return;
                     }
-                    ItemStack heldItem = player.getInventory().getItem(player.getInventory().getHeldItemSlot());
+                    PlayerInventory shootingPlayerInventory = shootingPlayer.getInventory();
+                    int heldItemSlot = shootingPlayerInventory.getHeldItemSlot();
+                    ItemStack heldItem = shootingPlayerInventory.getItem(heldItemSlot);
                     if (heldItem == null) {
                         return;
                     }
                     // if the player is holding the bow/crossbow
                     // if they switch then oh well
                     if (heldItem.getType() == Material.BOW || heldItem.getType() == Material.CROSSBOW) {
-                        if (livingEntity instanceof Player) {
-                            player.getInventory().setItem(player.getInventory().getHeldItemSlot(), updatePlayerKills(heldItem));
+                        if (mobBeingAttacked instanceof Player) {
+                            Bukkit.getScheduler().runTaskLater(toolStats, () -> shootingPlayerInventory.setItem(heldItemSlot, updatePlayerKills(heldItem)), 1);
                         } else {
-                            player.getInventory().setItem(player.getInventory().getHeldItemSlot(), updateMobKills(heldItem));
+                            Bukkit.getScheduler().runTaskLater(toolStats, () -> shootingPlayerInventory.setItem(heldItemSlot, updateMobKills(heldItem)), 1);
                         }
                     }
                 }
             }
         }
         // player is taken damage but not being killed
-        if (livingEntity instanceof Player) {
-            Player player = (Player) livingEntity;
-            if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+        if (mobBeingAttacked instanceof Player) {
+            Player playerTakingDamage = (Player) mobBeingAttacked;
+            if (playerTakingDamage.getGameMode() == GameMode.CREATIVE || playerTakingDamage.getGameMode() == GameMode.SPECTATOR) {
                 return;
             }
-            PlayerInventory inventory = player.getInventory();
-            for (ItemStack armor : inventory.getArmorContents()) {
-                if (armor != null) {
-                    if (ItemChecker.isArmor(armor.getType())) {
-                        updateArmorDamage(armor, event.getFinalDamage());
+            PlayerInventory inventory = playerTakingDamage.getInventory();
+            for (ItemStack armorPiece : inventory.getArmorContents()) {
+                if (armorPiece != null) {
+                    if (ItemChecker.isArmor(armorPiece.getType())) {
+                        Bukkit.getScheduler().runTaskLater(toolStats, () -> updateArmorDamage(armorPiece, event.getFinalDamage()), 1);
                     }
                 }
             }
@@ -159,18 +165,18 @@ public class EntityDamage implements Listener {
             return;
         }
 
-        LivingEntity livingEntity = (LivingEntity) event.getEntity();
+        LivingEntity mobBeingAttacked = (LivingEntity) event.getEntity();
         // player is taken damage but not being killed
-        if (livingEntity instanceof Player) {
-            Player player = (Player) livingEntity;
-            if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+        if (mobBeingAttacked instanceof Player) {
+            Player playerTakingDamage = (Player) mobBeingAttacked;
+            if (playerTakingDamage.getGameMode() == GameMode.CREATIVE || playerTakingDamage.getGameMode() == GameMode.SPECTATOR) {
                 return;
             }
-            PlayerInventory inventory = player.getInventory();
-            for (ItemStack armor : inventory.getArmorContents()) {
-                if (armor != null) {
-                    if (ItemChecker.isArmor(armor.getType())) {
-                        updateArmorDamage(armor, event.getFinalDamage());
+            PlayerInventory inventory = playerTakingDamage.getInventory();
+            for (ItemStack armorPiece : inventory.getArmorContents()) {
+                if (armorPiece != null) {
+                    if (ItemChecker.isArmor(armorPiece.getType())) {
+                        Bukkit.getScheduler().runTaskLater(toolStats, () -> updateArmorDamage(armorPiece, event.getFinalDamage()), 1);
                     }
                 }
             }
@@ -189,18 +195,18 @@ public class EntityDamage implements Listener {
             return;
         }
 
-        LivingEntity livingEntity = (LivingEntity) event.getEntity();
+        LivingEntity mobBeingAttacked = (LivingEntity) event.getEntity();
         // player is taken damage but not being killed
-        if (livingEntity instanceof Player) {
-            Player player = (Player) livingEntity;
-            if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+        if (mobBeingAttacked instanceof Player) {
+            Player playerTakingDamage = (Player) mobBeingAttacked;
+            if (playerTakingDamage.getGameMode() == GameMode.CREATIVE || playerTakingDamage.getGameMode() == GameMode.SPECTATOR) {
                 return;
             }
-            PlayerInventory inventory = player.getInventory();
-            for (ItemStack armor : inventory.getArmorContents()) {
-                if (armor != null) {
-                    if (ItemChecker.isArmor(armor.getType())) {
-                        updateArmorDamage(armor, event.getFinalDamage());
+            PlayerInventory inventory = playerTakingDamage.getInventory();
+            for (ItemStack armorPiece : inventory.getArmorContents()) {
+                if (armorPiece != null) {
+                    if (ItemChecker.isArmor(armorPiece.getType())) {
+                        Bukkit.getScheduler().runTaskLater(toolStats, () -> updateArmorDamage(armorPiece, event.getFinalDamage()), 1);
                     }
                 }
             }

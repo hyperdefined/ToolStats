@@ -20,6 +20,7 @@ package lol.hyper.toolstats.events;
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.ItemChecker;
 import lol.hyper.toolstats.tools.NumberFormat;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -43,7 +44,7 @@ public class BlocksMined implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler (priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onBreak(BlockBreakEvent event) {
         if (event.isCancelled()) {
             return;
@@ -63,7 +64,7 @@ public class BlocksMined implements Listener {
             return;
         }
         // if it's an item we want, update the stats
-        updateBlocksMined(heldItem);
+        Bukkit.getScheduler().runTaskLater(toolStats, () -> updateBlocksMined(heldItem), 1);
     }
 
     private void updateBlocksMined(ItemStack playerTool) {

@@ -21,6 +21,7 @@ import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.ItemChecker;
 import lol.hyper.toolstats.tools.NumberFormat;
 import lol.hyper.toolstats.tools.UUIDDataType;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -46,7 +47,7 @@ public class PlayerFish implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onFish(PlayerFishEvent event) {
         if (event.isCancelled()) {
             return;
@@ -65,8 +66,10 @@ public class PlayerFish implements Listener {
         if (heldItem == null || heldItem.getType() == Material.AIR || heldItem.getType() != Material.FISHING_ROD) {
             return;
         }
-        // update the fishing rod to the new one
-        updateFishCount(heldItem);
+
+        // fix compatability issues by running 1 tick later
+        Bukkit.getScheduler().runTaskLater(toolStats, () -> updateFishCount(heldItem), 1);
+
         // check if the player caught an item
         if (event.getCaught() == null) {
             return;
@@ -83,6 +86,7 @@ public class PlayerFish implements Listener {
 
     /**
      * Update a fishing rod's fish count.
+     *
      * @param fishingRod The fishing rod to update.
      */
     private void updateFishCount(ItemStack fishingRod) {
@@ -157,8 +161,9 @@ public class PlayerFish implements Listener {
 
     /**
      * Add lore to newly caught item.
+     *
      * @param originalItem The original item to add lore.
-     * @param owner The player who caught it.
+     * @param owner        The player who caught it.
      * @return A copy of the new item with lore.
      */
     private ItemStack addNewLore(ItemStack originalItem, Player owner) {
