@@ -18,7 +18,6 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import lol.hyper.toolstats.tools.NumberFormat;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -110,7 +109,7 @@ public class SheepShear implements Listener {
         }
 
         List<String> lore;
-        String newLine = sheepShearedLoreRaw.replace("{sheep}", NumberFormat.formatInt(sheepSheared));
+        String newLine = sheepShearedLoreRaw.replace("{sheep}", toolStats.numberFormat.formatInt(sheepSheared));
         if (meta.hasLore()) {
             lore = meta.getLore();
             boolean hasLore = false;

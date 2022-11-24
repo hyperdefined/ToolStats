@@ -103,4 +103,12 @@ messages:
 # Example: "dd/MM/yyyy"
 date-format: "M/dd/yyyy"
 
-config-version: 3
+# Change number formatting.
+# You probably do not need to touch this.
+number-formats:
+  comma-separator: ","
+  decimal-separator: "."
+  comma-format: "#,###"
+  decimal-format: "#,###.00"
+
+config-version: 4

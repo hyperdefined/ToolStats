@@ -128,7 +128,7 @@ public class CraftItem implements Listener {
         }
         // do we add the lore based on the config?
         if (toolStats.checkConfig(itemStack, "created-date")) {
-            lore.add(createdOnRaw.replace("{date}", toolStats.dateFormat.format(finalDate)));
+            lore.add(createdOnRaw.replace("{date}", toolStats.numberFormat.formatDate(finalDate)));
         }
         if (toolStats.checkConfig(itemStack, "created-by")) {
             lore.add(createdByRaw.replace("{player}", owner.getName()));

@@ -109,7 +109,7 @@ public class PickupItem implements Listener {
             lore = new ArrayList<>();
         }
         if (toolStats.config.getBoolean("enabled.elytra-tag")) {
-            lore.add(foundOnLoreRaw.replace("{date}", toolStats.dateFormat.format(finalDate)));
+            lore.add(foundOnLoreRaw.replace("{date}", toolStats.numberFormat.formatDate(finalDate)));
             lore.add(foundByLoreRaw.replace("{player}", owner.getName()));
         }
         meta.setLore(lore);

@@ -125,7 +125,7 @@ public class VillagerTrade implements Listener {
             lore = new ArrayList<>();
         }
         if (toolStats.checkConfig(newItem, "traded-tag")) {
-            lore.add(tradedOnLoreRaw.replace("{date}", toolStats.dateFormat.format(finalDate)));
+            lore.add(tradedOnLoreRaw.replace("{date}", toolStats.numberFormat.formatDate(finalDate)));
             lore.add(tradedByLoreRaw.replace("{player}", owner.getName()));
             meta.setLore(lore);
         }

@@ -21,6 +21,7 @@ import lol.hyper.githubreleaseapi.GitHubRelease;
 import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
 import lol.hyper.toolstats.commands.CommandToolStats;
 import lol.hyper.toolstats.events.*;
+import lol.hyper.toolstats.tools.NumberFormat;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -33,10 +34,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.logging.Logger;
 
 public final class ToolStats extends JavaPlugin {
@@ -60,7 +57,6 @@ public final class ToolStats extends JavaPlugin {
     // used for tracking new elytras
     public final NamespacedKey newElytra = new NamespacedKey(this, "new");
 
-    public SimpleDateFormat dateFormat;
     public BlocksMined blocksMined;
     public ChunkPopulate chunkPopulate;
     public CraftItem craftItem;
@@ -77,9 +73,11 @@ public final class ToolStats extends JavaPlugin {
     public final Logger logger = this.getLogger();
     public final File configFile = new File(this.getDataFolder(), "config.yml");
     public FileConfiguration config;
-    public final int CONFIG_VERSION = 3;
+    public final int CONFIG_VERSION = 4;
 
     private BukkitAudiences adventure;
+
+    public NumberFormat numberFormat;
 
     @Override
     public void onEnable() {
@@ -127,19 +125,7 @@ public final class ToolStats extends JavaPlugin {
             logger.warning("Your config file is outdated! Please regenerate the config.");
         }
 
-        String dateFormatConfig = config.getString("date-format");
-        if (dateFormatConfig != null) {
-            try {
-                dateFormat = new SimpleDateFormat(dateFormatConfig, Locale.getDefault());
-            } catch (IllegalArgumentException exception) {
-                logger.severe("date-format is NOT a valid format! Using default American English format.");
-                exception.printStackTrace();
-                dateFormat = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
-            }
-        } else {
-            logger.warning("date-format is missing from your config! Using default American English format.");
-            dateFormat = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
-        }
+        numberFormat = new NumberFormat(this);
     }
 
     public void checkForUpdates() {

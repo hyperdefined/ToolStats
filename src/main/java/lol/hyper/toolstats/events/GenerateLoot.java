@@ -160,7 +160,7 @@ public class GenerateLoot implements Listener {
             lore = new ArrayList<>();
         }
         if (toolStats.checkConfig(newItem, "looted-tag")) {
-            lore.add(foundOnLoreRaw.replace("{date}", toolStats.dateFormat.format(finalDate)));
+            lore.add(foundOnLoreRaw.replace("{date}", toolStats.numberFormat.formatDate(finalDate)));
             lore.add(foundByLoreRaw.replace("{player}", owner.getName()));
         }
         meta.setLore(lore);

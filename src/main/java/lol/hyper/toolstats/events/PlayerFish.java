@@ -19,7 +19,6 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.ItemChecker;
-import lol.hyper.toolstats.tools.NumberFormat;
 import lol.hyper.toolstats.tools.UUIDDataType;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -118,7 +117,7 @@ public class PlayerFish implements Listener {
         }
 
         List<String> lore;
-        String newLine = fishCaughtLoreRaw.replace("{fish}", NumberFormat.formatInt(fishCaught));
+        String newLine = fishCaughtLoreRaw.replace("{fish}", toolStats.numberFormat.formatInt(fishCaught));
         if (meta.hasLore()) {
             lore = meta.getLore();
             boolean hasLore = false;
@@ -140,19 +139,6 @@ public class PlayerFish implements Listener {
             lore = new ArrayList<>();
             lore.add(newLine);
         }
-
-        /*
-        if (Bukkit.getPluginManager().isPluginEnabled("EvenMoreFish")) {
-            ListIterator<String> iterator = lore.listIterator();
-            while (iterator.hasNext()) {
-                String line = iterator.next();
-                toolStats.logger.info(line);
-                if (line.equalsIgnoreCase("§f")) {
-                    iterator.remove();
-                }
-            }
-        }*/
-
         if (toolStats.config.getBoolean("enabled.fish-caught")) {
             meta.setLore(lore);
         }
@@ -199,7 +185,7 @@ public class PlayerFish implements Listener {
             lore = new ArrayList<>();
         }
         if (toolStats.checkConfig(newItem, "fished-tag")) {
-            lore.add(caughtOnLoreRaw.replace("{date}", toolStats.dateFormat.format(finalDate)));
+            lore.add(caughtOnLoreRaw.replace("{date}", toolStats.numberFormat.formatDate(finalDate)));
             lore.add(caughtByLoreRaw.replace("{player}", owner.getName()));
             meta.setLore(lore);
         }

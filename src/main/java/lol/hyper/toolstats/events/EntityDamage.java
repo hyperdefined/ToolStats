@@ -19,7 +19,6 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.ItemChecker;
-import lol.hyper.toolstats.tools.NumberFormat;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -30,7 +29,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -249,7 +247,7 @@ public class EntityDamage implements Listener {
         }
 
         List<String> lore;
-        String newLine = playerKillsLoreRaw.replace("{kills}", NumberFormat.formatInt(playerKills));
+        String newLine = playerKillsLoreRaw.replace("{kills}", toolStats.numberFormat.formatInt(playerKills));
         if (meta.hasLore()) {
             lore = meta.getLore();
             boolean hasLore = false;
@@ -315,7 +313,7 @@ public class EntityDamage implements Listener {
         }
 
         List<String> lore;
-        String newLine = mobKillsLoreRaw.replace("{kills}", NumberFormat.formatInt(mobKills));
+        String newLine = mobKillsLoreRaw.replace("{kills}", toolStats.numberFormat.formatInt(mobKills));
         if (meta.hasLore()) {
             lore = meta.getLore();
             boolean hasLore = false;
@@ -380,7 +378,7 @@ public class EntityDamage implements Listener {
         }
 
         List<String> lore;
-        String newLine = damageTakenLoreRaw.replace("{damage}", NumberFormat.formatDouble(damageTaken));
+        String newLine = damageTakenLoreRaw.replace("{damage}", toolStats.numberFormat.formatDouble(damageTaken));
         if (meta.hasLore()) {
             lore = meta.getLore();
             boolean hasLore = false;
