@@ -30,6 +30,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -61,13 +62,32 @@ public class PlayerFish implements Listener {
             return;
         }
         // make sure the player is holding a fishing rod
-        ItemStack heldItem = player.getInventory().getItem(player.getInventory().getHeldItemSlot());
-        if (heldItem == null || heldItem.getType() == Material.AIR || heldItem.getType() != Material.FISHING_ROD) {
+        // player can fish with their offhand
+        PlayerInventory inventory = player.getInventory();
+        boolean isMainHand = inventory.getItemInMainHand().getType() == Material.FISHING_ROD;
+        boolean isOffHand = inventory.getItemInOffHand().getType() == Material.FISHING_ROD;
+        ItemStack fishingRod = null;
+        if (isMainHand) {
+            fishingRod = inventory.getItemInMainHand();
+        }
+        if (isOffHand) {
+            fishingRod = inventory.getItemInOffHand();
+        }
+
+        // if the player is hold fishing rods in both hands
+        // default to main hand since that takes priority
+        if (isMainHand && isOffHand) {
+            fishingRod = inventory.getItemInMainHand();
+        }
+
+        // player swapped items?
+        if (fishingRod == null) {
             return;
         }
 
-        // fix compatability issues by running 1 tick later
-        Bukkit.getScheduler().runTaskLater(toolStats, () -> updateFishCount(heldItem), 1);
+        // update the fishing rod!
+        ItemStack finalFishingRod = fishingRod;
+        Bukkit.getScheduler().runTaskLater(toolStats, () -> updateFishCount(finalFishingRod), 1);
 
         // check if the player caught an item
         if (event.getCaught() == null) {
