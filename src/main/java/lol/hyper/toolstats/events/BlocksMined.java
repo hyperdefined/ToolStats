@@ -28,6 +28,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -53,11 +54,8 @@ public class BlocksMined implements Listener {
             return;
         }
         // if the player mines something with their fist
-        int heldItemSlot = player.getInventory().getHeldItemSlot();
-        ItemStack heldItem = player.getInventory().getItem(heldItemSlot);
-        if (heldItem == null || heldItem.getType() == Material.AIR) {
-            return;
-        }
+        PlayerInventory inventory = player.getInventory();
+        ItemStack heldItem = inventory.getItemInMainHand();
         // only check certain items
         if (!ItemChecker.isMineTool(heldItem.getType())) {
             return;

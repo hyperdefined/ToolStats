@@ -29,6 +29,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -57,19 +58,52 @@ public class SheepShear implements Listener {
         if (!(entity instanceof Sheep)) {
             return;
         }
-        // check if the player is right-clicking with shears only
-        int heldItemSlot = player.getInventory().getHeldItemSlot();
-        ItemStack heldItem = player.getInventory().getItem(heldItemSlot);
-        if (heldItem == null || heldItem.getType() == Material.AIR || heldItem.getType() != Material.SHEARS) {
+
+        // make sure the player is holding shears
+        // player can shear with their offhand
+        PlayerInventory inventory = player.getInventory();
+        boolean isMainHand = inventory.getItemInMainHand().getType() == Material.SHEARS;
+        boolean isOffHand = inventory.getItemInOffHand().getType() == Material.SHEARS;
+        ItemStack shears = null;
+        if (isMainHand) {
+            shears = inventory.getItemInMainHand();
+            toolStats.logger.info("main");
+        }
+        if (isOffHand) {
+            shears = inventory.getItemInOffHand();
+            toolStats.logger.info("offhand");
+        }
+
+        // if the player is hold fishing rods in both hands
+        // default to main hand since that takes priority
+        if (isMainHand && isOffHand) {
+            shears = inventory.getItemInMainHand();
+            toolStats.logger.info("both");
+        }
+
+        // player swapped items?
+        if (shears == null) {
             return;
         }
 
         Sheep sheep = (Sheep) entity;
         // make sure the sheep is not sheared
-        if (!sheep.isSheared()) {
-            ItemStack newShears = addLore(heldItem);
-            if (newShears != null) {
-                Bukkit.getScheduler().runTaskLater(toolStats, () -> player.getInventory().setItem(heldItemSlot, newShears), 1);
+        if (sheep.isSheared()) {
+            return;
+        }
+
+        // update the stats
+        ItemStack newShears = addLore(shears);
+        if (newShears != null) {
+            if (isMainHand && isOffHand) {
+                Bukkit.getScheduler().runTaskLater(toolStats, () -> inventory.setItemInMainHand(newShears), 1);
+                return;
+            }
+            if (isMainHand) {
+                Bukkit.getScheduler().runTaskLater(toolStats, () -> inventory.setItemInMainHand(newShears), 1);
+            }
+            if (isOffHand) {
+                Bukkit.getScheduler().runTaskLater(toolStats, () -> inventory.setItemInOffHand(newShears), 1);
             }
         }
     }
