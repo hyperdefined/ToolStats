@@ -47,7 +47,7 @@ public class PlayerFish implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onFish(PlayerFishEvent event) {
         if (event.isCancelled()) {
             return;
@@ -86,8 +86,7 @@ public class PlayerFish implements Listener {
         }
 
         // update the fishing rod!
-        ItemStack finalFishingRod = fishingRod;
-        Bukkit.getScheduler().runTaskLater(toolStats, () -> updateFishCount(finalFishingRod), 1);
+        updateFishCount(fishingRod);
 
         // check if the player caught an item
         if (event.getCaught() == null) {

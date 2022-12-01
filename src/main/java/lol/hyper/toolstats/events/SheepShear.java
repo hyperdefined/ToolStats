@@ -45,7 +45,7 @@ public class SheepShear implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onShear(PlayerInteractEntityEvent event) {
         if (event.isCancelled()) {
             return;
@@ -93,32 +93,20 @@ public class SheepShear implements Listener {
         }
 
         // update the stats
-        ItemStack newShears = addLore(shears);
-        if (newShears != null) {
-            if (isMainHand && isOffHand) {
-                Bukkit.getScheduler().runTaskLater(toolStats, () -> inventory.setItemInMainHand(newShears), 1);
-                return;
-            }
-            if (isMainHand) {
-                Bukkit.getScheduler().runTaskLater(toolStats, () -> inventory.setItemInMainHand(newShears), 1);
-            }
-            if (isOffHand) {
-                Bukkit.getScheduler().runTaskLater(toolStats, () -> inventory.setItemInOffHand(newShears), 1);
-            }
-        }
+        ItemStack finalShears = shears;
+        addLore(finalShears);
     }
 
     /**
      * Adds tags to shears.
      *
-     * @param oldShears The shears.
+     * @param newShears The shears.
      */
-    private ItemStack addLore(ItemStack oldShears) {
-        ItemStack newShears = oldShears.clone();
+    private void addLore(ItemStack newShears) {
         ItemMeta meta = newShears.getItemMeta();
         if (meta == null) {
             toolStats.logger.warning(newShears + " does NOT have any meta! Unable to update stats.");
-            return null;
+            return;
         }
         Integer sheepSheared = 0;
         PersistentDataContainer container = meta.getPersistentDataContainer();
@@ -139,7 +127,7 @@ public class SheepShear implements Listener {
 
         if (sheepShearedLore == null || sheepShearedLoreRaw == null) {
             toolStats.logger.warning("There is no lore message for messages.sheep-sheared!");
-            return null;
+            return;
         }
 
         List<String> lore;
@@ -169,6 +157,5 @@ public class SheepShear implements Listener {
             meta.setLore(lore);
         }
         newShears.setItemMeta(meta);
-        return newShears;
     }
 }

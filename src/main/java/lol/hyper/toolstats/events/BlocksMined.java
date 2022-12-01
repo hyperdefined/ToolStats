@@ -44,7 +44,7 @@ public class BlocksMined implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onBreak(BlockBreakEvent event) {
         if (event.isCancelled()) {
             return;

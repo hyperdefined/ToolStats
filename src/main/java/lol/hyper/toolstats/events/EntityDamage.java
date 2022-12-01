@@ -47,7 +47,7 @@ public class EntityDamage implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onDamage(EntityDamageByEntityEvent event) {
         if (event.isCancelled()) {
             return;
@@ -151,7 +151,7 @@ public class EntityDamage implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof LivingEntity)) {
             return;
@@ -181,7 +181,7 @@ public class EntityDamage implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onDamage(EntityDamageByBlockEvent event) {
         if (!(event.getEntity() instanceof LivingEntity)) {
             return;
