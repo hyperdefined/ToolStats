@@ -65,18 +65,15 @@ public class SheepShear implements Listener {
         ItemStack shears = null;
         if (isMainHand) {
             shears = inventory.getItemInMainHand();
-            toolStats.logger.info("main");
         }
         if (isOffHand) {
             shears = inventory.getItemInOffHand();
-            toolStats.logger.info("offhand");
         }
 
         // if the player is hold fishing rods in both hands
         // default to main hand since that takes priority
         if (isMainHand && isOffHand) {
             shears = inventory.getItemInMainHand();
-            toolStats.logger.info("both");
         }
 
         // player swapped items?
