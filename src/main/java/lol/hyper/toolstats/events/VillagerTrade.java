@@ -36,7 +36,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -110,24 +109,11 @@ public class VillagerTrade implements Listener {
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
         container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
 
-        String tradedByLoreRaw = toolStats.getLoreFromConfig("traded.traded-by", true);
-        String tradedOnLoreRaw = toolStats.getLoreFromConfig("traded.traded-on", true);
+        String formattedDate = toolStats.numberFormat.formatDate(finalDate);
+        List<String> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate, "TRADED");
 
-        if (tradedByLoreRaw == null || tradedOnLoreRaw == null) {
-            toolStats.logger.warning("There is no lore message for messages.traded!");
-            return null;
-        }
-
-        List<String> lore;
-        if (meta.hasLore()) {
-            lore = meta.getLore();
-        } else {
-            lore = new ArrayList<>();
-        }
         if (toolStats.checkConfig(newItem, "traded-tag")) {
-            lore.add(tradedOnLoreRaw.replace("{date}", toolStats.numberFormat.formatDate(finalDate)));
-            lore.add(tradedByLoreRaw.replace("{player}", owner.getName()));
-            meta.setLore(lore);
+            meta.setLore(newLore);
         }
         newItem.setItemMeta(meta);
         return newItem;

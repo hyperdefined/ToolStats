@@ -19,9 +19,7 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.ItemChecker;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -33,7 +31,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BlocksMined implements Listener {
@@ -60,8 +57,8 @@ public class BlocksMined implements Listener {
         if (!ItemChecker.isMineTool(heldItem.getType())) {
             return;
         }
-        // if it's an item we want, update the stats
-        Bukkit.getScheduler().runTaskLater(toolStats, () -> updateBlocksMined(heldItem), 1);
+        // update the blocks mined
+        updateBlocksMined(heldItem);
     }
 
     private void updateBlocksMined(ItemStack playerTool) {
@@ -86,40 +83,17 @@ public class BlocksMined implements Listener {
         blocksMined++;
         container.set(toolStats.genericMined, PersistentDataType.INTEGER, blocksMined);
 
-        String configLore = toolStats.getLoreFromConfig("blocks-mined", false);
-        String configLoreRaw = toolStats.getLoreFromConfig("blocks-mined", true);
+        String blocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined);
+        List<String> newLore = toolStats.itemLore.addItemLore(meta, "{blocks}", blocksMinedFormatted, "blocks-mined");
 
-        if (configLore == null || configLoreRaw == null) {
-            toolStats.logger.warning("There is no lore message for messages.blocks-mined!");
+        // if the list returned null, don't add it
+        if (newLore == null) {
             return;
         }
 
-        List<String> lore;
-        String newLine = configLoreRaw.replace("{blocks}", toolStats.numberFormat.formatInt(blocksMined));
-        if (meta.hasLore()) {
-            lore = meta.getLore();
-            boolean hasLore = false;
-            // we do a for loop like this, we can keep track of index
-            // this doesn't mess the lore up of existing items
-            for (int x = 0; x < lore.size(); x++) {
-                if (lore.get(x).contains(configLore)) {
-                    hasLore = true;
-                    lore.set(x, newLine);
-                    break;
-                }
-            }
-            // if the item has lore but doesn't have the tag, add it
-            if (!hasLore) {
-                lore.add(newLine);
-            }
-        } else {
-            // if the item has no lore, create a new list and add the string
-            lore = new ArrayList<>();
-            lore.add(newLine);
-        }
         // do we add the lore based on the config?
         if (toolStats.checkConfig(playerTool, "blocks-mined")) {
-            meta.setLore(lore);
+            meta.setLore(newLore);
         }
         playerTool.setItemMeta(meta);
     }

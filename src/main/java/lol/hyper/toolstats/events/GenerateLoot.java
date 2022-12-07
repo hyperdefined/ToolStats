@@ -38,7 +38,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -145,25 +144,12 @@ public class GenerateLoot implements Listener {
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
         container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
 
-        String foundByLoreRaw = toolStats.getLoreFromConfig("looted.found-by", true);
-        String foundOnLoreRaw = toolStats.getLoreFromConfig("looted.found-on", true);
+        String formattedDate = toolStats.numberFormat.formatDate(finalDate);
+        List<String> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate, "LOOTED");
 
-        if (foundByLoreRaw == null || foundOnLoreRaw == null) {
-            toolStats.logger.warning("There is no lore message for messages.looted!");
-            return null;
-        }
-
-        List<String> lore;
-        if (meta.hasLore()) {
-            lore = meta.getLore();
-        } else {
-            lore = new ArrayList<>();
-        }
         if (toolStats.checkConfig(newItem, "looted-tag")) {
-            lore.add(foundOnLoreRaw.replace("{date}", toolStats.numberFormat.formatDate(finalDate)));
-            lore.add(foundByLoreRaw.replace("{player}", owner.getName()));
+            meta.setLore(newLore);
         }
-        meta.setLore(lore);
         newItem.setItemMeta(meta);
         return newItem;
     }

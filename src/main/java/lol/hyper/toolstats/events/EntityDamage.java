@@ -73,39 +73,34 @@ public class EntityDamage implements Listener {
                     return;
                 }
                 PlayerInventory attackingPlayerInventory = attackingPlayer.getInventory();
-                int heldItemSlot = attackingPlayerInventory.getHeldItemSlot();
-                ItemStack heldItem = attackingPlayerInventory.getItem(attackingPlayer.getInventory().getHeldItemSlot());
-                // a player killed something with their fist
-                if (heldItem == null || heldItem.getType() == Material.AIR) {
-                    return;
-                }
+                ItemStack heldItem = attackingPlayerInventory.getItemInMainHand();
                 // only check certain items
                 if (!ItemChecker.isMeleeWeapon(heldItem.getType())) {
                     return;
                 }
                 // a player is killing another player
                 if (mobBeingAttacked instanceof Player) {
-                    Bukkit.getScheduler().runTaskLater(toolStats, () -> attackingPlayerInventory.setItem(heldItemSlot, updatePlayerKills(heldItem)), 1);
+                    updatePlayerKills(heldItem);
                     return;
                 }
                 // player is killing regular mob
-                Bukkit.getScheduler().runTaskLater(toolStats, () -> attackingPlayerInventory.setItem(heldItemSlot, updateMobKills(heldItem)), 1);
+                updateMobKills(heldItem);
                 trackedMobs.add(mobBeingAttacked.getUniqueId());
             }
             // trident is being thrown at something
             if (event.getDamager() instanceof Trident) {
                 Trident trident = (Trident) event.getDamager();
-                ItemStack clone;
+                ItemStack newTrident;
                 // trident is killing player
                 if (mobBeingAttacked instanceof Player) {
-                    clone = updatePlayerKills(trident.getItem());
+                    newTrident = tridentPlayerKills(trident.getItem());
                 } else {
-                    clone = updateMobKills(trident.getItem());
+                    // trident is killing a mob
+                    newTrident = tridentMobKills(trident.getItem());
                 }
-                if (clone == null) {
-                    return;
+                if (newTrident != null) {
+                    trident.setItem(newTrident);
                 }
-                Bukkit.getScheduler().runTaskLater(toolStats, () -> trident.setItem(clone), 1);
             }
             // arrow is being shot
             if (event.getDamager() instanceof Arrow) {
@@ -116,20 +111,35 @@ public class EntityDamage implements Listener {
                     if (shootingPlayer.getGameMode() == GameMode.CREATIVE || shootingPlayer.getGameMode() == GameMode.SPECTATOR) {
                         return;
                     }
-                    PlayerInventory shootingPlayerInventory = shootingPlayer.getInventory();
-                    int heldItemSlot = shootingPlayerInventory.getHeldItemSlot();
-                    ItemStack heldItem = shootingPlayerInventory.getItem(heldItemSlot);
-                    if (heldItem == null) {
+                    PlayerInventory inventory = shootingPlayer.getInventory();
+                    boolean isMainHand = inventory.getItemInMainHand().getType() == Material.BOW || inventory.getItemInMainHand().getType() == Material.CROSSBOW;
+                    boolean isOffHand = inventory.getItemInOffHand().getType() == Material.BOW || inventory.getItemInMainHand().getType() == Material.CROSSBOW;
+                    ItemStack heldBow = null;
+                    if (isMainHand) {
+                        heldBow = inventory.getItemInMainHand();
+                        toolStats.logger.info("main");
+                    }
+                    if (isOffHand) {
+                        heldBow = inventory.getItemInOffHand();
+                        toolStats.logger.info("offhand");
+                    }
+
+                    // if the player is hold a bow in both hands
+                    // default to main hand since that takes priority
+                    if (isMainHand && isOffHand) {
+                        heldBow = inventory.getItemInMainHand();
+                        toolStats.logger.info("both");
+                    }
+
+                    // player swapped
+                    if (heldBow == null) {
                         return;
                     }
-                    // if the player is holding the bow/crossbow
-                    // if they switch then oh well
-                    if (heldItem.getType() == Material.BOW || heldItem.getType() == Material.CROSSBOW) {
-                        if (mobBeingAttacked instanceof Player) {
-                            Bukkit.getScheduler().runTaskLater(toolStats, () -> shootingPlayerInventory.setItem(heldItemSlot, updatePlayerKills(heldItem)), 1);
-                        } else {
-                            Bukkit.getScheduler().runTaskLater(toolStats, () -> shootingPlayerInventory.setItem(heldItemSlot, updateMobKills(heldItem)), 1);
-                        }
+
+                    if (mobBeingAttacked instanceof Player) {
+                        updatePlayerKills(heldBow);
+                    } else {
+                        updateMobKills(heldBow);
                     }
                 }
             }
@@ -215,14 +225,12 @@ public class EntityDamage implements Listener {
      * Updates a weapon's player kills.
      *
      * @param itemStack The item to update.
-     * @return A copy of the item.
      */
-    private ItemStack updatePlayerKills(ItemStack itemStack) {
-        ItemStack finalItem = itemStack.clone();
-        ItemMeta meta = finalItem.getItemMeta();
+    private void updatePlayerKills(ItemStack itemStack) {
+        ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) {
             toolStats.logger.warning(itemStack + " does NOT have any meta! Unable to update stats.");
-            return null;
+            return;
         }
         Integer playerKills = 0;
         PersistentDataContainer container = meta.getPersistentDataContainer();
@@ -238,57 +246,31 @@ public class EntityDamage implements Listener {
         playerKills++;
         container.set(toolStats.swordPlayerKills, PersistentDataType.INTEGER, playerKills);
 
-        String playerKillsLore = toolStats.getLoreFromConfig("kills.player", false);
-        String playerKillsLoreRaw = toolStats.getLoreFromConfig("kills.player", true);
+        String playerKillsFormatted = toolStats.numberFormat.formatInt(playerKills);
+        List<String> newLore = toolStats.itemLore.addItemLore(meta, "{kills}", playerKillsFormatted, "kills.player");
 
-        if (playerKillsLore == null || playerKillsLoreRaw == null) {
-            toolStats.logger.warning("There is no lore message for messages.kills.player!");
-            return null;
+        // if the list returned null, don't add it
+        if (newLore == null) {
+            return;
         }
 
-        List<String> lore;
-        String newLine = playerKillsLoreRaw.replace("{kills}", toolStats.numberFormat.formatInt(playerKills));
-        if (meta.hasLore()) {
-            lore = meta.getLore();
-            boolean hasLore = false;
-            // we do a for loop like this, we can keep track of index
-            // this doesn't mess the lore up of existing items
-            for (int x = 0; x < lore.size(); x++) {
-                if (lore.get(x).contains(playerKillsLore)) {
-                    hasLore = true;
-                    lore.set(x, newLine);
-                    break;
-                }
-            }
-            // if the item has lore but doesn't have the tag, add it
-            if (!hasLore) {
-                lore.add(newLine);
-            }
-        } else {
-            // if the item has no lore, create a new list and add the string
-            lore = new ArrayList<>();
-            lore.add(newLine);
-        }
         // do we add the lore based on the config?
         if (toolStats.checkConfig(itemStack, "player-kills")) {
-            meta.setLore(lore);
+            meta.setLore(newLore);
         }
-        finalItem.setItemMeta(meta);
-        return finalItem;
+        itemStack.setItemMeta(meta);
     }
 
     /**
      * Updates a weapon's mob kills.
      *
      * @param itemStack The item to update.
-     * @return A copy of the item.
      */
-    private ItemStack updateMobKills(ItemStack itemStack) {
-        ItemStack finalItem = itemStack.clone();
-        ItemMeta meta = finalItem.getItemMeta();
+    private void updateMobKills(ItemStack itemStack) {
+        ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) {
             toolStats.logger.warning(itemStack + " does NOT have any meta! Unable to update stats.");
-            return null;
+            return;
         }
         Integer mobKills = 0;
         PersistentDataContainer container = meta.getPersistentDataContainer();
@@ -304,43 +286,19 @@ public class EntityDamage implements Listener {
         mobKills++;
         container.set(toolStats.swordMobKills, PersistentDataType.INTEGER, mobKills);
 
-        String mobKillsLore = toolStats.getLoreFromConfig("kills.mob", false);
-        String mobKillsLoreRaw = toolStats.getLoreFromConfig("kills.mob", true);
+        String mobKillsFormatted = toolStats.numberFormat.formatInt(mobKills);
+        List<String> newLore = toolStats.itemLore.addItemLore(meta, "{kills}", mobKillsFormatted, "kills.mob");
 
-        if (mobKillsLore == null || mobKillsLoreRaw == null) {
-            toolStats.logger.warning("There is no lore message for messages.kills.mob!");
-            return null;
+        // if the list returned null, don't add it
+        if (newLore == null) {
+            return;
         }
 
-        List<String> lore;
-        String newLine = mobKillsLoreRaw.replace("{kills}", toolStats.numberFormat.formatInt(mobKills));
-        if (meta.hasLore()) {
-            lore = meta.getLore();
-            boolean hasLore = false;
-            // we do a for loop like this, we can keep track of index
-            // this doesn't mess the lore up of existing items
-            for (int x = 0; x < lore.size(); x++) {
-                if (lore.get(x).contains(mobKillsLore)) {
-                    hasLore = true;
-                    lore.set(x, newLine);
-                    break;
-                }
-            }
-            // if the item has lore but doesn't have the tag, add it
-            if (!hasLore) {
-                lore.add(newLine);
-            }
-        } else {
-            // if the item has no lore, create a new list and add the string
-            lore = new ArrayList<>();
-            lore.add(newLine);
-        }
         // do we add the lore based on the config?
         if (toolStats.checkConfig(itemStack, "mob-kills")) {
-            meta.setLore(lore);
+            meta.setLore(newLore);
         }
-        finalItem.setItemMeta(meta);
-        return finalItem;
+        itemStack.setItemMeta(meta);
     }
 
     /**
@@ -369,40 +327,101 @@ public class EntityDamage implements Listener {
         damageTaken = damageTaken + damage;
         container.set(toolStats.armorDamage, PersistentDataType.DOUBLE, damageTaken);
 
-        String damageTakenLore = toolStats.getLoreFromConfig("damage-taken", false);
-        String damageTakenLoreRaw = toolStats.getLoreFromConfig("damage-taken", true);
+        String damageTakenFormatted = toolStats.numberFormat.formatDouble(damageTaken);
+        List<String> newLore = toolStats.itemLore.addItemLore(meta, "{damage}", damageTakenFormatted, "damage-taken");
 
-        if (damageTakenLore == null || damageTakenLoreRaw == null) {
-            toolStats.logger.warning("There is no lore message for messages.damage-taken!");
+        // if the list returned null, don't add it
+        if (newLore == null) {
             return;
         }
 
-        List<String> lore;
-        String newLine = damageTakenLoreRaw.replace("{damage}", toolStats.numberFormat.formatDouble(damageTaken));
-        if (meta.hasLore()) {
-            lore = meta.getLore();
-            boolean hasLore = false;
-            // we do a for loop like this, we can keep track of index
-            // this doesn't mess the lore up of existing items
-            for (int x = 0; x < lore.size(); x++) {
-                if (lore.get(x).contains(damageTakenLore)) {
-                    hasLore = true;
-                    lore.set(x, newLine);
-                    break;
-                }
-            }
-            // if the item has lore but doesn't have the tag, add it
-            if (!hasLore) {
-                lore.add(newLine);
-            }
-        } else {
-            // if the item has no lore, create a new list and add the string
-            lore = new ArrayList<>();
-            lore.add(newLine);
-        }
         if (toolStats.config.getBoolean("enabled.armor-damage")) {
-            meta.setLore(lore);
+            meta.setLore(newLore);
         }
         itemStack.setItemMeta(meta);
+    }
+
+    /**
+     * Updates a trident's mob kills.
+     *
+     * @param trident The item to update.
+     */
+    private ItemStack tridentMobKills(ItemStack trident) {
+        ItemStack newTrident = trident.clone();
+        ItemMeta meta = newTrident.getItemMeta();
+        if (meta == null) {
+            toolStats.logger.warning(newTrident + " does NOT have any meta! Unable to update stats.");
+            return null;
+        }
+        Integer mobKills = 0;
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        if (container.has(toolStats.swordMobKills, PersistentDataType.INTEGER)) {
+            mobKills = container.get(toolStats.swordMobKills, PersistentDataType.INTEGER);
+        }
+
+        if (mobKills == null) {
+            mobKills = 0;
+            toolStats.logger.warning(newTrident + " does not have valid mob-kills set! Resting to zero. This should NEVER happen.");
+        }
+
+        mobKills++;
+        container.set(toolStats.swordMobKills, PersistentDataType.INTEGER, mobKills);
+
+        String mobKillsFormatted = toolStats.numberFormat.formatInt(mobKills);
+        List<String> newLore = toolStats.itemLore.addItemLore(meta, "{kills}", mobKillsFormatted, "kills.mob");
+
+        // if the list returned null, don't add it
+        if (newLore == null) {
+            return null;
+        }
+
+        // do we add the lore based on the config?
+        if (toolStats.checkConfig(newTrident, "mob-kills")) {
+            meta.setLore(newLore);
+        }
+        newTrident.setItemMeta(meta);
+        return newTrident;
+    }
+
+    /**
+     * Updates a trident's player kills.
+     *
+     * @param trident The item to update.
+     */
+    private ItemStack tridentPlayerKills(ItemStack trident) {
+        ItemStack newTrident = trident.clone();
+        ItemMeta meta = newTrident.getItemMeta();
+        if (meta == null) {
+            toolStats.logger.warning(newTrident + " does NOT have any meta! Unable to update stats.");
+            return null;
+        }
+        Integer playerKills = 0;
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        if (container.has(toolStats.swordPlayerKills, PersistentDataType.INTEGER)) {
+            playerKills = container.get(toolStats.swordPlayerKills, PersistentDataType.INTEGER);
+        }
+
+        if (playerKills == null) {
+            playerKills = 0;
+            toolStats.logger.warning(newTrident + " does not have valid player-kills set! Resting to zero. This should NEVER happen.");
+        }
+
+        playerKills++;
+        container.set(toolStats.swordPlayerKills, PersistentDataType.INTEGER, playerKills);
+
+        String playerKillsFormatted = toolStats.numberFormat.formatInt(playerKills);
+        List<String> newLore = toolStats.itemLore.addItemLore(meta, "{kills}", playerKillsFormatted, "kills.player");
+
+        // if the list returned null, don't add it
+        if (newLore == null) {
+            return null;
+        }
+
+        // do we add the lore based on the config?
+        if (toolStats.checkConfig(newTrident, "player-kills")) {
+            meta.setLore(newLore);
+        }
+        newTrident.setItemMeta(meta);
+        return newTrident;
     }
 }

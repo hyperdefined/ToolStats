@@ -18,7 +18,6 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -34,7 +33,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SheepShear implements Listener {
@@ -122,39 +120,15 @@ public class SheepShear implements Listener {
         sheepSheared++;
         container.set(toolStats.shearsSheared, PersistentDataType.INTEGER, sheepSheared);
 
-        String sheepShearedLore = toolStats.getLoreFromConfig("sheep-sheared", false);
-        String sheepShearedLoreRaw = toolStats.getLoreFromConfig("sheep-sheared", true);
+        String sheepShearedFormatted = toolStats.numberFormat.formatInt(sheepSheared);
+        List<String> newLore = toolStats.itemLore.addItemLore(meta, "{sheep}", sheepShearedFormatted, "sheep-sheared");
 
-        if (sheepShearedLore == null || sheepShearedLoreRaw == null) {
-            toolStats.logger.warning("There is no lore message for messages.sheep-sheared!");
+        // if the list returned null, don't add it
+        if (newLore == null) {
             return;
         }
-
-        List<String> lore;
-        String newLine = sheepShearedLoreRaw.replace("{sheep}", toolStats.numberFormat.formatInt(sheepSheared));
-        if (meta.hasLore()) {
-            lore = meta.getLore();
-            boolean hasLore = false;
-            // we do a for loop like this, we can keep track of index
-            // this doesn't mess the lore up of existing items
-            for (int x = 0; x < lore.size(); x++) {
-                if (lore.get(x).contains(sheepShearedLore)) {
-                    hasLore = true;
-                    lore.set(x, newLine);
-                    break;
-                }
-            }
-            // if the item has lore but doesn't have the tag, add it
-            if (!hasLore) {
-                lore.add(newLine);
-            }
-        } else {
-            // if the item has no lore, create a new list and add the string
-            lore = new ArrayList<>();
-            lore.add(newLine);
-        }
         if (toolStats.config.getBoolean("enabled.sheep-sheared")) {
-            meta.setLore(lore);
+            meta.setLore(newLore);
         }
         newShears.setItemMeta(meta);
     }

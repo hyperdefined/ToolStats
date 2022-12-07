@@ -21,6 +21,7 @@ import lol.hyper.githubreleaseapi.GitHubRelease;
 import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
 import lol.hyper.toolstats.commands.CommandToolStats;
 import lol.hyper.toolstats.events.*;
+import lol.hyper.toolstats.tools.ItemLore;
 import lol.hyper.toolstats.tools.NumberFormat;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
@@ -69,6 +70,7 @@ public final class ToolStats extends JavaPlugin {
     public SheepShear sheepShear;
     public VillagerTrade villagerTrade;
     public CommandToolStats commandToolStats;
+    public ItemLore itemLore;
 
     public final Logger logger = this.getLogger();
     public final File configFile = new File(this.getDataFolder(), "config.yml");
@@ -99,6 +101,7 @@ public final class ToolStats extends JavaPlugin {
         sheepShear = new SheepShear(this);
         villagerTrade = new VillagerTrade(this);
         commandToolStats = new CommandToolStats(this);
+        itemLore = new ItemLore(this);
 
         Bukkit.getServer().getPluginManager().registerEvents(blocksMined, this);
         Bukkit.getServer().getPluginManager().registerEvents(chunkPopulate, this);

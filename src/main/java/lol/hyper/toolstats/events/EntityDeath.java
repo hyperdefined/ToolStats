@@ -74,7 +74,7 @@ public class EntityDeath implements Listener {
      * Adds "drop by" tag to item.
      *
      * @param oldItem The item to add lore to.
-     * @param mob       The mob or player name.
+     * @param mob     The mob or player name.
      */
     private ItemStack addLore(ItemStack oldItem, String mob) {
         ItemStack newItem = oldItem.clone();
@@ -82,35 +82,16 @@ public class EntityDeath implements Listener {
         if (meta == null) {
             return null;
         }
-        boolean hasTag = false;
 
-        String droppedByLore = toolStats.getLoreFromConfig("dropped-by", false);
-        String droppedByLoreRaw = toolStats.getLoreFromConfig("dropped-by", true);
+        List<String> newLore = toolStats.itemLore.addItemLore(meta, "{name}", mob, "dropped-by");
 
-        if (droppedByLore == null || droppedByLoreRaw == null) {
-            toolStats.logger.warning("There is no lore message for messages.dropped-by!");
+        // if the list returned null, don't add it
+        if (newLore == null) {
             return null;
         }
 
-        List<String> lore;
-        if (meta.hasLore()) {
-            lore = meta.getLore();
-            for (int x = 0; x < lore.size(); x++) {
-                if (lore.get(x).contains(droppedByLore)) {
-                    // replace existing tag
-                    lore.set(x, droppedByLoreRaw.replace("{name}", mob));
-                    hasTag = true;
-                }
-            }
-        } else {
-            // if the item has no lore, create a new list and add the string
-            lore = new ArrayList<>();
-        }
-        if (!hasTag) {
-            lore.add(droppedByLoreRaw.replace("{name}", mob));
-        }
         if (toolStats.config.getBoolean("enabled.dropped-by")) {
-            meta.setLore(lore);
+            meta.setLore(newLore);
         }
         newItem.setItemMeta(meta);
         return newItem;
