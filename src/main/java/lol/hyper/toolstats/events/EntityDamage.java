@@ -151,7 +151,7 @@ public class EntityDamage implements Listener {
             for (ItemStack armorPiece : inventory.getArmorContents()) {
                 if (armorPiece != null) {
                     if (ItemChecker.isArmor(armorPiece.getType())) {
-                        Bukkit.getScheduler().runTaskLater(toolStats, () -> updateArmorDamage(armorPiece, event.getFinalDamage()), 1);
+                        updateArmorDamage(armorPiece, event.getFinalDamage());
                     }
                 }
             }
@@ -181,7 +181,7 @@ public class EntityDamage implements Listener {
             for (ItemStack armorPiece : inventory.getArmorContents()) {
                 if (armorPiece != null) {
                     if (ItemChecker.isArmor(armorPiece.getType())) {
-                        Bukkit.getScheduler().runTaskLater(toolStats, () -> updateArmorDamage(armorPiece, event.getFinalDamage()), 1);
+                        updateArmorDamage(armorPiece, event.getFinalDamage());
                     }
                 }
             }
@@ -211,7 +211,7 @@ public class EntityDamage implements Listener {
             for (ItemStack armorPiece : inventory.getArmorContents()) {
                 if (armorPiece != null) {
                     if (ItemChecker.isArmor(armorPiece.getType())) {
-                        Bukkit.getScheduler().runTaskLater(toolStats, () -> updateArmorDamage(armorPiece, event.getFinalDamage()), 1);
+                        updateArmorDamage(armorPiece, event.getFinalDamage());
                     }
                 }
             }
