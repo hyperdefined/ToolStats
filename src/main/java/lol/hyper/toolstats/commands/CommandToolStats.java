@@ -18,6 +18,7 @@
 package lol.hyper.toolstats.commands;
 
 import lol.hyper.toolstats.ToolStats;
+import lol.hyper.toolstats.tools.ItemChecker;
 import lol.hyper.toolstats.tools.UUIDDataType;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
@@ -25,6 +26,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -71,6 +73,10 @@ public class CommandToolStats implements TabExecutor {
                     audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.").color(NamedTextColor.RED));
                     return true;
                 }
+                if (sender instanceof ConsoleCommandSender) {
+                    audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
+                    return true;
+                }
                 if (args.length == 2 && args[1].equalsIgnoreCase("confirm")) {
                     if (!sender.hasPermission("toolstats.reset.confirm")) {
                         audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.").color(NamedTextColor.RED));
@@ -78,8 +84,8 @@ public class CommandToolStats implements TabExecutor {
                     }
                     Player player = (Player) sender;
                     ItemStack heldItem = player.getInventory().getItemInMainHand();
-                    if (heldItem.getType() == Material.AIR) {
-                        audiences.sender(sender).sendMessage(Component.text("You must hold an item!").color(NamedTextColor.RED));
+                    if (ItemChecker.isValidItem(heldItem.getType())) {
+                        audiences.sender(sender).sendMessage(Component.text("You must hold a valid item.").color(NamedTextColor.RED));
                         return true;
                     }
                     fixItemLore(heldItem, player);
