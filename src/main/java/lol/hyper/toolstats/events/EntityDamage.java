@@ -150,11 +150,11 @@ public class EntityDamage implements Listener {
             if (playerTakingDamage.getGameMode() == GameMode.CREATIVE || playerTakingDamage.getGameMode() == GameMode.SPECTATOR) {
                 return;
             }
-            PlayerInventory inventory = playerTakingDamage.getInventory();
-            for (ItemStack armorPiece : inventory.getArmorContents()) {
+            PlayerInventory playerInventory = playerTakingDamage.getInventory();
+            for (ItemStack armorPiece : playerInventory.getArmorContents()) {
                 if (armorPiece != null) {
                     if (ItemChecker.isArmor(armorPiece.getType())) {
-                        updateArmorDamage(armorPiece, event.getFinalDamage());
+                        updateDamage(armorPiece, event.getFinalDamage());
                     }
                 }
             }
@@ -180,11 +180,11 @@ public class EntityDamage implements Listener {
             if (playerTakingDamage.getGameMode() == GameMode.CREATIVE || playerTakingDamage.getGameMode() == GameMode.SPECTATOR) {
                 return;
             }
-            PlayerInventory inventory = playerTakingDamage.getInventory();
-            for (ItemStack armorPiece : inventory.getArmorContents()) {
+            PlayerInventory playerInventory = playerTakingDamage.getInventory();
+            for (ItemStack armorPiece : playerInventory.getArmorContents()) {
                 if (armorPiece != null) {
                     if (ItemChecker.isArmor(armorPiece.getType())) {
-                        updateArmorDamage(armorPiece, event.getFinalDamage());
+                        updateDamage(armorPiece, event.getFinalDamage());
                     }
                 }
             }
@@ -210,11 +210,11 @@ public class EntityDamage implements Listener {
             if (playerTakingDamage.getGameMode() == GameMode.CREATIVE || playerTakingDamage.getGameMode() == GameMode.SPECTATOR) {
                 return;
             }
-            PlayerInventory inventory = playerTakingDamage.getInventory();
-            for (ItemStack armorPiece : inventory.getArmorContents()) {
+            PlayerInventory playerInventory = playerTakingDamage.getInventory();
+            for (ItemStack armorPiece : playerInventory.getArmorContents()) {
                 if (armorPiece != null) {
                     if (ItemChecker.isArmor(armorPiece.getType())) {
-                        updateArmorDamage(armorPiece, event.getFinalDamage());
+                        updateDamage(armorPiece, event.getFinalDamage());
                     }
                 }
             }
@@ -307,7 +307,7 @@ public class EntityDamage implements Listener {
      * @param itemStack The armor piece.
      * @param damage    How much damage is being added.
      */
-    private void updateArmorDamage(ItemStack itemStack, double damage) {
+    private void updateDamage(ItemStack itemStack, double damage) {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) {
             toolStats.logger.warning(itemStack + " does NOT have any meta! Unable to update stats.");
