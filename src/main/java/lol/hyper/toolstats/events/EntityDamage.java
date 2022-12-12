@@ -97,6 +97,7 @@ public class EntityDamage implements Listener {
                 } else {
                     // trident is killing a mob
                     newTrident = tridentMobKills(trident.getItem());
+                    trackedMobs.add(mobBeingAttacked.getUniqueId());
                 }
                 if (newTrident != null) {
                     trident.setItem(newTrident);
@@ -133,10 +134,12 @@ public class EntityDamage implements Listener {
                         return;
                     }
 
+                    // player is shooting another player
                     if (mobBeingAttacked instanceof Player) {
                         updatePlayerKills(heldBow);
                     } else {
                         updateMobKills(heldBow);
+                        trackedMobs.add(mobBeingAttacked.getUniqueId());
                     }
                 }
             }
