@@ -31,6 +31,10 @@ public class NumberFormat {
     private DecimalFormat COMMA_FORMAT;
     private SimpleDateFormat DATE_FORMAT;
 
+    /**
+     * Utility class to format different numbers
+     * @param toolStats Plugin instance.
+     */
     public NumberFormat(ToolStats toolStats) {
 
         String dateFormat = toolStats.config.getString("date-format");
@@ -39,6 +43,7 @@ public class NumberFormat {
         String commaFormat = toolStats.config.getString("number-formats.comma-format");
         String decimalFormat = toolStats.config.getString("number-formats.decimal-format");
 
+        // if these config values are missing, use the default ones
         if (dateFormat == null) {
             dateFormat = "M/dd/yyyy";
             toolStats.logger.warning("date-format is missing! Using default American English format.");
@@ -64,6 +69,7 @@ public class NumberFormat {
             toolStats.logger.warning("number-formats.comma-separator is missing! Using default #,###.00 instead.");
         }
 
+        // test the date format
         try {
             DATE_FORMAT = new SimpleDateFormat(dateFormat, Locale.getDefault());
         } catch (NullPointerException | IllegalArgumentException exception) {
@@ -72,11 +78,13 @@ public class NumberFormat {
             DATE_FORMAT = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
         }
 
+        // set the separators
         DecimalFormatSymbols formatSymbols = new DecimalFormatSymbols(Locale.getDefault());
         formatSymbols.setDecimalSeparator(decimalSeparator.charAt(0));
         formatSymbols.setGroupingSeparator(commaSeparator.charAt(0));
 
 
+        // test the comma format
         try {
             COMMA_FORMAT = new DecimalFormat(commaFormat, formatSymbols);
         } catch (NullPointerException | IllegalArgumentException exception) {
@@ -85,6 +93,7 @@ public class NumberFormat {
             COMMA_FORMAT = new DecimalFormat("#,###", formatSymbols);
         }
 
+        // test the decimal format
         try {
             DECIMAL_FORMAT = new DecimalFormat(decimalFormat, formatSymbols);
         } catch (NullPointerException | IllegalArgumentException exception) {
