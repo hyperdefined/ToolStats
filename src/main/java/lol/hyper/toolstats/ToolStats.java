@@ -236,14 +236,30 @@ public final class ToolStats extends JavaPlugin {
             // this is a dirty trick to remove color codes
             lore = ChatColor.translateAlternateColorCodes('&', lore);
             lore = ChatColor.stripColor(lore);
-            lore = lore.replace("{player}", "");
-            lore = lore.replace("{date}", "");
-            lore = lore.replace("{name}", "");
-            lore = lore.replace("{kills}", "");
-            lore = lore.replace("{blocks}", "");
-            lore = lore.replace("{sheep}", "");
-            lore = lore.replace("{damage}", "");
-            lore = lore.replace("{fish}", "");
+            if (lore.contains("{player}")) {
+                lore = lore.replace("{player}", "");
+            }
+            if (lore.contains("{date}")) {
+                lore = lore.replace("{date}", "");
+            }
+            if (lore.contains("{name}")) {
+                lore = lore.replace("{name}", "");
+            }
+            if (lore.contains("{kills}")) {
+                lore = lore.replace("{kills}", "");
+            }
+            if (lore.contains("{blocks}")) {
+                lore = lore.replace("{blocks}", "");
+            }
+            if (lore.contains("{sheep}")) {
+                lore = lore.replace("{sheep}", "");
+            }
+            if (lore.contains("{damage}")) {
+                lore = lore.replace("{damage}", "");
+            }
+            if (lore.contains("{fish}")) {
+                lore = lore.replace("{fish}", "");
+            }
         }
         return lore;
     }
