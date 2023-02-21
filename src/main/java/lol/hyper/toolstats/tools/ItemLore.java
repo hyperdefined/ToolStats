@@ -113,6 +113,7 @@ public class ItemLore {
             case "TRADED": {
                 dateCreated = toolStats.getLoreFromConfig("traded.traded-on", true);
                 itemOwner = toolStats.getLoreFromConfig("traded.traded-by", true);
+                break;
             }
         }
 
