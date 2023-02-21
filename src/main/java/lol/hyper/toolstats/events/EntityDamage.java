@@ -249,11 +249,6 @@ public class EntityDamage implements Listener {
         String playerKillsFormatted = toolStats.numberFormat.formatInt(playerKills);
         List<String> newLore = toolStats.itemLore.addItemLore(meta, "{kills}", playerKillsFormatted, "kills.player");
 
-        // if the list returned null, don't add it
-        if (newLore == null) {
-            return;
-        }
-
         // do we add the lore based on the config?
         if (toolStats.checkConfig(itemStack, "player-kills")) {
             meta.setLore(newLore);
@@ -288,11 +283,6 @@ public class EntityDamage implements Listener {
 
         String mobKillsFormatted = toolStats.numberFormat.formatInt(mobKills);
         List<String> newLore = toolStats.itemLore.addItemLore(meta, "{kills}", mobKillsFormatted, "kills.mob");
-
-        // if the list returned null, don't add it
-        if (newLore == null) {
-            return;
-        }
 
         // do we add the lore based on the config?
         if (toolStats.checkConfig(itemStack, "mob-kills")) {
@@ -330,11 +320,6 @@ public class EntityDamage implements Listener {
         String damageTakenFormatted = toolStats.numberFormat.formatDouble(damageTaken);
         List<String> newLore = toolStats.itemLore.addItemLore(meta, "{damage}", damageTakenFormatted, "damage-taken");
 
-        // if the list returned null, don't add it
-        if (newLore == null) {
-            return;
-        }
-
         if (toolStats.config.getBoolean("enabled.armor-damage")) {
             meta.setLore(newLore);
         }
@@ -369,11 +354,6 @@ public class EntityDamage implements Listener {
 
         String mobKillsFormatted = toolStats.numberFormat.formatInt(mobKills);
         List<String> newLore = toolStats.itemLore.addItemLore(meta, "{kills}", mobKillsFormatted, "kills.mob");
-
-        // if the list returned null, don't add it
-        if (newLore == null) {
-            return null;
-        }
 
         // do we add the lore based on the config?
         if (toolStats.checkConfig(newTrident, "mob-kills")) {
@@ -411,11 +391,6 @@ public class EntityDamage implements Listener {
 
         String playerKillsFormatted = toolStats.numberFormat.formatInt(playerKills);
         List<String> newLore = toolStats.itemLore.addItemLore(meta, "{kills}", playerKillsFormatted, "kills.player");
-
-        // if the list returned null, don't add it
-        if (newLore == null) {
-            return null;
-        }
 
         // do we add the lore based on the config?
         if (toolStats.checkConfig(newTrident, "player-kills")) {

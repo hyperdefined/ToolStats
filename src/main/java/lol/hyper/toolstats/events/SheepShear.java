@@ -120,10 +120,6 @@ public class SheepShear implements Listener {
         String sheepShearedFormatted = toolStats.numberFormat.formatInt(sheepSheared);
         List<String> newLore = toolStats.itemLore.addItemLore(meta, "{sheep}", sheepShearedFormatted, "sheep-sheared");
 
-        // if the list returned null, don't add it
-        if (newLore == null) {
-            return;
-        }
         if (toolStats.config.getBoolean("enabled.sheep-sheared")) {
             meta.setLore(newLore);
         }

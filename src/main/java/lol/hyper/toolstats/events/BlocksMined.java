@@ -86,11 +86,6 @@ public class BlocksMined implements Listener {
         String blocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined);
         List<String> newLore = toolStats.itemLore.addItemLore(meta, "{blocks}", blocksMinedFormatted, "blocks-mined");
 
-        // if the list returned null, don't add it
-        if (newLore == null) {
-            return;
-        }
-
         // do we add the lore based on the config?
         if (toolStats.checkConfig(playerTool, "blocks-mined")) {
             meta.setLore(newLore);

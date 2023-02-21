@@ -36,7 +36,7 @@ import org.bukkit.persistence.PersistentDataType;
 public class ChunkPopulate implements Listener {
 
     // this tags all elytras with a "new" tag
-    // this let's us track any new elytras player loot
+    // this lets us track any new elytras player loot
 
     private final ToolStats toolStats;
 
@@ -55,21 +55,22 @@ public class ChunkPopulate implements Listener {
             Chunk chunk = event.getChunk();
             for (Entity entity : chunk.getEntities()) {
                 // if there is a new item frame
-                if (entity instanceof ItemFrame) {
-                    ItemFrame itemFrame = (ItemFrame) entity;
-                    // if the item frame has an elytra
-                    if (itemFrame.getItem().getType() == Material.ELYTRA) {
-                        ItemStack elytraCopy = itemFrame.getItem();
-                        ItemMeta meta = elytraCopy.getItemMeta();
-                        if (meta == null) {
-                            return;
-                        }
-                        // add the new tag so we know it's new
-                        PersistentDataContainer container = meta.getPersistentDataContainer();
-                        container.set(toolStats.newElytra, PersistentDataType.INTEGER, 1);
-                        elytraCopy.setItemMeta(meta);
-                        itemFrame.setItem(elytraCopy);
+                if (!(entity instanceof ItemFrame)) {
+                    return;
+                }
+                ItemFrame itemFrame = (ItemFrame) entity;
+                // if the item frame has an elytra
+                if (itemFrame.getItem().getType() == Material.ELYTRA) {
+                    ItemStack elytraCopy = itemFrame.getItem();
+                    ItemMeta meta = elytraCopy.getItemMeta();
+                    if (meta == null) {
+                        return;
                     }
+                    // add the new tag so we know it's new
+                    PersistentDataContainer container = meta.getPersistentDataContainer();
+                    container.set(toolStats.newElytra, PersistentDataType.INTEGER, 1);
+                    elytraCopy.setItemMeta(meta);
+                    itemFrame.setItem(elytraCopy);
                 }
             }
         }, 20);

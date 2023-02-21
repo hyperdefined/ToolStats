@@ -128,11 +128,6 @@ public class PlayerFish implements Listener {
         String fishCaughtFormatted = toolStats.numberFormat.formatInt(fishCaught);
         List<String> newLore = toolStats.itemLore.addItemLore(meta, "{fish}", fishCaughtFormatted, "fished.fish-caught");
 
-        // if the list returned null, don't add it
-        if (newLore == null) {
-            return;
-        }
-
         if (toolStats.config.getBoolean("enabled.fish-caught")) {
             meta.setLore(newLore);
         }

@@ -85,11 +85,6 @@ public class EntityDeath implements Listener {
 
         List<String> newLore = toolStats.itemLore.addItemLore(meta, "{name}", mob, "dropped-by");
 
-        // if the list returned null, don't add it
-        if (newLore == null) {
-            return null;
-        }
-
         if (toolStats.config.getBoolean("enabled.dropped-by")) {
             meta.setLore(newLore);
         }
