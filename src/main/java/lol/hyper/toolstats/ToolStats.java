@@ -55,6 +55,8 @@ public final class ToolStats extends JavaPlugin {
     public final NamespacedKey shearsSheared = new NamespacedKey(this, "sheared");
     // stores how much damage armor has taken
     public final NamespacedKey armorDamage = new NamespacedKey(this, "damage-taken");
+    // stores how much damage armor has taken (as int)
+    public final NamespacedKey armorDamageInt = new NamespacedKey(this, "damage-taken-int");
     // used for tracking new elytras
     public final NamespacedKey newElytra = new NamespacedKey(this, "new");
 

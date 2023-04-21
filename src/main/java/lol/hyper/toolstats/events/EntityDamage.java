@@ -316,6 +316,7 @@ public class EntityDamage implements Listener {
 
         damageTaken = damageTaken + damage;
         container.set(toolStats.armorDamage, PersistentDataType.DOUBLE, damageTaken);
+        container.set(toolStats.armorDamageInt, PersistentDataType.INTEGER, damageTaken.intValue());
 
         String damageTakenFormatted = toolStats.numberFormat.formatDouble(damageTaken);
         List<String> newLore = toolStats.itemLore.addItemLore(meta, "{damage}", damageTakenFormatted, "damage-taken");
