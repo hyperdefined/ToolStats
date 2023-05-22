@@ -66,19 +66,20 @@ public class VillagerTrade implements Listener {
             if (event.getSlotType() == InventoryType.SlotType.RESULT) {
                 ItemStack item = event.getCurrentItem();
                 // only check items we want
-                if (ItemChecker.isValidItem(item.getType())) {
-                    // if the player shift clicks, show the warning
-                    if (event.isShiftClick()) {
-                        String configMessage = toolStats.config.getString("messages.shift-click-warning.trading");
-                        if (configMessage != null) {
-                            event.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&', configMessage));
-                        }
+                if (!ItemChecker.isValidItem(item.getType())) {
+                    return;
+                }
+                // if the player shift clicks, show the warning
+                if (event.isShiftClick()) {
+                    String configMessage = toolStats.config.getString("messages.shift-click-warning.trading");
+                    if (configMessage != null) {
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', configMessage));
                     }
-                    ItemStack newItem = addLore(item, player);
-                    if (newItem != null) {
-                        // this gets delayed since villager inventories suck for no reason
-                        Bukkit.getScheduler().runTaskLater(toolStats, () -> event.setCurrentItem(newItem), 5);
-                    }
+                }
+                ItemStack newItem = addLore(item, player);
+                if (newItem != null) {
+                    // set the new item
+                    event.setCurrentItem(newItem);
                 }
             }
         }
