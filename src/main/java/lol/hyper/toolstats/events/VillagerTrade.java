@@ -79,7 +79,7 @@ public class VillagerTrade implements Listener {
                 ItemStack newItem = addLore(item, player);
                 if (newItem != null) {
                     // set the new item
-                    event.setCurrentItem(newItem);
+                    inventory.setItem(event.getSlot(), newItem);
                 }
             }
         }
