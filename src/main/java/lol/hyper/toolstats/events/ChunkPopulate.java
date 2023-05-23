@@ -56,7 +56,7 @@ public class ChunkPopulate implements Listener {
             for (Entity entity : chunk.getEntities()) {
                 // if there is a new item frame
                 if (!(entity instanceof ItemFrame)) {
-                    return;
+                    continue;
                 }
                 ItemFrame itemFrame = (ItemFrame) entity;
                 // if the item frame has an elytra
@@ -64,7 +64,7 @@ public class ChunkPopulate implements Listener {
                     ItemStack elytraCopy = itemFrame.getItem();
                     ItemMeta meta = elytraCopy.getItemMeta();
                     if (meta == null) {
-                        return;
+                        continue;
                     }
                     // add the new tag so we know it's new
                     PersistentDataContainer container = meta.getPersistentDataContainer();
