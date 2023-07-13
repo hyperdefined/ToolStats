@@ -129,24 +129,15 @@ public class CommandToolStats implements TabExecutor {
             return;
         }
 
-        // determine how the item was originally created
-        // this doesn't get saved, so we just rely on the lore
-        // if there isn't a tag, default to crafted
-        String type = "DEFAULT";
-        if (finalMeta.hasLore()) {
-            if (finalMeta.getLore() != null) {
-                for (String line : finalMeta.getLore()) {
-                    if (line.contains(caughtByLore)) {
-                        type = "CAUGHT";
-                    }
-                    if (line.contains(lootedByLore)) {
-                        type = "LOOTED";
-                    }
-                    if (line.contains(tradedByLore)) {
-                        type = "TRADED";
-                    }
-                }
-            }
+        // set how the item was obtained
+        Integer origin = -1;
+        if (container.has(toolStats.originType, PersistentDataType.INTEGER)) {
+            origin = container.get(toolStats.originType, PersistentDataType.INTEGER);
+        }
+
+        // set to -1 if it's invalid
+        if (origin == null) {
+            origin = -1;
         }
 
         // hard code elytras
@@ -171,21 +162,25 @@ public class CommandToolStats implements TabExecutor {
             if (container.has(toolStats.genericOwner, new UUIDDataType())) {
                 container.set(toolStats.genericOwner, new UUIDDataType(), player.getUniqueId());
                 // show how the item was created based on the previous lore
-                switch (type) {
-                    case "DEFAULT": {
+                switch (origin) {
+                    case 0: {
                         lore.add(toolStats.getLoreFromConfig("created.created-by", true).replace("{player}", player.getName()));
                         break;
                     }
-                    case "CAUGHT": {
-                        lore.add(toolStats.getLoreFromConfig("fished.caught-by", true).replace("{player}", player.getName()));
+                    case 2: {
+                        lore.add(toolStats.getLoreFromConfig("looted.looted-by", true).replace("{player}", player.getName()));
                         break;
                     }
-                    case "LOOTED": {
+                    case 3: {
+                        lore.add(toolStats.getLoreFromConfig("traded.traded-by", true).replace("{player}", player.getName()));
+                        break;
+                    }
+                    case 4: {
                         lore.add(toolStats.getLoreFromConfig("looted.found-by", true).replace("{player}", player.getName()));
                         break;
                     }
-                    case "TRADED": {
-                        lore.add(toolStats.getLoreFromConfig("traded.traded-by", true).replace("{player}", player.getName()));
+                    case 5: {
+                        lore.add(toolStats.getLoreFromConfig("fished.caught-by", true).replace("{player}", player.getName()));
                         break;
                     }
                 }
@@ -196,21 +191,25 @@ public class CommandToolStats implements TabExecutor {
                 Long time = container.get(toolStats.timeCreated, PersistentDataType.LONG);
                 if (time != null) {
                     // show how when the item was created based on the previous lore
-                    switch (type) {
-                        case "DEFAULT": {
+                    switch (origin) {
+                        case 0: {
                             lore.add(toolStats.getLoreFromConfig("created.created-on", true).replace("{date}", toolStats.numberFormat.formatDate(new Date(time))));
                             break;
                         }
-                        case "CAUGHT": {
-                            lore.add(toolStats.getLoreFromConfig("fished.caught-on", true).replace("{date}", toolStats.numberFormat.formatDate(new Date(time))));
+                        case 2: {
+                            lore.add(toolStats.getLoreFromConfig("looted.looted-on", true).replace("{date}", toolStats.numberFormat.formatDate(new Date(time))));
                             break;
                         }
-                        case "LOOTED": {
+                        case 3: {
+                            lore.add(toolStats.getLoreFromConfig("traded.traded-on", true).replace("{date}", toolStats.numberFormat.formatDate(new Date(time))));
+                            break;
+                        }
+                        case 4: {
                             lore.add(toolStats.getLoreFromConfig("looted.found-on", true).replace("{date}", toolStats.numberFormat.formatDate(new Date(time))));
                             break;
                         }
-                        case "TRADED": {
-                            lore.add(toolStats.getLoreFromConfig("traded.traded-on", true).replace("{date}", toolStats.numberFormat.formatDate(new Date(time))));
+                        case 5: {
+                            lore.add(toolStats.getLoreFromConfig("fished.caught-on", true).replace("{date}", toolStats.numberFormat.formatDate(new Date(time))));
                             break;
                         }
                     }

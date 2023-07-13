@@ -39,26 +39,56 @@ import java.util.logging.Logger;
 
 public final class ToolStats extends JavaPlugin {
 
-    // stores who created an item
+    /**
+     * Stores who created an item.
+     */
     public final NamespacedKey genericOwner = new NamespacedKey(this, "owner");
-    // stores when an item was created
+    /**
+     * Stores when the item was created.
+     */
     public final NamespacedKey timeCreated = new NamespacedKey(this, "time-created");
-    // stores how many player kills by sword
+    /**
+     * Stores how many player kills.
+     */
     public final NamespacedKey swordPlayerKills = new NamespacedKey(this, "player-kills");
-    // stores how many mob kills by sword
+    /**
+     * Stores how many mob kills.
+     */
     public final NamespacedKey swordMobKills = new NamespacedKey(this, "mob-kills");
-    // stores how blocks mined (used for all tools)
+    /**
+     * Stores how many blocks were mined.
+     */
     public final NamespacedKey genericMined = new NamespacedKey(this, "generic-mined");
-    // stores how many fish were caught
+    /**
+     * Stores how many fish were caught.
+     */
     public final NamespacedKey fishingRodCaught = new NamespacedKey(this, "fish-caught");
-    // stores how many times sheep were sheared
+    /**
+     * Stores how many sheep were sheared.
+     */
     public final NamespacedKey shearsSheared = new NamespacedKey(this, "sheared");
-    // stores how much damage armor has taken
+    /**
+     * Stores how much damage an armor piece has taken.
+     */
     public final NamespacedKey armorDamage = new NamespacedKey(this, "damage-taken");
-    // stores how much damage armor has taken (as int)
+    /**
+     * Stores how much damage an armor piece has taken (as an int).
+     */
     public final NamespacedKey armorDamageInt = new NamespacedKey(this, "damage-taken-int");
-    // used for tracking new elytras
+    /**
+     * Key for tracking new elytras that spawn.
+     */
     public final NamespacedKey newElytra = new NamespacedKey(this, "new");
+    /**
+     * Stores how an item was created.
+     * 0 = crafted.
+     * 1 = dropped.
+     * 2 = looted.
+     * 3 = traded.
+     * 4 = founded (for elytras).
+     * 5 = fished.
+     */
+    public final NamespacedKey originType = new NamespacedKey(this, "origin");
 
     public BlocksMined blocksMined;
     public ChunkPopulate chunkPopulate;

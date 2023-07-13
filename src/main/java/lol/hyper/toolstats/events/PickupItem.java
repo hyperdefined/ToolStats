@@ -91,6 +91,7 @@ public class PickupItem implements Listener {
         PersistentDataContainer container = meta.getPersistentDataContainer();
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
         container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
+        container.set(toolStats.originType, PersistentDataType.INTEGER, 4);
         container.remove(toolStats.newElytra);
 
         String formattedDate = toolStats.numberFormat.formatDate(finalDate);

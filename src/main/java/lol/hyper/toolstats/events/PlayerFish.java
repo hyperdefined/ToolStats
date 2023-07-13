@@ -157,6 +157,7 @@ public class PlayerFish implements Listener {
 
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
         container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
+        container.set(toolStats.originType, PersistentDataType.INTEGER, 5);
 
         String formattedDate = toolStats.numberFormat.formatDate(finalDate);
         List<String> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate, "FISHED");

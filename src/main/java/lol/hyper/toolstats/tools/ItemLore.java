@@ -21,7 +21,6 @@ import lol.hyper.toolstats.ToolStats;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 

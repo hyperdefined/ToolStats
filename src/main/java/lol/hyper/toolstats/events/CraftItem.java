@@ -106,6 +106,7 @@ public class CraftItem implements Listener {
 
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
         container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
+        container.set(toolStats.originType, PersistentDataType.INTEGER, 0);
 
         String createdByRaw = toolStats.getLoreFromConfig("created.created-by", true);
         String createdOnRaw = toolStats.getLoreFromConfig("created.created-on", true);
