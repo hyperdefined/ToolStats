@@ -112,7 +112,7 @@ public class VillagerTrade implements Listener {
         container.set(toolStats.originType, PersistentDataType.INTEGER, 3);
 
         String formattedDate = toolStats.numberFormat.formatDate(finalDate);
-        List<String> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate, "TRADED");
+        List<String> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
 
         if (toolStats.checkConfig(newItem, "traded-tag")) {
             meta.setLore(newLore);

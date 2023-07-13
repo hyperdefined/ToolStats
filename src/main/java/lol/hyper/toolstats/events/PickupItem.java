@@ -95,7 +95,7 @@ public class PickupItem implements Listener {
         container.remove(toolStats.newElytra);
 
         String formattedDate = toolStats.numberFormat.formatDate(finalDate);
-        List<String> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate, "LOOTED");
+        List<String> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
 
         if (toolStats.config.getBoolean("enabled.elytra-tag")) {
             meta.setLore(newLore);

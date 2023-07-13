@@ -18,11 +18,13 @@
 package lol.hyper.toolstats.tools;
 
 import lol.hyper.toolstats.ToolStats;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class ItemLore {
 
@@ -87,38 +89,46 @@ public class ItemLore {
      * @param itemMeta      The item meta.
      * @param playerName    The new owner of item.
      * @param formattedDate The date of the ownership.
-     * @param type          The type of new ownership.
      * @return The item's new lore.
      */
-    public List<String> addNewOwner(ItemMeta itemMeta, String playerName, String formattedDate, String type) {
+    public List<String> addNewOwner(ItemMeta itemMeta, String playerName, String formattedDate) {
         String dateCreated = null;
         String itemOwner = null;
-        switch (type) {
-            case "LOOTED": {
+        Integer origin = null;
+        PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+        if (container.has(toolStats.originType, PersistentDataType.INTEGER)) {
+            origin = container.get(toolStats.originType, PersistentDataType.INTEGER);
+        }
+
+        if (origin == null) {
+            origin = -1;
+        }
+
+        switch (origin) {
+            case 2: {
+                dateCreated = toolStats.getLoreFromConfig("looted.looted-on", true);
+                itemOwner = toolStats.getLoreFromConfig("looted.looted-by", true);
+                break;
+            }
+            case 3: {
+                dateCreated = toolStats.getLoreFromConfig("traded.traded-on", true);
+                itemOwner = toolStats.getLoreFromConfig("traded.traded-by", true);
+                break;
+            }
+            case 4: {
                 dateCreated = toolStats.getLoreFromConfig("looted.found-on", true);
                 itemOwner = toolStats.getLoreFromConfig("looted.found-by", true);
                 break;
             }
-            case "CREATED": {
-                dateCreated = toolStats.getLoreFromConfig("created.created-on", true);
-                itemOwner = toolStats.getLoreFromConfig("created.created-by", true);
-                break;
-            }
-            case "FISHED": {
+            case 5: {
                 dateCreated = toolStats.getLoreFromConfig("fished.caught-on", true);
                 itemOwner = toolStats.getLoreFromConfig("fished.caught-by", true);
-                break;
-            }
-            case "TRADED": {
-                dateCreated = toolStats.getLoreFromConfig("traded.traded-on", true);
-                itemOwner = toolStats.getLoreFromConfig("traded.traded-by", true);
                 break;
             }
         }
 
         if (dateCreated == null || itemOwner == null) {
-            toolStats.logger.warning("There is no lore message for messages." + type.toLowerCase(Locale.ENGLISH) + "!");
-            toolStats.logger.warning("Unable to update lore for item.");
+            toolStats.logger.info("Unable to determine origin of item for " + itemMeta);
             return itemMeta.getLore();
         }
 
@@ -132,5 +142,20 @@ public class ItemLore {
         newLore.add(dateCreated.replace("{date}", formattedDate));
         newLore.add(itemOwner.replace("{player}", playerName));
         return newLore;
+    }
+
+    /**
+     * Add origin to already existing items.
+     * @param itemStack The item to add origin to.
+     * @param origin The origin type.
+     */
+    public void addOriginTag(ItemStack itemStack, int origin) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta == null) {
+            return;
+        }
+        PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+        container.set(toolStats.originType, PersistentDataType.INTEGER, origin);
+        itemStack.setItemMeta(itemMeta);
     }
 }
