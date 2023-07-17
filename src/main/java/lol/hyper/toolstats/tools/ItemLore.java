@@ -59,22 +59,18 @@ public class ItemLore {
 
         if (itemMeta.hasLore()) {
             newLore = itemMeta.getLore();
-            boolean hasLore = false;
             // keep track of line index
             // this doesn't mess the lore of existing items
             for (int x = 0; x < newLore.size(); x++) {
                 // check to see if the line matches the config value
                 // this means we update this line only!
                 if (newLore.get(x).contains(configLore)) {
-                    hasLore = true;
                     newLore.set(x, newLine);
-                    break;
+                    return newLore;
                 }
             }
-            // if the item has lore but doesn't have our line, add it
-            if (!hasLore) {
-                newLore.add(newLine);
-            }
+            // if the item has lore, but we didn't find the line
+            newLore.add(newLine);
         } else {
             // if the item has no lore, create a new list and add the line
             newLore = new ArrayList<>();
@@ -146,8 +142,9 @@ public class ItemLore {
 
     /**
      * Add origin to already existing items.
+     *
      * @param itemStack The item to add origin to.
-     * @param origin The origin type.
+     * @param origin    The origin type.
      */
     public void addOriginTag(ItemStack itemStack, int origin) {
         ItemMeta itemMeta = itemStack.getItemMeta();
