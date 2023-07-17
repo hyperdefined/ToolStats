@@ -84,7 +84,7 @@ public class CommandToolStats implements TabExecutor {
                     }
                     Player player = (Player) sender;
                     ItemStack heldItem = player.getInventory().getItemInMainHand();
-                    if (ItemChecker.isValidItem(heldItem.getType())) {
+                    if (!ItemChecker.isValidItem(heldItem.getType())) {
                         audiences.sender(sender).sendMessage(Component.text("You must hold a valid item.").color(NamedTextColor.RED));
                         return true;
                     }
