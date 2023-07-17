@@ -103,6 +103,8 @@ public final class ToolStats extends JavaPlugin {
     public VillagerTrade villagerTrade;
     public CommandToolStats commandToolStats;
     public ItemLore itemLore;
+    public InventoryOpen inventoryOpen;
+    public NumberFormat numberFormat;
 
     public final Logger logger = this.getLogger();
     public final File configFile = new File(this.getDataFolder(), "config.yml");
@@ -111,7 +113,6 @@ public final class ToolStats extends JavaPlugin {
 
     private BukkitAudiences adventure;
 
-    public NumberFormat numberFormat;
 
     @Override
     public void onEnable() {
@@ -134,6 +135,7 @@ public final class ToolStats extends JavaPlugin {
         villagerTrade = new VillagerTrade(this);
         commandToolStats = new CommandToolStats(this);
         itemLore = new ItemLore(this);
+        inventoryOpen = new InventoryOpen(this);
 
         Bukkit.getServer().getPluginManager().registerEvents(blocksMined, this);
         Bukkit.getServer().getPluginManager().registerEvents(chunkPopulate, this);
@@ -146,6 +148,7 @@ public final class ToolStats extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(playerInteract, this);
         Bukkit.getServer().getPluginManager().registerEvents(sheepShear, this);
         Bukkit.getServer().getPluginManager().registerEvents(villagerTrade, this);
+        Bukkit.getServer().getPluginManager().registerEvents(inventoryOpen, this);
 
         this.getCommand("toolstats").setExecutor(commandToolStats);
 
