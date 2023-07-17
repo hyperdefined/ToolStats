@@ -18,7 +18,6 @@
 package lol.hyper.toolstats.tools;
 
 import lol.hyper.toolstats.ToolStats;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -138,21 +137,5 @@ public class ItemLore {
         newLore.add(dateCreated.replace("{date}", formattedDate));
         newLore.add(itemOwner.replace("{player}", playerName));
         return newLore;
-    }
-
-    /**
-     * Add origin to already existing items.
-     *
-     * @param itemStack The item to add origin to.
-     * @param origin    The origin type.
-     */
-    public void addOriginTag(ItemStack itemStack, int origin) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        if (itemMeta == null) {
-            return;
-        }
-        PersistentDataContainer container = itemMeta.getPersistentDataContainer();
-        container.set(toolStats.originType, PersistentDataType.INTEGER, origin);
-        itemStack.setItemMeta(itemMeta);
     }
 }
