@@ -80,8 +80,8 @@ messages:
     caught-on: "&7Caught on: &8{date}"
     fish-caught: "&7Fish caught: &8{fish}"
   looted:
-    looted-by: "&7Found by: &8{player}"
-    looted-on: "&7Found on: &8{date}"
+    looted-by: "&7Looted by: &8{player}"
+    looted-on: "&7Looted on: &8{date}"
     found-by: "&7Found by: &8{player}"
     found-on: "&7Found on: &8{date}"
   traded:
