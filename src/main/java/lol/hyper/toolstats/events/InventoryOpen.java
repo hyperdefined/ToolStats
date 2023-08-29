@@ -21,14 +21,17 @@ import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.ItemChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
@@ -46,33 +49,39 @@ public class InventoryOpen implements Listener {
             return;
         }
 
-        Bukkit.getScheduler().runTaskLater(toolStats, ()-> {
-            Inventory inventory = event.getInventory();
-            for (ItemStack itemStack : inventory) {
-                if (itemStack == null) {
-                    continue;
-                }
-                ItemMeta itemMeta = itemStack.getItemMeta();
-                if (itemMeta == null) {
-                    continue;
-                }
-                PersistentDataContainer container = itemMeta.getPersistentDataContainer();
-                // ignore any items that already have the origin tag
-                if (container.has(toolStats.originType, PersistentDataType.INTEGER)) {
-                    continue;
-                }
-                // ignore items that are not the right type
-                if (!ItemChecker.isValidItem(itemStack.getType())) {
-                    continue;
-                }
+        Player player = (Player) event.getPlayer();
 
-                ItemMeta newMeta = getOrigin(itemMeta, itemStack.getType() == Material.ELYTRA);
-                if (newMeta == null) {
-                    continue;
-                }
-                itemStack.setItemMeta(newMeta);
+        Inventory inventory = event.getInventory();
+        for (ItemStack itemStack : inventory) {
+            if (itemStack == null) {
+                continue;
             }
-        },1);
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            if (itemMeta == null) {
+                continue;
+            }
+            PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+            // ignore any items that already have the origin tag
+            if (container.has(toolStats.originType, PersistentDataType.INTEGER)) {
+                continue;
+            }
+            // ignore items that are not the right type
+            if (!ItemChecker.isValidItem(itemStack.getType())) {
+                continue;
+            }
+
+            ItemMeta newMeta = getOrigin(itemMeta, itemStack.getType() == Material.ELYTRA);
+            if (newMeta == null) {
+                continue;
+            }
+            BukkitRunnable runnable = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    itemStack.setItemMeta(newMeta);
+                }
+            };
+            toolStats.scheduleEntity(runnable, player, 1);
+        }
     }
 
     /**
@@ -93,11 +102,11 @@ public class InventoryOpen implements Listener {
         for (String line : lore) {
             // this is the worst code I have ever written
             String createdBy = toolStats.getLoreFromConfig("created.created-by", false);
-            String createdOn = toolStats.getLoreFromConfig("created.created-by", false);
-            String caughtBy = toolStats.getLoreFromConfig("created.created-by", false);
-            String lootedBy = toolStats.getLoreFromConfig("created.created-by", false);
-            String foundBy = toolStats.getLoreFromConfig("created.created-by", false);
-            String tradedBy = toolStats.getLoreFromConfig("created.created-by", false);
+            String createdOn = toolStats.getLoreFromConfig("created.created-on", false);
+            String caughtBy = toolStats.getLoreFromConfig("fished.caught-by", false);
+            String lootedBy = toolStats.getLoreFromConfig("looted.looted-by", false);
+            String foundBy = toolStats.getLoreFromConfig("looted.found-by", false);
+            String tradedBy = toolStats.getLoreFromConfig("traded.traded-by", false);
 
             if (createdBy != null && line.contains(createdBy)) {
                 origin = 0;

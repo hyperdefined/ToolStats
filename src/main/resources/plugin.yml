@@ -4,6 +4,7 @@ main: lol.hyper.toolstats.ToolStats
 api-version: 1.15
 author: hyperdefined
 description: Track various tool stats!
+folia-supported: true
 commands:
   toolstats:
     usage: /toolstats

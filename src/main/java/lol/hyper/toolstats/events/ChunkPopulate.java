@@ -32,6 +32,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class ChunkPopulate implements Listener {
 
@@ -51,28 +52,32 @@ public class ChunkPopulate implements Listener {
         }
         // this is delayed because entities are not loaded instantly
         // we just check 1 second later
-        Bukkit.getScheduler().runTaskLater(toolStats, () -> {
-            Chunk chunk = event.getChunk();
-            for (Entity entity : chunk.getEntities()) {
-                // if there is a new item frame
-                if (!(entity instanceof ItemFrame)) {
-                    continue;
-                }
-                ItemFrame itemFrame = (ItemFrame) entity;
-                // if the item frame has an elytra
-                if (itemFrame.getItem().getType() == Material.ELYTRA) {
-                    ItemStack elytraCopy = itemFrame.getItem();
-                    ItemMeta meta = elytraCopy.getItemMeta();
-                    if (meta == null) {
+        Chunk chunk = event.getChunk();
+        BukkitRunnable runnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Entity entity : chunk.getEntities()) {
+                    // if there is a new item frame
+                    if (!(entity instanceof ItemFrame)) {
                         continue;
                     }
-                    // add the new tag so we know it's new
-                    PersistentDataContainer container = meta.getPersistentDataContainer();
-                    container.set(toolStats.newElytra, PersistentDataType.INTEGER, 1);
-                    elytraCopy.setItemMeta(meta);
-                    itemFrame.setItem(elytraCopy);
+                    ItemFrame itemFrame = (ItemFrame) entity;
+                    // if the item frame has an elytra
+                    if (itemFrame.getItem().getType() == Material.ELYTRA) {
+                        ItemStack elytraCopy = itemFrame.getItem();
+                        ItemMeta meta = elytraCopy.getItemMeta();
+                        if (meta == null) {
+                            continue;
+                        }
+                        // add the new tag so we know it's new
+                        PersistentDataContainer container = meta.getPersistentDataContainer();
+                        container.set(toolStats.newElytra, PersistentDataType.INTEGER, 1);
+                        elytraCopy.setItemMeta(meta);
+                        itemFrame.setItem(elytraCopy);
+                    }
                 }
             }
-        }, 20);
+        };
+        toolStats.scheduleRegion(runnable, chunk.getWorld(), chunk, 20);
     }
 }

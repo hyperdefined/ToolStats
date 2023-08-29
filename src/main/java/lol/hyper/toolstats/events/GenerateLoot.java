@@ -37,6 +37,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Date;
 import java.util.List;
@@ -77,26 +78,29 @@ public class GenerateLoot implements Listener {
                 return;
             }
 
-            // run task later since if it runs on the same tick it breaks idk
+            // run task later since if it runs on the same tick it breaks
             Block finalOpenedChest = openedChest;
-            Bukkit.getScheduler().runTaskLater(toolStats, () -> {
-                Player player = toolStats.playerInteract.openedChests.get(finalOpenedChest);
-                // do a classic for loop, so we keep track of chest index of item
-                for (int i = 0; i < chestInv.getContents().length; i++) {
-                    ItemStack itemStack = chestInv.getItem(i);
-                    // ignore air
-                    if (itemStack == null || itemStack.getType() == Material.AIR) {
-                        continue;
-                    }
-                    if (ItemChecker.isValidItem(itemStack.getType())) {
-                        ItemStack newItem = addLore(itemStack, player);
-                        if (newItem != null) {
-                            chestInv.setItem(i, newItem);
+            BukkitRunnable runnable = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    Player player = toolStats.playerInteract.openedChests.get(finalOpenedChest);
+                    // keep track of chest index of item
+                    for (int i = 0; i < chestInv.getContents().length; i++) {
+                        ItemStack itemStack = chestInv.getItem(i);
+                        // ignore air
+                        if (itemStack == null || itemStack.getType() == Material.AIR) {
+                            continue;
+                        }
+                        if (ItemChecker.isValidItem(itemStack.getType())) {
+                            ItemStack newItem = addLore(itemStack, player);
+                            if (newItem != null) {
+                                chestInv.setItem(i, newItem);
+                            }
                         }
                     }
                 }
-
-            }, 1);
+            };
+            toolStats.scheduleRegion(runnable, lootLocation.getWorld(), lootLocation.getChunk(), 1);
         }
         if (inventoryHolder instanceof StorageMinecart) {
             StorageMinecart mineCart = (StorageMinecart) inventoryHolder;

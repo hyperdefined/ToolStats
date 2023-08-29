@@ -25,13 +25,14 @@ import lol.hyper.toolstats.tools.ItemLore;
 import lol.hyper.toolstats.tools.NumberFormat;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import space.arim.morepaperlib.MorePaperLib;
 
 import java.io.File;
 import java.io.IOException;
@@ -112,11 +113,13 @@ public final class ToolStats extends JavaPlugin {
     public final int CONFIG_VERSION = 5;
 
     private BukkitAudiences adventure;
+    public MorePaperLib morePaperLib;
 
 
     @Override
     public void onEnable() {
         this.adventure = BukkitAudiences.create(this);
+        morePaperLib = new MorePaperLib(this);
         if (!configFile.exists()) {
             this.saveResource("config.yml", true);
             logger.info("Copying default config!");
@@ -154,7 +157,7 @@ public final class ToolStats extends JavaPlugin {
 
         new Metrics(this, 14110);
 
-        Bukkit.getScheduler().runTaskAsynchronously(this, this::checkForUpdates);
+        morePaperLib.scheduling().asyncScheduler().run(this::checkForUpdates);
     }
 
     public void loadConfig() {
@@ -304,5 +307,28 @@ public final class ToolStats extends JavaPlugin {
             throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
         }
         return this.adventure;
+    }
+
+    public void scheduleEntity(BukkitRunnable runnable, Entity entity, int delay) {
+        if (Bukkit.getServer().getVersion().contains("Folia")) {
+            morePaperLib.scheduling().entitySpecificScheduler(entity).runDelayed(runnable, null, delay);
+        } else {
+            runnable.runTaskLater(this, delay);
+        }
+    }
+
+    public void scheduleGlobal(BukkitRunnable runnable, int delay) {
+        if (Bukkit.getServer().getVersion().contains("Folia")) {
+            morePaperLib.scheduling().globalRegionalScheduler().runDelayed(runnable, delay);
+        } else {
+            runnable.runTaskLater(this, delay);
+        }
+    }
+    public void scheduleRegion(BukkitRunnable runnable, World world, Chunk chunk, int delay) {
+        if (Bukkit.getServer().getVersion().contains("Folia")) {
+            morePaperLib.scheduling().regionSpecificScheduler(world, chunk.getX(), chunk.getZ()).runDelayed(runnable, delay);
+        } else {
+            runnable.runTaskLater(this, delay);
+        }
     }
 }

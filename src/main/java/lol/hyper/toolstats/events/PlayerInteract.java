@@ -31,6 +31,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 
@@ -63,7 +64,13 @@ public class PlayerInteract implements Listener {
         // store when a player opens a chest
         if (block.getType() != Material.AIR && block.getType() == Material.CHEST) {
             openedChests.put(block, player);
-            Bukkit.getScheduler().runTaskLater(toolStats, () -> openedChests.remove(block), 20);
+            BukkitRunnable runnable = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    openedChests.remove(block);
+                }
+            };
+            toolStats.scheduleGlobal(runnable, 20);
         }
     }
 
@@ -78,7 +85,13 @@ public class PlayerInteract implements Listener {
         if (clicked.getType() == EntityType.MINECART_CHEST) {
             StorageMinecart storageMinecart = (StorageMinecart) clicked;
             openedMineCarts.put(storageMinecart, player);
-            Bukkit.getScheduler().runTaskLater(toolStats, () -> openedMineCarts.remove(storageMinecart), 20);
+            BukkitRunnable runnable = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    openedMineCarts.remove(storageMinecart);
+                }
+            };
+            toolStats.scheduleGlobal(runnable, 20);
         }
     }
 }
