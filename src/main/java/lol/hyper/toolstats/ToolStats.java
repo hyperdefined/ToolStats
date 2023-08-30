@@ -105,6 +105,7 @@ public final class ToolStats extends JavaPlugin {
     public CommandToolStats commandToolStats;
     public ItemLore itemLore;
     public InventoryOpen inventoryOpen;
+    public PlayerJoin playerJoin;
     public NumberFormat numberFormat;
 
     public final Logger logger = this.getLogger();
@@ -139,6 +140,7 @@ public final class ToolStats extends JavaPlugin {
         commandToolStats = new CommandToolStats(this);
         itemLore = new ItemLore(this);
         inventoryOpen = new InventoryOpen(this);
+        playerJoin = new PlayerJoin(this);
 
         Bukkit.getServer().getPluginManager().registerEvents(blocksMined, this);
         Bukkit.getServer().getPluginManager().registerEvents(chunkPopulate, this);
@@ -152,6 +154,7 @@ public final class ToolStats extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(sheepShear, this);
         Bukkit.getServer().getPluginManager().registerEvents(villagerTrade, this);
         Bukkit.getServer().getPluginManager().registerEvents(inventoryOpen, this);
+        Bukkit.getServer().getPluginManager().registerEvents(playerJoin, this);
 
         this.getCommand("toolstats").setExecutor(commandToolStats);
 
@@ -310,25 +313,14 @@ public final class ToolStats extends JavaPlugin {
     }
 
     public void scheduleEntity(BukkitRunnable runnable, Entity entity, int delay) {
-        if (Bukkit.getServer().getVersion().contains("Folia")) {
-            morePaperLib.scheduling().entitySpecificScheduler(entity).runDelayed(runnable, null, delay);
-        } else {
-            runnable.runTaskLater(this, delay);
-        }
+        morePaperLib.scheduling().entitySpecificScheduler(entity).runDelayed(runnable, null, delay);
     }
 
     public void scheduleGlobal(BukkitRunnable runnable, int delay) {
-        if (Bukkit.getServer().getVersion().contains("Folia")) {
-            morePaperLib.scheduling().globalRegionalScheduler().runDelayed(runnable, delay);
-        } else {
-            runnable.runTaskLater(this, delay);
-        }
+        morePaperLib.scheduling().globalRegionalScheduler().runDelayed(runnable, delay);
     }
+
     public void scheduleRegion(BukkitRunnable runnable, World world, Chunk chunk, int delay) {
-        if (Bukkit.getServer().getVersion().contains("Folia")) {
-            morePaperLib.scheduling().regionSpecificScheduler(world, chunk.getX(), chunk.getZ()).runDelayed(runnable, delay);
-        } else {
-            runnable.runTaskLater(this, delay);
-        }
+        morePaperLib.scheduling().regionSpecificScheduler(world, chunk.getX(), chunk.getZ()).runDelayed(runnable, delay);
     }
 }

@@ -24,7 +24,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -32,23 +32,19 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.List;
-
-public class InventoryOpen implements Listener {
+public class PlayerJoin implements Listener {
 
     private final ToolStats toolStats;
 
-    public InventoryOpen(ToolStats toolStats) {
+    public PlayerJoin(ToolStats toolStats) {
         this.toolStats = toolStats;
     }
 
     @EventHandler
-    public void onOpen(InventoryOpenEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
+    public void onJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
 
-        Inventory inventory = event.getInventory();
+        Inventory inventory = player.getInventory();
         for (ItemStack itemStack : inventory) {
             if (itemStack == null) {
                 continue;

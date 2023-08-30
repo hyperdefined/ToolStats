@@ -138,4 +138,63 @@ public class ItemLore {
         newLore.add(itemOwner.replace("{player}", playerName));
         return newLore;
     }
+
+    /**
+     * Determine an item's origin based on lore.
+     *
+     * @param itemMeta The item's meta.
+     * @param elytra   If they item is an elytra.
+     * @return The new item meta with the new origin tag. Returns null if origin cannot be determined.
+     */
+    public ItemMeta getOrigin(ItemMeta itemMeta, boolean elytra) {
+        List<String> lore;
+        if (!itemMeta.hasLore()) {
+            return null;
+        }
+        lore = itemMeta.getLore();
+        Integer origin = null;
+
+        for (String line : lore) {
+            // this is the worst code I have ever written
+            String createdBy = toolStats.getLoreFromConfig("created.created-by", false);
+            String createdOn = toolStats.getLoreFromConfig("created.created-on", false);
+            String caughtBy = toolStats.getLoreFromConfig("fished.caught-by", false);
+            String lootedBy = toolStats.getLoreFromConfig("looted.looted-by", false);
+            String foundBy = toolStats.getLoreFromConfig("looted.found-by", false);
+            String tradedBy = toolStats.getLoreFromConfig("traded.traded-by", false);
+
+            if (createdBy != null && line.contains(createdBy)) {
+                origin = 0;
+            }
+            if (createdOn != null && line.contains(createdOn)) {
+                origin = 0;
+            }
+            if (caughtBy != null && line.contains(caughtBy)) {
+                origin = 5;
+            }
+            if (lootedBy != null && line.contains(lootedBy)) {
+                origin = 2;
+            }
+            // because the config changed, "found-by" was being used for ALL looted items
+            // this includes elytras, so we have to check for this mistake
+            if (foundBy != null && line.contains(foundBy)) {
+                if (elytra) {
+                    origin = 4;
+                } else {
+                    origin = 5;
+                }
+            }
+            if (tradedBy != null && line.contains(tradedBy)) {
+                origin = 3;
+            }
+        }
+
+        if (origin == null) {
+            return null;
+        }
+
+        PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+        container.set(toolStats.originType, PersistentDataType.INTEGER, origin);
+        return itemMeta;
+    }
 }
