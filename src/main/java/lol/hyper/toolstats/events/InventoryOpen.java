@@ -64,23 +64,25 @@ public class InventoryOpen implements Listener {
             }
             PersistentDataContainer container = itemMeta.getPersistentDataContainer();
 
-            // generate a hash if the item doesn't have one
-            if (!container.has(toolStats.hash, PersistentDataType.STRING)) {
-                // make sure the item has an owner
-                if (!container.has(toolStats.genericOwner, new UUIDDataType())) {
-                    continue;
+            // generate a hash if the item doesn't have one (if it's enabled in the config
+            if (toolStats.config.getBoolean("generate-hash-for-items")) {
+                if (!container.has(toolStats.hash, PersistentDataType.STRING)) {
+                    // make sure the item has an owner
+                    if (!container.has(toolStats.genericOwner, new UUIDDataType())) {
+                        continue;
+                    }
+                    UUID owner = container.get(toolStats.genericOwner, new UUIDDataType());
+                    if (owner == null) {
+                        continue;
+                    }
+                    Long timestamp = container.get(toolStats.timeCreated, PersistentDataType.LONG);
+                    if (timestamp == null) {
+                        continue;
+                    }
+                    String hash = toolStats.hashMaker.makeHash(itemStack.getType(), owner, timestamp);
+                    toolStats.logger.info(hash);
+                    container.set(toolStats.hash, PersistentDataType.STRING, hash);
                 }
-                UUID owner = container.get(toolStats.genericOwner, new UUIDDataType());
-                if (owner == null) {
-                    continue;
-                }
-                Long timestamp = container.get(toolStats.timeCreated, PersistentDataType.LONG);
-                if (timestamp == null) {
-                    continue;
-                }
-                String hash = toolStats.hashMaker.makeHash(itemStack.getType(), owner, timestamp);
-                toolStats.logger.info(hash);
-                container.set(toolStats.hash, PersistentDataType.STRING, hash);
             }
 
             // add origin tag

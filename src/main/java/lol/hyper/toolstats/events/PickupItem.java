@@ -89,6 +89,13 @@ public class PickupItem implements Listener {
         long timeCreated = System.currentTimeMillis();
         Date finalDate = new Date(timeCreated);
         PersistentDataContainer container = meta.getPersistentDataContainer();
+
+        // only make the hash if it's enabled
+        if (toolStats.config.getBoolean("generate-hash-for-items")) {
+            String hash = toolStats.hashMaker.makeHash(finalItem.getType(), owner.getUniqueId(), timeCreated);
+            container.set(toolStats.hash, PersistentDataType.STRING, hash);
+        }
+
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
         container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
         container.set(toolStats.originType, PersistentDataType.INTEGER, 4);

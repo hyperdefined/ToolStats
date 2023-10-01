@@ -114,4 +114,9 @@ number-formats:
   comma-format: "#,###"
   decimal-format: "#,###.00"
 
-config-version: 5
+# When any tool is created, it will generate a hash for the item.
+# This hash is not on the item lore, only stored in the NBT data.
+# This has no use currently, but can be used for future features for dupe detection.
+generate-hash-for-items: true
+
+config-version: 6

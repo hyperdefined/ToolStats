@@ -119,7 +119,7 @@ public final class ToolStats extends JavaPlugin {
     public final Logger logger = this.getLogger();
     public final File configFile = new File(this.getDataFolder(), "config.yml");
     public FileConfiguration config;
-    public final int CONFIG_VERSION = 5;
+    public final int CONFIG_VERSION = 6;
 
     private BukkitAudiences adventure;
     public MorePaperLib morePaperLib;
