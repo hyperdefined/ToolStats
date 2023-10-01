@@ -19,7 +19,6 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.ItemChecker;
-import lol.hyper.toolstats.tools.UUIDDataType;
 import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
@@ -36,7 +35,6 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 
 public class BlocksMined implements Listener {
 
