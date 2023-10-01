@@ -20,6 +20,7 @@ package lol.hyper.toolstats.events;
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.ItemChecker;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.entity.Player;
@@ -32,6 +33,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 import java.util.Locale;
@@ -56,6 +58,18 @@ public class BlocksMined implements Listener {
         PlayerInventory inventory = player.getInventory();
         ItemStack heldItem = inventory.getItemInMainHand();
         Block block = event.getBlock();
+
+        if (block.getType() == Material.CHEST) {
+            toolStats.playerInteract.openedChests.put(block, player);
+            BukkitRunnable runnable = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    toolStats.playerInteract.openedChests.remove(block);
+                }
+            };
+            toolStats.scheduleGlobal(runnable, 20);
+        }
+
         // only check certain items
         if (!ItemChecker.isMineTool(heldItem.getType())) {
             return;

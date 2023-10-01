@@ -56,7 +56,6 @@ public class GenerateLoot implements Listener {
             return;
         }
         Location lootLocation = event.getLootContext().getLocation();
-        Inventory chestInv = inventoryHolder.getInventory();
 
         if (inventoryHolder instanceof Chest) {
             Block openedChest = null;
@@ -77,48 +76,14 @@ public class GenerateLoot implements Listener {
                 return;
             }
 
-            // run task later since if it runs on the same tick it breaks
-            Block finalOpenedChest = openedChest;
-            BukkitRunnable runnable = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    Player player = toolStats.playerInteract.openedChests.get(finalOpenedChest);
-                    // keep track of chest index of item
-                    for (int i = 0; i < chestInv.getContents().length; i++) {
-                        ItemStack itemStack = chestInv.getItem(i);
-                        // ignore air
-                        if (itemStack == null || itemStack.getType() == Material.AIR) {
-                            continue;
-                        }
-                        if (ItemChecker.isValidItem(itemStack.getType())) {
-                            ItemStack newItem = addLore(itemStack, player);
-                            if (newItem != null) {
-                                chestInv.setItem(i, newItem);
-                            }
-                        }
-                    }
-                }
-            };
-            toolStats.scheduleRegion(runnable, lootLocation.getWorld(), lootLocation.getChunk(), 1);
+            Player player = toolStats.playerInteract.openedChests.get(openedChest);
+            setLoot(event.getLoot(), player);
         }
         if (inventoryHolder instanceof StorageMinecart) {
             StorageMinecart mineCart = (StorageMinecart) inventoryHolder;
             if (toolStats.playerInteract.openedMineCarts.containsKey(mineCart)) {
                 Player player = toolStats.playerInteract.openedMineCarts.get(mineCart);
-                // player clicked this minecart
-                for (int i = 0; i < chestInv.getContents().length; i++) {
-                    ItemStack itemStack = chestInv.getItem(i);
-                    // ignore air
-                    if (itemStack == null || itemStack.getType() == Material.AIR) {
-                        continue;
-                    }
-                    if (ItemChecker.isValidItem(itemStack.getType())) {
-                        ItemStack newItem = addLore(itemStack, player);
-                        if (newItem != null) {
-                            chestInv.setItem(i, newItem);
-                        }
-                    }
-                }
+                setLoot(event.getLoot(), player);
             }
         }
     }
@@ -162,5 +127,27 @@ public class GenerateLoot implements Listener {
         }
         newItem.setItemMeta(meta);
         return newItem;
+    }
+
+    /**
+     * Add tags to the generated loot.
+     *
+     * @param loot   The loot from the event.
+     * @param player The player triggering the event.
+     */
+    private void setLoot(List<ItemStack> loot, Player player) {
+        for (int i = 0; i < loot.size(); i++) {
+            ItemStack itemStack = loot.get(i);
+            // ignore air
+            if (itemStack == null || itemStack.getType() == Material.AIR) {
+                continue;
+            }
+            if (ItemChecker.isValidItem(itemStack.getType())) {
+                ItemStack newItem = addLore(itemStack, player);
+                if (newItem != null) {
+                    loot.set(i, newItem);
+                }
+            }
+        }
     }
 }
