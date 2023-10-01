@@ -21,6 +21,7 @@ import lol.hyper.githubreleaseapi.GitHubRelease;
 import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
 import lol.hyper.toolstats.commands.CommandToolStats;
 import lol.hyper.toolstats.events.*;
+import lol.hyper.toolstats.tools.HashMaker;
 import lol.hyper.toolstats.tools.ItemLore;
 import lol.hyper.toolstats.tools.NumberFormat;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -29,7 +30,6 @@ import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import space.arim.morepaperlib.MorePaperLib;
@@ -61,6 +61,10 @@ public final class ToolStats extends JavaPlugin {
      */
     public final NamespacedKey genericMined = new NamespacedKey(this, "generic-mined");
     /**
+     * Stores how many crops were harvested.
+     */
+    public final NamespacedKey cropsHarvested = new NamespacedKey(this, "crops-mined");
+    /**
      * Stores how many fish were caught.
      */
     public final NamespacedKey fishingRodCaught = new NamespacedKey(this, "fish-caught");
@@ -80,6 +84,10 @@ public final class ToolStats extends JavaPlugin {
      * Key for tracking new elytras that spawn.
      */
     public final NamespacedKey newElytra = new NamespacedKey(this, "new");
+    /**
+     * Key for item has.
+     */
+    public final NamespacedKey hash = new NamespacedKey(this, "hash");
     /**
      * Stores how an item was created.
      * 0 = crafted.
@@ -115,6 +123,7 @@ public final class ToolStats extends JavaPlugin {
 
     private BukkitAudiences adventure;
     public MorePaperLib morePaperLib;
+    public HashMaker hashMaker;
 
 
     @Override
@@ -126,6 +135,7 @@ public final class ToolStats extends JavaPlugin {
             logger.info("Copying default config!");
         }
         loadConfig();
+        hashMaker = new HashMaker(this);
         blocksMined = new BlocksMined(this);
         craftItem = new CraftItem(this);
         chunkPopulate = new ChunkPopulate(this);
@@ -198,12 +208,12 @@ public final class ToolStats extends JavaPlugin {
     /**
      * Checks the config to see if we want to show lore on certain items.
      *
-     * @param itemStack  The item to check.
+     * @param material   The item type to check.
      * @param configName The config we are checking under.
      * @return If we want to allow lore or not.
      */
-    public boolean checkConfig(ItemStack itemStack, String configName) {
-        String itemName = itemStack.getType().toString().toLowerCase();
+    public boolean checkConfig(Material material, String configName) {
+        String itemName = material.toString().toLowerCase();
         String itemType = null;
         if (itemName.contains("bow") || itemName.contains("shears") || itemName.contains("trident")) {
             if (itemName.contains("bow")) {
@@ -300,6 +310,9 @@ public final class ToolStats extends JavaPlugin {
             }
             if (lore.contains("{fish}")) {
                 lore = lore.replace("{fish}", "");
+            }
+            if (lore.contains("{crops}")) {
+                lore = lore.replace("{crops}", "");
             }
         }
         return lore;

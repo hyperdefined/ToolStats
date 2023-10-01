@@ -144,6 +144,9 @@ public class GenerateLoot implements Listener {
             return null;
         }
 
+        String hash = toolStats.hashMaker.makeHash(newItem.getType(), owner.getUniqueId(), timeCreated);
+
+        container.set(toolStats.hash, PersistentDataType.STRING, hash);
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
         container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
         container.set(toolStats.originType, PersistentDataType.INTEGER, 2);
@@ -151,7 +154,7 @@ public class GenerateLoot implements Listener {
         String formattedDate = toolStats.numberFormat.formatDate(finalDate);
         List<String> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
 
-        if (toolStats.checkConfig(newItem, "looted-tag")) {
+        if (toolStats.checkConfig(newItem.getType(), "looted-tag")) {
             meta.setLore(newLore);
         }
         newItem.setItemMeta(meta);

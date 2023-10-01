@@ -104,6 +104,9 @@ public class CraftItem implements Listener {
             return null;
         }
 
+        String hash = toolStats.hashMaker.makeHash(newItem.getType(), owner.getUniqueId(), timeCreated);
+
+        container.set(toolStats.hash, PersistentDataType.STRING, hash);
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
         container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
         container.set(toolStats.originType, PersistentDataType.INTEGER, 0);
@@ -128,10 +131,10 @@ public class CraftItem implements Listener {
             lore = new ArrayList<>();
         }
         // do we add the lore based on the config?
-        if (toolStats.checkConfig(itemStack, "created-date")) {
+        if (toolStats.checkConfig(itemStack.getType(), "created-date")) {
             lore.add(createdOnRaw.replace("{date}", toolStats.numberFormat.formatDate(finalDate)));
         }
-        if (toolStats.checkConfig(itemStack, "created-by")) {
+        if (toolStats.checkConfig(itemStack.getType(), "created-by")) {
             lore.add(createdByRaw.replace("{player}", owner.getName()));
         }
         meta.setLore(lore);

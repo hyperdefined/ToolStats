@@ -24,10 +24,10 @@ import java.util.Locale;
 
 public class ItemChecker {
 
-    private static final String[] validItems = { "pickaxe", "sword", "shovel", "axe", "hoe", "bow", "helmet", "chestplate", "leggings", "boots", "fishing", "elytra" };
-    private static final String[] validArmor = { "helmet", "chestplate", "leggings", "boots" };
+    private static final String[] validItems = {"pickaxe", "sword", "shovel", "axe", "hoe", "bow", "helmet", "chestplate", "leggings", "boots", "fishing", "elytra"};
+    private static final String[] validArmor = {"helmet", "chestplate", "leggings", "boots"};
     private static final String[] validMelee = {"sword", "trident", "axe"};
-    private static final String[] validMine = { "pickaxe", "axe", "hoe", "shovel", "shear" };
+    private static final String[] validMine = {"pickaxe", "axe", "hoe", "shovel", "shear", "hoe"};
 
     /**
      * Check if item is an armor piece.

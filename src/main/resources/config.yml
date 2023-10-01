@@ -91,6 +91,7 @@ messages:
     mob: "&7Mob kills: &8{kills}"
     player: "&7Player kills: &8{kills}"
   blocks-mined: "&7Blocks mined: &8{blocks}"
+  crops-harvested: "&7Crops harvested: &8{crops}"
   sheep-sheared: "&7Sheep sheared: &8{sheep}"
   dropped-by: "&7Dropped by: &8{name}" # name will be player/mob name
   damage-taken: "&7Damage taken: &8{damage}"

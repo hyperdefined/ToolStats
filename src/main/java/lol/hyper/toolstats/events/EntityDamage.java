@@ -249,7 +249,7 @@ public class EntityDamage implements Listener {
         List<String> newLore = toolStats.itemLore.addItemLore(meta, "{kills}", playerKillsFormatted, "kills.player");
 
         // do we add the lore based on the config?
-        if (toolStats.checkConfig(itemStack, "player-kills")) {
+        if (toolStats.checkConfig(itemStack.getType(), "player-kills")) {
             meta.setLore(newLore);
         }
         itemStack.setItemMeta(meta);
@@ -284,7 +284,7 @@ public class EntityDamage implements Listener {
         List<String> newLore = toolStats.itemLore.addItemLore(meta, "{kills}", mobKillsFormatted, "kills.mob");
 
         // do we add the lore based on the config?
-        if (toolStats.checkConfig(itemStack, "mob-kills")) {
+        if (toolStats.checkConfig(itemStack.getType(), "mob-kills")) {
             meta.setLore(newLore);
         }
         itemStack.setItemMeta(meta);
@@ -356,7 +356,7 @@ public class EntityDamage implements Listener {
         List<String> newLore = toolStats.itemLore.addItemLore(meta, "{kills}", mobKillsFormatted, "kills.mob");
 
         // do we add the lore based on the config?
-        if (toolStats.checkConfig(newTrident, "mob-kills")) {
+        if (toolStats.checkConfig(newTrident.getType(), "mob-kills")) {
             meta.setLore(newLore);
         }
         newTrident.setItemMeta(meta);
@@ -393,7 +393,7 @@ public class EntityDamage implements Listener {
         List<String> newLore = toolStats.itemLore.addItemLore(meta, "{kills}", playerKillsFormatted, "kills.player");
 
         // do we add the lore based on the config?
-        if (toolStats.checkConfig(newTrident, "player-kills")) {
+        if (toolStats.checkConfig(newTrident.getType(), "player-kills")) {
             meta.setLore(newLore);
         }
         newTrident.setItemMeta(meta);

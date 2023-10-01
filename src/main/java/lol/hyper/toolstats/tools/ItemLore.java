@@ -63,7 +63,8 @@ public class ItemLore {
             for (int x = 0; x < newLore.size(); x++) {
                 // check to see if the line matches the config value
                 // this means we update this line only!
-                if (newLore.get(x).contains(configLore)) {
+                String line = newLore.get(x);
+                if (line.contains(configLore)) {
                     newLore.set(x, newLine);
                     return newLore;
                 }

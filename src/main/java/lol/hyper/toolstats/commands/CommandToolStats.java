@@ -158,7 +158,7 @@ public class CommandToolStats implements TabExecutor {
             }
         }
 
-        if (toolStats.checkConfig(original, "created-by")) {
+        if (toolStats.checkConfig(original.getType(), "created-by")) {
             if (container.has(toolStats.genericOwner, new UUIDDataType())) {
                 container.set(toolStats.genericOwner, new UUIDDataType(), player.getUniqueId());
                 // show how the item was created based on the previous lore
@@ -186,7 +186,7 @@ public class CommandToolStats implements TabExecutor {
                 }
             }
         }
-        if (toolStats.checkConfig(original, "created-date")) {
+        if (toolStats.checkConfig(original.getType(), "created-date")) {
             if (container.has(toolStats.timeCreated, PersistentDataType.LONG)) {
                 Long time = container.get(toolStats.timeCreated, PersistentDataType.LONG);
                 if (time != null) {
@@ -216,7 +216,7 @@ public class CommandToolStats implements TabExecutor {
                 }
             }
         }
-        if (toolStats.checkConfig(original, "player-kills")) {
+        if (toolStats.checkConfig(original.getType(), "player-kills")) {
             if (container.has(toolStats.swordPlayerKills, PersistentDataType.INTEGER)) {
                 Integer kills = container.get(toolStats.swordPlayerKills, PersistentDataType.INTEGER);
                 if (kills != null) {
@@ -224,7 +224,7 @@ public class CommandToolStats implements TabExecutor {
                 }
             }
         }
-        if (toolStats.checkConfig(original, "mob-kills")) {
+        if (toolStats.checkConfig(original.getType(), "mob-kills")) {
             if (container.has(toolStats.swordMobKills, PersistentDataType.INTEGER)) {
                 Integer kills = container.get(toolStats.swordMobKills, PersistentDataType.INTEGER);
                 if (kills != null) {
@@ -232,7 +232,15 @@ public class CommandToolStats implements TabExecutor {
                 }
             }
         }
-        if (toolStats.checkConfig(original, "blocks-mined")) {
+        if (toolStats.checkConfig(original.getType(), "blocks-mined")) {
+            if (original.getType().toString().toLowerCase(Locale.ROOT).contains("hoe")) {
+                if (container.has(toolStats.cropsHarvested, PersistentDataType.INTEGER)) {
+                    Integer crops = container.get(toolStats.cropsHarvested, PersistentDataType.INTEGER);
+                    if (crops != null) {
+                        lore.add(toolStats.getLoreFromConfig("crops-harvested", true).replace("{crops}", toolStats.numberFormat.formatInt(crops)));
+                    }
+                }
+            }
             if (container.has(toolStats.genericMined, PersistentDataType.INTEGER)) {
                 Integer blocksMined = container.get(toolStats.genericMined, PersistentDataType.INTEGER);
                 if (blocksMined != null) {

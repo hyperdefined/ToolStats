@@ -19,6 +19,7 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.ItemChecker;
+import lol.hyper.toolstats.tools.UUIDDataType;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -32,7 +33,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.List;
+import java.util.UUID;
 
 public class InventoryOpen implements Listener {
 
@@ -49,8 +50,13 @@ public class InventoryOpen implements Listener {
         }
 
         Inventory inventory = event.getInventory();
+        Location location = event.getInventory().getLocation();
         for (ItemStack itemStack : inventory) {
             if (itemStack == null) {
+                continue;
+            }
+            // ignore items that are not the right type
+            if (!ItemChecker.isValidItem(itemStack.getType())) {
                 continue;
             }
             ItemMeta itemMeta = itemStack.getItemMeta();
@@ -58,27 +64,40 @@ public class InventoryOpen implements Listener {
                 continue;
             }
             PersistentDataContainer container = itemMeta.getPersistentDataContainer();
-            // ignore any items that already have the origin tag
-            if (container.has(toolStats.originType, PersistentDataType.INTEGER)) {
-                continue;
-            }
-            // ignore items that are not the right type
-            if (!ItemChecker.isValidItem(itemStack.getType())) {
-                continue;
+
+            // generate a hash if the item doesn't have one
+            if (!container.has(toolStats.hash, PersistentDataType.STRING)) {
+                // make sure the item has an owner
+                if (!container.has(toolStats.genericOwner, new UUIDDataType())) {
+                    continue;
+                }
+                UUID owner = container.get(toolStats.genericOwner, new UUIDDataType());
+                if (owner == null) {
+                    continue;
+                }
+                Long timestamp = container.get(toolStats.timeCreated, PersistentDataType.LONG);
+                if (timestamp == null) {
+                    continue;
+                }
+                String hash = toolStats.hashMaker.makeHash(itemStack.getType(), owner, timestamp);
+                toolStats.logger.info(hash);
+                container.set(toolStats.hash, PersistentDataType.STRING, hash);
             }
 
-            ItemMeta newMeta = toolStats.itemLore.getOrigin(itemMeta, itemStack.getType() == Material.ELYTRA);
-            if (newMeta == null) {
-                continue;
+            // add origin tag
+            if (!container.has(toolStats.originType, PersistentDataType.INTEGER)) {
+                itemMeta = toolStats.itemLore.getOrigin(itemMeta, itemStack.getType() == Material.ELYTRA);
+                if (itemMeta == null) {
+                    continue;
+                }
             }
+            ItemMeta clone = itemMeta.clone();
             BukkitRunnable runnable = new BukkitRunnable() {
                 @Override
                 public void run() {
-                    itemStack.setItemMeta(newMeta);
+                    itemStack.setItemMeta(clone);
                 }
             };
-            Location location = inventory.getLocation();
-            // only run for actual inventories
             if (location != null) {
                 toolStats.scheduleRegion(runnable, location.getWorld(), location.getChunk(), 1);
             }
