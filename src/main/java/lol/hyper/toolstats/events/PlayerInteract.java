@@ -33,13 +33,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class PlayerInteract implements Listener {
 
     private final ToolStats toolStats;
 
-    public final HashMap<Block, Player> openedChests = new HashMap<>();
-    public final HashMap<StorageMinecart, Player> openedMineCarts = new HashMap<>();
+    public final Map<Block, Player> openedChests = new HashMap<>();
+    public final Map<StorageMinecart, Player> openedMineCarts = new HashMap<>();
 
     public PlayerInteract(ToolStats toolStats) {
         this.toolStats = toolStats;
