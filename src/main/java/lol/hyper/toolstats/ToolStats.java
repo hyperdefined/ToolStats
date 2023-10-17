@@ -96,6 +96,7 @@ public final class ToolStats extends JavaPlugin {
      * 3 = traded.
      * 4 = founded (for elytras).
      * 5 = fished.
+     * 6 = spawned in (creative).
      */
     public final NamespacedKey originType = new NamespacedKey(this, "origin");
 
@@ -124,7 +125,7 @@ public final class ToolStats extends JavaPlugin {
     private BukkitAudiences adventure;
     public MorePaperLib morePaperLib;
     public HashMaker hashMaker;
-
+    public CreativeEvent creativeEvent;
 
     @Override
     public void onEnable() {
@@ -151,6 +152,7 @@ public final class ToolStats extends JavaPlugin {
         itemLore = new ItemLore(this);
         inventoryOpen = new InventoryOpen(this);
         playerJoin = new PlayerJoin(this);
+        creativeEvent = new CreativeEvent(this);
 
         Bukkit.getServer().getPluginManager().registerEvents(blocksMined, this);
         Bukkit.getServer().getPluginManager().registerEvents(chunkPopulate, this);
@@ -165,6 +167,7 @@ public final class ToolStats extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(villagerTrade, this);
         Bukkit.getServer().getPluginManager().registerEvents(inventoryOpen, this);
         Bukkit.getServer().getPluginManager().registerEvents(playerJoin, this);
+        Bukkit.getServer().getPluginManager().registerEvents(creativeEvent, this);
 
         this.getCommand("toolstats").setExecutor(commandToolStats);
 

@@ -65,6 +65,16 @@ enabled:
     axe: true
     hoe: true
     shears: true
+  # Will show "Spawned in by <player>"
+  spawned-in:
+    pickaxe: true
+    sword: true
+    shovel: true
+    axe: true
+    hoe: true
+    shears: true
+    bow: true
+    armor: true
   fish-caught: true
   sheep-sheared: true
   armor-damage: true
@@ -90,6 +100,9 @@ messages:
   kills:
     mob: "&7Mob kills: &8{kills}"
     player: "&7Player kills: &8{kills}"
+  spawned:
+    spawned-by: "&7Spawned in by: &8{player}"
+    spawned-on: "&7Spawned on: &8{date}"
   blocks-mined: "&7Blocks mined: &8{blocks}"
   crops-harvested: "&7Crops harvested: &8{crops}"
   sheep-sheared: "&7Sheep sheared: &8{sheep}"

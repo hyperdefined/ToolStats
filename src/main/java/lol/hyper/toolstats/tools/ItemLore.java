@@ -121,6 +121,11 @@ public class ItemLore {
                 itemOwner = toolStats.getLoreFromConfig("fished.caught-by", true);
                 break;
             }
+            case 6: {
+                dateCreated = toolStats.getLoreFromConfig("spawned.spawned-on", true);
+                itemOwner = toolStats.getLoreFromConfig("spawned.spawned-by", true);
+                break;
+            }
         }
 
         if (dateCreated == null || itemOwner == null) {

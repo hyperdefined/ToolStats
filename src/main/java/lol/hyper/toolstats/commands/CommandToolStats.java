@@ -23,7 +23,9 @@ import lol.hyper.toolstats.tools.UUIDDataType;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -51,55 +53,55 @@ public class CommandToolStats implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!sender.hasPermission("toolstats.command")) {
-            audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.").color(NamedTextColor.RED));
+            audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
             return true;
         }
         if (args.length == 0) {
-            audiences.sender(sender).sendMessage(Component.text("ToolStats version " + toolStats.getDescription().getVersion() + ". Created by hyperdefined.").color(NamedTextColor.GREEN));
+            audiences.sender(sender).sendMessage(Component.text("ToolStats version " + toolStats.getDescription().getVersion() + ". Created by hyperdefined.", NamedTextColor.GREEN));
             return true;
         }
         switch (args[0]) {
             case "reload": {
                 if (sender.hasPermission("toolstats.reload")) {
                     toolStats.loadConfig();
-                    audiences.sender(sender).sendMessage(Component.text("Configuration reloaded!").color(NamedTextColor.GREEN));
+                    audiences.sender(sender).sendMessage(Component.text("Configuration reloaded!", NamedTextColor.GREEN));
                 } else {
-                    audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.").color(NamedTextColor.RED));
+                    audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
                 }
                 return true;
             }
             case "reset": {
                 if (!sender.hasPermission("toolstats.reset")) {
-                    audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.").color(NamedTextColor.RED));
+                    audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
                     return true;
                 }
                 if (sender instanceof ConsoleCommandSender) {
-                    audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.").color(NamedTextColor.RED));
+                    audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.", NamedTextColor.RED));
                     return true;
                 }
                 if (args.length == 2 && args[1].equalsIgnoreCase("confirm")) {
                     if (!sender.hasPermission("toolstats.reset.confirm")) {
-                        audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.").color(NamedTextColor.RED));
+                        audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
                         return true;
                     }
                     Player player = (Player) sender;
                     ItemStack heldItem = player.getInventory().getItemInMainHand();
                     if (!ItemChecker.isValidItem(heldItem.getType())) {
-                        audiences.sender(sender).sendMessage(Component.text("You must hold a valid item.").color(NamedTextColor.RED));
+                        audiences.sender(sender).sendMessage(Component.text("You must hold a valid item.", NamedTextColor.RED));
                         return true;
                     }
                     fixItemLore(heldItem, player);
-                    audiences.sender(sender).sendMessage(Component.text("The lore was reset!").color(NamedTextColor.GREEN));
+                    audiences.sender(sender).sendMessage(Component.text("The lore was reset!", NamedTextColor.GREEN));
                     return true;
                 }
-                audiences.sender(sender).sendMessage(Component.text("This will remove ALL current lore from the held item and replace it with the correct lore.").color(NamedTextColor.GREEN));
-                audiences.sender(sender).sendMessage(Component.text("The item owner will be who ever is currently running this command.").color(NamedTextColor.GREEN));
-                audiences.sender(sender).sendMessage(Component.text("Only use this if the tags on the tool are incorrect.").color(NamedTextColor.GREEN));
-                audiences.sender(sender).sendMessage(Component.text("Type /toolstats reset confirm to confirm this.").color(NamedTextColor.GREEN));
+                audiences.sender(sender).sendMessage(Component.text("This will remove ALL current lore from the held item and replace it with the correct lore.", NamedTextColor.GREEN));
+                audiences.sender(sender).sendMessage(Component.text("If the owner of the item is broken, it will reset to the person holding it.", NamedTextColor.GREEN));
+                audiences.sender(sender).sendMessage(Component.text("Only use this if the tags on the tool are incorrect.", NamedTextColor.GREEN));
+                audiences.sender(sender).sendMessage(Component.text("Type /toolstats reset confirm to confirm this.", NamedTextColor.GREEN));
                 return true;
             }
             default: {
-                audiences.sender(sender).sendMessage(Component.text("Invalid sub-command.").color(NamedTextColor.RED));
+                audiences.sender(sender).sendMessage(Component.text("Invalid sub-command.", NamedTextColor.RED));
             }
         }
         return true;
@@ -123,9 +125,10 @@ public class CommandToolStats implements TabExecutor {
         String caughtByLore = toolStats.getLoreFromConfig("fished.caught-by", false);
         String lootedByLore = toolStats.getLoreFromConfig("looted.found-by", false);
         String tradedByLore = toolStats.getLoreFromConfig("traded.traded-by", false);
+        String spawnedByLore = toolStats.getLoreFromConfig("spawned.spawned-by", false);
 
         // make sure the config messages are not null
-        if (caughtByLore == null || lootedByLore == null || tradedByLore == null) {
+        if (caughtByLore == null || lootedByLore == null || tradedByLore == null || spawnedByLore == null) {
             return;
         }
 
@@ -160,27 +163,46 @@ public class CommandToolStats implements TabExecutor {
 
         if (toolStats.checkConfig(original.getType(), "created-by")) {
             if (container.has(toolStats.genericOwner, new UUIDDataType())) {
-                container.set(toolStats.genericOwner, new UUIDDataType(), player.getUniqueId());
+                UUID owner = container.get(toolStats.genericOwner, new UUIDDataType());
+                String ownerName = null;
+                // if we can read the current owner
+                if (owner != null) {
+                    OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(owner);
+                    ownerName = offlinePlayer.getName();
+                }
+
+                // if the owner's name is null for whatever reason, set the new owner
+                // to the current player running the command
+                if (ownerName == null) {
+                    audiences.player(player).sendMessage(Component.text("The owner of this item is null. Setting to " + player.getName() + ".", NamedTextColor.RED));
+                    ownerName = player.getName();
+                    container.set(toolStats.genericOwner, new UUIDDataType(), player.getUniqueId());
+                }
+
                 // show how the item was created based on the previous lore
                 switch (origin) {
                     case 0: {
-                        lore.add(toolStats.getLoreFromConfig("created.created-by", true).replace("{player}", player.getName()));
+                        lore.add(toolStats.getLoreFromConfig("created.created-by", true).replace("{player}", ownerName));
                         break;
                     }
                     case 2: {
-                        lore.add(toolStats.getLoreFromConfig("looted.looted-by", true).replace("{player}", player.getName()));
+                        lore.add(toolStats.getLoreFromConfig("looted.looted-by", true).replace("{player}", ownerName));
                         break;
                     }
                     case 3: {
-                        lore.add(toolStats.getLoreFromConfig("traded.traded-by", true).replace("{player}", player.getName()));
+                        lore.add(toolStats.getLoreFromConfig("traded.traded-by", true).replace("{player}", ownerName));
                         break;
                     }
                     case 4: {
-                        lore.add(toolStats.getLoreFromConfig("looted.found-by", true).replace("{player}", player.getName()));
+                        lore.add(toolStats.getLoreFromConfig("looted.found-by", true).replace("{player}", ownerName));
                         break;
                     }
                     case 5: {
-                        lore.add(toolStats.getLoreFromConfig("fished.caught-by", true).replace("{player}", player.getName()));
+                        lore.add(toolStats.getLoreFromConfig("fished.caught-by", true).replace("{player}", ownerName));
+                        break;
+                    }
+                    case 6: {
+                        lore.add(toolStats.getLoreFromConfig("spawned.spawned-by", true).replace("{player}", ownerName));
                         break;
                     }
                 }
@@ -210,6 +232,10 @@ public class CommandToolStats implements TabExecutor {
                         }
                         case 5: {
                             lore.add(toolStats.getLoreFromConfig("fished.caught-on", true).replace("{date}", toolStats.numberFormat.formatDate(new Date(time))));
+                            break;
+                        }
+                        case 6: {
+                            lore.add(toolStats.getLoreFromConfig("spawned.spawned-on", true).replace("{date}", toolStats.numberFormat.formatDate(new Date(time))));
                             break;
                         }
                     }
