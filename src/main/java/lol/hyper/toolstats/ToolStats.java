@@ -21,10 +21,7 @@ import lol.hyper.githubreleaseapi.GitHubRelease;
 import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
 import lol.hyper.toolstats.commands.CommandToolStats;
 import lol.hyper.toolstats.events.*;
-import lol.hyper.toolstats.tools.HashMaker;
-import lol.hyper.toolstats.tools.ItemChecker;
-import lol.hyper.toolstats.tools.ItemLore;
-import lol.hyper.toolstats.tools.NumberFormat;
+import lol.hyper.toolstats.tools.*;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.*;
@@ -180,8 +177,11 @@ public final class ToolStats extends JavaPlugin {
 
     public void loadConfig() {
         config = YamlConfiguration.loadConfiguration(configFile);
+        logger.info(String.valueOf(config.getInt("config-version")));
         if (config.getInt("config-version") != CONFIG_VERSION) {
-            logger.warning("Your config file is outdated! Please regenerate the config.");
+            logger.warning("Your config file is outdated! We will try to update it, but you should regenerate it!");
+            ConfigUpdater configUpdater = new ConfigUpdater(this);
+            configUpdater.updateConfig();
         }
 
         numberFormat = new NumberFormat(this);
@@ -220,22 +220,19 @@ public final class ToolStats extends JavaPlugin {
     public boolean checkConfig(Material material, String configName) {
         String itemName = material.toString().toLowerCase();
         String itemType = null;
-        if (itemName.contains("bow") || itemName.contains("shears") || itemName.contains("trident")) {
-            if (itemName.contains("bow")) {
+        // hardcode these
+        if (material == Material.BOW || material == Material.SHEARS || material == Material.TRIDENT) {
+            if (material == Material.BOW) {
                 itemType = "bow";
             }
-            if (itemName.contains("shears")) {
+            if (material == Material.SHEARS) {
                 itemType = "shears";
             }
-            if (itemName.contains("trident")) {
+            if (material == Material.TRIDENT) {
                 itemType = "trident";
             }
         } else {
             itemType = itemName.substring(itemName.indexOf('_') + 1);
-        }
-
-        if (itemType == null) {
-            return false;
         }
 
         switch (itemType) {

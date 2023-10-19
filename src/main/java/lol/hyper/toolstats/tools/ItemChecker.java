@@ -59,10 +59,6 @@ public class ItemChecker {
         validItems.addAll(armorItems);
         validItems.addAll(meleeItems);
         validItems.addAll(mineItems);
-
-        for (Material material : validItems) {
-            System.out.println(material);
-        }
     }
 
     /**
