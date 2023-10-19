@@ -19,15 +19,51 @@ package lol.hyper.toolstats.tools;
 
 import org.bukkit.Material;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class ItemChecker {
 
-    private static final String[] validItems = {"pickaxe", "sword", "shovel", "axe", "hoe", "bow", "helmet", "chestplate", "leggings", "boots", "fishing", "elytra"};
-    private static final String[] validArmor = {"helmet", "chestplate", "leggings", "boots"};
-    private static final String[] validMelee = {"sword", "trident", "axe"};
-    private static final String[] validMine = {"pickaxe", "axe", "hoe", "shovel", "shear", "hoe"};
+    private final List<Material> validItems = new ArrayList<>();
+    private final List<Material> armorItems = new ArrayList<>();
+    private final List<Material> meleeItems = new ArrayList<>();
+    private final List<Material> mineItems = new ArrayList<>();
+
+    /**
+     * Creates an item checker and saves all valid items we want.
+     */
+    public ItemChecker() {
+        for (Material material : Material.values()) {
+            String lowerCase = material.toString().toLowerCase(Locale.ROOT);
+            if (lowerCase.contains("_pickaxe") || lowerCase.contains("_axe") || lowerCase.contains("_hoe") || lowerCase.contains("_shovel")) {
+                mineItems.add(material);
+            }
+
+            if (lowerCase.contains("_sword") || lowerCase.contains("_axe")) {
+                meleeItems.add(material);
+            }
+
+            if (lowerCase.contains("_helmet") || lowerCase.contains("_chestplate") || lowerCase.contains("_leggings") || lowerCase.contains("_boots")) {
+                armorItems.add(material);
+            }
+        }
+
+        // hardcode these
+        mineItems.add(Material.SHEARS);
+        meleeItems.add(Material.TRIDENT);
+        validItems.add(Material.BOW);
+        validItems.add(Material.FISHING_ROD);
+
+        // combine the lists
+        validItems.addAll(armorItems);
+        validItems.addAll(meleeItems);
+        validItems.addAll(mineItems);
+
+        for (Material material : validItems) {
+            System.out.println(material);
+        }
+    }
 
     /**
      * Check if item is an armor piece.
@@ -35,8 +71,8 @@ public class ItemChecker {
      * @param itemType The item type, not name.
      * @return If the item is an armor piece.
      */
-    public static boolean isArmor(Material itemType) {
-        return Arrays.stream(validArmor).anyMatch(type -> itemType.toString().toLowerCase(Locale.ROOT).contains(type));
+    public boolean isArmor(Material itemType) {
+        return armorItems.contains(itemType);
     }
 
     /**
@@ -45,8 +81,8 @@ public class ItemChecker {
      * @param itemType The item type, not name.
      * @return If the item something we want to track.
      */
-    public static boolean isValidItem(Material itemType) {
-        return Arrays.stream(validItems).anyMatch(type -> itemType.toString().toLowerCase(Locale.ROOT).contains(type));
+    public boolean isValidItem(Material itemType) {
+        return validItems.contains(itemType);
     }
 
     /**
@@ -55,8 +91,8 @@ public class ItemChecker {
      * @param itemType The item type, not name.
      * @return If the item is a melee weapon.
      */
-    public static boolean isMeleeWeapon(Material itemType) {
-        return Arrays.stream(validMelee).anyMatch(type -> itemType.toString().toLowerCase(Locale.ROOT).contains(type));
+    public boolean isMeleeWeapon(Material itemType) {
+        return meleeItems.contains(itemType);
     }
 
     /**
@@ -65,7 +101,7 @@ public class ItemChecker {
      * @param itemType The item type, not name.
      * @return If the item is a mining tool.
      */
-    public static boolean isMineTool(Material itemType) {
-        return Arrays.stream(validMine).anyMatch(type -> itemType.toString().toLowerCase(Locale.ROOT).contains(type));
+    public boolean isMineTool(Material itemType) {
+        return mineItems.contains(itemType);
     }
 }

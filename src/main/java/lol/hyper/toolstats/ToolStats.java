@@ -22,6 +22,7 @@ import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
 import lol.hyper.toolstats.commands.CommandToolStats;
 import lol.hyper.toolstats.events.*;
 import lol.hyper.toolstats.tools.HashMaker;
+import lol.hyper.toolstats.tools.ItemChecker;
 import lol.hyper.toolstats.tools.ItemLore;
 import lol.hyper.toolstats.tools.NumberFormat;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -100,6 +101,10 @@ public final class ToolStats extends JavaPlugin {
      */
     public final NamespacedKey originType = new NamespacedKey(this, "origin");
 
+    public final int CONFIG_VERSION = 6;
+    public final Logger logger = this.getLogger();
+    public final File configFile = new File(this.getDataFolder(), "config.yml");
+
     public BlocksMined blocksMined;
     public ChunkPopulate chunkPopulate;
     public CraftItem craftItem;
@@ -116,16 +121,12 @@ public final class ToolStats extends JavaPlugin {
     public InventoryOpen inventoryOpen;
     public PlayerJoin playerJoin;
     public NumberFormat numberFormat;
-
-    public final Logger logger = this.getLogger();
-    public final File configFile = new File(this.getDataFolder(), "config.yml");
     public FileConfiguration config;
-    public final int CONFIG_VERSION = 6;
-
     private BukkitAudiences adventure;
     public MorePaperLib morePaperLib;
     public HashMaker hashMaker;
     public CreativeEvent creativeEvent;
+    public ItemChecker itemChecker;
 
     @Override
     public void onEnable() {
@@ -153,6 +154,7 @@ public final class ToolStats extends JavaPlugin {
         inventoryOpen = new InventoryOpen(this);
         playerJoin = new PlayerJoin(this);
         creativeEvent = new CreativeEvent(this);
+        itemChecker = new ItemChecker();
 
         Bukkit.getServer().getPluginManager().registerEvents(blocksMined, this);
         Bukkit.getServer().getPluginManager().registerEvents(chunkPopulate, this);

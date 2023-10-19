@@ -18,7 +18,6 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import lol.hyper.toolstats.tools.ItemChecker;
 import lol.hyper.toolstats.tools.UUIDDataType;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -140,7 +139,7 @@ public class GenerateLoot implements Listener {
             if (itemStack == null || itemStack.getType() == Material.AIR) {
                 continue;
             }
-            if (ItemChecker.isValidItem(itemStack.getType())) {
+            if (toolStats.itemChecker.isValidItem(itemStack.getType())) {
                 ItemStack newItem = addLore(itemStack, player);
                 if (newItem != null) {
                     loot.set(i, newItem);

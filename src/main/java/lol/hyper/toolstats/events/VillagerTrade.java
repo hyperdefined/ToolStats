@@ -18,7 +18,6 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import lol.hyper.toolstats.tools.ItemChecker;
 import lol.hyper.toolstats.tools.UUIDDataType;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -65,7 +64,7 @@ public class VillagerTrade implements Listener {
             if (event.getSlotType() == InventoryType.SlotType.RESULT) {
                 ItemStack item = event.getCurrentItem();
                 // only check items we want
-                if (!ItemChecker.isValidItem(item.getType())) {
+                if (!toolStats.itemChecker.isValidItem(item.getType())) {
                     return;
                 }
                 // if the player shift clicks, show the warning

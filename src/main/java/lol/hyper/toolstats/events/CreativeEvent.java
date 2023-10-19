@@ -18,7 +18,6 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import lol.hyper.toolstats.tools.ItemChecker;
 import lol.hyper.toolstats.tools.UUIDDataType;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -49,7 +48,7 @@ public class CreativeEvent implements Listener {
             return;
         }
         ItemStack spawnedItem = event.getCursor();
-        if (!ItemChecker.isValidItem(spawnedItem.getType())) {
+        if (!toolStats.itemChecker.isValidItem(spawnedItem.getType())) {
             return;
         }
 

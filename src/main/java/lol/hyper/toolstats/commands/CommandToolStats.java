@@ -18,7 +18,6 @@
 package lol.hyper.toolstats.commands;
 
 import lol.hyper.toolstats.ToolStats;
-import lol.hyper.toolstats.tools.ItemChecker;
 import lol.hyper.toolstats.tools.UUIDDataType;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
@@ -86,7 +85,7 @@ public class CommandToolStats implements TabExecutor {
                     }
                     Player player = (Player) sender;
                     ItemStack heldItem = player.getInventory().getItemInMainHand();
-                    if (!ItemChecker.isValidItem(heldItem.getType())) {
+                    if (!toolStats.itemChecker.isValidItem(heldItem.getType())) {
                         audiences.sender(sender).sendMessage(Component.text("You must hold a valid item.", NamedTextColor.RED));
                         return true;
                     }

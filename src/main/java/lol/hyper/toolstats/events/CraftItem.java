@@ -18,7 +18,6 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import lol.hyper.toolstats.tools.ItemChecker;
 import lol.hyper.toolstats.tools.UUIDDataType;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -57,7 +56,7 @@ public class CraftItem implements Listener {
             return;
         }
         // only check certain items
-        if (!ItemChecker.isValidItem(itemStack.getType())) {
+        if (!toolStats.itemChecker.isValidItem(itemStack.getType())) {
             return;
         }
 

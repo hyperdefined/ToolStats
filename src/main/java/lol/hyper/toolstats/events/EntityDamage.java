@@ -18,7 +18,6 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import lol.hyper.toolstats.tools.ItemChecker;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
@@ -74,7 +73,7 @@ public class EntityDamage implements Listener {
                 PlayerInventory attackingPlayerInventory = attackingPlayer.getInventory();
                 ItemStack heldItem = attackingPlayerInventory.getItemInMainHand();
                 // only check certain items
-                if (!ItemChecker.isMeleeWeapon(heldItem.getType())) {
+                if (!toolStats.itemChecker.isMeleeWeapon(heldItem.getType())) {
                     return;
                 }
                 // a player is killing another player
@@ -152,7 +151,7 @@ public class EntityDamage implements Listener {
             PlayerInventory playerInventory = playerTakingDamage.getInventory();
             for (ItemStack armorPiece : playerInventory.getArmorContents()) {
                 if (armorPiece != null) {
-                    if (ItemChecker.isArmor(armorPiece.getType())) {
+                    if (toolStats.itemChecker.isArmor(armorPiece.getType())) {
                         updateDamage(armorPiece, event.getFinalDamage());
                     }
                 }
@@ -182,7 +181,7 @@ public class EntityDamage implements Listener {
             PlayerInventory playerInventory = playerTakingDamage.getInventory();
             for (ItemStack armorPiece : playerInventory.getArmorContents()) {
                 if (armorPiece != null) {
-                    if (ItemChecker.isArmor(armorPiece.getType())) {
+                    if (toolStats.itemChecker.isArmor(armorPiece.getType())) {
                         updateDamage(armorPiece, event.getFinalDamage());
                     }
                 }
@@ -212,7 +211,7 @@ public class EntityDamage implements Listener {
             PlayerInventory playerInventory = playerTakingDamage.getInventory();
             for (ItemStack armorPiece : playerInventory.getArmorContents()) {
                 if (armorPiece != null) {
-                    if (ItemChecker.isArmor(armorPiece.getType())) {
+                    if (toolStats.itemChecker.isArmor(armorPiece.getType())) {
                         updateDamage(armorPiece, event.getFinalDamage());
                     }
                 }

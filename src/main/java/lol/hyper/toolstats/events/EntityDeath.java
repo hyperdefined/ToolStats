@@ -18,7 +18,6 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import lol.hyper.toolstats.tools.ItemChecker;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -59,7 +58,7 @@ public class EntityDeath implements Listener {
                     }
 
                 }
-                if (ItemChecker.isValidItem(droppedItem.getType())) {
+                if (toolStats.itemChecker.isValidItem(droppedItem.getType())) {
                     ItemStack newItem = addLore(droppedItem, livingEntity.getName());
                     if (newItem != null) {
                         event.getDrops().set(i, newItem);

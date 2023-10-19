@@ -18,7 +18,6 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import lol.hyper.toolstats.tools.ItemChecker;
 import lol.hyper.toolstats.tools.UUIDDataType;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -52,7 +51,7 @@ public class PlayerJoin implements Listener {
                 continue;
             }
             // ignore items that are not the right type
-            if (!ItemChecker.isValidItem(itemStack.getType())) {
+            if (!toolStats.itemChecker.isValidItem(itemStack.getType())) {
                 continue;
             }
             ItemMeta itemMeta = itemStack.getItemMeta();

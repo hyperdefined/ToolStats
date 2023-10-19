@@ -18,7 +18,6 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import lol.hyper.toolstats.tools.ItemChecker;
 import lol.hyper.toolstats.tools.UUIDDataType;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -92,7 +91,7 @@ public class PlayerFish implements Listener {
         }
         ItemStack caughtItem = ((Item) event.getCaught()).getItemStack();
         Item caughtItemEntity = (Item) event.getCaught();
-        if (ItemChecker.isValidItem(caughtItem.getType())) {
+        if (toolStats.itemChecker.isValidItem(caughtItem.getType())) {
             ItemStack newItem = addNewLore(caughtItem, player);
             if (newItem != null) {
                 caughtItemEntity.setItemStack(newItem);

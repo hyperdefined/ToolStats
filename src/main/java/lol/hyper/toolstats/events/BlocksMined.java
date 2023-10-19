@@ -18,7 +18,6 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import lol.hyper.toolstats.tools.ItemChecker;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -71,7 +70,7 @@ public class BlocksMined implements Listener {
         }
 
         // only check certain items
-        if (!ItemChecker.isMineTool(heldItem.getType())) {
+        if (!toolStats.itemChecker.isMineTool(heldItem.getType())) {
             return;
         }
 
