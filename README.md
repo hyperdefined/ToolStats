@@ -1,7 +1,7 @@
 <h1 align="center">ToolStats</h1>
 
 <p align="center">
-	<img src="https://img.shields.io/badge/Minecraft-1.15--1.19.2-orange" alt="Minecraft versions">
+	<img src="https://img.shields.io/badge/Minecraft-1.15--1.20.2-orange" alt="Minecraft versions">
 	<img src="https://img.shields.io/github/v/release/hyperdefined/ToolStats" alt="GitHub release (latest by date)">
 	<a href="https://github.com/hyperdefined/ToolStats/releases"><img src="https://img.shields.io/github/downloads/hyperdefined/ToolStats/total?logo=github" alt="Downloads"></a>
 	<a href="https://ko-fi.com/hyperdefined"><img src="https://img.shields.io/badge/Donate-Ko--fi-red" alt="Donate via Ko-fi"></a>
@@ -18,6 +18,7 @@ Here is everything it tracks:
 * Armor damage taken.
 * Fish caught.
 * Sheep sheared.
+* Items spawned via creative.
 
 The best part is, this data is stored on the item itself. You can also change how the lore is displayed on the items!
 
