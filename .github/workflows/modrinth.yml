@@ -9,4 +9,4 @@ jobs:
     - uses: funnyboy-roks/modrinth-auto-desc@v1.6
       with:
         auth-token: ${{ secrets.MODRINTH }}
-        slug: 'mapify'
+        slug: 'oBZj9E15'
