@@ -100,7 +100,7 @@ messages:
   kills:
     mob: "&7Mob kills: &8{kills}"
     player: "&7Player kills: &8{kills}"
-  spawned:
+  spawned-in:
     spawned-by: "&7Spawned in by: &8{player}"
     spawned-on: "&7Spawned on: &8{date}"
   blocks-mined: "&7Blocks mined: &8{blocks}"

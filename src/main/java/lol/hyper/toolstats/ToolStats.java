@@ -118,7 +118,7 @@ public final class ToolStats extends JavaPlugin {
     public InventoryOpen inventoryOpen;
     public PlayerJoin playerJoin;
     public NumberFormat numberFormat;
-    public FileConfiguration config;
+    public YamlConfiguration config;
     private BukkitAudiences adventure;
     public MorePaperLib morePaperLib;
     public HashMaker hashMaker;
@@ -177,11 +177,15 @@ public final class ToolStats extends JavaPlugin {
 
     public void loadConfig() {
         config = YamlConfiguration.loadConfiguration(configFile);
-        logger.info(String.valueOf(config.getInt("config-version")));
         if (config.getInt("config-version") != CONFIG_VERSION) {
             logger.warning("Your config file is outdated! We will try to update it, but you should regenerate it!");
             ConfigUpdater configUpdater = new ConfigUpdater(this);
-            configUpdater.updateConfig();
+            try {
+                configUpdater.updateConfig();
+            } catch (IOException exception) {
+                logger.severe("Unable to update config.yml! Please regenerate it!");
+                throw new RuntimeException(exception);
+            }
         }
 
         numberFormat = new NumberFormat(this);

@@ -122,8 +122,8 @@ public class ItemLore {
                 break;
             }
             case 6: {
-                dateCreated = toolStats.getLoreFromConfig("spawned.spawned-on", true);
-                itemOwner = toolStats.getLoreFromConfig("spawned.spawned-by", true);
+                dateCreated = toolStats.getLoreFromConfig("spawned-in.spawned-on", true);
+                itemOwner = toolStats.getLoreFromConfig("spawned-in.spawned-by", true);
                 break;
             }
         }
