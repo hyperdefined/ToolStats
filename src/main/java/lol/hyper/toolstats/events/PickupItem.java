@@ -101,10 +101,9 @@ public class PickupItem implements Listener {
         container.set(toolStats.originType, PersistentDataType.INTEGER, 4);
         container.remove(toolStats.newElytra);
 
-        String formattedDate = toolStats.numberFormat.formatDate(finalDate);
-        List<String> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
-
         if (toolStats.config.getBoolean("enabled.elytra-tag")) {
+            String formattedDate = toolStats.numberFormat.formatDate(finalDate);
+            List<String> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
             meta.setLore(newLore);
         }
         finalItem.setItemMeta(meta);

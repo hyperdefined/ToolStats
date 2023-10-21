@@ -117,10 +117,9 @@ public class SheepShear implements Listener {
         sheepSheared++;
         container.set(toolStats.shearsSheared, PersistentDataType.INTEGER, sheepSheared);
 
-        String sheepShearedFormatted = toolStats.numberFormat.formatInt(sheepSheared);
-        List<String> newLore = toolStats.itemLore.addItemLore(meta, "{sheep}", sheepShearedFormatted, "sheep-sheared");
-
         if (toolStats.config.getBoolean("enabled.sheep-sheared")) {
+            String sheepShearedFormatted = toolStats.numberFormat.formatInt(sheepSheared);
+            List<String> newLore = toolStats.itemLore.addItemLore(meta, "{sheep}", sheepShearedFormatted, "sheep-sheared");
             meta.setLore(newLore);
         }
         newShears.setItemMeta(meta);

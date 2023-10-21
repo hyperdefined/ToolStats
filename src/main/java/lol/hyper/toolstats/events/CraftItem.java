@@ -113,18 +113,6 @@ public class CraftItem implements Listener {
         container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
         container.set(toolStats.originType, PersistentDataType.INTEGER, 0);
 
-        String createdByRaw = toolStats.getLoreFromConfig("created.created-by", true);
-        String createdOnRaw = toolStats.getLoreFromConfig("created.created-on", true);
-
-        if (createdOnRaw == null) {
-            toolStats.logger.warning("There is no lore message for messages.created.created-on!");
-            return null;
-        }
-        if (createdByRaw == null) {
-            toolStats.logger.warning("There is no lore message for messages.created.created-by!");
-            return null;
-        }
-
         List<String> lore;
         // get the current lore the item
         if (meta.hasLore()) {
@@ -134,12 +122,23 @@ public class CraftItem implements Listener {
         }
         // do we add the lore based on the config?
         if (toolStats.checkConfig(itemStack.getType(), "created-date")) {
+            String createdOnRaw = toolStats.getLoreFromConfig("created.created-on", true);
+            if (createdOnRaw == null) {
+                toolStats.logger.warning("There is no lore message for messages.created.created-on!");
+                return null;
+            }
             lore.add(createdOnRaw.replace("{date}", toolStats.numberFormat.formatDate(finalDate)));
+            meta.setLore(lore);
         }
         if (toolStats.checkConfig(itemStack.getType(), "created-by")) {
+            String createdByRaw = toolStats.getLoreFromConfig("created.created-by", true);
+            if (createdByRaw == null) {
+                toolStats.logger.warning("There is no lore message for messages.created.created-by!");
+                return null;
+            }
             lore.add(createdByRaw.replace("{player}", owner.getName()));
+            meta.setLore(lore);
         }
-        meta.setLore(lore);
         newItem.setItemMeta(meta);
         return newItem;
     }

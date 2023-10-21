@@ -85,9 +85,8 @@ public class EntityDeath implements Listener {
         PersistentDataContainer container = meta.getPersistentDataContainer();
         container.set(toolStats.originType, PersistentDataType.INTEGER, 1);
 
-        List<String> newLore = toolStats.itemLore.addItemLore(meta, "{name}", mob, "dropped-by");
-
         if (toolStats.config.getBoolean("enabled.dropped-by")) {
+            List<String> newLore = toolStats.itemLore.addItemLore(meta, "{name}", mob, "dropped-by");
             meta.setLore(newLore);
         }
         newItem.setItemMeta(meta);

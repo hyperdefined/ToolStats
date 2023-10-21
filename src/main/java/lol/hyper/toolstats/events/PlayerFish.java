@@ -124,10 +124,9 @@ public class PlayerFish implements Listener {
         fishCaught++;
         container.set(toolStats.fishingRodCaught, PersistentDataType.INTEGER, fishCaught);
 
-        String fishCaughtFormatted = toolStats.numberFormat.formatInt(fishCaught);
-        List<String> newLore = toolStats.itemLore.addItemLore(meta, "{fish}", fishCaughtFormatted, "fished.fish-caught");
-
         if (toolStats.config.getBoolean("enabled.fish-caught")) {
+            String fishCaughtFormatted = toolStats.numberFormat.formatInt(fishCaught);
+            List<String> newLore = toolStats.itemLore.addItemLore(meta, "{fish}", fishCaughtFormatted, "fished.fish-caught");
             meta.setLore(newLore);
         }
         fishingRod.setItemMeta(meta);
@@ -161,10 +160,9 @@ public class PlayerFish implements Listener {
         container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
         container.set(toolStats.originType, PersistentDataType.INTEGER, 5);
 
-        String formattedDate = toolStats.numberFormat.formatDate(finalDate);
-        List<String> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
-
         if (toolStats.checkConfig(newItem.getType(), "fished-tag")) {
+            String formattedDate = toolStats.numberFormat.formatDate(finalDate);
+            List<String> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
             meta.setLore(newLore);
         }
         newItem.setItemMeta(meta);

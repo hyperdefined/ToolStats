@@ -61,9 +61,9 @@ public class ConfigUpdater {
             toolStats.logger.info("Adding enabled.spawned-in.bow to config.yml.");
             toolStats.config.set("enabled.spawned-in.armor", true);
             toolStats.logger.info("Adding enabled.spawned-in.armor to config.yml.");
-            toolStats.config.set("messages.spawned.spawned-by", "&7Spawned in by: &8{player}");
+            toolStats.config.set("messages.spawned-in.spawned-by", "&7Spawned in by: &8{player}");
             toolStats.logger.info("Adding messages.spawned-in.spawned-by to config.yml.");
-            toolStats.config.set("messages.spawned.spawned-on", "&7Spawned on: &8{date}");
+            toolStats.config.set("messages.spawned-in.spawned-on", "&7Spawned on: &8{date}");
             toolStats.logger.info("Adding messages.spawned-in.spawned-on to config.yml.");
             toolStats.config.set("generate-hash-for-items", true);
             toolStats.logger.info("Adding generate-hash-for-items to config.yml.");
