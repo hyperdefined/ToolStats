@@ -34,6 +34,7 @@ import space.arim.morepaperlib.MorePaperLib;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 public final class ToolStats extends JavaPlugin {
 
@@ -86,6 +87,10 @@ public final class ToolStats extends JavaPlugin {
      */
     public final NamespacedKey hash = new NamespacedKey(this, "hash");
     /**
+     * Key for arrows shot.
+     */
+    public final NamespacedKey arrowsShot = new NamespacedKey(this, "arrows-shot");
+    /**
      * Stores how an item was created.
      * 0 = crafted.
      * 1 = dropped.
@@ -100,6 +105,7 @@ public final class ToolStats extends JavaPlugin {
     public final int CONFIG_VERSION = 6;
     public final Logger logger = this.getLogger();
     public final File configFile = new File(this.getDataFolder(), "config.yml");
+    private final Pattern COLOR_CODES = Pattern.compile("(?i)&[0-9A-FK-ORX]");
 
     public BlocksMined blocksMined;
     public ChunkPopulate chunkPopulate;
@@ -123,6 +129,7 @@ public final class ToolStats extends JavaPlugin {
     public HashMaker hashMaker;
     public CreativeEvent creativeEvent;
     public ItemChecker itemChecker;
+    public ShootBow shootBow;
 
     @Override
     public void onEnable() {
@@ -151,6 +158,7 @@ public final class ToolStats extends JavaPlugin {
         playerJoin = new PlayerJoin(this);
         creativeEvent = new CreativeEvent(this);
         itemChecker = new ItemChecker();
+        shootBow = new ShootBow(this);
 
         Bukkit.getServer().getPluginManager().registerEvents(blocksMined, this);
         Bukkit.getServer().getPluginManager().registerEvents(chunkPopulate, this);
@@ -166,6 +174,7 @@ public final class ToolStats extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(inventoryOpen, this);
         Bukkit.getServer().getPluginManager().registerEvents(playerJoin, this);
         Bukkit.getServer().getPluginManager().registerEvents(creativeEvent, this);
+        Bukkit.getServer().getPluginManager().registerEvents(shootBow, this);
 
         this.getCommand("toolstats").setExecutor(commandToolStats);
 
@@ -224,7 +233,7 @@ public final class ToolStats extends JavaPlugin {
         String itemName = material.toString().toLowerCase();
         String itemType = null;
         // hardcode these
-        if (material == Material.BOW || material == Material.SHEARS || material == Material.TRIDENT) {
+        if (material == Material.BOW || material == Material.CROSSBOW || material == Material.SHEARS || material == Material.TRIDENT) {
             if (material == Material.BOW) {
                 itemType = "bow";
             }
@@ -233,6 +242,9 @@ public final class ToolStats extends JavaPlugin {
             }
             if (material == Material.TRIDENT) {
                 itemType = "trident";
+            }
+            if (material == Material.CROSSBOW) {
+                itemType = "crossbow";
             }
         } else {
             itemType = itemName.substring(itemName.indexOf('_') + 1);
@@ -257,6 +269,7 @@ public final class ToolStats extends JavaPlugin {
             case "shears": {
                 return config.getBoolean("enabled." + configName + ".shears");
             }
+            case "crossbow":
             case "bow": {
                 return config.getBoolean("enabled." + configName + ".bow");
             }
@@ -288,10 +301,11 @@ public final class ToolStats extends JavaPlugin {
         if (raw) {
             return ChatColor.translateAlternateColorCodes('&', lore);
         } else {
-            // we basically add the color codes then remove them
-            // this is a dirty trick to remove color codes
-            lore = ChatColor.translateAlternateColorCodes('&', lore);
-            lore = ChatColor.stripColor(lore);
+            // remove all color codes
+            // this is used to compare the current lore on the item
+            // Example: [§7Arrows shot: §8] is on the lore
+            // this will return [Arrows shot: ] so we can match it
+            lore = COLOR_CODES.matcher(lore).replaceAll("");
             if (lore.contains("{player}")) {
                 lore = lore.replace("{player}", "");
             }
@@ -318,6 +332,9 @@ public final class ToolStats extends JavaPlugin {
             }
             if (lore.contains("{crops}")) {
                 lore = lore.replace("{crops}", "");
+            }
+            if (lore.contains("{arrows}")) {
+                lore = lore.replace("{arrows}", "");
             }
         }
         return lore;

@@ -54,6 +54,7 @@ public class ItemChecker {
         meleeItems.add(Material.TRIDENT);
         validItems.add(Material.BOW);
         validItems.add(Material.FISHING_ROD);
+        validItems.add(Material.CROSSBOW);
 
         // combine the lists
         validItems.addAll(armorItems);

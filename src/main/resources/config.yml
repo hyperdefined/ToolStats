@@ -80,6 +80,7 @@ enabled:
   armor-damage: true
   dropped-by: true
   elytra-tag: true
+  arrows-shot: true
 
 messages:
   created:
@@ -108,6 +109,7 @@ messages:
   sheep-sheared: "&7Sheep sheared: &8{sheep}"
   dropped-by: "&7Dropped by: &8{name}" # name will be player/mob name
   damage-taken: "&7Damage taken: &8{damage}"
+  arrows-shot: "&7Arrows shot: &8{arrows}"
   # Display this message if the player shift click trades/crafts items. It's not really easy to get every single item
   # that is crafted. The tag will only be added to the first item. If you don't want this message, simply replace them both with ""
   shift-click-warning:

@@ -121,7 +121,7 @@ public class EntityDamage implements Listener {
                         heldBow = inventory.getItemInOffHand();
                     }
 
-                    // if the player is hold a bow in both hands
+                    // if the player is holding a bow in both hands
                     // default to main hand since that takes priority
                     if (isMainHand && isOffHand) {
                         heldBow = inventory.getItemInMainHand();
