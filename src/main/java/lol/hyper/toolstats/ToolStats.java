@@ -22,6 +22,7 @@ import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
 import lol.hyper.toolstats.commands.CommandToolStats;
 import lol.hyper.toolstats.events.*;
 import lol.hyper.toolstats.tools.*;
+import lol.hyper.toolstats.tools.config.ConfigUpdater;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.*;
@@ -188,12 +189,7 @@ public final class ToolStats extends JavaPlugin {
         if (config.getInt("config-version") != CONFIG_VERSION) {
             logger.warning("Your config file is outdated! We will try to update it, but you should regenerate it!");
             ConfigUpdater configUpdater = new ConfigUpdater(this);
-            try {
-                configUpdater.updateConfig();
-            } catch (IOException exception) {
-                logger.severe("Unable to update config.yml! Please regenerate it!");
-                throw new RuntimeException(exception);
-            }
+            configUpdater.updateConfig();
         }
 
         numberFormat = new NumberFormat(this);
