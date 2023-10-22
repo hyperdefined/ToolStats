@@ -97,7 +97,7 @@ public class CreativeEvent implements Listener {
         container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
         container.set(toolStats.originType, PersistentDataType.INTEGER, 6);
 
-        if (toolStats.checkConfig(newSpawnedItem.getType(), "spawned-in")) {
+        if (toolStats.configTools.checkConfig(newSpawnedItem.getType(), "spawned-in")) {
             String formattedDate = toolStats.numberFormat.formatDate(finalDate);
             List<String> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
             meta.setLore(newLore);

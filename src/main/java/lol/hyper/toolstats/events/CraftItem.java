@@ -121,8 +121,8 @@ public class CraftItem implements Listener {
             lore = new ArrayList<>();
         }
         // do we add the lore based on the config?
-        if (toolStats.checkConfig(itemStack.getType(), "created-date")) {
-            String createdOnRaw = toolStats.getLoreFromConfig("created.created-on", true);
+        if (toolStats.configTools.checkConfig(itemStack.getType(), "created-date")) {
+            String createdOnRaw = toolStats.configTools.getLoreFromConfig("created.created-on", true);
             if (createdOnRaw == null) {
                 toolStats.logger.warning("There is no lore message for messages.created.created-on!");
                 return null;
@@ -130,8 +130,8 @@ public class CraftItem implements Listener {
             lore.add(createdOnRaw.replace("{date}", toolStats.numberFormat.formatDate(finalDate)));
             meta.setLore(lore);
         }
-        if (toolStats.checkConfig(itemStack.getType(), "created-by")) {
-            String createdByRaw = toolStats.getLoreFromConfig("created.created-by", true);
+        if (toolStats.configTools.checkConfig(itemStack.getType(), "created-by")) {
+            String createdByRaw = toolStats.configTools.getLoreFromConfig("created.created-by", true);
             if (createdByRaw == null) {
                 toolStats.logger.warning("There is no lore message for messages.created.created-by!");
                 return null;

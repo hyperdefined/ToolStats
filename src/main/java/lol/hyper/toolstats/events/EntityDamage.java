@@ -245,7 +245,7 @@ public class EntityDamage implements Listener {
         container.set(toolStats.swordPlayerKills, PersistentDataType.INTEGER, playerKills);
 
         // do we add the lore based on the config?
-        if (toolStats.checkConfig(itemStack.getType(), "player-kills")) {
+        if (toolStats.configTools.checkConfig(itemStack.getType(), "player-kills")) {
             String playerKillsFormatted = toolStats.numberFormat.formatInt(playerKills);
             List<String> newLore = toolStats.itemLore.addItemLore(meta, "{kills}", playerKillsFormatted, "kills.player");
             meta.setLore(newLore);
@@ -279,7 +279,7 @@ public class EntityDamage implements Listener {
         container.set(toolStats.swordMobKills, PersistentDataType.INTEGER, mobKills);
 
         // do we add the lore based on the config?
-        if (toolStats.checkConfig(itemStack.getType(), "mob-kills")) {
+        if (toolStats.configTools.checkConfig(itemStack.getType(), "mob-kills")) {
             String mobKillsFormatted = toolStats.numberFormat.formatInt(mobKills);
             List<String> newLore = toolStats.itemLore.addItemLore(meta, "{kills}", mobKillsFormatted, "kills.mob");
             meta.setLore(newLore);
@@ -349,7 +349,7 @@ public class EntityDamage implements Listener {
         container.set(toolStats.swordMobKills, PersistentDataType.INTEGER, mobKills);
 
         // do we add the lore based on the config?
-        if (toolStats.checkConfig(newTrident.getType(), "mob-kills")) {
+        if (toolStats.configTools.checkConfig(newTrident.getType(), "mob-kills")) {
             String mobKillsFormatted = toolStats.numberFormat.formatInt(mobKills);
             List<String> newLore = toolStats.itemLore.addItemLore(meta, "{kills}", mobKillsFormatted, "kills.mob");
             meta.setLore(newLore);
@@ -385,7 +385,7 @@ public class EntityDamage implements Listener {
         container.set(toolStats.swordPlayerKills, PersistentDataType.INTEGER, playerKills);
 
         // do we add the lore based on the config?
-        if (toolStats.checkConfig(newTrident.getType(), "player-kills")) {
+        if (toolStats.configTools.checkConfig(newTrident.getType(), "player-kills")) {
             String playerKillsFormatted = toolStats.numberFormat.formatInt(playerKills);
             List<String> newLore = toolStats.itemLore.addItemLore(meta, "{kills}", playerKillsFormatted, "kills.player");
             meta.setLore(newLore);

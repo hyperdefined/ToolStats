@@ -116,7 +116,7 @@ public class GenerateLoot implements Listener {
         container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
         container.set(toolStats.originType, PersistentDataType.INTEGER, 2);
 
-        if (toolStats.checkConfig(newItem.getType(), "looted-tag")) {
+        if (toolStats.configTools.checkConfig(newItem.getType(), "looted-tag")) {
             String formattedDate = toolStats.numberFormat.formatDate(finalDate);
             List<String> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
             meta.setLore(newLore);

@@ -22,6 +22,7 @@ import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
 import lol.hyper.toolstats.commands.CommandToolStats;
 import lol.hyper.toolstats.events.*;
 import lol.hyper.toolstats.tools.*;
+import lol.hyper.toolstats.tools.config.ConfigTools;
 import lol.hyper.toolstats.tools.config.ConfigUpdater;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
@@ -106,7 +107,6 @@ public final class ToolStats extends JavaPlugin {
     public final int CONFIG_VERSION = 6;
     public final Logger logger = this.getLogger();
     public final File configFile = new File(this.getDataFolder(), "config.yml");
-    private final Pattern COLOR_CODES = Pattern.compile("(?i)&[0-9A-FK-ORX]");
 
     public BlocksMined blocksMined;
     public ChunkPopulate chunkPopulate;
@@ -131,6 +131,7 @@ public final class ToolStats extends JavaPlugin {
     public CreativeEvent creativeEvent;
     public ItemChecker itemChecker;
     public ShootBow shootBow;
+    public ConfigTools configTools;
 
     @Override
     public void onEnable() {
@@ -160,6 +161,7 @@ public final class ToolStats extends JavaPlugin {
         creativeEvent = new CreativeEvent(this);
         itemChecker = new ItemChecker();
         shootBow = new ShootBow(this);
+        configTools = new ConfigTools(this);
 
         Bukkit.getServer().getPluginManager().registerEvents(blocksMined, this);
         Bukkit.getServer().getPluginManager().registerEvents(chunkPopulate, this);
@@ -216,124 +218,6 @@ public final class ToolStats extends JavaPlugin {
         } else {
             logger.warning("A new version is available (" + latest.getTagVersion() + ")! You are running version " + current.getTagVersion() + ". You are " + buildsBehind + " version(s) behind.");
         }
-    }
-
-    /**
-     * Checks the config to see if we want to show lore on certain items.
-     *
-     * @param material   The item type to check.
-     * @param configName The config we are checking under.
-     * @return If we want to allow lore or not.
-     */
-    public boolean checkConfig(Material material, String configName) {
-        String itemName = material.toString().toLowerCase();
-        String itemType = null;
-        // hardcode these
-        if (material == Material.BOW || material == Material.CROSSBOW || material == Material.SHEARS || material == Material.TRIDENT) {
-            if (material == Material.BOW) {
-                itemType = "bow";
-            }
-            if (material == Material.SHEARS) {
-                itemType = "shears";
-            }
-            if (material == Material.TRIDENT) {
-                itemType = "trident";
-            }
-            if (material == Material.CROSSBOW) {
-                itemType = "crossbow";
-            }
-        } else {
-            itemType = itemName.substring(itemName.indexOf('_') + 1);
-        }
-
-        switch (itemType) {
-            case "pickaxe": {
-                return config.getBoolean("enabled." + configName + ".pickaxe");
-            }
-            case "sword": {
-                return config.getBoolean("enabled." + configName + ".sword");
-            }
-            case "shovel": {
-                return config.getBoolean("enabled." + configName + ".shovel");
-            }
-            case "axe": {
-                return config.getBoolean("enabled." + configName + ".axe");
-            }
-            case "hoe": {
-                return config.getBoolean("enabled." + configName + ".hoe");
-            }
-            case "shears": {
-                return config.getBoolean("enabled." + configName + ".shears");
-            }
-            case "crossbow":
-            case "bow": {
-                return config.getBoolean("enabled." + configName + ".bow");
-            }
-            case "trident": {
-                return config.getBoolean("enabled." + configName + ".trident");
-            }
-            case "helmet":
-            case "chestplate":
-            case "leggings":
-            case "boots": {
-                return config.getBoolean("enabled." + configName + ".armor");
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Gets the lore message from the config.
-     *
-     * @param configName The config name, "messages." is already in front.
-     * @param raw        If you want the raw message with the formatting codes and placeholders.
-     * @return The lore message.
-     */
-    public String getLoreFromConfig(String configName, boolean raw) {
-        String lore = config.getString("messages." + configName);
-        if (lore == null) {
-            return null;
-        }
-        if (raw) {
-            return ChatColor.translateAlternateColorCodes('&', lore);
-        } else {
-            // remove all color codes
-            // this is used to compare the current lore on the item
-            // Example: [§7Arrows shot: §8] is on the lore
-            // this will return [Arrows shot: ] so we can match it
-            lore = COLOR_CODES.matcher(lore).replaceAll("");
-            if (lore.contains("{player}")) {
-                lore = lore.replace("{player}", "");
-            }
-            if (lore.contains("{date}")) {
-                lore = lore.replace("{date}", "");
-            }
-            if (lore.contains("{name}")) {
-                lore = lore.replace("{name}", "");
-            }
-            if (lore.contains("{kills}")) {
-                lore = lore.replace("{kills}", "");
-            }
-            if (lore.contains("{blocks}")) {
-                lore = lore.replace("{blocks}", "");
-            }
-            if (lore.contains("{sheep}")) {
-                lore = lore.replace("{sheep}", "");
-            }
-            if (lore.contains("{damage}")) {
-                lore = lore.replace("{damage}", "");
-            }
-            if (lore.contains("{fish}")) {
-                lore = lore.replace("{fish}", "");
-            }
-            if (lore.contains("{crops}")) {
-                lore = lore.replace("{crops}", "");
-            }
-            if (lore.contains("{arrows}")) {
-                lore = lore.replace("{arrows}", "");
-            }
-        }
-        return lore;
     }
 
     public BukkitAudiences getAdventure() {

@@ -42,8 +42,8 @@ public class ItemLore {
      * @return The item's new lore.
      */
     public List<String> addItemLore(ItemMeta itemMeta, String placeholder, String placeholderValue, String configLorePath) {
-        String configLore = toolStats.getLoreFromConfig(configLorePath, false);
-        String configLoreRaw = toolStats.getLoreFromConfig(configLorePath, true);
+        String configLore = toolStats.configTools.getLoreFromConfig(configLorePath, false);
+        String configLoreRaw = toolStats.configTools.getLoreFromConfig(configLorePath, true);
 
         if (configLore == null || configLoreRaw == null) {
             toolStats.logger.warning("There is no lore message for messages." + configLorePath + "!");
@@ -106,8 +106,8 @@ public class ItemLore {
         // set the lore based on the origin
         switch (origin) {
             case 2: {
-                dateCreatedLore = toolStats.getLoreFromConfig("looted.looted-on", true);
-                itemOwnerLore = toolStats.getLoreFromConfig("looted.looted-by", true);
+                dateCreatedLore = toolStats.configTools.getLoreFromConfig("looted.looted-on", true);
+                itemOwnerLore = toolStats.configTools.getLoreFromConfig("looted.looted-by", true);
 
                 if (dateCreatedLore == null) {
                     toolStats.logger.warning("messages.looted.looted-on is not set in your config!");
@@ -122,8 +122,8 @@ public class ItemLore {
                 break;
             }
             case 3: {
-                dateCreatedLore = toolStats.getLoreFromConfig("traded.traded-on", true);
-                itemOwnerLore = toolStats.getLoreFromConfig("traded.traded-by", true);
+                dateCreatedLore = toolStats.configTools.getLoreFromConfig("traded.traded-on", true);
+                itemOwnerLore = toolStats.configTools.getLoreFromConfig("traded.traded-by", true);
 
                 if (dateCreatedLore == null) {
                     toolStats.logger.warning("messages.traded.traded-on is not set in your config!");
@@ -138,8 +138,8 @@ public class ItemLore {
                 break;
             }
             case 4: {
-                dateCreatedLore = toolStats.getLoreFromConfig("looted.found-on", true);
-                itemOwnerLore = toolStats.getLoreFromConfig("looted.found-by", true);
+                dateCreatedLore = toolStats.configTools.getLoreFromConfig("looted.found-on", true);
+                itemOwnerLore = toolStats.configTools.getLoreFromConfig("looted.found-by", true);
 
                 if (dateCreatedLore == null) {
                     toolStats.logger.warning("messages.looted.found-on is not set in your config!");
@@ -154,8 +154,8 @@ public class ItemLore {
                 break;
             }
             case 5: {
-                dateCreatedLore = toolStats.getLoreFromConfig("fished.caught-on", true);
-                itemOwnerLore = toolStats.getLoreFromConfig("fished.caught-by", true);
+                dateCreatedLore = toolStats.configTools.getLoreFromConfig("fished.caught-on", true);
+                itemOwnerLore = toolStats.configTools.getLoreFromConfig("fished.caught-by", true);
 
                 if (dateCreatedLore == null) {
                     toolStats.logger.warning("messages.fished.caught-on is not set in your config!");
@@ -170,8 +170,8 @@ public class ItemLore {
                 break;
             }
             case 6: {
-                dateCreatedLore = toolStats.getLoreFromConfig("spawned-in.spawned-on", true);
-                itemOwnerLore = toolStats.getLoreFromConfig("spawned-in.spawned-by", true);
+                dateCreatedLore = toolStats.configTools.getLoreFromConfig("spawned-in.spawned-on", true);
+                itemOwnerLore = toolStats.configTools.getLoreFromConfig("spawned-in.spawned-by", true);
 
                 if (dateCreatedLore == null) {
                     toolStats.logger.warning("messages.spawned-in.spawned-on is not set in your config!");
@@ -219,12 +219,12 @@ public class ItemLore {
         lore = itemMeta.getLore();
         Integer origin = null;
 
-        String createdBy = toolStats.getLoreFromConfig("created.created-by", false);
-        String createdOn = toolStats.getLoreFromConfig("created.created-on", false);
-        String caughtBy = toolStats.getLoreFromConfig("fished.caught-by", false);
-        String lootedBy = toolStats.getLoreFromConfig("looted.looted-by", false);
-        String foundBy = toolStats.getLoreFromConfig("looted.found-by", false);
-        String tradedBy = toolStats.getLoreFromConfig("traded.traded-by", false);
+        String createdBy = toolStats.configTools.getLoreFromConfig("created.created-by", false);
+        String createdOn = toolStats.configTools.getLoreFromConfig("created.created-on", false);
+        String caughtBy = toolStats.configTools.getLoreFromConfig("fished.caught-by", false);
+        String lootedBy = toolStats.configTools.getLoreFromConfig("looted.looted-by", false);
+        String foundBy = toolStats.configTools.getLoreFromConfig("looted.found-by", false);
+        String tradedBy = toolStats.configTools.getLoreFromConfig("traded.traded-by", false);
 
         for (String line : lore) {
             // this is the worst code I have ever written

@@ -108,7 +108,7 @@ public class BlocksMined implements Listener {
         container.set(toolStats.genericMined, PersistentDataType.INTEGER, blocksMined);
 
         // do we add the lore based on the config?
-        if (toolStats.checkConfig(playerTool.getType(), "blocks-mined")) {
+        if (toolStats.configTools.checkConfig(playerTool.getType(), "blocks-mined")) {
             String blocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined);
             List<String> newLore = toolStats.itemLore.addItemLore(meta, "{blocks}", blocksMinedFormatted, "blocks-mined");
             meta.setLore(newLore);
@@ -144,7 +144,7 @@ public class BlocksMined implements Listener {
         container.set(toolStats.cropsHarvested, PersistentDataType.INTEGER, cropsMined);
 
         // do we add the lore based on the config?
-        if (toolStats.checkConfig(playerTool.getType(), "blocks-mined")) {
+        if (toolStats.configTools.checkConfig(playerTool.getType(), "blocks-mined")) {
             String cropsMinedFormatted = toolStats.numberFormat.formatInt(cropsMined);
             List<String> newLore = toolStats.itemLore.addItemLore(meta, "{crops}", cropsMinedFormatted, "crops-harvested");
             meta.setLore(newLore);
