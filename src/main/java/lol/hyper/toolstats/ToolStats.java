@@ -36,7 +36,6 @@ import space.arim.morepaperlib.MorePaperLib;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 public final class ToolStats extends JavaPlugin {
 

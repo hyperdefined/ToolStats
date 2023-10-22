@@ -63,7 +63,7 @@ public class InventoryOpen implements Listener {
             }
             PersistentDataContainer container = itemMeta.getPersistentDataContainer();
 
-            // generate a hash if the item doesn't have one (if it's enabled in the config
+            // generate a hash if the item doesn't have one (if it's enabled in the config)
             if (toolStats.config.getBoolean("generate-hash-for-items")) {
                 if (!container.has(toolStats.hash, PersistentDataType.STRING)) {
                     // make sure the item has an owner
