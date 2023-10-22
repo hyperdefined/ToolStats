@@ -35,6 +35,8 @@ If item lore is ever incorrect, you can run `/toolstats reset` to reset the item
 ![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image8.png)
 ![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image9.png)
 ![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image10.png)
+![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image11.png)
+![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image12.png)
 
 ## Documentation
 Visit the [wiki](https://github.com/hyperdefined/ToolStats/wiki) for help.
