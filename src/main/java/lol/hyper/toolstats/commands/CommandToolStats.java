@@ -124,7 +124,7 @@ public class CommandToolStats implements TabExecutor {
         String caughtByLore = toolStats.getLoreFromConfig("fished.caught-by", false);
         String lootedByLore = toolStats.getLoreFromConfig("looted.found-by", false);
         String tradedByLore = toolStats.getLoreFromConfig("traded.traded-by", false);
-        String spawnedByLore = toolStats.getLoreFromConfig("spawned.spawned-by", false);
+        String spawnedByLore = toolStats.getLoreFromConfig("spawned-in.spawned-by", false);
 
         // make sure the config messages are not null
         if (caughtByLore == null || lootedByLore == null || tradedByLore == null || spawnedByLore == null) {
@@ -201,7 +201,7 @@ public class CommandToolStats implements TabExecutor {
                         break;
                     }
                     case 6: {
-                        lore.add(toolStats.getLoreFromConfig("spawned.spawned-by", true).replace("{player}", ownerName));
+                        lore.add(toolStats.getLoreFromConfig("spawned-in.spawned-by", true).replace("{player}", ownerName));
                         break;
                     }
                 }
@@ -234,7 +234,7 @@ public class CommandToolStats implements TabExecutor {
                             break;
                         }
                         case 6: {
-                            lore.add(toolStats.getLoreFromConfig("spawned.spawned-on", true).replace("{date}", toolStats.numberFormat.formatDate(new Date(time))));
+                            lore.add(toolStats.getLoreFromConfig("spawned-in.spawned-on", true).replace("{date}", toolStats.numberFormat.formatDate(new Date(time))));
                             break;
                         }
                     }
@@ -294,6 +294,14 @@ public class CommandToolStats implements TabExecutor {
                 Double damage = container.get(toolStats.armorDamage, PersistentDataType.DOUBLE);
                 if (damage != null) {
                     lore.add(toolStats.getLoreFromConfig("damage-taken", true).replace("{damage}", toolStats.numberFormat.formatDouble(damage)));
+                }
+            }
+        }
+        if (toolStats.config.getBoolean("enabled.arrows-shot")) {
+            if (container.has(toolStats.arrowsShot, PersistentDataType.INTEGER)) {
+                Integer arrows = container.get(toolStats.arrowsShot, PersistentDataType.INTEGER);
+                if (arrows != null) {
+                    lore.add(toolStats.getLoreFromConfig("arrows-shot", true).replace("{arrows}", toolStats.numberFormat.formatInt(arrows)));
                 }
             }
         }
