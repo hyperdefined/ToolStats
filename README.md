@@ -14,12 +14,13 @@ ToolStats is a small plugin that display various stats about tools. This plugin 
 
 Here is everything it tracks:
 * Blocks mined (pickaxes, shovels, axes, hoes, shears)
+* Crops mined (hoes)
 * Player/mob kills (swords, axes, tridents, bows/crossbows)
-* Ownership of items when crafted, looted (from chests), traded, and caught from fishing.
+* Ownership of items when crafted, looted (from chests), traded, spawned via creative, and caught from fishing.
 * Armor damage taken.
 * Fish caught.
 * Sheep sheared.
-* Items spawned via creative.
+* Arrows shot (bows/crossbows)
 
 The best part is, this data is stored on the item itself. You can also change how the lore is displayed on the items!
 
