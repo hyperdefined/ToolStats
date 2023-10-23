@@ -57,7 +57,7 @@ public class GenerateLoot implements Listener {
         if (inventoryHolder instanceof Chest) {
             Block openedChest = null;
             // look at the current list of opened chest and get the distance
-            // between the lootcontext location and chest location
+            // between the LootContext location and chest location
             // if the distance is less than 1, it's the same chest
             for (Block chest : toolStats.playerInteract.openedChests.keySet()) {
                 Location chestLocation = chest.getLocation();

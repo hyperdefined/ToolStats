@@ -46,7 +46,6 @@ public class ConfigUpdater {
     }
 
     public void updateConfig() {
-        // get a copy of the current config
         int version = toolStats.config.getInt("config-version");
 
         // this will be a switch in the future

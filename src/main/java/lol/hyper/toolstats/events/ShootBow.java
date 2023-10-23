@@ -36,7 +36,7 @@ import java.util.List;
 
 public class ShootBow implements Listener {
 
-    private ToolStats toolStats;
+    private final ToolStats toolStats;
 
     public ShootBow(ToolStats toolStats) {
         this.toolStats = toolStats;
