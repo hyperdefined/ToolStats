@@ -87,6 +87,11 @@ public class CreativeEvent implements Listener {
         Date finalDate = new Date(timeCreated);
         PersistentDataContainer container = meta.getPersistentDataContainer();
 
+        // if the item already has an origin set, don't add it again
+        if (container.has(toolStats.originType, PersistentDataType.INTEGER)) {
+            return null;
+        }
+
         // only make the hash if it's enabled
         if (toolStats.config.getBoolean("generate-hash-for-items")) {
             String hash = toolStats.hashMaker.makeHash(spawnedItem.getType(), owner.getUniqueId(), timeCreated);
