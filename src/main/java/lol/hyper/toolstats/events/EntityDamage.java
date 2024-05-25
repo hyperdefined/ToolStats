@@ -294,6 +294,10 @@ public class EntityDamage implements Listener {
      * @param damage    How much damage is being added.
      */
     private void updateDamage(ItemStack itemStack, double damage) {
+        // ignore if the damage is zero or negative
+        if (damage < 0) {
+            return;
+        }
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) {
             toolStats.logger.warning(itemStack + " does NOT have any meta! Unable to update stats.");
