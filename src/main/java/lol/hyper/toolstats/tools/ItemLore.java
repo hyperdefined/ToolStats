@@ -18,6 +18,9 @@
 package lol.hyper.toolstats.tools;
 
 import lol.hyper.toolstats.ToolStats;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -63,7 +66,7 @@ public class ItemLore {
             for (int x = 0; x < newLore.size(); x++) {
                 // check to see if the line matches the config value
                 // this means we update this line only!
-                String line = newLore.get(x);
+                String line = ChatColor.stripColor(newLore.get(x));
                 if (line.contains(configLore)) {
                     newLore.set(x, newLine);
                     return newLore;
