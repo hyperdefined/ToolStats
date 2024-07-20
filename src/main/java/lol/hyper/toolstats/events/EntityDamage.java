@@ -39,7 +39,7 @@ public class EntityDamage implements Listener {
 
     private final ToolStats toolStats;
     public final Set<UUID> trackedMobs = new HashSet<>();
-    private final List<EntityDamageEvent.DamageCause> ignoredCauses = Arrays.asList(EntityDamageEvent.DamageCause.SUICIDE, EntityDamageEvent.DamageCause.VOID, EntityDamageEvent.DamageCause.CUSTOM);
+    private final List<EntityDamageEvent.DamageCause> ignoredCauses = Arrays.asList(EntityDamageEvent.DamageCause.SUICIDE, EntityDamageEvent.DamageCause.VOID, EntityDamageEvent.DamageCause.CUSTOM, EntityDamageEvent.DamageCause.KILL);
 
     public EntityDamage(ToolStats toolStats) {
         this.toolStats = toolStats;
