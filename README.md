@@ -1,7 +1,7 @@
 <h1 align="center">ToolStats</h1>
 
 <p align="center">
-	<img src="https://img.shields.io/badge/Minecraft-1.15--1.20.6-orange" alt="Minecraft versions">
+	<img src="https://img.shields.io/badge/Minecraft-1.15--1.21-orange" alt="Minecraft versions">
 	<img src="https://img.shields.io/github/v/release/hyperdefined/ToolStats" alt="GitHub release (latest by date)">
 	<a href="https://github.com/hyperdefined/ToolStats/releases"><img src="https://img.shields.io/github/downloads/hyperdefined/ToolStats/total?logo=github" alt="Downloads"></a>
 	<img src="https://img.shields.io/badge/made%20with-love%20&%20fluff-red" alt="Made with love & fluff">
