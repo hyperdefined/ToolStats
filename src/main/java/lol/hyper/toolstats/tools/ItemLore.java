@@ -19,8 +19,6 @@ package lol.hyper.toolstats.tools;
 
 import lol.hyper.toolstats.ToolStats;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;

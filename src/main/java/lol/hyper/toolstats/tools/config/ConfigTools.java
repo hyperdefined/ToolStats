@@ -21,12 +21,14 @@ import lol.hyper.toolstats.ToolStats;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ConfigTools {
 
     private final ToolStats toolStats;
-    private final Pattern COLOR_CODES = Pattern.compile("(?i)&[0-9A-FK-ORX]");
+    private final Pattern COLOR_CODES = Pattern.compile("&([0-9a-fk-or])");
+    private final Pattern HEX_PATTERN = Pattern.compile("&#([A-Fa-f0-9]{6})");
 
     public ConfigTools(ToolStats toolStats) {
         this.toolStats = toolStats;
@@ -110,7 +112,7 @@ public class ConfigTools {
      * Gets the lore message from the config.
      *
      * @param configName The config name, "messages." is already in front.
-     * @param raw        If you want the raw message with the formatting codes and placeholders.
+     * @param raw        If you want the raw message. False if you want no placeholders.
      * @return The lore message.
      */
     public String getLoreFromConfig(String configName, boolean raw) {
@@ -119,13 +121,26 @@ public class ConfigTools {
             return null;
         }
         if (raw) {
-            return ChatColor.translateAlternateColorCodes('&', lore);
+            Matcher hexMatcher = HEX_PATTERN.matcher(lore);
+            while (hexMatcher.find()) {
+                String hexCode = hexMatcher.group(1);
+                lore = lore.replaceAll(hexMatcher.group(), net.md_5.bungee.api.ChatColor.of("#" + hexCode).toString());
+            }
+
+            Matcher colorMatcher = COLOR_CODES.matcher(lore);
+            while (colorMatcher.find()) {
+                String colorCode = colorMatcher.group(1);
+                lore = lore.replaceAll("&" + colorCode, ChatColor.getByChar(colorCode).toString());
+            }
+
+            return ChatColor.translateAlternateColorCodes('§', lore);
         } else {
             // remove all color codes
             // this is used to compare the current lore on the item
             // Example: [§7Arrows shot: §8] is on the lore
             // this will return [Arrows shot: ] so we can match it
             lore = COLOR_CODES.matcher(lore).replaceAll("");
+            lore = HEX_PATTERN.matcher(lore).replaceAll("");
             if (lore.contains("{player}")) {
                 lore = lore.replace("{player}", "");
             }
