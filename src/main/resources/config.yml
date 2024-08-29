@@ -136,4 +136,4 @@ number-formats:
 # This has no use currently, but can be used for future features for dupe detection.
 generate-hash-for-items: true
 
-config-version: 6
+config-version: 7

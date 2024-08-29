@@ -113,7 +113,7 @@ public final class ToolStats extends JavaPlugin {
      */
     public final NamespacedKey originType = new NamespacedKey(this, "origin");
 
-    public final int CONFIG_VERSION = 6;
+    public final int CONFIG_VERSION = 7;
     public final Logger logger = this.getLogger();
     public final File configFile = new File(this.getDataFolder(), "config.yml");
 

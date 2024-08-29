@@ -36,6 +36,7 @@ package lol.hyper.toolstats.tools.config;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.config.versions.Version6;
+import lol.hyper.toolstats.tools.config.versions.Version7;
 
 public class ConfigUpdater {
 
@@ -49,9 +50,16 @@ public class ConfigUpdater {
         int version = toolStats.config.getInt("config-version");
 
         // this will be a switch in the future
+        // Upgrade 5 to 6
         if (version == 5) {
             Version6 version6 = new Version6(toolStats);
             version6.update();
+        }
+
+        // Upgrade 6 to 7
+        if (version == 6) {
+            Version7 version7 = new Version7(toolStats);
+            version7.update();
         }
     }
 }
