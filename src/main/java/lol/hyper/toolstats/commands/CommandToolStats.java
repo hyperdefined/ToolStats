@@ -144,20 +144,30 @@ public class CommandToolStats implements TabExecutor {
 
         // hard code elytras
         if (finalItem.getType() == Material.ELYTRA) {
-            if (toolStats.config.getBoolean("enabled.elytra-tag")) {
-                lore.add(toolStats.configTools.getLoreFromConfig("looted.found-by", true).replace("{player}", player.getName()));
-                if (container.has(toolStats.timeCreated, PersistentDataType.LONG)) {
-                    Long time = container.get(toolStats.timeCreated, PersistentDataType.LONG);
-                    if (time != null) {
-                        lore.add(toolStats.configTools.getLoreFromConfig("looted.found-on", true).replace("{date}", toolStats.numberFormat.formatDate(new Date(time))));
-                    }
-                }
-                finalMeta.setLore(lore);
-                finalItem.setItemMeta(finalMeta);
-                int slot = player.getInventory().getHeldItemSlot();
-                player.getInventory().setItem(slot, finalItem);
-                return;
+            Long flightTime = null;
+            Long timeCreated = null;
+            if (container.has(toolStats.timeCreated, PersistentDataType.LONG)) {
+                timeCreated = container.get(toolStats.timeCreated, PersistentDataType.LONG);
             }
+            if (container.has(toolStats.flightTime, PersistentDataType.LONG)) {
+                flightTime = container.get(toolStats.flightTime, PersistentDataType.LONG);
+            }
+
+            if (flightTime != null) {
+                if (toolStats.config.getBoolean("enabled.flight-time")) {
+                    lore.add(toolStats.configTools.getLoreFromConfig("flight-time", true).replace("{time}", toolStats.numberFormat.formatDouble((double) flightTime / 1000)));
+                }
+            }
+
+            if (timeCreated != null) {
+                lore.add(toolStats.configTools.getLoreFromConfig("looted.found-by", true).replace("{player}", player.getName()));
+                lore.add(toolStats.configTools.getLoreFromConfig("looted.found-on", true).replace("{date}", toolStats.numberFormat.formatDate(new Date(timeCreated))));
+            }
+
+            finalMeta.setLore(lore);
+            finalItem.setItemMeta(finalMeta);
+            int slot = player.getInventory().getHeldItemSlot();
+            player.getInventory().setItem(slot, finalItem);
         }
 
         if (toolStats.configTools.checkConfig(original.getType(), "created-by")) {

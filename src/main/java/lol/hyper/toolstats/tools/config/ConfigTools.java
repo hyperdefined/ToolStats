@@ -171,6 +171,9 @@ public class ConfigTools {
             if (lore.contains("{arrows}")) {
                 lore = lore.replace("{arrows}", "");
             }
+            if (lore.contains("{time}")) {
+                lore = lore.replace("{time}", "");
+            }
         }
         return lore;
     }

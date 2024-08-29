@@ -98,6 +98,10 @@ public final class ToolStats extends JavaPlugin {
      */
     public final NamespacedKey arrowsShot = new NamespacedKey(this, "arrows-shot");
     /**
+     * Key for tracking flight time.
+     */
+    public final NamespacedKey flightTime = new NamespacedKey(this, "flightTime");
+    /**
      * Stores how an item was created.
      * 0 = crafted.
      * 1 = dropped.
@@ -134,6 +138,7 @@ public final class ToolStats extends JavaPlugin {
     public MorePaperLib morePaperLib;
     public HashMaker hashMaker;
     public CreativeEvent creativeEvent;
+    public PlayerMove playerMove;
     public ItemChecker itemChecker;
     public ShootBow shootBow;
     public ConfigTools configTools;
@@ -164,6 +169,7 @@ public final class ToolStats extends JavaPlugin {
         inventoryOpen = new InventoryOpen(this);
         playerJoin = new PlayerJoin(this);
         creativeEvent = new CreativeEvent(this);
+        playerMove = new PlayerMove(this);
         itemChecker = new ItemChecker();
         shootBow = new ShootBow(this);
         configTools = new ConfigTools(this);
@@ -183,6 +189,7 @@ public final class ToolStats extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(playerJoin, this);
         Bukkit.getServer().getPluginManager().registerEvents(creativeEvent, this);
         Bukkit.getServer().getPluginManager().registerEvents(shootBow, this);
+        Bukkit.getServer().getPluginManager().registerEvents(playerMove, this);
 
         this.getCommand("toolstats").setExecutor(commandToolStats);
 
