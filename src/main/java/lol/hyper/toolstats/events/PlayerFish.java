@@ -32,6 +32,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
 import java.util.List;
@@ -58,25 +59,8 @@ public class PlayerFish implements Listener {
         if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
-        // make sure the player is holding a fishing rod
-        // player can fish with their offhand
-        PlayerInventory inventory = player.getInventory();
-        boolean isMainHand = inventory.getItemInMainHand().getType() == Material.FISHING_ROD;
-        boolean isOffHand = inventory.getItemInOffHand().getType() == Material.FISHING_ROD;
-        ItemStack fishingRod = null;
-        if (isMainHand) {
-            fishingRod = inventory.getItemInMainHand();
-        }
-        if (isOffHand) {
-            fishingRod = inventory.getItemInOffHand();
-        }
 
-        // if the player is hold fishing rods in both hands
-        // default to main hand since that takes priority
-        if (isMainHand && isOffHand) {
-            fishingRod = inventory.getItemInMainHand();
-        }
-
+        ItemStack fishingRod = getItemStack(player);
         // player swapped items?
         if (fishingRod == null) {
             return;
@@ -97,6 +81,26 @@ public class PlayerFish implements Listener {
                 caughtItemEntity.setItemStack(newItem);
             }
         }
+    }
+
+    private static @Nullable ItemStack getItemStack(Player player) {
+        PlayerInventory inventory = player.getInventory();
+        boolean isMainHand = inventory.getItemInMainHand().getType() == Material.FISHING_ROD;
+        boolean isOffHand = inventory.getItemInOffHand().getType() == Material.FISHING_ROD;
+        ItemStack fishingRod = null;
+        if (isMainHand) {
+            fishingRod = inventory.getItemInMainHand();
+        }
+        if (isOffHand) {
+            fishingRod = inventory.getItemInOffHand();
+        }
+
+        // if the player is hold fishing rods in both hands
+        // default to main hand since that takes priority
+        if (isMainHand && isOffHand) {
+            fishingRod = inventory.getItemInMainHand();
+        }
+        return fishingRod;
     }
 
     /**
@@ -121,12 +125,17 @@ public class PlayerFish implements Listener {
             toolStats.logger.warning(fishingRod + " does not have valid fish-caught set! Resting to zero. This should NEVER happen.");
         }
 
-        fishCaught++;
-        container.set(toolStats.fishingRodCaught, PersistentDataType.INTEGER, fishCaught);
+        container.set(toolStats.fishingRodCaught, PersistentDataType.INTEGER, fishCaught + 1);
 
         if (toolStats.config.getBoolean("enabled.fish-caught")) {
-            String fishCaughtFormatted = toolStats.numberFormat.formatInt(fishCaught);
-            List<String> newLore = toolStats.itemLore.addItemLore(meta, "{fish}", fishCaughtFormatted, "fished.fish-caught");
+            String oldFishFormatted = toolStats.numberFormat.formatInt(fishCaught);
+            String newFishFormatted = toolStats.numberFormat.formatInt(fishCaught + 1);
+            String oldLine = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", oldFishFormatted);
+            String newLine = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", newFishFormatted);
+            if (oldLine == null || newLine == null) {
+                return;
+            }
+            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
             meta.setLore(newLore);
         }
         fishingRod.setItemMeta(meta);

@@ -104,13 +104,18 @@ public class BlocksMined implements Listener {
             toolStats.logger.warning(playerTool + " does not have valid generic-mined set! Resting to zero. This should NEVER happen.");
         }
 
-        blocksMined++;
-        container.set(toolStats.genericMined, PersistentDataType.INTEGER, blocksMined);
+        container.set(toolStats.genericMined, PersistentDataType.INTEGER, blocksMined + 1);
 
         // do we add the lore based on the config?
         if (toolStats.configTools.checkConfig(playerTool.getType(), "blocks-mined")) {
-            String blocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined);
-            List<String> newLore = toolStats.itemLore.addItemLore(meta, "{blocks}", blocksMinedFormatted, "blocks-mined");
+            String oldBlocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined);
+            String newBlocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined + 1);
+            String oldLine = toolStats.configTools.formatLore("blocks-mined", "{blocks}", oldBlocksMinedFormatted);
+            String newLine = toolStats.configTools.formatLore("blocks-mined", "{blocks}", newBlocksMinedFormatted);
+            if (oldLine == null || newLine == null) {
+                return;
+            }
+            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
             meta.setLore(newLore);
         }
         playerTool.setItemMeta(meta);
@@ -140,13 +145,18 @@ public class BlocksMined implements Listener {
             toolStats.logger.warning(playerTool + " does not have valid crops-mined set! Resting to zero. This should NEVER happen.");
         }
 
-        cropsMined++;
-        container.set(toolStats.cropsHarvested, PersistentDataType.INTEGER, cropsMined);
+        container.set(toolStats.cropsHarvested, PersistentDataType.INTEGER, cropsMined + 1);
 
         // do we add the lore based on the config?
         if (toolStats.configTools.checkConfig(playerTool.getType(), "blocks-mined")) {
-            String cropsMinedFormatted = toolStats.numberFormat.formatInt(cropsMined);
-            List<String> newLore = toolStats.itemLore.addItemLore(meta, "{crops}", cropsMinedFormatted, "crops-harvested");
+            String oldCropsMinedFormatted = toolStats.numberFormat.formatInt(cropsMined);
+            String newCropsMinedFormatted = toolStats.numberFormat.formatInt(cropsMined + 1);
+            String oldLine = toolStats.configTools.formatLore("crops-harvested", "{crops}", oldCropsMinedFormatted);
+            String newLine = toolStats.configTools.formatLore("crops-harvested", "{crops}", newCropsMinedFormatted);
+            if (oldLine == null || newLine == null) {
+                return;
+            }
+            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
             meta.setLore(newLore);
         }
         playerTool.setItemMeta(meta);

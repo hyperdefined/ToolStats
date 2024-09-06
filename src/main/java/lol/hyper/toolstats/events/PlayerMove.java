@@ -86,13 +86,19 @@ public class PlayerMove implements Listener {
         }
 
         // get the duration of the flight
-        flightTime = (System.currentTimeMillis() - startTime) + flightTime;
-        container.set(toolStats.flightTime, PersistentDataType.LONG, flightTime);
+        long duration = (System.currentTimeMillis() - startTime) + flightTime;
+        container.set(toolStats.flightTime, PersistentDataType.LONG, flightTime + duration);
 
         // do we add the lore based on the config?
         if (toolStats.config.getBoolean("enabled.flight-time")) {
-            String flightTimeFormatted = toolStats.numberFormat.formatDouble((double) flightTime / 1000);
-            List<String> newLore = toolStats.itemLore.addItemLore(meta, "{time}", flightTimeFormatted, "flight-time");
+            String oldFlightFormatted = toolStats.numberFormat.formatDouble((double) flightTime / 1000);
+            String newFlightFormatted = toolStats.numberFormat.formatDouble((double) (flightTime + duration) / 1000);
+            String oldLine = toolStats.configTools.formatLore("flight-time", "{time}", oldFlightFormatted);
+            String newLine = toolStats.configTools.formatLore("flight-time", "{time}", newFlightFormatted);
+            if (oldLine == null || newLine == null) {
+                return;
+            }
+            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
             meta.setLore(newLore);
         }
         chest.setItemMeta(meta);

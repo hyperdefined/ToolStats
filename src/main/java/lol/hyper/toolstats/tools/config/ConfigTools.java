@@ -18,17 +18,15 @@
 package lol.hyper.toolstats.tools.config;
 
 import lol.hyper.toolstats.ToolStats;
+import lol.hyper.toolstats.tools.ItemLore;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ConfigTools {
 
     private final ToolStats toolStats;
-    private final Pattern COLOR_CODES = Pattern.compile("&([0-9a-fk-or])");
-    private final Pattern HEX_PATTERN = Pattern.compile("&#([A-Fa-f0-9]{6})");
 
     public ConfigTools(ToolStats toolStats) {
         this.toolStats = toolStats;
@@ -109,72 +107,46 @@ public class ConfigTools {
     }
 
     /**
-     * Gets the lore message from the config.
+     * Format a string to be ready for lore usage.
      *
-     * @param configName The config name, "messages." is already in front.
-     * @param raw        If you want the raw message. False if you want no placeholders.
-     * @return The lore message.
+     * @param configName  The message to use.
+     * @param placeHolder The placeholder text in the message.
+     * @param value       The value to set the placeholder.
+     * @return Formatted string, null if the configName doesn't exist.
      */
-    public String getLoreFromConfig(String configName, boolean raw) {
+    public String formatLore(String configName, String placeHolder, Object value) {
         String lore = toolStats.config.getString("messages." + configName);
         if (lore == null) {
             return null;
         }
-        if (raw) {
-            Matcher hexMatcher = HEX_PATTERN.matcher(lore);
-            while (hexMatcher.find()) {
-                String hexCode = hexMatcher.group(1);
-                lore = lore.replaceAll(hexMatcher.group(), net.md_5.bungee.api.ChatColor.of("#" + hexCode).toString());
-            }
 
-            Matcher colorMatcher = COLOR_CODES.matcher(lore);
-            while (colorMatcher.find()) {
-                String colorCode = colorMatcher.group(1);
-                lore = lore.replaceAll("&" + colorCode, ChatColor.getByChar(colorCode).toString());
-            }
+        // set the placeholder to the value
+        lore = lore.replace(placeHolder, String.valueOf(value));
 
-            return ChatColor.translateAlternateColorCodes('§', lore);
-        } else {
-            // remove all color codes
-            // this is used to compare the current lore on the item
-            // Example: [§7Arrows shot: §8] is on the lore
-            // this will return [Arrows shot: ] so we can match it
-            lore = COLOR_CODES.matcher(lore).replaceAll("");
-            lore = HEX_PATTERN.matcher(lore).replaceAll("");
-            if (lore.contains("{player}")) {
-                lore = lore.replace("{player}", "");
-            }
-            if (lore.contains("{date}")) {
-                lore = lore.replace("{date}", "");
-            }
-            if (lore.contains("{name}")) {
-                lore = lore.replace("{name}", "");
-            }
-            if (lore.contains("{kills}")) {
-                lore = lore.replace("{kills}", "");
-            }
-            if (lore.contains("{blocks}")) {
-                lore = lore.replace("{blocks}", "");
-            }
-            if (lore.contains("{sheep}")) {
-                lore = lore.replace("{sheep}", "");
-            }
-            if (lore.contains("{damage}")) {
-                lore = lore.replace("{damage}", "");
-            }
-            if (lore.contains("{fish}")) {
-                lore = lore.replace("{fish}", "");
-            }
-            if (lore.contains("{crops}")) {
-                lore = lore.replace("{crops}", "");
-            }
-            if (lore.contains("{arrows}")) {
-                lore = lore.replace("{arrows}", "");
-            }
-            if (lore.contains("{time}")) {
-                lore = lore.replace("{time}", "");
-            }
+        Matcher hexMatcher = ItemLore.HEX_PATTERN.matcher(lore);
+        while (hexMatcher.find()) {
+            String hexCode = hexMatcher.group(1);
+            lore = lore.replaceAll(hexMatcher.group(), net.md_5.bungee.api.ChatColor.of("#" + hexCode).toString());
         }
-        return lore;
+
+        Matcher colorMatcher = ItemLore.COLOR_CODES.matcher(lore);
+        while (colorMatcher.find()) {
+            String colorCode = colorMatcher.group(1);
+            lore = lore.replaceAll("&" + colorCode, ChatColor.getByChar(colorCode).toString());
+        }
+
+        return ChatColor.translateAlternateColorCodes('§', lore);
+    }
+
+    /**
+     * Remove all color codes from a message.
+     *
+     * @param message The message.
+     * @return The message without color codes.
+     */
+    public String removeColor(String message) {
+        message = ItemLore.COLOR_CODES.matcher(message).replaceAll("");
+        message = ItemLore.HEX_PATTERN.matcher(message).replaceAll("");
+        return message;
     }
 }

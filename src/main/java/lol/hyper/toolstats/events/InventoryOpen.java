@@ -20,7 +20,6 @@ package lol.hyper.toolstats.events;
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.UUIDDataType;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -81,14 +80,6 @@ public class InventoryOpen implements Listener {
                     String hash = toolStats.hashMaker.makeHash(itemStack.getType(), owner, timestamp);
                     toolStats.logger.info(hash);
                     container.set(toolStats.hash, PersistentDataType.STRING, hash);
-                }
-            }
-
-            // add origin tag
-            if (!container.has(toolStats.originType, PersistentDataType.INTEGER)) {
-                itemMeta = toolStats.itemLore.getOrigin(itemMeta, itemStack.getType() == Material.ELYTRA);
-                if (itemMeta == null) {
-                    continue;
                 }
             }
             ItemMeta clone = itemMeta.clone();

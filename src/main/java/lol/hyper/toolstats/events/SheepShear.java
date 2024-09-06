@@ -32,6 +32,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -57,25 +58,7 @@ public class SheepShear implements Listener {
             return;
         }
 
-        // make sure the player is holding shears
-        // player can shear with their offhand
-        PlayerInventory inventory = player.getInventory();
-        boolean isMainHand = inventory.getItemInMainHand().getType() == Material.SHEARS;
-        boolean isOffHand = inventory.getItemInOffHand().getType() == Material.SHEARS;
-        ItemStack shears = null;
-        if (isMainHand) {
-            shears = inventory.getItemInMainHand();
-        }
-        if (isOffHand) {
-            shears = inventory.getItemInOffHand();
-        }
-
-        // if the player is hold fishing rods in both hands
-        // default to main hand since that takes priority
-        if (isMainHand && isOffHand) {
-            shears = inventory.getItemInMainHand();
-        }
-
+        ItemStack shears = getShears(player);
         // player swapped items?
         if (shears == null) {
             return;
@@ -90,6 +73,26 @@ public class SheepShear implements Listener {
         // update the stats
         ItemStack finalShears = shears;
         addLore(finalShears);
+    }
+
+    private static @Nullable ItemStack getShears(Player player) {
+        PlayerInventory inventory = player.getInventory();
+        boolean isMainHand = inventory.getItemInMainHand().getType() == Material.SHEARS;
+        boolean isOffHand = inventory.getItemInOffHand().getType() == Material.SHEARS;
+        ItemStack shears = null;
+        if (isMainHand) {
+            shears = inventory.getItemInMainHand();
+        }
+        if (isOffHand) {
+            shears = inventory.getItemInOffHand();
+        }
+
+        // if the player is hold shears in both hands
+        // default to main hand since that takes priority
+        if (isMainHand && isOffHand) {
+            shears = inventory.getItemInMainHand();
+        }
+        return shears;
     }
 
     /**
@@ -114,12 +117,17 @@ public class SheepShear implements Listener {
             toolStats.logger.warning(newShears + " does not have valid sheared set! Resting to zero. This should NEVER happen.");
         }
 
-        sheepSheared++;
-        container.set(toolStats.shearsSheared, PersistentDataType.INTEGER, sheepSheared);
+        container.set(toolStats.shearsSheared, PersistentDataType.INTEGER, sheepSheared + 1);
 
         if (toolStats.config.getBoolean("enabled.sheep-sheared")) {
-            String sheepShearedFormatted = toolStats.numberFormat.formatInt(sheepSheared);
-            List<String> newLore = toolStats.itemLore.addItemLore(meta, "{sheep}", sheepShearedFormatted, "sheep-sheared");
+            String oldSheepFormatted = toolStats.numberFormat.formatInt(sheepSheared);
+            String newSheepFormatted = toolStats.numberFormat.formatInt(sheepSheared + 1);
+            String oldLine = toolStats.configTools.formatLore("sheep-sheared", "{sheep}", oldSheepFormatted);
+            String newLine = toolStats.configTools.formatLore("sheep-sheared", "{sheep}", newSheepFormatted);
+            if (oldLine == null || newLine == null) {
+                return;
+            }
+            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
             meta.setLore(newLore);
         }
         newShears.setItemMeta(meta);

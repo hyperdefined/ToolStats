@@ -241,13 +241,18 @@ public class EntityDamage implements Listener {
             toolStats.logger.warning(itemStack + " does not have valid player-kills set! Resting to zero. This should NEVER happen.");
         }
 
-        playerKills++;
-        container.set(toolStats.swordPlayerKills, PersistentDataType.INTEGER, playerKills);
+        container.set(toolStats.swordPlayerKills, PersistentDataType.INTEGER, playerKills + 1);
 
         // do we add the lore based on the config?
         if (toolStats.configTools.checkConfig(itemStack.getType(), "player-kills")) {
-            String playerKillsFormatted = toolStats.numberFormat.formatInt(playerKills);
-            List<String> newLore = toolStats.itemLore.addItemLore(meta, "{kills}", playerKillsFormatted, "kills.player");
+            String oldPlayerKillsFormatted = toolStats.numberFormat.formatInt(playerKills);
+            String newPlayerKillsFormatted = toolStats.numberFormat.formatInt(playerKills + 1);
+            String oldLine = toolStats.configTools.formatLore("kills.player", "{kills}", oldPlayerKillsFormatted);
+            String newLine = toolStats.configTools.formatLore("kills.player", "{kills}", newPlayerKillsFormatted);
+            if (oldLine == null || newLine == null) {
+                return;
+            }
+            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
             meta.setLore(newLore);
         }
         itemStack.setItemMeta(meta);
@@ -275,13 +280,18 @@ public class EntityDamage implements Listener {
             toolStats.logger.warning(itemStack + " does not have valid mob-kills set! Resting to zero. This should NEVER happen.");
         }
 
-        mobKills++;
-        container.set(toolStats.swordMobKills, PersistentDataType.INTEGER, mobKills);
+        container.set(toolStats.swordMobKills, PersistentDataType.INTEGER, mobKills + 1);
 
         // do we add the lore based on the config?
         if (toolStats.configTools.checkConfig(itemStack.getType(), "mob-kills")) {
-            String mobKillsFormatted = toolStats.numberFormat.formatInt(mobKills);
-            List<String> newLore = toolStats.itemLore.addItemLore(meta, "{kills}", mobKillsFormatted, "kills.mob");
+            String oldMobKillsFormatted = toolStats.numberFormat.formatInt(mobKills);
+            String newMobKillsFormatted = toolStats.numberFormat.formatInt(mobKills + 1);
+            String oldLine = toolStats.configTools.formatLore("kills.mob", "{kills}", oldMobKillsFormatted);
+            String newLine = toolStats.configTools.formatLore("kills.mob", "{kills}", newMobKillsFormatted);
+            if (oldLine == null || newLine == null) {
+                return;
+            }
+            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
             meta.setLore(newLore);
         }
         itemStack.setItemMeta(meta);
@@ -315,12 +325,17 @@ public class EntityDamage implements Listener {
         }
 
         damageTaken = damageTaken + damage;
-        container.set(toolStats.armorDamage, PersistentDataType.DOUBLE, damageTaken);
-        container.set(toolStats.armorDamageInt, PersistentDataType.INTEGER, damageTaken.intValue());
+        container.set(toolStats.armorDamage, PersistentDataType.DOUBLE, damageTaken + damage);
 
         if (toolStats.config.getBoolean("enabled.armor-damage")) {
-            String damageTakenFormatted = toolStats.numberFormat.formatDouble(damageTaken);
-            List<String> newLore = toolStats.itemLore.addItemLore(meta, "{damage}", damageTakenFormatted, "damage-taken");
+            String oldDamageFormatted = toolStats.numberFormat.formatDouble(damageTaken);
+            String newDamageFormatted = toolStats.numberFormat.formatDouble(damageTaken + damage);
+            String oldLine = toolStats.configTools.formatLore("damage-taken", "{damage}", oldDamageFormatted);
+            String newLine = toolStats.configTools.formatLore("damage-taken", "{damage}", newDamageFormatted);
+            if (oldLine == null || newLine == null) {
+                return;
+            }
+            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
             meta.setLore(newLore);
         }
         itemStack.setItemMeta(meta);
@@ -349,13 +364,18 @@ public class EntityDamage implements Listener {
             toolStats.logger.warning(newTrident + " does not have valid mob-kills set! Resting to zero. This should NEVER happen.");
         }
 
-        mobKills++;
-        container.set(toolStats.swordMobKills, PersistentDataType.INTEGER, mobKills);
+        container.set(toolStats.swordMobKills, PersistentDataType.INTEGER, mobKills + 1);
 
         // do we add the lore based on the config?
         if (toolStats.configTools.checkConfig(newTrident.getType(), "mob-kills")) {
-            String mobKillsFormatted = toolStats.numberFormat.formatInt(mobKills);
-            List<String> newLore = toolStats.itemLore.addItemLore(meta, "{kills}", mobKillsFormatted, "kills.mob");
+            String oldMobKillsFormatted = toolStats.numberFormat.formatDouble(mobKills);
+            String newMobKillsFormatted = toolStats.numberFormat.formatDouble(mobKills + 1);
+            String oldLine = toolStats.configTools.formatLore("kills.mob", "{kills}", oldMobKillsFormatted);
+            String newLine = toolStats.configTools.formatLore("kills.mob", "{kills}", newMobKillsFormatted);
+            if (oldLine == null || newLine == null) {
+                return null;
+            }
+            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
             meta.setLore(newLore);
         }
         newTrident.setItemMeta(meta);
@@ -385,13 +405,18 @@ public class EntityDamage implements Listener {
             toolStats.logger.warning(newTrident + " does not have valid player-kills set! Resting to zero. This should NEVER happen.");
         }
 
-        playerKills++;
-        container.set(toolStats.swordPlayerKills, PersistentDataType.INTEGER, playerKills);
+        container.set(toolStats.swordPlayerKills, PersistentDataType.INTEGER, playerKills + 1);
 
         // do we add the lore based on the config?
         if (toolStats.configTools.checkConfig(newTrident.getType(), "player-kills")) {
-            String playerKillsFormatted = toolStats.numberFormat.formatInt(playerKills);
-            List<String> newLore = toolStats.itemLore.addItemLore(meta, "{kills}", playerKillsFormatted, "kills.player");
+            String oldPlayerKillsFormatted = toolStats.numberFormat.formatDouble(playerKills);
+            String newPlayerKillsFormatted = toolStats.numberFormat.formatDouble(playerKills + 1);
+            String oldLine = toolStats.configTools.formatLore("kills.player", "{kills}", oldPlayerKillsFormatted);
+            String newLine = toolStats.configTools.formatLore("kills.player", "{kills}", newPlayerKillsFormatted);
+            if (oldLine == null || newLine == null) {
+                return null;
+            }
+            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
             meta.setLore(newLore);
         }
         newTrident.setItemMeta(meta);

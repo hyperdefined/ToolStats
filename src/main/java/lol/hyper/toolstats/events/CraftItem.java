@@ -64,7 +64,7 @@ public class CraftItem implements Listener {
         if (event.isShiftClick()) {
             String configMessage = toolStats.config.getString("messages.shift-click-warning.crafting");
             if (configMessage != null) {
-                if (configMessage.length() != 0) {
+                if (!configMessage.isEmpty()) {
                     event.getWhoClicked().sendMessage(ChatColor.translateAlternateColorCodes('&', configMessage));
                 }
             }
@@ -122,21 +122,20 @@ public class CraftItem implements Listener {
         }
         // do we add the lore based on the config?
         if (toolStats.configTools.checkConfig(itemStack.getType(), "created-date")) {
-            String createdOnRaw = toolStats.configTools.getLoreFromConfig("created.created-on", true);
-            if (createdOnRaw == null) {
-                toolStats.logger.warning("There is no lore message for messages.created.created-on!");
+            String date = toolStats.numberFormat.formatDate(finalDate);
+            String newLine = toolStats.configTools.formatLore("created.created-on", "{date}", date);
+            if (newLine == null) {
                 return null;
             }
-            lore.add(createdOnRaw.replace("{date}", toolStats.numberFormat.formatDate(finalDate)));
+            lore.add(newLine);
             meta.setLore(lore);
         }
         if (toolStats.configTools.checkConfig(itemStack.getType(), "created-by")) {
-            String createdByRaw = toolStats.configTools.getLoreFromConfig("created.created-by", true);
-            if (createdByRaw == null) {
-                toolStats.logger.warning("There is no lore message for messages.created.created-by!");
+            String newLine = toolStats.configTools.formatLore("created.created-by", "{player}", owner.getName());
+            if (newLine == null) {
                 return null;
             }
-            lore.add(createdByRaw.replace("{player}", owner.getName()));
+            lore.add(newLine);
             meta.setLore(lore);
         }
         newItem.setItemMeta(meta);

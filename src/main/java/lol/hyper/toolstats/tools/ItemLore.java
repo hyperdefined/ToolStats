@@ -18,66 +18,68 @@
 package lol.hyper.toolstats.tools;
 
 import lol.hyper.toolstats.ToolStats;
-import org.bukkit.ChatColor;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class ItemLore {
 
     private final ToolStats toolStats;
+    public static final Pattern COLOR_CODES = Pattern.compile("[&§]([0-9a-fk-or])");
+    public static final Pattern HEX_PATTERN = Pattern.compile("[&§]#([A-Fa-f0-9]{6})");
 
     public ItemLore(ToolStats toolStats) {
         this.toolStats = toolStats;
     }
 
     /**
-     * Adds/updates lore for an item.
+     * Updates existing lore on an item.
      *
-     * @param placeholder      The placeholder from the config. ex: {kills}
-     * @param placeholderValue The value to replace the placeholder.
-     * @param configLorePath   The path to the config message.
+     * @param itemMeta The item's meta.
+     * @param oldLine  The old line to replace.
+     * @param newLine  The new line to replace oldLine.
      * @return The item's new lore.
      */
-    public List<String> addItemLore(ItemMeta itemMeta, String placeholder, String placeholderValue, String configLorePath) {
-        String configLore = toolStats.configTools.getLoreFromConfig(configLorePath, false);
-        String configLoreRaw = toolStats.configTools.getLoreFromConfig(configLorePath, true);
-
-        if (configLore == null || configLoreRaw == null) {
-            toolStats.logger.warning("There is no lore message for messages." + configLorePath + "!");
-            toolStats.logger.warning("Unable to update lore for item.");
-            return itemMeta.getLore();
-        }
-
-        List<String> newLore;
-        // replace the placeholder with the value
-        // ex: {kills} -> a number
-        String newLine = configLoreRaw.replace(placeholder, placeholderValue);
-
+    public List<String> updateItemLore(ItemMeta itemMeta, String oldLine, String newLine) {
+        List<String> itemLore;
+        oldLine = toolStats.configTools.removeColor(oldLine);
         if (itemMeta.hasLore()) {
-            newLore = itemMeta.getLore();
+            itemLore = itemMeta.getLore();
             // keep track of line index
             // this doesn't mess the lore of existing items
-            for (int x = 0; x < newLore.size(); x++) {
+            for (int x = 0; x < itemLore.size(); x++) {
                 // check to see if the line matches the config value
                 // this means we update this line only!
-                String line = ChatColor.stripColor(newLore.get(x));
-                if (line.contains(configLore)) {
-                    newLore.set(x, newLine);
-                    return newLore;
+                String line = toolStats.configTools.removeColor(itemLore.get(x));
+                if (line.equals(oldLine)) {
+                    itemLore.set(x, newLine);
+                    return itemLore;
                 }
             }
             // if the item has lore, but we didn't find the line
-            newLore.add(newLine);
+            itemLore.add(newLine);
         } else {
             // if the item has no lore, create a new list and add the line
-            newLore = new ArrayList<>();
-            newLore.add(newLine);
+            itemLore = new ArrayList<>();
+            itemLore.add(newLine);
         }
-        return newLore;
+        return itemLore;
+    }
+
+    public List<String> addItemLore(ItemMeta itemMeta, String newLine) {
+        List<String> itemLore;
+        if (itemMeta.hasLore()) {
+            itemLore = itemMeta.getLore();
+            itemLore.add(newLine);
+        } else {
+            itemLore = new ArrayList<>();
+            itemLore.add(newLine);
+        }
+        return itemLore;
     }
 
     /**
@@ -107,8 +109,8 @@ public class ItemLore {
         // set the lore based on the origin
         switch (origin) {
             case 2: {
-                dateCreatedLore = toolStats.configTools.getLoreFromConfig("looted.looted-on", true);
-                itemOwnerLore = toolStats.configTools.getLoreFromConfig("looted.looted-by", true);
+                dateCreatedLore = toolStats.configTools.formatLore("looted.looted-on", "{date}", formattedDate);
+                itemOwnerLore = toolStats.configTools.formatLore("looted.looted-by", "{player}", playerName);
 
                 if (dateCreatedLore == null) {
                     toolStats.logger.warning("messages.looted.looted-on is not set in your config!");
@@ -123,8 +125,8 @@ public class ItemLore {
                 break;
             }
             case 3: {
-                dateCreatedLore = toolStats.configTools.getLoreFromConfig("traded.traded-on", true);
-                itemOwnerLore = toolStats.configTools.getLoreFromConfig("traded.traded-by", true);
+                dateCreatedLore = toolStats.configTools.formatLore("traded.traded-on", "{date}", formattedDate);
+                itemOwnerLore = toolStats.configTools.formatLore("traded.traded-by", "{player}", playerName);
 
                 if (dateCreatedLore == null) {
                     toolStats.logger.warning("messages.traded.traded-on is not set in your config!");
@@ -139,8 +141,8 @@ public class ItemLore {
                 break;
             }
             case 4: {
-                dateCreatedLore = toolStats.configTools.getLoreFromConfig("looted.found-on", true);
-                itemOwnerLore = toolStats.configTools.getLoreFromConfig("looted.found-by", true);
+                dateCreatedLore = toolStats.configTools.formatLore("looted.found-on", "{date}", formattedDate);
+                itemOwnerLore = toolStats.configTools.formatLore("looted.found-by", "{player}", playerName);
 
                 if (dateCreatedLore == null) {
                     toolStats.logger.warning("messages.looted.found-on is not set in your config!");
@@ -155,8 +157,8 @@ public class ItemLore {
                 break;
             }
             case 5: {
-                dateCreatedLore = toolStats.configTools.getLoreFromConfig("fished.caught-on", true);
-                itemOwnerLore = toolStats.configTools.getLoreFromConfig("fished.caught-by", true);
+                dateCreatedLore = toolStats.configTools.formatLore("fished.caught-on", "{date}", formattedDate);
+                itemOwnerLore = toolStats.configTools.formatLore("fished.caught-by", "{player}", playerName);
 
                 if (dateCreatedLore == null) {
                     toolStats.logger.warning("messages.fished.caught-on is not set in your config!");
@@ -171,8 +173,8 @@ public class ItemLore {
                 break;
             }
             case 6: {
-                dateCreatedLore = toolStats.configTools.getLoreFromConfig("spawned-in.spawned-on", true);
-                itemOwnerLore = toolStats.configTools.getLoreFromConfig("spawned-in.spawned-by", true);
+                dateCreatedLore = toolStats.configTools.formatLore("spawned-in.spawned-on", "{date}", formattedDate);
+                itemOwnerLore = toolStats.configTools.formatLore("spawned-in.spawned-by", "{player}", playerName);
 
                 if (dateCreatedLore == null) {
                     toolStats.logger.warning("messages.spawned-in.spawned-on is not set in your config!");
@@ -203,64 +205,5 @@ public class ItemLore {
         newLore.add(dateCreatedLore.replace("{date}", formattedDate));
         newLore.add(itemOwnerLore.replace("{player}", playerName));
         return newLore;
-    }
-
-    /**
-     * Determine an item's origin based on lore.
-     *
-     * @param itemMeta The item's meta.
-     * @param elytra   If they item is an elytra.
-     * @return The new item meta with the new origin tag. Returns null if origin cannot be determined.
-     */
-    public ItemMeta getOrigin(ItemMeta itemMeta, boolean elytra) {
-        List<String> lore;
-        if (!itemMeta.hasLore()) {
-            return null;
-        }
-        lore = itemMeta.getLore();
-        Integer origin = null;
-
-        String createdBy = toolStats.configTools.getLoreFromConfig("created.created-by", false);
-        String createdOn = toolStats.configTools.getLoreFromConfig("created.created-on", false);
-        String caughtBy = toolStats.configTools.getLoreFromConfig("fished.caught-by", false);
-        String lootedBy = toolStats.configTools.getLoreFromConfig("looted.looted-by", false);
-        String foundBy = toolStats.configTools.getLoreFromConfig("looted.found-by", false);
-        String tradedBy = toolStats.configTools.getLoreFromConfig("traded.traded-by", false);
-
-        for (String line : lore) {
-            // this is the worst code I have ever written
-            if (createdBy != null && line.contains(createdBy)) {
-                origin = 0;
-            }
-            if (createdOn != null && line.contains(createdOn)) {
-                origin = 0;
-            }
-            if (caughtBy != null && line.contains(caughtBy)) {
-                origin = 5;
-            }
-            if (lootedBy != null && line.contains(lootedBy)) {
-                origin = 2;
-            }
-            // because the config changed, "found-by" was being used for ALL looted items
-            // this includes elytras, so we have to check for this mistake
-            if (foundBy != null && line.contains(foundBy)) {
-                if (elytra) {
-                    origin = 4;
-                } else {
-                    origin = 5;
-                }
-            }
-            if (tradedBy != null && line.contains(tradedBy)) {
-                origin = 3;
-            }
-        }
-
-        if (origin == null) {
-            return null;
-        }
-
-        PersistentDataContainer container = itemMeta.getPersistentDataContainer();
-        container.set(toolStats.originType, PersistentDataType.INTEGER, origin);
-        return itemMeta;
     }
 }

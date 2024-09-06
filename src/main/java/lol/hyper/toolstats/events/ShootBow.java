@@ -31,6 +31,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -56,6 +57,17 @@ public class ShootBow implements Listener {
         }
 
         PlayerInventory inventory = player.getInventory();
+        ItemStack heldBow = getBow(inventory);
+
+        // player swapped
+        if (heldBow == null) {
+            return;
+        }
+
+        updateArrowsShot(heldBow);
+    }
+
+    private static @Nullable ItemStack getBow(PlayerInventory inventory) {
         boolean isMainHand = inventory.getItemInMainHand().getType() == Material.BOW || inventory.getItemInMainHand().getType() == Material.CROSSBOW;
         boolean isOffHand = inventory.getItemInOffHand().getType() == Material.BOW || inventory.getItemInMainHand().getType() == Material.CROSSBOW;
         ItemStack heldBow = null;
@@ -71,13 +83,7 @@ public class ShootBow implements Listener {
         if (isMainHand && isOffHand) {
             heldBow = inventory.getItemInMainHand();
         }
-
-        // player swapped
-        if (heldBow == null) {
-            return;
-        }
-
-        updateArrowsShot(heldBow);
+        return heldBow;
     }
 
     private void updateArrowsShot(ItemStack bow) {
@@ -99,13 +105,18 @@ public class ShootBow implements Listener {
             toolStats.logger.warning(arrowsShot + " does not have valid arrows-shot set! Resting to zero. This should NEVER happen.");
         }
 
-        arrowsShot++;
-        container.set(toolStats.arrowsShot, PersistentDataType.INTEGER, arrowsShot);
+        container.set(toolStats.arrowsShot, PersistentDataType.INTEGER, arrowsShot + 1);
 
         // do we add the lore based on the config?
         if (toolStats.config.getBoolean("enabled.arrows-shot")) {
-            String arrowsShotFormatted = toolStats.numberFormat.formatInt(arrowsShot);
-            List<String> newLore = toolStats.itemLore.addItemLore(meta, "{arrows}", arrowsShotFormatted, "arrows-shot");
+            String oldArrowsFormatted = toolStats.numberFormat.formatInt(arrowsShot);
+            String newArrowsFormatted = toolStats.numberFormat.formatInt(arrowsShot + 1);
+            String oldLine = toolStats.configTools.formatLore("arrows-shot", "{arrows}", oldArrowsFormatted);
+            String newLine = toolStats.configTools.formatLore("arrows-shot", "{arrows}", newArrowsFormatted);
+            if (oldLine == null || newLine == null) {
+                return;
+            }
+            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
             meta.setLore(newLore);
         }
         bow.setItemMeta(meta);
