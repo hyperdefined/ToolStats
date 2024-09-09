@@ -324,7 +324,6 @@ public class EntityDamage implements Listener {
             toolStats.logger.warning(itemStack + " does not have valid damage-taken set! Resting to zero. This should NEVER happen.");
         }
 
-        damageTaken = damageTaken + damage;
         container.set(toolStats.armorDamage, PersistentDataType.DOUBLE, damageTaken + damage);
 
         if (toolStats.config.getBoolean("enabled.armor-damage")) {
