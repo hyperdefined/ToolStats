@@ -297,7 +297,7 @@ public class CommandToolStats implements TabExecutor {
             if (container.has(toolStats.armorDamage, PersistentDataType.DOUBLE)) {
                 Double damage = container.get(toolStats.armorDamage, PersistentDataType.DOUBLE);
                 if (damage != null) {
-                    toolStats.configTools.formatLore("damage-taken", "{damage}", toolStats.numberFormat.formatDouble(damage));
+                    lore.add(toolStats.configTools.formatLore("damage-taken", "{damage}", toolStats.numberFormat.formatDouble(damage)));
                 }
             }
         }
@@ -305,7 +305,7 @@ public class CommandToolStats implements TabExecutor {
             if (container.has(toolStats.arrowsShot, PersistentDataType.INTEGER)) {
                 Integer arrows = container.get(toolStats.arrowsShot, PersistentDataType.INTEGER);
                 if (arrows != null) {
-                    toolStats.configTools.formatLore("arrows-shot", "{arrows}", toolStats.numberFormat.formatInt(arrows));
+                    lore.add(toolStats.configTools.formatLore("arrows-shot", "{arrows}", toolStats.numberFormat.formatInt(arrows)));
                 }
             }
         }
