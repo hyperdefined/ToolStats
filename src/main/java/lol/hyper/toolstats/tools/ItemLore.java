@@ -24,13 +24,10 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class ItemLore {
 
     private final ToolStats toolStats;
-    public static final Pattern COLOR_CODES = Pattern.compile("[&§]([0-9a-fk-or])");
-    public static final Pattern HEX_PATTERN = Pattern.compile("[&§]#([A-Fa-f0-9]{6})");
 
     public ItemLore(ToolStats toolStats) {
         this.toolStats = toolStats;

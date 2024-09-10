@@ -18,15 +18,18 @@
 package lol.hyper.toolstats.tools.config;
 
 import lol.hyper.toolstats.ToolStats;
-import lol.hyper.toolstats.tools.ItemLore;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ConfigTools {
 
     private final ToolStats toolStats;
+    public static final Pattern COLOR_CODES = Pattern.compile("[&§]([0-9a-fk-or])");
+    public static final Pattern CONFIG_HEX_PATTERN = Pattern.compile("[&§]#([A-Fa-f0-9]{6})");
+    public static final Pattern MINECRAFT_HEX_PATTERN = Pattern.compile("§x(?:§[a-fA-F0-9]){6}|§[a-fA-F0-9]");
 
     public ConfigTools(ToolStats toolStats) {
         this.toolStats = toolStats;
@@ -123,13 +126,13 @@ public class ConfigTools {
         // set the placeholder to the value
         lore = lore.replace(placeHolder, String.valueOf(value));
 
-        Matcher hexMatcher = ItemLore.HEX_PATTERN.matcher(lore);
+        Matcher hexMatcher = CONFIG_HEX_PATTERN.matcher(lore);
         while (hexMatcher.find()) {
             String hexCode = hexMatcher.group(1);
             lore = lore.replaceAll(hexMatcher.group(), net.md_5.bungee.api.ChatColor.of("#" + hexCode).toString());
         }
 
-        Matcher colorMatcher = ItemLore.COLOR_CODES.matcher(lore);
+        Matcher colorMatcher = COLOR_CODES.matcher(lore);
         while (colorMatcher.find()) {
             String colorCode = colorMatcher.group(1);
             lore = lore.replaceAll("&" + colorCode, ChatColor.getByChar(colorCode).toString());
@@ -145,8 +148,9 @@ public class ConfigTools {
      * @return The message without color codes.
      */
     public String removeColor(String message) {
-        message = ItemLore.COLOR_CODES.matcher(message).replaceAll("");
-        message = ItemLore.HEX_PATTERN.matcher(message).replaceAll("");
+        message = MINECRAFT_HEX_PATTERN.matcher(message).replaceAll("");
+        message = COLOR_CODES.matcher(message).replaceAll("");
+        message = CONFIG_HEX_PATTERN.matcher(message).replaceAll("");
         return message;
     }
 }
