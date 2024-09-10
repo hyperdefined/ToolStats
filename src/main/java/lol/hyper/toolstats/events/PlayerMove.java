@@ -86,13 +86,14 @@ public class PlayerMove implements Listener {
         }
 
         // get the duration of the flight
-        long duration = (System.currentTimeMillis() - startTime) + flightTime;
+        long duration = (System.currentTimeMillis() - startTime);
+        double newDuration = flightTime + duration;
         container.set(toolStats.flightTime, PersistentDataType.LONG, flightTime + duration);
 
         // do we add the lore based on the config?
         if (toolStats.config.getBoolean("enabled.flight-time")) {
             String oldFlightFormatted = toolStats.numberFormat.formatDouble((double) flightTime / 1000);
-            String newFlightFormatted = toolStats.numberFormat.formatDouble((double) (flightTime + duration) / 1000);
+            String newFlightFormatted = toolStats.numberFormat.formatDouble(newDuration / 1000);
             String oldLine = toolStats.configTools.formatLore("flight-time", "{time}", oldFlightFormatted);
             String newLine = toolStats.configTools.formatLore("flight-time", "{time}", newFlightFormatted);
             if (oldLine == null || newLine == null) {
