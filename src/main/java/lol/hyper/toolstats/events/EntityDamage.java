@@ -367,8 +367,8 @@ public class EntityDamage implements Listener {
 
         // do we add the lore based on the config?
         if (toolStats.configTools.checkConfig(newTrident.getType(), "mob-kills")) {
-            String oldMobKillsFormatted = toolStats.numberFormat.formatDouble(mobKills);
-            String newMobKillsFormatted = toolStats.numberFormat.formatDouble(mobKills + 1);
+            String oldMobKillsFormatted = toolStats.numberFormat.formatInt(mobKills);
+            String newMobKillsFormatted = toolStats.numberFormat.formatInt(mobKills + 1);
             String oldLine = toolStats.configTools.formatLore("kills.mob", "{kills}", oldMobKillsFormatted);
             String newLine = toolStats.configTools.formatLore("kills.mob", "{kills}", newMobKillsFormatted);
             if (oldLine == null || newLine == null) {
@@ -408,8 +408,8 @@ public class EntityDamage implements Listener {
 
         // do we add the lore based on the config?
         if (toolStats.configTools.checkConfig(newTrident.getType(), "player-kills")) {
-            String oldPlayerKillsFormatted = toolStats.numberFormat.formatDouble(playerKills);
-            String newPlayerKillsFormatted = toolStats.numberFormat.formatDouble(playerKills + 1);
+            String oldPlayerKillsFormatted = toolStats.numberFormat.formatInt(playerKills);
+            String newPlayerKillsFormatted = toolStats.numberFormat.formatInt(playerKills + 1);
             String oldLine = toolStats.configTools.formatLore("kills.player", "{kills}", oldPlayerKillsFormatted);
             String newLine = toolStats.configTools.formatLore("kills.player", "{kills}", newPlayerKillsFormatted);
             if (oldLine == null || newLine == null) {
