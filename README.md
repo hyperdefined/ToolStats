@@ -43,5 +43,8 @@ If item lore is ever incorrect/missing, you can run `/toolstats reset`. This com
 ## Documentation
 Visit the [wiki](https://github.com/hyperdefined/ToolStats/wiki) for help.
 
+## Support
+You can join the [Discord](https://discord.gg/rJuQXVcJz8) for support.
+
 ## License
 This plugin is released under GNU General Public License v3. See [LICENSE](https://github.com/hyperdefined/ToolStats/blob/master/LICENSE).
