@@ -99,6 +99,38 @@ public class CommandToolStats implements TabExecutor {
                 audiences.sender(sender).sendMessage(Component.text("Type /toolstats reset confirm to confirm this.", NamedTextColor.GREEN));
                 return true;
             }
+            case "reset-lore": {
+                if (!sender.hasPermission("toolstats.reset.lore")) {
+                    audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
+                    return true;
+                }
+                if (sender instanceof ConsoleCommandSender) {
+                    audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.", NamedTextColor.RED));
+                    return true;
+                }
+
+                Player player = (Player) sender;
+                ItemStack heldItem = player.getInventory().getItemInMainHand();
+
+                if (!toolStats.itemChecker.isValidItem(heldItem.getType())) {
+                    audiences.sender(sender).sendMessage(Component.text("You must hold a valid item.", NamedTextColor.RED));
+                    return true;
+                }
+
+                // Verifica se o item tem lore
+                ItemMeta meta = heldItem.getItemMeta();
+                if (meta == null || !meta.hasLore()) {
+                    audiences.sender(sender).sendMessage(Component.text("This item has no lore to reset.", NamedTextColor.RED));
+                    return true;
+                }
+
+                // Reseta a lore do item
+                meta.setLore(null);
+                heldItem.setItemMeta(meta);
+
+                audiences.sender(sender).sendMessage(Component.text("The item's lore has been reset.", NamedTextColor.GREEN));
+                return true;
+            }
             default: {
                 audiences.sender(sender).sendMessage(Component.text("Invalid sub-command.", NamedTextColor.RED));
             }
