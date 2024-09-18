@@ -117,14 +117,12 @@ public class CommandToolStats implements TabExecutor {
                     return true;
                 }
 
-                // Verifica se o item tem lore
                 ItemMeta meta = heldItem.getItemMeta();
                 if (meta == null || !meta.hasLore()) {
                     audiences.sender(sender).sendMessage(Component.text("This item has no lore to reset.", NamedTextColor.RED));
                     return true;
                 }
 
-                // Reseta a lore do item
                 meta.setLore(null);
                 heldItem.setItemMeta(meta);
 
