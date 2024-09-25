@@ -53,7 +53,7 @@ public class EntityDeath implements Listener {
                 ItemMeta droppedItemMeta = droppedItem.getItemMeta();
                 if (droppedItemMeta != null) {
                     PersistentDataContainer container = droppedItemMeta.getPersistentDataContainer();
-                    if (container.has(toolStats.timeCreated, PersistentDataType.LONG)) {
+                    if (container.has(toolStats.originType, PersistentDataType.INTEGER)) {
                         continue; // ignore any items that have our tags
                     }
 
