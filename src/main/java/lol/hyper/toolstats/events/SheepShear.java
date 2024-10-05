@@ -64,15 +64,14 @@ public class SheepShear implements Listener {
             return;
         }
 
-        Sheep sheep = (Sheep) entity;
         // make sure the sheep is not sheared
+        Sheep sheep = (Sheep) entity;
         if (sheep.isSheared()) {
             return;
         }
 
         // update the stats
-        ItemStack finalShears = shears;
-        addLore(finalShears);
+        addLore(shears);
     }
 
     private static @Nullable ItemStack getShears(Player player) {

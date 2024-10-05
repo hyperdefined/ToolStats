@@ -39,7 +39,7 @@ public class EntityDamage implements Listener {
 
     private final ToolStats toolStats;
     public final Set<UUID> trackedMobs = new HashSet<>();
-    private final List<EntityDamageEvent.DamageCause> ignoredCauses = Arrays.asList(EntityDamageEvent.DamageCause.SUICIDE, EntityDamageEvent.DamageCause.VOID, EntityDamageEvent.DamageCause.CUSTOM, EntityDamageEvent.DamageCause.KILL);
+    private final List<String> ignoredDamageCauses = Arrays.asList("SUICIDE", "VOID", "CUSTOM", "KILL");
 
     public EntityDamage(ToolStats toolStats) {
         this.toolStats = toolStats;
@@ -57,8 +57,8 @@ public class EntityDamage implements Listener {
         LivingEntity mobBeingAttacked = (LivingEntity) event.getEntity();
 
         // ignore void and /kill damage
-        EntityDamageEvent.DamageCause cause = event.getCause();
-        if (ignoredCauses.contains(cause)) {
+        String cause = event.getCause().toString().toUpperCase();
+        if (ignoredDamageCauses.contains(cause)) {
             return;
         }
 
@@ -166,8 +166,8 @@ public class EntityDamage implements Listener {
         }
 
         // ignore void and /kill damage
-        EntityDamageEvent.DamageCause cause = event.getCause();
-        if (ignoredCauses.contains(cause)) {
+        String cause = event.getCause().toString().toUpperCase();
+        if (ignoredDamageCauses.contains(cause)) {
             return;
         }
 
@@ -196,8 +196,8 @@ public class EntityDamage implements Listener {
         }
 
         // ignore void and /kill damage
-        EntityDamageEvent.DamageCause cause = event.getCause();
-        if (ignoredCauses.contains(cause)) {
+        String cause = event.getCause().toString().toUpperCase();
+        if (ignoredDamageCauses.contains(cause)) {
             return;
         }
 
