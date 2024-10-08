@@ -55,16 +55,19 @@ public class ConfigUpdater {
                 // Version 5 to 6
                 Version6 version6 = new Version6(toolStats);
                 version6.update();
+                break;
             }
             case 6: {
                 // Version 6 to 7
                 Version7 version7 = new Version7(toolStats);
                 version7.update();
+                break;
             }
             case 7: {
                 // Version 7 to 8
                 Version8 version8 = new Version8(toolStats);
                 version8.update();
+                break;
             }
         }
     }
