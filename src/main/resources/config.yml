@@ -9,6 +9,7 @@ enabled:
     shears: true
     bow: true
     armor: true
+    mace: true
   # Will show time the item is created
   created-date:
     pickaxe: true
@@ -19,6 +20,7 @@ enabled:
     shears: true
     bow: true
     armor: true
+    mace: true
   # Will show "Fished by <player>"
   fished-tag:
     pickaxe: true
@@ -54,11 +56,13 @@ enabled:
     axe: true
     trident: true
     bow: true
+    mace: true
   mob-kills:
     sword: true
     axe: true
     trident: true
     bow: true
+    mace: true
   blocks-mined:
     pickaxe: true
     shovel: true
@@ -75,6 +79,7 @@ enabled:
     shears: true
     bow: true
     armor: true
+    mace: true
   fish-caught: true
   sheep-sheared: true
   armor-damage: true

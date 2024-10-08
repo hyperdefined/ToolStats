@@ -47,6 +47,9 @@ public class ItemChecker {
             if (lowerCase.contains("_helmet") || lowerCase.contains("_chestplate") || lowerCase.contains("_leggings") || lowerCase.contains("_boots")) {
                 armorItems.add(material);
             }
+            if (lowerCase.equalsIgnoreCase("mace")) {
+                meleeItems.add(material);
+            }
         }
 
         // hardcode these

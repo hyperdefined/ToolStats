@@ -58,6 +58,19 @@ public class Version8 {
         toolStats.logger.info("Adding example for messages.mob.ZOMBIE");
         toolStats.config.set("messages.mob.ZOMBIE", "Zombie");
 
+        // Add mace to enabled sections
+        toolStats.logger.info("Adding entry for enabled.created-by.mace");
+        toolStats.config.set("enabled.created-by.mace", true);
+
+        toolStats.logger.info("Adding entry for enabled.created-date.mace");
+        toolStats.config.set("enabled.created-date.mace", true);
+
+        toolStats.logger.info("Adding entry for enabled.player-kills.mace");
+        toolStats.config.set("enabled.player-kills.mace", true);
+
+        toolStats.logger.info("Adding entry for enabled.mob-kills.mace");
+        toolStats.config.set("enabled.mob-kills.mace", true);
+
         List<String> mobComments = new ArrayList<>();
         mobComments.add("Set display name for mobs. See: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html");
         toolStats.config.setComments("messages.mob", mobComments);

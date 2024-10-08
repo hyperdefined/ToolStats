@@ -99,6 +99,9 @@ public class ConfigTools {
             case "fishing-rod": {
                 return toolStats.config.getBoolean("enabled." + configName + ".fishing-rod");
             }
+            case "mace": {
+                return toolStats.config.getBoolean("enabled." + configName + ".mace");
+            }
             case "helmet":
             case "chestplate":
             case "leggings":
