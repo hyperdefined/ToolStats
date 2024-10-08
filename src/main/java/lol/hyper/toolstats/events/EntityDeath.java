@@ -88,8 +88,6 @@ public class EntityDeath implements Listener {
 
         if (toolStats.config.getBoolean("enabled.dropped-by")) {
             String mobName = toolStats.config.getString("messages.mob." + entity.getType());
-            toolStats.logger.info("messages.mob." + entity.getType());
-            toolStats.logger.info(mobName);
             if (mobName == null) {
                 mobName = entity.getName();
             }
