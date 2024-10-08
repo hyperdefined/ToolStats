@@ -29,7 +29,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 public class EntityDeath implements Listener {
 
@@ -59,7 +60,7 @@ public class EntityDeath implements Listener {
 
                 }
                 if (toolStats.itemChecker.isValidItem(droppedItem.getType())) {
-                    ItemStack newItem = addLore(droppedItem, livingEntity.getName());
+                    ItemStack newItem = addLore(droppedItem, livingEntity);
                     if (newItem != null) {
                         event.getDrops().set(i, newItem);
                     }
@@ -73,9 +74,9 @@ public class EntityDeath implements Listener {
      * Adds "drop by" tag to item.
      *
      * @param oldItem The item to add lore to.
-     * @param mob     The mob or player name.
+     * @param entity  The mob dying.
      */
-    private ItemStack addLore(ItemStack oldItem, String mob) {
+    private ItemStack addLore(ItemStack oldItem, LivingEntity entity) {
         ItemStack newItem = oldItem.clone();
         ItemMeta meta = newItem.getItemMeta();
         if (meta == null) {
@@ -86,7 +87,13 @@ public class EntityDeath implements Listener {
         container.set(toolStats.originType, PersistentDataType.INTEGER, 1);
 
         if (toolStats.config.getBoolean("enabled.dropped-by")) {
-            String newLine = toolStats.configTools.formatLore("dropped-by", "{name}", mob);
+            String mobName = toolStats.config.getString("messages.mob." + entity.getType());
+            toolStats.logger.info("messages.mob." + entity.getType());
+            toolStats.logger.info(mobName);
+            if (mobName == null) {
+                mobName = entity.getName();
+            }
+            String newLine = toolStats.configTools.formatLore("dropped-by", "{name}", mobName);
             List<String> newLore = toolStats.itemLore.addItemLore(meta, newLine);
             meta.setLore(newLore);
         }

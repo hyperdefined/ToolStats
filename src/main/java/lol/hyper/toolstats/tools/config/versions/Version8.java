@@ -18,20 +18,23 @@
 package lol.hyper.toolstats.tools.config.versions;
 
 import lol.hyper.toolstats.ToolStats;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Version7 {
+public class Version8 {
 
     private final ToolStats toolStats;
 
     /**
-     * Used for updating from version 6 to 7.
+     * Used for updating from version 7 to 8.
      *
      * @param toolStats ToolStats instance.
      */
-    public Version7(ToolStats toolStats) {
+    public Version8(ToolStats toolStats) {
         this.toolStats = toolStats;
     }
 
@@ -41,21 +44,23 @@ public class Version7 {
     public void update() {
         // save the old config first
         try {
-            toolStats.config.save("plugins" + File.separator + "ToolStats" + File.separator + "config-6.yml");
+            toolStats.config.save("plugins" + File.separator + "ToolStats" + File.separator + "config-7.yml");
         } catch (IOException exception) {
-            toolStats.logger.severe("Unable to save config-6.yml!");
+            toolStats.logger.severe("Unable to save config-7.yml!");
             throw new RuntimeException(exception);
         }
 
         // we make this super verbose so that admins can see what's being added
-        toolStats.logger.info("Updating config.yml to version 7.");
-        toolStats.config.set("config-version", 7);
+        toolStats.logger.info("Updating config.yml to version 8.");
+        toolStats.config.set("config-version", 8);
 
-        toolStats.logger.info("Adding messages.flight-time to config.yml.");
-        toolStats.config.set("messages.flight-time", "&7Flight time: &8{time}");
+        // Add example to setting mob names
+        toolStats.logger.info("Adding example for messages.mob.ZOMBIE");
+        toolStats.config.set("messages.mob.ZOMBIE", "Zombie");
 
-        toolStats.logger.info("Adding enabled.flight-time to config.yml.");
-        toolStats.config.set("enabled.flight-time", true);
+        List<String> mobComments = new ArrayList<>();
+        mobComments.add("Set display name for mobs. See: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html");
+        toolStats.config.setComments("messages.mob", mobComments);
 
         // save the config and reload it
         try {
@@ -65,6 +70,6 @@ public class Version7 {
             throw new RuntimeException(exception);
         }
         toolStats.loadConfig();
-        toolStats.logger.info("Config has been updated to version 7. A copy of version 6 has been saved as config-6.yml");
+        toolStats.logger.info("Config has been updated to version 8. A copy of version 7 has been saved as config-7.yml");
     }
 }

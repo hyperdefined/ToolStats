@@ -117,6 +117,9 @@ messages:
   shift-click-warning:
     crafting: "&cCrafting items via shift clicking does not fully apply tags to each item. This is a limitation with the Bukkit API."
     trading: "&cTrading items via shift clicking does not fully apply tags to each item. This is a limitation with the Bukkit API."
+  # Set display name for mobs. See: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
+  mobs:
+    ZOMBIE: "Zombie"
 
 # Change the default formatting for dates.
 # See: https://www.digitalocean.com/community/tutorials/java-simpledateformat-java-date-format
