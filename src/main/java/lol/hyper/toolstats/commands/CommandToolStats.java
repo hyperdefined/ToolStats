@@ -365,10 +365,10 @@ public class CommandToolStats implements TabExecutor {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (args.length == 1) {
             if (sender.hasPermission("toolstats.reload")) {
-                return Arrays.asList("reset", "reload");
+                return Arrays.asList("reset", "reload", "remove");
             }
             if (sender.hasPermission("toolstats.reset")) {
-                return Collections.singletonList("reset");
+                return Arrays.asList("reset", "remove");
             }
             if (sender.hasPermission("toolstats.remove")) {
                 return Collections.singletonList("remove");
@@ -377,6 +377,11 @@ public class CommandToolStats implements TabExecutor {
         if (args.length == 2) {
             if (args[0].equalsIgnoreCase("reset")) {
                 if (sender.hasPermission("toolstats.reset.confirm")) {
+                    return Collections.singletonList("confirm");
+                }
+            }
+            if (args[0].equalsIgnoreCase("remove")) {
+                if (sender.hasPermission("toolstats.remove.confirm")) {
                     return Collections.singletonList("confirm");
                 }
             }
