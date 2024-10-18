@@ -370,6 +370,9 @@ public class CommandToolStats implements TabExecutor {
             if (sender.hasPermission("toolstats.reset")) {
                 return Collections.singletonList("reset");
             }
+            if (sender.hasPermission("toolstats.remove")) {
+                return Collections.singletonList("remove");
+            }
         }
         if (args.length == 2) {
             if (args[0].equalsIgnoreCase("reset")) {
