@@ -99,11 +99,56 @@ public class CommandToolStats implements TabExecutor {
                 audiences.sender(sender).sendMessage(Component.text("Type /toolstats reset confirm to confirm this.", NamedTextColor.GREEN));
                 return true;
             }
+            case "remove": {
+                if (!sender.hasPermission("toolstats.remove")) {
+                    audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
+                    return true;
+                }
+                if (sender instanceof ConsoleCommandSender) {
+                    audiences.sender(sender).sendMessage(Component.text("You must be a player for this command.", NamedTextColor.RED));
+                    return true;
+                }
+                if (args.length == 2 && args[1].equalsIgnoreCase("confirm")) {
+                    if (!sender.hasPermission("toolstats.remove.confirm")) {
+                        audiences.sender(sender).sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
+                        return true;
+                    }
+                    Player player = (Player) sender;
+                    ItemStack heldItem = player.getInventory().getItemInMainHand();
+                    if (!toolStats.itemChecker.isValidItem(heldItem.getType())) {
+                        audiences.sender(sender).sendMessage(Component.text("You must hold a valid item.", NamedTextColor.RED));
+                        return true;
+                    }
+                    removeItemLore(heldItem, player);
+                    audiences.sender(sender).sendMessage(Component.text("The lore was reset!", NamedTextColor.GREEN));
+                    return true;
+                }
+                audiences.sender(sender).sendMessage(Component.text("This will remove ALL current lore from the held item.", NamedTextColor.GREEN));
+                audiences.sender(sender).sendMessage(Component.text("ALL custom item lore will be DELETED.", NamedTextColor.GREEN));
+                audiences.sender(sender).sendMessage(Component.text("Type /toolstats remove confirm to confirm this.", NamedTextColor.GREEN));
+                return true;
+            }
             default: {
                 audiences.sender(sender).sendMessage(Component.text("Invalid sub-command.", NamedTextColor.RED));
             }
         }
         return true;
+    }
+
+    /**
+     * Removes lore on a given item.
+     */
+    private void removeItemLore(ItemStack original, Player player) {
+        ItemStack finalItem = original.clone();
+        ItemMeta finalMeta = finalItem.getItemMeta();
+        if (finalMeta == null) {
+            return;
+        }
+
+        finalMeta.setLore(new ArrayList<>());
+        finalItem.setItemMeta(finalMeta);
+        int slot = player.getInventory().getHeldItemSlot();
+        player.getInventory().setItem(slot, finalItem);
     }
 
     /**
