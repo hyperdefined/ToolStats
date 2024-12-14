@@ -18,6 +18,7 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
+import net.kyori.adventure.text.Component;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -47,11 +48,10 @@ public class ShootBow implements Listener {
     public void onShoot(EntityShootBowEvent event) {
         Entity shooter = event.getEntity();
         // only listen for players
-        if (!(shooter instanceof Player)) {
+        if (!(shooter instanceof Player player)) {
             return;
         }
 
-        Player player = (Player) shooter;
         if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.ADVENTURE) {
             return;
         }
@@ -111,13 +111,13 @@ public class ShootBow implements Listener {
         if (toolStats.config.getBoolean("enabled.arrows-shot")) {
             String oldArrowsFormatted = toolStats.numberFormat.formatInt(arrowsShot);
             String newArrowsFormatted = toolStats.numberFormat.formatInt(arrowsShot + 1);
-            String oldLine = toolStats.configTools.formatLore("arrows-shot", "{arrows}", oldArrowsFormatted);
-            String newLine = toolStats.configTools.formatLore("arrows-shot", "{arrows}", newArrowsFormatted);
+            Component oldLine = toolStats.configTools.formatLore("arrows-shot", "{arrows}", oldArrowsFormatted);
+            Component newLine = toolStats.configTools.formatLore("arrows-shot", "{arrows}", newArrowsFormatted);
             if (oldLine == null || newLine == null) {
                 return;
             }
-            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.setLore(newLore);
+            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+            meta.lore(newLore);
         }
         bow.setItemMeta(meta);
     }

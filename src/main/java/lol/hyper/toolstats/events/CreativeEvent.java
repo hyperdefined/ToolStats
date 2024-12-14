@@ -19,6 +19,7 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.UUIDDataType;
+import net.kyori.adventure.text.Component;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -104,8 +105,8 @@ public class CreativeEvent implements Listener {
 
         if (toolStats.configTools.checkConfig(newSpawnedItem.getType(), "spawned-in")) {
             String formattedDate = toolStats.numberFormat.formatDate(finalDate);
-            List<String> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
-            meta.setLore(newLore);
+            List<Component> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
+            meta.lore(newLore);
         }
 
         newSpawnedItem.setItemMeta(meta);

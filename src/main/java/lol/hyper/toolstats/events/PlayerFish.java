@@ -19,6 +19,7 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.UUIDDataType;
+import net.kyori.adventure.text.Component;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -130,13 +131,13 @@ public class PlayerFish implements Listener {
         if (toolStats.config.getBoolean("enabled.fish-caught")) {
             String oldFishFormatted = toolStats.numberFormat.formatInt(fishCaught);
             String newFishFormatted = toolStats.numberFormat.formatInt(fishCaught + 1);
-            String oldLine = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", oldFishFormatted);
-            String newLine = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", newFishFormatted);
+            Component oldLine = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", oldFishFormatted);
+            Component newLine = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", newFishFormatted);
             if (oldLine == null || newLine == null) {
                 return;
             }
-            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.setLore(newLore);
+            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+            meta.lore(newLore);
         }
         fishingRod.setItemMeta(meta);
     }
@@ -171,8 +172,8 @@ public class PlayerFish implements Listener {
 
         if (toolStats.configTools.checkConfig(newItem.getType(), "fished-tag")) {
             String formattedDate = toolStats.numberFormat.formatDate(finalDate);
-            List<String> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
-            meta.setLore(newLore);
+            List<Component> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
+            meta.lore(newLore);
         }
         newItem.setItemMeta(meta);
         return newItem;

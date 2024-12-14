@@ -18,6 +18,7 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -91,9 +92,9 @@ public class EntityDeath implements Listener {
             if (mobName == null) {
                 mobName = entity.getName();
             }
-            String newLine = toolStats.configTools.formatLore("dropped-by", "{name}", mobName);
-            List<String> newLore = toolStats.itemLore.addItemLore(meta, newLine);
-            meta.setLore(newLore);
+            Component newLine = toolStats.configTools.formatLore("dropped-by", "{name}", mobName);
+            List<Component> newLore = toolStats.itemLore.addItemLore(meta, newLine);
+            meta.lore(newLore);
         }
         newItem.setItemMeta(meta);
         return newItem;

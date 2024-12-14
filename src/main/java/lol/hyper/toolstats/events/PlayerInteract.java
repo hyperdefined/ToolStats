@@ -17,7 +17,9 @@
 
 package lol.hyper.toolstats.events;
 
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import lol.hyper.toolstats.ToolStats;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -34,6 +36,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class PlayerInteract implements Listener {
 
@@ -64,13 +67,7 @@ public class PlayerInteract implements Listener {
         // store when a player opens a chest
         if (block.getType() != Material.AIR && block.getType() == Material.CHEST) {
             openedChests.put(block, player);
-            BukkitRunnable runnable = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    openedChests.remove(block);
-                }
-            };
-            toolStats.scheduleGlobal(runnable, 20);
+            Bukkit.getGlobalRegionScheduler().runDelayed(toolStats, scheduledTask -> openedChests.remove(block), 20);
         }
     }
 
@@ -82,16 +79,10 @@ public class PlayerInteract implements Listener {
             return;
         }
         // store when a player opens a minecart
-        if (clicked.getType() == EntityType.MINECART_CHEST) {
+        if (clicked.getType() == EntityType.CHEST_MINECART) {
             StorageMinecart storageMinecart = (StorageMinecart) clicked;
             openedMineCarts.put(storageMinecart, player);
-            BukkitRunnable runnable = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    openedMineCarts.remove(storageMinecart);
-                }
-            };
-            toolStats.scheduleGlobal(runnable, 20);
+            Bukkit.getGlobalRegionScheduler().runDelayed(toolStats, scheduledTask -> openedMineCarts.remove(storageMinecart), 20);
         }
     }
 }

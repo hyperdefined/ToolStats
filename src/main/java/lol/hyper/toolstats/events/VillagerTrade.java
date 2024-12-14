@@ -19,6 +19,7 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.UUIDDataType;
+import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -51,10 +52,9 @@ public class VillagerTrade implements Listener {
             return;
         }
         Inventory inventory = event.getClickedInventory();
-        if (!(event.getWhoClicked() instanceof Player)) {
+        if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        Player player = (Player) event.getWhoClicked();
         if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
@@ -117,8 +117,8 @@ public class VillagerTrade implements Listener {
 
         if (toolStats.configTools.checkConfig(newItem.getType(), "traded-tag")) {
             String formattedDate = toolStats.numberFormat.formatDate(finalDate);
-            List<String> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
-            meta.setLore(newLore);
+            List<Component> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
+            meta.lore(newLore);
         }
         newItem.setItemMeta(meta);
         return newItem;

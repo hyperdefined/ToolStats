@@ -18,7 +18,9 @@
 package lol.hyper.toolstats.tools.config;
 
 import lol.hyper.toolstats.ToolStats;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 
 import java.util.regex.Matcher;
@@ -70,46 +72,21 @@ public class ConfigTools {
             itemType = itemName.substring(itemName.indexOf('_') + 1);
         }
 
-        switch (itemType) {
-            case "pickaxe": {
-                return toolStats.config.getBoolean("enabled." + configName + ".pickaxe");
-            }
-            case "sword": {
-                return toolStats.config.getBoolean("enabled." + configName + ".sword");
-            }
-            case "shovel": {
-                return toolStats.config.getBoolean("enabled." + configName + ".shovel");
-            }
-            case "axe": {
-                return toolStats.config.getBoolean("enabled." + configName + ".axe");
-            }
-            case "hoe": {
-                return toolStats.config.getBoolean("enabled." + configName + ".hoe");
-            }
-            case "shears": {
-                return toolStats.config.getBoolean("enabled." + configName + ".shears");
-            }
-            case "crossbow":
-            case "bow": {
-                return toolStats.config.getBoolean("enabled." + configName + ".bow");
-            }
-            case "trident": {
-                return toolStats.config.getBoolean("enabled." + configName + ".trident");
-            }
-            case "fishing-rod": {
-                return toolStats.config.getBoolean("enabled." + configName + ".fishing-rod");
-            }
-            case "mace": {
-                return toolStats.config.getBoolean("enabled." + configName + ".mace");
-            }
-            case "helmet":
-            case "chestplate":
-            case "leggings":
-            case "boots": {
-                return toolStats.config.getBoolean("enabled." + configName + ".armor");
-            }
-        }
-        return false;
+        return switch (itemType) {
+            case "pickaxe" -> toolStats.config.getBoolean("enabled." + configName + ".pickaxe");
+            case "sword" -> toolStats.config.getBoolean("enabled." + configName + ".sword");
+            case "shovel" -> toolStats.config.getBoolean("enabled." + configName + ".shovel");
+            case "axe" -> toolStats.config.getBoolean("enabled." + configName + ".axe");
+            case "hoe" -> toolStats.config.getBoolean("enabled." + configName + ".hoe");
+            case "shears" -> toolStats.config.getBoolean("enabled." + configName + ".shears");
+            case "crossbow", "bow" -> toolStats.config.getBoolean("enabled." + configName + ".bow");
+            case "trident" -> toolStats.config.getBoolean("enabled." + configName + ".trident");
+            case "fishing-rod" -> toolStats.config.getBoolean("enabled." + configName + ".fishing-rod");
+            case "mace" -> toolStats.config.getBoolean("enabled." + configName + ".mace");
+            case "helmet", "chestplate", "leggings", "boots" ->
+                    toolStats.config.getBoolean("enabled." + configName + ".armor");
+            default -> false;
+        };
     }
 
     /**
@@ -120,28 +97,29 @@ public class ConfigTools {
      * @param value       The value to set the placeholder.
      * @return Formatted string, null if the configName doesn't exist.
      */
-    public String formatLore(String configName, String placeHolder, Object value) {
+    public Component formatLore(String configName, String placeHolder, Object value) {
         String lore = toolStats.config.getString("messages." + configName);
         if (lore == null) {
             return null;
         }
 
+        // the final component for this lore
+        Component component;
+
         // set the placeholder to the value
         lore = lore.replace(placeHolder, String.valueOf(value));
 
+        // if we match the old color codes, then format them as so
         Matcher hexMatcher = CONFIG_HEX_PATTERN.matcher(lore);
-        while (hexMatcher.find()) {
-            String hexCode = hexMatcher.group(1);
-            lore = lore.replaceAll(hexMatcher.group(), net.md_5.bungee.api.ChatColor.of("#" + hexCode).toString());
-        }
-
         Matcher colorMatcher = COLOR_CODES.matcher(lore);
-        while (colorMatcher.find()) {
-            String colorCode = colorMatcher.group(1);
-            lore = lore.replaceAll("&" + colorCode, ChatColor.getByChar(colorCode).toString());
+        if (hexMatcher.find() || colorMatcher.find()) {
+            component = LegacyComponentSerializer.legacyAmpersand().deserialize(lore);
+        } else {
+            // otherwise format them normally
+            component = Component.text(lore);
         }
 
-        return ChatColor.translateAlternateColorCodes('§', lore);
+        return component.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
     }
 
     /**

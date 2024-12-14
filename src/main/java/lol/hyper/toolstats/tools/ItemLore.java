@@ -18,6 +18,8 @@
 package lol.hyper.toolstats.tools;
 
 import lol.hyper.toolstats.ToolStats;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -41,17 +43,16 @@ public class ItemLore {
      * @param newLine  The new line to replace oldLine.
      * @return The item's new lore.
      */
-    public List<String> updateItemLore(ItemMeta itemMeta, String oldLine, String newLine) {
-        List<String> itemLore;
-        oldLine = toolStats.configTools.removeColor(oldLine);
+    public List<Component> updateItemLore(ItemMeta itemMeta, Component oldLine, Component newLine) {
+        List<Component> itemLore;
         if (itemMeta.hasLore()) {
-            itemLore = itemMeta.getLore();
+            itemLore = itemMeta.lore();
             // keep track of line index
             // this doesn't mess the lore of existing items
             for (int x = 0; x < itemLore.size(); x++) {
-                // check to see if the line matches the config value
+                Component line = itemLore.get(x);
+                // find the old line to update, keeping index
                 // this means we update this line only!
-                String line = toolStats.configTools.removeColor(itemLore.get(x));
                 if (line.equals(oldLine)) {
                     itemLore.set(x, newLine);
                     return itemLore;
@@ -67,10 +68,10 @@ public class ItemLore {
         return itemLore;
     }
 
-    public List<String> addItemLore(ItemMeta itemMeta, String newLine) {
-        List<String> itemLore;
+    public List<Component> addItemLore(ItemMeta itemMeta, Component newLine) {
+        List<Component> itemLore;
         if (itemMeta.hasLore()) {
-            itemLore = itemMeta.getLore();
+            itemLore = itemMeta.lore();
             itemLore.add(newLine);
         } else {
             itemLore = new ArrayList<>();
@@ -87,9 +88,9 @@ public class ItemLore {
      * @param formattedDate The date of the ownership.
      * @return The item's new lore.
      */
-    public List<String> addNewOwner(ItemMeta itemMeta, String playerName, String formattedDate) {
-        String dateCreatedLore;
-        String itemOwnerLore;
+    public List<Component> addNewOwner(ItemMeta itemMeta, String playerName, String formattedDate) {
+        Component dateCreatedLore;
+        Component itemOwnerLore;
         Integer origin = null;
         PersistentDataContainer container = itemMeta.getPersistentDataContainer();
         if (container.has(toolStats.originType, PersistentDataType.INTEGER)) {
@@ -100,7 +101,7 @@ public class ItemLore {
         if (origin == null) {
             toolStats.logger.info("Unable to determine origin for item " + itemMeta.getAsString());
             toolStats.logger.info("This IS a bug, please report this to the GitHub.");
-            return itemMeta.getLore();
+            return itemMeta.lore();
         }
 
         // set the lore based on the origin
@@ -112,12 +113,12 @@ public class ItemLore {
                 if (dateCreatedLore == null) {
                     toolStats.logger.warning("messages.looted.looted-on is not set in your config!");
                     toolStats.logger.warning("Unable to update lore for item.");
-                    return itemMeta.getLore();
+                    return itemMeta.lore();
                 }
                 if (itemOwnerLore == null) {
                     toolStats.logger.warning("messages.looted.looted-by is not set in your config!");
                     toolStats.logger.warning("Unable to update lore for item.");
-                    return itemMeta.getLore();
+                    return itemMeta.lore();
                 }
                 break;
             }
@@ -128,12 +129,12 @@ public class ItemLore {
                 if (dateCreatedLore == null) {
                     toolStats.logger.warning("messages.traded.traded-on is not set in your config!");
                     toolStats.logger.warning("Unable to update lore for item.");
-                    return itemMeta.getLore();
+                    return itemMeta.lore();
                 }
                 if (itemOwnerLore == null) {
                     toolStats.logger.warning("messages.traded.traded-by is not set in your config!");
                     toolStats.logger.warning("Unable to update lore for item.");
-                    return itemMeta.getLore();
+                    return itemMeta.lore();
                 }
                 break;
             }
@@ -144,12 +145,12 @@ public class ItemLore {
                 if (dateCreatedLore == null) {
                     toolStats.logger.warning("messages.looted.found-on is not set in your config!");
                     toolStats.logger.warning("Unable to update lore for item.");
-                    return itemMeta.getLore();
+                    return itemMeta.lore();
                 }
                 if (itemOwnerLore == null) {
                     toolStats.logger.warning("messages.looted.found-by is not set in your config!");
                     toolStats.logger.warning("Unable to update lore for item.");
-                    return itemMeta.getLore();
+                    return itemMeta.lore();
                 }
                 break;
             }
@@ -160,12 +161,12 @@ public class ItemLore {
                 if (dateCreatedLore == null) {
                     toolStats.logger.warning("messages.fished.caught-on is not set in your config!");
                     toolStats.logger.warning("Unable to update lore for item.");
-                    return itemMeta.getLore();
+                    return itemMeta.lore();
                 }
                 if (itemOwnerLore == null) {
                     toolStats.logger.warning("messages.fished.caught-by is not set in your config!");
                     toolStats.logger.warning("Unable to update lore for item.");
-                    return itemMeta.getLore();
+                    return itemMeta.lore();
                 }
                 break;
             }
@@ -176,31 +177,31 @@ public class ItemLore {
                 if (dateCreatedLore == null) {
                     toolStats.logger.warning("messages.spawned-in.spawned-on is not set in your config!");
                     toolStats.logger.warning("Unable to update lore for item.");
-                    return itemMeta.getLore();
+                    return itemMeta.lore();
                 }
                 if (itemOwnerLore == null) {
                     toolStats.logger.warning("messages.spawned-in.spawned-by is not set in your config!");
                     toolStats.logger.warning("Unable to update lore for item.");
-                    return itemMeta.getLore();
+                    return itemMeta.lore();
                 }
                 break;
             }
             default: {
                 toolStats.logger.warning("Origin " + origin + " was found. Data was modified OR something REALLY broke.");
                 toolStats.logger.warning(itemMeta.getAsString());
-                return itemMeta.getLore();
+                return itemMeta.lore();
             }
         }
 
-        List<String> newLore;
+        List<Component> newLore;
         if (itemMeta.hasLore()) {
-            newLore = itemMeta.getLore();
+            newLore = itemMeta.lore();
         } else {
             newLore = new ArrayList<>();
         }
 
-        newLore.add(dateCreatedLore.replace("{date}", formattedDate));
-        newLore.add(itemOwnerLore.replace("{player}", playerName));
+        newLore.add(dateCreatedLore);
+        newLore.add(itemOwnerLore);
         return newLore;
     }
 }

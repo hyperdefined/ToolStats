@@ -18,6 +18,7 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
+import net.kyori.adventure.text.Component;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -54,7 +55,7 @@ public class SheepShear implements Listener {
             return;
         }
         Entity entity = event.getRightClicked();
-        if (!(entity instanceof Sheep)) {
+        if (!(entity instanceof Sheep sheep)) {
             return;
         }
 
@@ -65,7 +66,6 @@ public class SheepShear implements Listener {
         }
 
         // make sure the sheep is not sheared
-        Sheep sheep = (Sheep) entity;
         if (sheep.isSheared()) {
             return;
         }
@@ -121,13 +121,13 @@ public class SheepShear implements Listener {
         if (toolStats.config.getBoolean("enabled.sheep-sheared")) {
             String oldSheepFormatted = toolStats.numberFormat.formatInt(sheepSheared);
             String newSheepFormatted = toolStats.numberFormat.formatInt(sheepSheared + 1);
-            String oldLine = toolStats.configTools.formatLore("sheep-sheared", "{sheep}", oldSheepFormatted);
-            String newLine = toolStats.configTools.formatLore("sheep-sheared", "{sheep}", newSheepFormatted);
+            Component oldLine = toolStats.configTools.formatLore("sheep-sheared", "{sheep}", oldSheepFormatted);
+            Component newLine = toolStats.configTools.formatLore("sheep-sheared", "{sheep}", newSheepFormatted);
             if (oldLine == null || newLine == null) {
                 return;
             }
-            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.setLore(newLore);
+            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+            meta.lore(newLore);
         }
         newShears.setItemMeta(meta);
     }

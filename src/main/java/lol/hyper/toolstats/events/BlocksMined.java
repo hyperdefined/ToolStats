@@ -17,7 +17,10 @@
 
 package lol.hyper.toolstats.events;
 
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import lol.hyper.toolstats.ToolStats;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -36,6 +39,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 public class BlocksMined implements Listener {
 
@@ -60,13 +64,7 @@ public class BlocksMined implements Listener {
 
         if (block.getType() == Material.CHEST) {
             toolStats.playerInteract.openedChests.put(block, player);
-            BukkitRunnable runnable = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    toolStats.playerInteract.openedChests.remove(block);
-                }
-            };
-            toolStats.scheduleGlobal(runnable, 20);
+            Bukkit.getGlobalRegionScheduler().runDelayed(toolStats, scheduledTask -> toolStats.playerInteract.openedChests.remove(block), 20);
         }
 
         // only check certain items
@@ -110,13 +108,13 @@ public class BlocksMined implements Listener {
         if (toolStats.configTools.checkConfig(playerTool.getType(), "blocks-mined")) {
             String oldBlocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined);
             String newBlocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined + 1);
-            String oldLine = toolStats.configTools.formatLore("blocks-mined", "{blocks}", oldBlocksMinedFormatted);
-            String newLine = toolStats.configTools.formatLore("blocks-mined", "{blocks}", newBlocksMinedFormatted);
+            Component oldLine = toolStats.configTools.formatLore("blocks-mined", "{blocks}", oldBlocksMinedFormatted);
+            Component newLine = toolStats.configTools.formatLore("blocks-mined", "{blocks}", newBlocksMinedFormatted);
             if (oldLine == null || newLine == null) {
                 return;
             }
-            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.setLore(newLore);
+            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+            meta.lore(newLore);
         }
         playerTool.setItemMeta(meta);
     }
@@ -151,13 +149,13 @@ public class BlocksMined implements Listener {
         if (toolStats.configTools.checkConfig(playerTool.getType(), "blocks-mined")) {
             String oldCropsMinedFormatted = toolStats.numberFormat.formatInt(cropsMined);
             String newCropsMinedFormatted = toolStats.numberFormat.formatInt(cropsMined + 1);
-            String oldLine = toolStats.configTools.formatLore("crops-harvested", "{crops}", oldCropsMinedFormatted);
-            String newLine = toolStats.configTools.formatLore("crops-harvested", "{crops}", newCropsMinedFormatted);
+            Component oldLine = toolStats.configTools.formatLore("crops-harvested", "{crops}", oldCropsMinedFormatted);
+            Component newLine = toolStats.configTools.formatLore("crops-harvested", "{crops}", newCropsMinedFormatted);
             if (oldLine == null || newLine == null) {
                 return;
             }
-            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.setLore(newLore);
+            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+            meta.lore(newLore);
         }
         playerTool.setItemMeta(meta);
     }

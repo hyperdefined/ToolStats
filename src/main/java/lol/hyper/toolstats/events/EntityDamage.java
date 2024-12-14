@@ -18,6 +18,7 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
+import net.kyori.adventure.text.Component;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
@@ -51,10 +52,9 @@ public class EntityDamage implements Listener {
             return;
         }
 
-        if (!(event.getEntity() instanceof LivingEntity)) {
+        if (!(event.getEntity() instanceof LivingEntity mobBeingAttacked)) {
             return;
         }
-        LivingEntity mobBeingAttacked = (LivingEntity) event.getEntity();
 
         // ignore void and /kill damage
         String cause = event.getCause().toString().toUpperCase();
@@ -65,8 +65,7 @@ public class EntityDamage implements Listener {
         // mob is going to die
         if (mobBeingAttacked.getHealth() - event.getFinalDamage() <= 0) {
             // a player is killing something
-            if (event.getDamager() instanceof Player) {
-                Player attackingPlayer = (Player) event.getDamager();
+            if (event.getDamager() instanceof Player attackingPlayer) {
                 if (attackingPlayer.getGameMode() == GameMode.CREATIVE || attackingPlayer.getGameMode() == GameMode.SPECTATOR) {
                     return;
                 }
@@ -86,27 +85,24 @@ public class EntityDamage implements Listener {
                 trackedMobs.add(mobBeingAttacked.getUniqueId());
             }
             // trident is being thrown at something
-            if (event.getDamager() instanceof Trident) {
-                Trident trident = (Trident) event.getDamager();
+            if (event.getDamager() instanceof Trident trident) {
                 ItemStack newTrident;
                 // trident is killing player
                 if (mobBeingAttacked instanceof Player) {
-                    newTrident = tridentPlayerKills(trident.getItem());
+                    newTrident = tridentPlayerKills(trident.getItemStack());
                 } else {
                     // trident is killing a mob
-                    newTrident = tridentMobKills(trident.getItem());
+                    newTrident = tridentMobKills(trident.getItemStack());
                     trackedMobs.add(mobBeingAttacked.getUniqueId());
                 }
                 if (newTrident != null) {
-                    trident.setItem(newTrident);
+                    trident.setItemStack(newTrident);
                 }
             }
             // arrow is being shot
-            if (event.getDamager() instanceof Arrow) {
-                Arrow arrow = (Arrow) event.getDamager();
+            if (event.getDamager() instanceof Arrow arrow) {
                 // if the shooter is a player
-                if (arrow.getShooter() instanceof Player) {
-                    Player shootingPlayer = (Player) arrow.getShooter();
+                if (arrow.getShooter() instanceof Player shootingPlayer) {
                     if (shootingPlayer.getGameMode() == GameMode.CREATIVE || shootingPlayer.getGameMode() == GameMode.SPECTATOR) {
                         return;
                     }
@@ -143,8 +139,7 @@ public class EntityDamage implements Listener {
             }
         }
         // player is taken damage but not being killed
-        if (mobBeingAttacked instanceof Player) {
-            Player playerTakingDamage = (Player) mobBeingAttacked;
+        if (mobBeingAttacked instanceof Player playerTakingDamage) {
             if (playerTakingDamage.getGameMode() == GameMode.CREATIVE || playerTakingDamage.getGameMode() == GameMode.SPECTATOR) {
                 return;
             }
@@ -161,7 +156,7 @@ public class EntityDamage implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDamage(EntityDamageEvent event) {
-        if (!(event.getEntity() instanceof LivingEntity)) {
+        if (!(event.getEntity() instanceof LivingEntity mobBeingAttacked)) {
             return;
         }
 
@@ -171,10 +166,8 @@ public class EntityDamage implements Listener {
             return;
         }
 
-        LivingEntity mobBeingAttacked = (LivingEntity) event.getEntity();
         // player is taken damage but not being killed
-        if (mobBeingAttacked instanceof Player) {
-            Player playerTakingDamage = (Player) mobBeingAttacked;
+        if (mobBeingAttacked instanceof Player playerTakingDamage) {
             if (playerTakingDamage.getGameMode() == GameMode.CREATIVE || playerTakingDamage.getGameMode() == GameMode.SPECTATOR) {
                 return;
             }
@@ -191,7 +184,7 @@ public class EntityDamage implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDamage(EntityDamageByBlockEvent event) {
-        if (!(event.getEntity() instanceof LivingEntity)) {
+        if (!(event.getEntity() instanceof LivingEntity mobBeingAttacked)) {
             return;
         }
 
@@ -201,10 +194,8 @@ public class EntityDamage implements Listener {
             return;
         }
 
-        LivingEntity mobBeingAttacked = (LivingEntity) event.getEntity();
         // player is taken damage but not being killed
-        if (mobBeingAttacked instanceof Player) {
-            Player playerTakingDamage = (Player) mobBeingAttacked;
+        if (mobBeingAttacked instanceof Player playerTakingDamage) {
             if (playerTakingDamage.getGameMode() == GameMode.CREATIVE || playerTakingDamage.getGameMode() == GameMode.SPECTATOR) {
                 return;
             }
@@ -247,13 +238,13 @@ public class EntityDamage implements Listener {
         if (toolStats.configTools.checkConfig(itemStack.getType(), "player-kills")) {
             String oldPlayerKillsFormatted = toolStats.numberFormat.formatInt(playerKills);
             String newPlayerKillsFormatted = toolStats.numberFormat.formatInt(playerKills + 1);
-            String oldLine = toolStats.configTools.formatLore("kills.player", "{kills}", oldPlayerKillsFormatted);
-            String newLine = toolStats.configTools.formatLore("kills.player", "{kills}", newPlayerKillsFormatted);
+            Component oldLine = toolStats.configTools.formatLore("kills.player", "{kills}", oldPlayerKillsFormatted);
+            Component newLine = toolStats.configTools.formatLore("kills.player", "{kills}", newPlayerKillsFormatted);
             if (oldLine == null || newLine == null) {
                 return;
             }
-            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.setLore(newLore);
+            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+            meta.lore(newLore);
         }
         itemStack.setItemMeta(meta);
     }
@@ -286,13 +277,13 @@ public class EntityDamage implements Listener {
         if (toolStats.configTools.checkConfig(itemStack.getType(), "mob-kills")) {
             String oldMobKillsFormatted = toolStats.numberFormat.formatInt(mobKills);
             String newMobKillsFormatted = toolStats.numberFormat.formatInt(mobKills + 1);
-            String oldLine = toolStats.configTools.formatLore("kills.mob", "{kills}", oldMobKillsFormatted);
-            String newLine = toolStats.configTools.formatLore("kills.mob", "{kills}", newMobKillsFormatted);
+            Component oldLine = toolStats.configTools.formatLore("kills.mob", "{kills}", oldMobKillsFormatted);
+            Component newLine = toolStats.configTools.formatLore("kills.mob", "{kills}", newMobKillsFormatted);
             if (oldLine == null || newLine == null) {
                 return;
             }
-            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.setLore(newLore);
+            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+            meta.lore(newLore);
         }
         itemStack.setItemMeta(meta);
     }
@@ -329,13 +320,13 @@ public class EntityDamage implements Listener {
         if (toolStats.config.getBoolean("enabled.armor-damage")) {
             String oldDamageFormatted = toolStats.numberFormat.formatDouble(damageTaken);
             String newDamageFormatted = toolStats.numberFormat.formatDouble(damageTaken + damage);
-            String oldLine = toolStats.configTools.formatLore("damage-taken", "{damage}", oldDamageFormatted);
-            String newLine = toolStats.configTools.formatLore("damage-taken", "{damage}", newDamageFormatted);
+            Component oldLine = toolStats.configTools.formatLore("damage-taken", "{damage}", oldDamageFormatted);
+            Component newLine = toolStats.configTools.formatLore("damage-taken", "{damage}", newDamageFormatted);
             if (oldLine == null || newLine == null) {
                 return;
             }
-            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.setLore(newLore);
+            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+            meta.lore(newLore);
         }
         itemStack.setItemMeta(meta);
     }
@@ -369,13 +360,13 @@ public class EntityDamage implements Listener {
         if (toolStats.configTools.checkConfig(newTrident.getType(), "mob-kills")) {
             String oldMobKillsFormatted = toolStats.numberFormat.formatInt(mobKills);
             String newMobKillsFormatted = toolStats.numberFormat.formatInt(mobKills + 1);
-            String oldLine = toolStats.configTools.formatLore("kills.mob", "{kills}", oldMobKillsFormatted);
-            String newLine = toolStats.configTools.formatLore("kills.mob", "{kills}", newMobKillsFormatted);
+            Component oldLine = toolStats.configTools.formatLore("kills.mob", "{kills}", oldMobKillsFormatted);
+            Component newLine = toolStats.configTools.formatLore("kills.mob", "{kills}", newMobKillsFormatted);
             if (oldLine == null || newLine == null) {
                 return null;
             }
-            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.setLore(newLore);
+            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+            meta.lore(newLore);
         }
         newTrident.setItemMeta(meta);
         return newTrident;
@@ -410,13 +401,13 @@ public class EntityDamage implements Listener {
         if (toolStats.configTools.checkConfig(newTrident.getType(), "player-kills")) {
             String oldPlayerKillsFormatted = toolStats.numberFormat.formatInt(playerKills);
             String newPlayerKillsFormatted = toolStats.numberFormat.formatInt(playerKills + 1);
-            String oldLine = toolStats.configTools.formatLore("kills.player", "{kills}", oldPlayerKillsFormatted);
-            String newLine = toolStats.configTools.formatLore("kills.player", "{kills}", newPlayerKillsFormatted);
+            Component oldLine = toolStats.configTools.formatLore("kills.player", "{kills}", oldPlayerKillsFormatted);
+            Component newLine = toolStats.configTools.formatLore("kills.player", "{kills}", newPlayerKillsFormatted);
             if (oldLine == null || newLine == null) {
                 return null;
             }
-            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.setLore(newLore);
+            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+            meta.lore(newLore);
         }
         newTrident.setItemMeta(meta);
         return newTrident;

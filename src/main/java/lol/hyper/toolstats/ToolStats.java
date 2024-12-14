@@ -27,17 +27,13 @@ import lol.hyper.toolstats.tools.ItemLore;
 import lol.hyper.toolstats.tools.NumberFormat;
 import lol.hyper.toolstats.tools.config.ConfigTools;
 import lol.hyper.toolstats.tools.config.ConfigUpdater;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.NamespacedKey;
-import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Entity;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import space.arim.morepaperlib.MorePaperLib;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,10 +77,6 @@ public final class ToolStats extends JavaPlugin {
      * Stores how much damage an armor piece has taken.
      */
     public final NamespacedKey armorDamage = new NamespacedKey(this, "damage-taken");
-    /**
-     * Stores how much damage an armor piece has taken (as an int).
-     */
-    public final NamespacedKey armorDamageInt = new NamespacedKey(this, "damage-taken-int");
     /**
      * Key for tracking new elytras that spawn.
      */
@@ -134,8 +126,6 @@ public final class ToolStats extends JavaPlugin {
     public PlayerJoin playerJoin;
     public NumberFormat numberFormat;
     public YamlConfiguration config;
-    private BukkitAudiences adventure;
-    public MorePaperLib morePaperLib;
     public HashMaker hashMaker;
     public CreativeEvent creativeEvent;
     public PlayerMove playerMove;
@@ -145,8 +135,6 @@ public final class ToolStats extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        this.adventure = BukkitAudiences.create(this);
-        morePaperLib = new MorePaperLib(this);
         if (!configFile.exists()) {
             this.saveResource("config.yml", true);
             logger.info("Copying default config!");
@@ -194,8 +182,7 @@ public final class ToolStats extends JavaPlugin {
         this.getCommand("toolstats").setExecutor(commandToolStats);
 
         new Metrics(this, 14110);
-
-        morePaperLib.scheduling().asyncScheduler().run(this::checkForUpdates);
+        Bukkit.getAsyncScheduler().runNow(this, scheduledTask -> checkForUpdates());
     }
 
     public void loadConfig() {
@@ -230,24 +217,5 @@ public final class ToolStats extends JavaPlugin {
         } else {
             logger.warning("A new version is available (" + latest.getTagVersion() + ")! You are running version " + current.getTagVersion() + ". You are " + buildsBehind + " version(s) behind.");
         }
-    }
-
-    public BukkitAudiences getAdventure() {
-        if (this.adventure == null) {
-            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
-        }
-        return this.adventure;
-    }
-
-    public void scheduleEntity(BukkitRunnable runnable, Entity entity, int delay) {
-        morePaperLib.scheduling().entitySpecificScheduler(entity).runDelayed(runnable, null, delay);
-    }
-
-    public void scheduleGlobal(BukkitRunnable runnable, int delay) {
-        morePaperLib.scheduling().globalRegionalScheduler().runDelayed(runnable, delay);
-    }
-
-    public void scheduleRegion(BukkitRunnable runnable, World world, Chunk chunk, int delay) {
-        morePaperLib.scheduling().regionSpecificScheduler(world, chunk.getX(), chunk.getZ()).runDelayed(runnable, delay);
     }
 }

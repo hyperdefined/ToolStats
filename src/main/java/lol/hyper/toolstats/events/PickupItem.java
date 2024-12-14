@@ -19,6 +19,7 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.UUIDDataType;
+import net.kyori.adventure.text.Component;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
@@ -48,13 +49,12 @@ public class PickupItem implements Listener {
             return;
         }
         Entity entity = event.getEntity();
-        if (entity instanceof Player) {
-            Player player = (Player) entity;
+        if (entity instanceof Player player) {
             if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
                 return;
             }
             Item item = event.getItem();
-            if (item.getType() == EntityType.DROPPED_ITEM) {
+            if (item.getType() == EntityType.ITEM) {
                 ItemStack itemStack = event.getItem().getItemStack();
                 ItemMeta meta = itemStack.getItemMeta();
                 if (meta == null) {
@@ -103,8 +103,8 @@ public class PickupItem implements Listener {
 
         if (toolStats.config.getBoolean("enabled.elytra-tag")) {
             String formattedDate = toolStats.numberFormat.formatDate(finalDate);
-            List<String> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
-            meta.setLore(newLore);
+            List<Component> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
+            meta.lore(newLore);
         }
         finalItem.setItemMeta(meta);
         return finalItem;

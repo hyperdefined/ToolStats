@@ -17,8 +17,10 @@
 
 package lol.hyper.toolstats.events;
 
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.UUIDDataType;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -31,6 +33,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class InventoryOpen implements Listener {
 
@@ -83,14 +86,8 @@ public class InventoryOpen implements Listener {
                 }
             }
             ItemMeta clone = itemMeta.clone();
-            BukkitRunnable runnable = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    itemStack.setItemMeta(clone);
-                }
-            };
             if (location != null) {
-                toolStats.scheduleRegion(runnable, location.getWorld(), location.getChunk(), 1);
+                Bukkit.getRegionScheduler().runDelayed(toolStats, location, scheduledTask -> itemStack.setItemMeta(clone), 1);
             }
         }
     }

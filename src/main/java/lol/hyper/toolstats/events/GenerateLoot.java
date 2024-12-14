@@ -19,6 +19,7 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.UUIDDataType;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -76,8 +77,7 @@ public class GenerateLoot implements Listener {
             Player player = toolStats.playerInteract.openedChests.get(openedChest);
             setLoot(event.getLoot(), player);
         }
-        if (inventoryHolder instanceof StorageMinecart) {
-            StorageMinecart mineCart = (StorageMinecart) inventoryHolder;
+        if (inventoryHolder instanceof StorageMinecart mineCart) {
             if (toolStats.playerInteract.openedMineCarts.containsKey(mineCart)) {
                 Player player = toolStats.playerInteract.openedMineCarts.get(mineCart);
                 setLoot(event.getLoot(), player);
@@ -118,8 +118,8 @@ public class GenerateLoot implements Listener {
 
         if (toolStats.configTools.checkConfig(newItem.getType(), "looted-tag")) {
             String formattedDate = toolStats.numberFormat.formatDate(finalDate);
-            List<String> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
-            meta.setLore(newLore);
+            List<Component> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
+            meta.lore(newLore);
         }
         newItem.setItemMeta(meta);
         return newItem;

@@ -17,6 +17,7 @@
 
 package lol.hyper.toolstats.events;
 
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.UUIDDataType;
 import org.bukkit.entity.Player;
@@ -31,6 +32,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class PlayerJoin implements Listener {
 
@@ -77,13 +79,7 @@ public class PlayerJoin implements Listener {
                 container.set(toolStats.hash, PersistentDataType.STRING, hash);
             }
             ItemMeta clone = itemMeta.clone();
-            BukkitRunnable runnable = new BukkitRunnable() {
-                @Override
-                public void run() {
-                    itemStack.setItemMeta(clone);
-                }
-            };
-            toolStats.scheduleEntity(runnable, player, 1);
+            player.getScheduler().runDelayed(toolStats, scheduledTask -> itemStack.setItemMeta(clone), null, 1);
         }
     }
 }

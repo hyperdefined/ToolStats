@@ -18,6 +18,7 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -94,13 +95,13 @@ public class PlayerMove implements Listener {
         if (toolStats.config.getBoolean("enabled.flight-time")) {
             String oldFlightFormatted = toolStats.numberFormat.formatDouble((double) flightTime / 1000);
             String newFlightFormatted = toolStats.numberFormat.formatDouble(newDuration / 1000);
-            String oldLine = toolStats.configTools.formatLore("flight-time", "{time}", oldFlightFormatted);
-            String newLine = toolStats.configTools.formatLore("flight-time", "{time}", newFlightFormatted);
+            Component oldLine = toolStats.configTools.formatLore("flight-time", "{time}", oldFlightFormatted);
+            Component newLine = toolStats.configTools.formatLore("flight-time", "{time}", newFlightFormatted);
             if (oldLine == null || newLine == null) {
                 return;
             }
-            List<String> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.setLore(newLore);
+            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+            meta.lore(newLore);
         }
         chest.setItemMeta(meta);
     }
