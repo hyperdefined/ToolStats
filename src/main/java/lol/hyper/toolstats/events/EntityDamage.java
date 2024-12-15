@@ -161,8 +161,8 @@ public class EntityDamage implements Listener {
         }
 
         // ignore void and /kill damage
-        String cause = event.getCause().toString().toUpperCase();
-        if (ignoredDamageCauses.contains(cause)) {
+        EntityDamageEvent.DamageCause cause = event.getCause();
+        if (ignoredCauses.contains(cause)) {
             return;
         }
 
@@ -189,8 +189,8 @@ public class EntityDamage implements Listener {
         }
 
         // ignore void and /kill damage
-        String cause = event.getCause().toString().toUpperCase();
-        if (ignoredDamageCauses.contains(cause)) {
+        EntityDamageEvent.DamageCause cause = event.getCause();
+        if (ignoredCauses.contains(cause)) {
             return;
         }
 
