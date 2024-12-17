@@ -107,7 +107,9 @@ public class ConfigTools {
         Component component;
 
         // set the placeholder to the value
-        lore = lore.replace(placeHolder, String.valueOf(value));
+        if (placeHolder != null && value != null) {
+            lore = lore.replace(placeHolder, String.valueOf(value));
+        }
 
         // if we match the old color codes, then format them as so
         Matcher hexMatcher = CONFIG_HEX_PATTERN.matcher(lore);
