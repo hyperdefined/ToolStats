@@ -6,7 +6,7 @@
 	<a href="https://papermc.io"><img alt="paper" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/supported/paper_vector.svg"></a>
 	<a href="https://github.com/hyperdefined/ToolStats/wiki"><img alt="ghpages" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/documentation/ghpages_vector.svg"></a>
 	<a href="https://discord.gg/rJuQXVcJz8"><img alt="discord-singular" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/social/discord-singular_vector.svg"></a>
-	<a href="https://ko-fi.com/hyperdefined"><img alt="kofi-singular" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/donate/kofi-singular_vector.svg"></a>
+	<a href="https://buymeacoffee.com/hyperdefined"><img alt="buymeacoffee-singular" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/donate/buymeacoffee-singular_vector.svg"></a>
 </p>
 
 ToolStats is a Paper plugin that display various stats about tools. This plugin is inspired off of [GearStats](https://www.spigotmc.org/resources/gearstats.12960/). You can disable/enable which stats are shown on which tools via the config. Note: stats are tracked regardless of config setting. The config is to disable the lore on the item.
