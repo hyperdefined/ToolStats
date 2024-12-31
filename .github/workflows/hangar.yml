@@ -1,9 +1,7 @@
-name: Update Hangar Page
-
+name: Update Hangar Description
 on:
   push:
     branches: [ master ]
-
 jobs:
   update-hangar-page:
     runs-on: ubuntu-latest

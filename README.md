@@ -11,8 +11,6 @@
 
 ToolStats is a Paper plugin that display various stats about tools. This plugin is inspired off of [GearStats](https://www.spigotmc.org/resources/gearstats.12960/). You can disable/enable which stats are shown on which tools via the config. Note: stats are tracked regardless of config setting. The config is to disable the lore on the item.
 
-test :3
-
 Here is everything it tracks:
 * Blocks mined (pickaxes, shovels, axes, hoes, shears)
 * Crops mined (hoes)
