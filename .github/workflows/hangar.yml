@@ -22,7 +22,7 @@ jobs:
           echo "::add-mask::$TOKEN"
           echo "token=$TOKEN" >> $GITHUB_OUTPUT
 
-      - name: Update Project for Hangar
+      - name: Update Project Description
         run: |
           README_CONTENT=$(cat README.md | jq -Rs .)
           curl -s -X PATCH "https://hangar.papermc.io/api/v1/pages/editmain/ToolStats" \
