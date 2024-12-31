@@ -22,7 +22,7 @@ jobs:
             exit 1
           fi
           echo "::add-mask::$TOKEN"
-          echo "::set-output name=token::$TOKEN"
+          echo "token=$TOKEN" >> $GITHUB_OUTPUT
 
       - name: Update Project for Hangar
         run: |
