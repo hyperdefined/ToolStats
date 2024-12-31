@@ -1,0 +1,34 @@
+name: Update Hangar Page
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-hangar-page:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Authenticate with Hangar
+        id: authenticate
+        run: |
+          RESPONSE=$(curl -s -X POST "https://hangar.papermc.io/api/v1/authenticate?apiKey=${{ secrets.HANGAR }}" -H 'accept: application/json')
+          TOKEN=$(echo $RESPONSE | jq -r '.token')
+          if [[ "$TOKEN" == "null" ]]; then
+            echo "Error: Unable to fetch JWT token"
+            exit 1
+          fi
+          echo "::add-mask::$TOKEN"
+          echo "::set-output name=token::$TOKEN"
+
+      - name: Update Project for Hangar
+        run: |
+          README_CONTENT=$(cat README.md | jq -Rs .)
+          curl -s -X PATCH "https://hangar.papermc.io/api/v1/pages/editmain/ToolStats" \
+            -H "content-type: application/json" \
+            -H "Authorization: HangarAuth ${{ steps.authenticate.outputs.token }}" \
+            -d "{\"content\":$README_CONTENT}"
