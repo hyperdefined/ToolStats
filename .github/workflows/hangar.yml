@@ -2,8 +2,7 @@ name: Update Hangar Page
 
 on:
   push:
-    branches:
-      - main
+    branches: [ master ]
 
 jobs:
   update-hangar-page:
