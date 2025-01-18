@@ -65,7 +65,9 @@ public class CraftItem implements Listener {
         // if the player shift clicks, send them this warning
         if (event.isShiftClick()) {
             Component component = toolStats.configTools.formatLore("shift-click-warning.crafting", null, null);
-            event.getWhoClicked().sendMessage(component);
+            if (component != null) {
+                event.getWhoClicked().sendMessage(component);
+            }
         }
 
         // test the item before setting it

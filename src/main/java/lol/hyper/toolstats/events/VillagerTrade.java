@@ -70,7 +70,9 @@ public class VillagerTrade implements Listener {
                 // if the player shift clicks, show the warning
                 if (event.isShiftClick()) {
                     Component component = toolStats.configTools.formatLore("shift-click-warning.trading", null, null);
-                    event.getWhoClicked().sendMessage(component);
+                    if (component != null) {
+                        event.getWhoClicked().sendMessage(component);
+                    }
                 }
                 ItemStack newItem = addLore(item, player);
                 if (newItem != null) {

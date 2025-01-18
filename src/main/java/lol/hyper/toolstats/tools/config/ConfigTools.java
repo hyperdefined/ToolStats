@@ -100,6 +100,12 @@ public class ConfigTools {
     public Component formatLore(String configName, String placeHolder, Object value) {
         String lore = toolStats.config.getString("messages." + configName);
         if (lore == null) {
+            toolStats.logger.warning("Unable to find config message for: messages." + configName);
+            return null;
+        }
+
+        // if the config message is empty, don't send it
+        if (lore.isEmpty()) {
             return null;
         }
 
