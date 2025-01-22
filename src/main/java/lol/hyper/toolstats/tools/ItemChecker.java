@@ -47,9 +47,6 @@ public class ItemChecker {
             if (lowerCase.contains("_helmet") || lowerCase.contains("_chestplate") || lowerCase.contains("_leggings") || lowerCase.contains("_boots")) {
                 armorItems.add(material);
             }
-            if (lowerCase.equalsIgnoreCase("mace")) {
-                meleeItems.add(material);
-            }
         }
 
         // hardcode these
@@ -59,6 +56,7 @@ public class ItemChecker {
         validItems.add(Material.FISHING_ROD);
         validItems.add(Material.CROSSBOW);
         validItems.add(Material.ELYTRA);
+        validItems.add(Material.MACE);
 
         // combine the lists
         validItems.addAll(armorItems);
