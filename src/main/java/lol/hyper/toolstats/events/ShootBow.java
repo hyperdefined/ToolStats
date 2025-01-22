@@ -56,10 +56,8 @@ public class ShootBow implements Listener {
             return;
         }
 
-        PlayerInventory inventory = player.getInventory();
-        ItemStack heldBow = getBow(inventory);
-
-        // player swapped
+        ItemStack heldBow = getBow(player.getInventory());
+        // player swapped or we can't get the bow
         if (heldBow == null) {
             return;
         }
@@ -68,22 +66,23 @@ public class ShootBow implements Listener {
     }
 
     private static @Nullable ItemStack getBow(PlayerInventory inventory) {
-        boolean isMainHand = inventory.getItemInMainHand().getType() == Material.BOW || inventory.getItemInMainHand().getType() == Material.CROSSBOW;
-        boolean isOffHand = inventory.getItemInOffHand().getType() == Material.BOW || inventory.getItemInMainHand().getType() == Material.CROSSBOW;
-        ItemStack heldBow = null;
-        if (isMainHand) {
-            heldBow = inventory.getItemInMainHand();
+        ItemStack main = inventory.getItemInMainHand();
+        ItemStack offHand = inventory.getItemInOffHand();
+
+        boolean isMain = main.getType() == Material.BOW || main.getType() == Material.CROSSBOW;
+        boolean isOffHand = offHand.getType() == Material.BOW || offHand.getType() == Material.CROSSBOW;
+
+        // if the player is holding a bow in their main hand, use that one
+        // if the bow is in their offhand instead, use that one after checking main hand
+        // Minecraft prioritizes main hand if the player holds in both hands
+        if (isMain) {
+            return main;
         }
         if (isOffHand) {
-            heldBow = inventory.getItemInOffHand();
+            return offHand;
         }
 
-        // if the player is holding a bow in both hands
-        // default to main hand since that takes priority
-        if (isMainHand && isOffHand) {
-            heldBow = inventory.getItemInMainHand();
-        }
-        return heldBow;
+        return null;
     }
 
     private void updateArrowsShot(ItemStack bow) {
