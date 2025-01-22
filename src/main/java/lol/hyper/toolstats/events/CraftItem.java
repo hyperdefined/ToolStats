@@ -17,9 +17,11 @@
 
 package lol.hyper.toolstats.events;
 
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.UUIDDataType;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -27,7 +29,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -35,6 +39,7 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class CraftItem implements Listener {
 
@@ -53,25 +58,51 @@ public class CraftItem implements Listener {
         if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
-        ItemStack itemStack = event.getCurrentItem();
-        if (itemStack == null || itemStack.getType() == Material.AIR) {
+        ItemStack craftedItem = event.getCurrentItem();
+        if (craftedItem == null || craftedItem.getType() == Material.AIR) {
             return;
         }
+        Material craftedMaterial = craftedItem.getType();
         // only check certain items
-        if (!toolStats.itemChecker.isValidItem(itemStack.getType())) {
+        if (!toolStats.itemChecker.isValidItem(craftedMaterial)) {
             return;
         }
 
-        // if the player shift clicks, send them this warning
+        // if the player shift clicks
         if (event.isShiftClick()) {
-            Component component = toolStats.configTools.formatLore("shift-click-warning.crafting", null, null);
-            if (component != null) {
-                event.getWhoClicked().sendMessage(component);
-            }
+            // store the player inventory before they craft the items
+            ItemStack[] beforeCraft = player.getInventory().getContents();
+            // run a tick after to see the changes
+            player.getScheduler().runDelayed(toolStats, scheduledTask -> {
+                // get their inventory after the craft
+                ItemStack[] afterCraft = player.getInventory().getContents();
+                for (int i = 0; i < afterCraft.length; i++) {
+                    ItemStack newSlotItem = afterCraft[i];
+                    ItemStack oldSlotItem = beforeCraft[i];
+
+                    // if this slot is empty after crafting, skip it
+                    if (newSlotItem == null) {
+                        continue;
+                    }
+
+                    // if the item matches what we crafted
+                    if (newSlotItem.getType() == craftedMaterial) {
+                        // if the slot was empty before we crafted, this means we just made it
+                        if (oldSlotItem == null) {
+                            // add the lore
+                            ItemStack newItem = addLore(newSlotItem, player);
+                            if (newItem != null) {
+                                player.getInventory().setItem(i, newItem);
+                            }
+                        }
+                    }
+                }
+            }, null, 1);
+            return;
         }
 
-        // test the item before setting it
-        ItemStack newItem = addLore(itemStack, player);
+        // the player did not shift click
+        ItemStack newItem = addLore(craftedItem, player);
         if (newItem != null) {
             // set the result
             event.setCurrentItem(newItem);

@@ -21,6 +21,7 @@ import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.UUIDDataType;
 import net.kyori.adventure.text.Component;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -58,27 +59,55 @@ public class VillagerTrade implements Listener {
             return;
         }
         // only check villager inventories
-        if (inventory instanceof MerchantInventory) {
-            // only check the result slot (the item you receive)
-            if (event.getSlotType() == InventoryType.SlotType.RESULT) {
-                ItemStack item = event.getCurrentItem();
-                // only check items we want
-                if (!toolStats.itemChecker.isValidItem(item.getType())) {
-                    return;
-                }
-                // if the player shift clicks, show the warning
-                if (event.isShiftClick()) {
-                    Component component = toolStats.configTools.formatLore("shift-click-warning.trading", null, null);
-                    if (component != null) {
-                        event.getWhoClicked().sendMessage(component);
+        if (!(inventory instanceof MerchantInventory)) {
+            return;
+        }
+        // only check the result slot (the item you receive)
+        if (event.getSlotType() != InventoryType.SlotType.RESULT) {
+            return;
+        }
+        ItemStack tradedItem = event.getCurrentItem();
+        Material tradedMaterial = tradedItem.getType();
+        // only check items we want
+        if (!toolStats.itemChecker.isValidItem(tradedMaterial)) {
+            return;
+        }
+        // if the player shift clicks
+        if (event.isShiftClick()) {
+            // store the player inventory before they trade the items
+            ItemStack[] beforeTrade = player.getInventory().getContents();
+            // run a tick after to see the changes
+            player.getScheduler().runDelayed(toolStats, scheduledTask -> {
+                // get their inventory after the trade
+                ItemStack[] afterTrade = player.getInventory().getContents();
+                for (int i = 0; i < afterTrade.length; i++) {
+                    ItemStack newSlotItem = afterTrade[i];
+                    ItemStack oldSlotItem = beforeTrade[i];
+
+                    // if this slot is empty after trading, skip it
+                    if (newSlotItem == null) {
+                        continue;
+                    }
+
+                    // if the item matches what we traded
+                    if (newSlotItem.getType() == tradedMaterial) {
+                        // if the slot was empty before we traded, this means we just traded it
+                        if (oldSlotItem == null) {
+                            // add the lore
+                            ItemStack newItem = addLore(newSlotItem, player);
+                            if (newItem != null) {
+                                player.getInventory().setItem(i, newItem);
+                            }
+                        }
                     }
                 }
-                ItemStack newItem = addLore(item, player);
-                if (newItem != null) {
-                    // set the new item
-                    inventory.setItem(event.getSlot(), newItem);
-                }
-            }
+            }, null, 1);
+            return;
+        }
+        ItemStack newItem = addLore(tradedItem, player);
+        if (newItem != null) {
+            // set the new item
+            inventory.setItem(event.getSlot(), newItem);
         }
     }
 
