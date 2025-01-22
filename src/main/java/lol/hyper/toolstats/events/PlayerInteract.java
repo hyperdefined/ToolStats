@@ -17,7 +17,6 @@
 
 package lol.hyper.toolstats.events;
 
-import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import lol.hyper.toolstats.ToolStats;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -32,11 +31,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
 public class PlayerInteract implements Listener {
 

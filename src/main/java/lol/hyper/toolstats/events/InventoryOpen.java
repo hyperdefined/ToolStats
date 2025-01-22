@@ -17,7 +17,6 @@
 
 package lol.hyper.toolstats.events;
 
-import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.UUIDDataType;
 import org.bukkit.Bukkit;
@@ -30,10 +29,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
-import java.util.function.Consumer;
 
 public class InventoryOpen implements Listener {
 

@@ -107,20 +107,16 @@ public class EntityDamage implements Listener {
                         return;
                     }
                     PlayerInventory inventory = shootingPlayer.getInventory();
-                    boolean isMainHand = inventory.getItemInMainHand().getType() == Material.BOW || inventory.getItemInMainHand().getType() == Material.CROSSBOW;
-                    boolean isOffHand = inventory.getItemInOffHand().getType() == Material.BOW || inventory.getItemInMainHand().getType() == Material.CROSSBOW;
+                    ItemStack main = inventory.getItemInMainHand();
+                    ItemStack offHand = inventory.getItemInOffHand();
+                    boolean isMain = main.getType() == Material.BOW || main.getType() == Material.CROSSBOW;
+                    boolean isOffHand = offHand.getType() == Material.BOW || offHand.getType() == Material.CROSSBOW;
                     ItemStack heldBow = null;
-                    if (isMainHand) {
-                        heldBow = inventory.getItemInMainHand();
+                    if (isMain) {
+                        heldBow = main;
                     }
                     if (isOffHand) {
-                        heldBow = inventory.getItemInOffHand();
-                    }
-
-                    // if the player is holding a bow in both hands
-                    // default to main hand since that takes priority
-                    if (isMainHand && isOffHand) {
-                        heldBow = inventory.getItemInMainHand();
+                        heldBow = offHand;
                     }
 
                     // player swapped

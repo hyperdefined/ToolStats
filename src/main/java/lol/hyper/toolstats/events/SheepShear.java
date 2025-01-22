@@ -59,9 +59,9 @@ public class SheepShear implements Listener {
             return;
         }
 
-        ItemStack shears = getShears(player);
-        // player swapped items?
-        if (shears == null) {
+        ItemStack heldShears = getShears(player.getInventory());
+        // player swapped or we can't get the shears
+        if (heldShears == null) {
             return;
         }
 
@@ -71,27 +71,27 @@ public class SheepShear implements Listener {
         }
 
         // update the stats
-        addLore(shears);
+        addLore(heldShears);
     }
 
-    private static @Nullable ItemStack getShears(Player player) {
-        PlayerInventory inventory = player.getInventory();
-        boolean isMainHand = inventory.getItemInMainHand().getType() == Material.SHEARS;
-        boolean isOffHand = inventory.getItemInOffHand().getType() == Material.SHEARS;
-        ItemStack shears = null;
-        if (isMainHand) {
-            shears = inventory.getItemInMainHand();
+    private static @Nullable ItemStack getShears(PlayerInventory inventory) {
+        ItemStack main = inventory.getItemInMainHand();
+        ItemStack offHand = inventory.getItemInOffHand();
+
+        boolean isMain = main.getType() == Material.SHEARS;
+        boolean isOffHand = offHand.getType() == Material.SHEARS;
+
+        // if the player is holding shears in their main hand, use that one
+        // if the shears are in their offhand instead, use that one after checking main hand
+        // Minecraft prioritizes main hand if the player holds in both hands
+        if (isMain) {
+            return main;
         }
         if (isOffHand) {
-            shears = inventory.getItemInOffHand();
+            return offHand;
         }
 
-        // if the player is hold shears in both hands
-        // default to main hand since that takes priority
-        if (isMainHand && isOffHand) {
-            shears = inventory.getItemInMainHand();
-        }
-        return shears;
+        return null;
     }
 
     /**

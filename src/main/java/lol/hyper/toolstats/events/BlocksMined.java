@@ -17,7 +17,6 @@
 
 package lol.hyper.toolstats.events;
 
-import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import lol.hyper.toolstats.ToolStats;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -35,11 +34,9 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.function.Consumer;
 
 public class BlocksMined implements Listener {
 
