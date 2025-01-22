@@ -19,6 +19,7 @@ package lol.hyper.toolstats.tools;
 
 import lol.hyper.toolstats.ToolStats;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -49,10 +50,10 @@ public class ItemLore {
             // keep track of line index
             // this doesn't mess the lore of existing items
             for (int x = 0; x < itemLore.size(); x++) {
-                Component line = itemLore.get(x);
+                String line = PlainTextComponentSerializer.plainText().serialize(itemLore.get(x));
                 // find the old line to update, keeping index
                 // this means we update this line only!
-                if (line.equals(oldLine)) {
+                if (line.equals(PlainTextComponentSerializer.plainText().serialize(oldLine))) {
                     itemLore.set(x, newLine);
                     return itemLore;
                 }
