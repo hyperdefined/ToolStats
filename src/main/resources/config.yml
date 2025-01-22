@@ -117,11 +117,6 @@ messages:
   damage-taken: "&7Damage taken: &8{damage}"
   arrows-shot: "&7Arrows shot: &8{arrows}"
   flight-time: "&7Flight time: &8{time}"
-  # Display this message if the player shift click trades/crafts items. It's not really easy to get every single item
-  # that is crafted. The tag will only be added to the first item. If you don't want this message, simply replace them both with ""
-  shift-click-warning:
-    crafting: "&cCrafting items via shift clicking does not fully apply tags to each item. This is a limitation with the Bukkit API."
-    trading: "&cTrading items via shift clicking does not fully apply tags to each item. This is a limitation with the Bukkit API."
   # Set display name for mobs. See: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
   mobs:
     ZOMBIE: "Zombie"
@@ -144,4 +139,4 @@ number-formats:
 # This has no use currently, but can be used for future features for dupe detection.
 generate-hash-for-items: true
 
-config-version: 7
+config-version: 8
