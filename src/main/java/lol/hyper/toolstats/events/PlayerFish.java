@@ -33,7 +33,6 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
 import java.util.List;
@@ -61,7 +60,7 @@ public class PlayerFish implements Listener {
             return;
         }
 
-        ItemStack fishingRod = getFishingRod(player.getInventory());
+        ItemStack fishingRod = toolStats.itemChecker.getFishingRod(player.getInventory());
         // player swapped items?
         if (fishingRod == null) {
             return;
@@ -93,32 +92,6 @@ public class PlayerFish implements Listener {
                 caughtItemEntity.setItemStack(newItem);
             }
         }
-    }
-
-    /**
-     * Get the player's fishing rod.
-     *
-     * @param inventory Their inventory.
-     * @return Their fishing rod, either main or offhand.
-     */
-    private static @Nullable ItemStack getFishingRod(PlayerInventory inventory) {
-        ItemStack main = inventory.getItemInMainHand();
-        ItemStack offHand = inventory.getItemInOffHand();
-
-        boolean isMain = main.getType() == Material.FISHING_ROD;
-        boolean isOffHand = offHand.getType() == Material.FISHING_ROD;
-
-        // if the player is holding a fishing rod in their main hand, use that one
-        // if the fishing rod is in their offhand instead, use that one after checking main hand
-        // Minecraft prioritizes main hand if the player holds in both hands
-        if (isMain) {
-            return main;
-        }
-        if (isOffHand) {
-            return offHand;
-        }
-
-        return null;
     }
 
     /**

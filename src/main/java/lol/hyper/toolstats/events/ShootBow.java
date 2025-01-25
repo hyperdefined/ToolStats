@@ -18,7 +18,6 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import net.kyori.adventure.text.Component;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -29,12 +28,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class ShootBow implements Listener {
 
@@ -56,7 +50,7 @@ public class ShootBow implements Listener {
             return;
         }
 
-        ItemStack heldBow = getBow(player.getInventory());
+        ItemStack heldBow = toolStats.itemChecker.getBow(player.getInventory());
         // player swapped or we can't get the bow
         if (heldBow == null) {
             return;
@@ -74,31 +68,5 @@ public class ShootBow implements Listener {
                 inventory.setItemInOffHand(newItem);
             }
         }
-    }
-
-    /**
-     * Get the player's bow/crossbow.
-     *
-     * @param inventory Their inventory.
-     * @return Their bow/crossbow, either main or offhand.
-     */
-    private static @Nullable ItemStack getBow(PlayerInventory inventory) {
-        ItemStack main = inventory.getItemInMainHand();
-        ItemStack offHand = inventory.getItemInOffHand();
-
-        boolean isMain = main.getType() == Material.BOW || main.getType() == Material.CROSSBOW;
-        boolean isOffHand = offHand.getType() == Material.BOW || offHand.getType() == Material.CROSSBOW;
-
-        // if the player is holding a bow in their main hand, use that one
-        // if the bow is in their offhand instead, use that one after checking main hand
-        // Minecraft prioritizes main hand if the player holds in both hands
-        if (isMain) {
-            return main;
-        }
-        if (isOffHand) {
-            return offHand;
-        }
-
-        return null;
     }
 }

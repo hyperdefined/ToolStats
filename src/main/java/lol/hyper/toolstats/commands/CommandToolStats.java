@@ -137,6 +137,11 @@ public class CommandToolStats implements TabExecutor {
                     sender.sendMessage(Component.text("Invalid token type.", NamedTextColor.RED));
                     return true;
                 }
+                // make sure tokens are enabled before giving
+                if (!toolStats.config.getBoolean("tokens.enabled")) {
+                    sender.sendMessage(Component.text("Unable to give tokens. Tokens are disabled", NamedTextColor.RED));
+                    return true;
+                }
                 // if the user does not send in a number, default to 1
                 int amount = 1;
                 if (args.length >= 4) {

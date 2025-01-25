@@ -29,7 +29,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.jetbrains.annotations.Nullable;
 
 public class SheepShear implements Listener {
 
@@ -53,7 +52,7 @@ public class SheepShear implements Listener {
             return;
         }
 
-        ItemStack heldShears = getShears(player.getInventory());
+        ItemStack heldShears = toolStats.itemChecker.getShears(player.getInventory());
         // player swapped or we can't get the shears
         if (heldShears == null) {
             return;
@@ -77,31 +76,5 @@ public class SheepShear implements Listener {
                 inventory.setItemInOffHand(newItem);
             }
         }
-    }
-
-    /**
-     * Get the player's shears.
-     *
-     * @param inventory Their inventory.
-     * @return Their shears, either main or offhand.
-     */
-    private static @Nullable ItemStack getShears(PlayerInventory inventory) {
-        ItemStack main = inventory.getItemInMainHand();
-        ItemStack offHand = inventory.getItemInOffHand();
-
-        boolean isMain = main.getType() == Material.SHEARS;
-        boolean isOffHand = offHand.getType() == Material.SHEARS;
-
-        // if the player is holding shears in their main hand, use that one
-        // if the shears are in their offhand instead, use that one after checking main hand
-        // Minecraft prioritizes main hand if the player holds in both hands
-        if (isMain) {
-            return main;
-        }
-        if (isOffHand) {
-            return offHand;
-        }
-
-        return null;
     }
 }

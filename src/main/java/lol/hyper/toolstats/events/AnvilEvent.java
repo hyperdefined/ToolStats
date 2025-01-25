@@ -40,6 +40,10 @@ public class AnvilEvent implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onAnvilEvent(PrepareAnvilEvent event) {
+        // only listen if the token system is enabled
+        if (!toolStats.config.getBoolean("tokens.enabled")) {
+            return;
+        }
         AnvilInventory inventory = event.getInventory();
 
         ItemStack firstSlot = inventory.getItem(0);
@@ -58,7 +62,6 @@ public class AnvilEvent implements Listener {
             return;
         }
 
-        PersistentDataContainer firstSlotContainer = firstSlot.getItemMeta().getPersistentDataContainer();
         PersistentDataContainer secondSlotContainer = secondSlot.getItemMeta().getPersistentDataContainer();
 
         // make sure the 2nd item is one of ours

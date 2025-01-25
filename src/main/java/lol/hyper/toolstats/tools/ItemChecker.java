@@ -20,9 +20,11 @@ package lol.hyper.toolstats.tools;
 import lol.hyper.toolstats.ToolStats;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -199,5 +201,83 @@ public class ItemChecker {
      */
     public int getCost(String tokenType) {
         return toolStats.config.getInt("tokens.data." + tokenType + ".levels");
+    }
+
+    /**
+     * Get the player's bow/crossbow.
+     *
+     * @param inventory Their inventory.
+     * @return Their bow/crossbow, either main or offhand.
+     */
+    public @Nullable ItemStack getBow(PlayerInventory inventory) {
+        ItemStack main = inventory.getItemInMainHand();
+        ItemStack offHand = inventory.getItemInOffHand();
+
+        boolean isMain = main.getType() == Material.BOW || main.getType() == Material.CROSSBOW;
+        boolean isOffHand = offHand.getType() == Material.BOW || offHand.getType() == Material.CROSSBOW;
+
+        // if the player is holding a bow in their main hand, use that one
+        // if the bow is in their offhand instead, use that one after checking main hand
+        // Minecraft prioritizes main hand if the player holds in both hands
+        if (isMain) {
+            return main;
+        }
+        if (isOffHand) {
+            return offHand;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the player's shears.
+     *
+     * @param inventory Their inventory.
+     * @return Their shears, either main or offhand.
+     */
+    public @Nullable ItemStack getShears(PlayerInventory inventory) {
+        ItemStack main = inventory.getItemInMainHand();
+        ItemStack offHand = inventory.getItemInOffHand();
+
+        boolean isMain = main.getType() == Material.SHEARS;
+        boolean isOffHand = offHand.getType() == Material.SHEARS;
+
+        // if the player is holding shears in their main hand, use that one
+        // if the shears are in their offhand instead, use that one after checking main hand
+        // Minecraft prioritizes main hand if the player holds in both hands
+        if (isMain) {
+            return main;
+        }
+        if (isOffHand) {
+            return offHand;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the player's fishing rod.
+     *
+     * @param inventory Their inventory.
+     * @return Their fishing rod, either main or offhand.
+     */
+    public @Nullable ItemStack getFishingRod(PlayerInventory inventory) {
+        ItemStack main = inventory.getItemInMainHand();
+        ItemStack offHand = inventory.getItemInOffHand();
+
+        boolean isMain = main.getType() == Material.FISHING_ROD;
+        boolean isOffHand = offHand.getType() == Material.FISHING_ROD;
+
+        // if the player is holding a fishing rod in their main hand, use that one
+        // if the fishing rod is in their offhand instead, use that one after checking main hand
+        // Minecraft prioritizes main hand if the player holds in both hands
+        if (isMain) {
+            return main;
+        }
+        if (isOffHand) {
+            return offHand;
+        }
+
+        return null;
     }
 }

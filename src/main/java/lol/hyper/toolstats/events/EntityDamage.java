@@ -19,7 +19,6 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -112,19 +111,7 @@ public class EntityDamage implements Listener {
                         return;
                     }
                     PlayerInventory shootingPlayerInventory = shootingPlayer.getInventory();
-                    ItemStack main = shootingPlayerInventory.getItemInMainHand();
-                    ItemStack offHand = shootingPlayerInventory.getItemInOffHand();
-                    boolean isMain = main.getType() == Material.BOW || main.getType() == Material.CROSSBOW;
-                    boolean isOffHand = offHand.getType() == Material.BOW || offHand.getType() == Material.CROSSBOW;
-                    ItemStack heldBow = null;
-                    if (isMain) {
-                        heldBow = main;
-                    }
-                    if (isOffHand) {
-                        heldBow = offHand;
-                    }
-
-                    // player swapped
+                    ItemStack heldBow = toolStats.itemChecker.getBow(shootingPlayerInventory);
                     if (heldBow == null) {
                         return;
                     }
