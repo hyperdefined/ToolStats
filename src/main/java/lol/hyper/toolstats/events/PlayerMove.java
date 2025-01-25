@@ -18,7 +18,6 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,12 +25,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class PlayerMove implements Listener {
@@ -55,54 +51,18 @@ public class PlayerMove implements Listener {
         } else {
             // player is not flying
             if (playerStartFlight.containsKey(player)) {
-                trackFlight(player, playerStartFlight.get(player));
+                PlayerInventory inventory = player.getInventory();
+                ItemStack chest = inventory.getChestplate();
+                // make sure the player is wearing an elytra
+                if (chest != null && chest.getType() == Material.ELYTRA) {
+                    long duration = (System.currentTimeMillis() - playerStartFlight.get(player));
+                    ItemStack newItem = toolStats.itemLore.updateFlightTime(chest, duration);
+                    if (newItem != null) {
+                        inventory.setChestplate(newItem);
+                    }
+                }
                 playerStartFlight.remove(player);
             }
         }
-    }
-
-    private void trackFlight(Player player, long startTime) {
-        ItemStack chest = player.getInventory().getChestplate();
-        // make sure their chest piece is an elytra
-        if (chest == null || chest.getType() != Material.ELYTRA) {
-            return;
-        }
-        ItemMeta meta = chest.getItemMeta();
-        if (meta == null) {
-            toolStats.logger.warning(chest + " does NOT have any meta! Unable to update stats.");
-            return;
-        }
-
-        // read the current stats from the item
-        // if they don't exist, then start from 0
-        Long flightTime = 0L;
-        PersistentDataContainer container = meta.getPersistentDataContainer();
-        if (container.has(toolStats.flightTime, PersistentDataType.LONG)) {
-            flightTime = container.get(toolStats.flightTime, PersistentDataType.LONG);
-        }
-
-        if (flightTime == null) {
-            flightTime = 0L;
-            toolStats.logger.warning(flightTime + " does not have valid flight-time set! Resting to zero. This should NEVER happen.");
-        }
-
-        // get the duration of the flight
-        long duration = (System.currentTimeMillis() - startTime);
-        double newDuration = flightTime + duration;
-        container.set(toolStats.flightTime, PersistentDataType.LONG, flightTime + duration);
-
-        // do we add the lore based on the config?
-        if (toolStats.config.getBoolean("enabled.flight-time")) {
-            String oldFlightFormatted = toolStats.numberFormat.formatDouble((double) flightTime / 1000);
-            String newFlightFormatted = toolStats.numberFormat.formatDouble(newDuration / 1000);
-            Component oldLine = toolStats.configTools.formatLore("flight-time", "{time}", oldFlightFormatted);
-            Component newLine = toolStats.configTools.formatLore("flight-time", "{time}", newFlightFormatted);
-            if (oldLine == null || newLine == null) {
-                return;
-            }
-            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.lore(newLore);
-        }
-        chest.setItemMeta(meta);
     }
 }

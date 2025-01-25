@@ -21,6 +21,7 @@ import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.config.versions.Version6;
 import lol.hyper.toolstats.tools.config.versions.Version7;
 import lol.hyper.toolstats.tools.config.versions.Version8;
+import lol.hyper.toolstats.tools.config.versions.Version9;
 
 public class ConfigUpdater {
 
@@ -50,6 +51,12 @@ public class ConfigUpdater {
                 // Version 7 to 8
                 Version8 version8 = new Version8(toolStats);
                 version8.update();
+                break;
+            }
+            case 8: {
+                // Version 8 to 9
+                Version9 version9 = new Version9(toolStats);
+                version9.update();
                 break;
             }
         }

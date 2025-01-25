@@ -18,7 +18,6 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -31,11 +30,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 
-import java.util.List;
 import java.util.Locale;
 
 public class BlocksMined implements Listener {
@@ -69,91 +64,29 @@ public class BlocksMined implements Listener {
             return;
         }
 
+        // if the item is a hoe
         if (heldItem.getType().toString().toLowerCase(Locale.ROOT).contains("hoe")) {
             // player is breaking crops with a hoe
-            if (block.getBlockData() instanceof Ageable) {
-                updateCropsMined(heldItem, (Ageable) block.getBlockData());
+            if (block.getBlockData() instanceof Ageable ageable) {
+                // ignore crops that are not fully grown
+                if (ageable.getAge() != ageable.getMaximumAge()) {
+                    return;
+                }
+                ItemStack newItem = toolStats.itemLore.updateCropsMined(heldItem, 1);
+                if (newItem != null) {
+                    // replace item in main hand
+                    inventory.setItemInMainHand(newItem);
+                }
             }
         } else {
+            // item is not a hoe
             // update the blocks mined
-            updateBlocksMined(heldItem);
-        }
-    }
-
-    private void updateBlocksMined(ItemStack playerTool) {
-        ItemMeta meta = playerTool.getItemMeta();
-        if (meta == null) {
-            toolStats.logger.warning(playerTool + " does NOT have any meta! Unable to update stats.");
-            return;
-        }
-        // read the current stats from the item
-        // if they don't exist, then start from 0
-        Integer blocksMined = 0;
-        PersistentDataContainer container = meta.getPersistentDataContainer();
-        if (container.has(toolStats.genericMined, PersistentDataType.INTEGER)) {
-            blocksMined = container.get(toolStats.genericMined, PersistentDataType.INTEGER);
-        }
-
-        if (blocksMined == null) {
-            blocksMined = 0;
-            toolStats.logger.warning(playerTool + " does not have valid generic-mined set! Resting to zero. This should NEVER happen.");
-        }
-
-        container.set(toolStats.genericMined, PersistentDataType.INTEGER, blocksMined + 1);
-
-        // do we add the lore based on the config?
-        if (toolStats.configTools.checkConfig(playerTool.getType(), "blocks-mined")) {
-            String oldBlocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined);
-            String newBlocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined + 1);
-            Component oldLine = toolStats.configTools.formatLore("blocks-mined", "{blocks}", oldBlocksMinedFormatted);
-            Component newLine = toolStats.configTools.formatLore("blocks-mined", "{blocks}", newBlocksMinedFormatted);
-            if (oldLine == null || newLine == null) {
-                return;
+            ItemStack newItem = toolStats.itemLore.updateBlocksMined(heldItem, 1);
+            if (newItem != null) {
+                toolStats.logger.info(newItem.toString());
+                // replace item in main hand
+                inventory.setItemInMainHand(newItem);
             }
-            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.lore(newLore);
         }
-        playerTool.setItemMeta(meta);
-    }
-
-    private void updateCropsMined(ItemStack playerTool, Ageable block) {
-        // ignore crops that are not fully grown
-        if (block.getAge() != block.getMaximumAge()) {
-            return;
-        }
-
-        ItemMeta meta = playerTool.getItemMeta();
-        if (meta == null) {
-            toolStats.logger.warning(playerTool + " does NOT have any meta! Unable to update stats.");
-            return;
-        }
-        // read the current stats from the item
-        // if they don't exist, then start from 0
-        Integer cropsMined = 0;
-        PersistentDataContainer container = meta.getPersistentDataContainer();
-        if (container.has(toolStats.cropsHarvested, PersistentDataType.INTEGER)) {
-            cropsMined = container.get(toolStats.cropsHarvested, PersistentDataType.INTEGER);
-        }
-
-        if (cropsMined == null) {
-            cropsMined = 0;
-            toolStats.logger.warning(playerTool + " does not have valid crops-mined set! Resting to zero. This should NEVER happen.");
-        }
-
-        container.set(toolStats.cropsHarvested, PersistentDataType.INTEGER, cropsMined + 1);
-
-        // do we add the lore based on the config?
-        if (toolStats.configTools.checkConfig(playerTool.getType(), "blocks-mined")) {
-            String oldCropsMinedFormatted = toolStats.numberFormat.formatInt(cropsMined);
-            String newCropsMinedFormatted = toolStats.numberFormat.formatInt(cropsMined + 1);
-            Component oldLine = toolStats.configTools.formatLore("crops-harvested", "{crops}", oldCropsMinedFormatted);
-            Component newLine = toolStats.configTools.formatLore("crops-harvested", "{crops}", newCropsMinedFormatted);
-            if (oldLine == null || newLine == null) {
-                return;
-            }
-            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.lore(newLore);
-        }
-        playerTool.setItemMeta(meta);
     }
 }

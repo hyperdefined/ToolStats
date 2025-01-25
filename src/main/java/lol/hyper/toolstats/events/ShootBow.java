@@ -62,9 +62,26 @@ public class ShootBow implements Listener {
             return;
         }
 
-        updateArrowsShot(heldBow);
+        ItemStack newItem = toolStats.itemLore.updateArrowsShot(heldBow, 1);
+        if (newItem != null) {
+            PlayerInventory inventory = player.getInventory();
+            boolean isMain = inventory.getItemInMainHand().getType() == Material.BOW || inventory.getItemInMainHand().getType() == Material.CROSSBOW;
+            boolean isOffHand = inventory.getItemInOffHand().getType() == Material.BOW || inventory.getItemInOffHand().getType() == Material.CROSSBOW;
+            if (isMain) {
+                inventory.setItemInMainHand(newItem);
+            }
+            if (isOffHand) {
+                inventory.setItemInOffHand(newItem);
+            }
+        }
     }
 
+    /**
+     * Get the player's bow/crossbow.
+     *
+     * @param inventory Their inventory.
+     * @return Their bow/crossbow, either main or offhand.
+     */
     private static @Nullable ItemStack getBow(PlayerInventory inventory) {
         ItemStack main = inventory.getItemInMainHand();
         ItemStack offHand = inventory.getItemInOffHand();
@@ -83,41 +100,5 @@ public class ShootBow implements Listener {
         }
 
         return null;
-    }
-
-    private void updateArrowsShot(ItemStack bow) {
-        ItemMeta meta = bow.getItemMeta();
-        if (meta == null) {
-            toolStats.logger.warning(bow + " does NOT have any meta! Unable to update stats.");
-            return;
-        }
-        // read the current stats from the item
-        // if they don't exist, then start from 0
-        Integer arrowsShot = 0;
-        PersistentDataContainer container = meta.getPersistentDataContainer();
-        if (container.has(toolStats.arrowsShot, PersistentDataType.INTEGER)) {
-            arrowsShot = container.get(toolStats.arrowsShot, PersistentDataType.INTEGER);
-        }
-
-        if (arrowsShot == null) {
-            arrowsShot = 0;
-            toolStats.logger.warning(arrowsShot + " does not have valid arrows-shot set! Resting to zero. This should NEVER happen.");
-        }
-
-        container.set(toolStats.arrowsShot, PersistentDataType.INTEGER, arrowsShot + 1);
-
-        // do we add the lore based on the config?
-        if (toolStats.config.getBoolean("enabled.arrows-shot")) {
-            String oldArrowsFormatted = toolStats.numberFormat.formatInt(arrowsShot);
-            String newArrowsFormatted = toolStats.numberFormat.formatInt(arrowsShot + 1);
-            Component oldLine = toolStats.configTools.formatLore("arrows-shot", "{arrows}", oldArrowsFormatted);
-            Component newLine = toolStats.configTools.formatLore("arrows-shot", "{arrows}", newArrowsFormatted);
-            if (oldLine == null || newLine == null) {
-                return;
-            }
-            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.lore(newLore);
-        }
-        bow.setItemMeta(meta);
     }
 }

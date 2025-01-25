@@ -65,7 +65,7 @@ public class NumberFormat {
         }
 
         if (decimalFormat == null) {
-            decimalFormat = "#,###.00";
+            decimalFormat = "#,##0.00";
             toolStats.logger.warning("number-formats.comma-separator is missing! Using default #,###.00 instead.");
         }
 

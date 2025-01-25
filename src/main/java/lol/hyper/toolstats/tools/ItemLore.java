@@ -20,6 +20,7 @@ package lol.hyper.toolstats.tools;
 import lol.hyper.toolstats.ToolStats;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -68,6 +69,13 @@ public class ItemLore {
         return itemLore;
     }
 
+    /**
+     * Add lore to a given item.
+     *
+     * @param itemMeta The item's meta.
+     * @param newLine  The new line to add to the lore.
+     * @return The new item's lore.
+     */
     public List<Component> addItemLore(ItemMeta itemMeta, Component newLine) {
         List<Component> itemLore;
         if (itemMeta.hasLore()) {
@@ -203,5 +211,487 @@ public class ItemLore {
         newLore.add(dateCreatedLore);
         newLore.add(itemOwnerLore);
         return newLore;
+    }
+
+    /**
+     * Add x to the crops mined stat.
+     *
+     * @param playerTool The tool to update.
+     */
+    public ItemStack updateCropsMined(ItemStack playerTool, int add) {
+        ItemStack clone = playerTool.clone();
+        ItemMeta meta = clone.getItemMeta();
+        if (meta == null) {
+            toolStats.logger.warning(clone + " does NOT have any meta! Unable to update stats.");
+            return null;
+        }
+        // read the current stats from the item
+        // if they don't exist, then start from 0
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+
+        // check for tokens
+        if (toolStats.config.getBoolean("tokens.enabled")) {
+            // if the item has this token, then continue
+            // if the item does not, ignore
+            boolean validTokens = toolStats.itemChecker.checkTokens(container, "crops-mined");
+            if (!validTokens) {
+                return null;
+            }
+        }
+
+        Integer cropsMined = 0;
+        if (container.has(toolStats.cropsHarvested, PersistentDataType.INTEGER)) {
+            cropsMined = container.get(toolStats.cropsHarvested, PersistentDataType.INTEGER);
+        }
+
+        if (cropsMined == null) {
+            cropsMined = 0;
+            toolStats.logger.warning(clone + " does not have valid crops-mined set! Resting to zero. This should NEVER happen.");
+        }
+
+        container.set(toolStats.cropsHarvested, PersistentDataType.INTEGER, cropsMined + add);
+
+        // do we add the lore based on the config?
+        if (toolStats.configTools.checkConfig(clone.getType(), "blocks-mined")) {
+            String oldCropsMinedFormatted = toolStats.numberFormat.formatInt(cropsMined);
+            String newCropsMinedFormatted = toolStats.numberFormat.formatInt(cropsMined + add);
+            Component oldLine = toolStats.configTools.formatLore("crops-harvested", "{crops}", oldCropsMinedFormatted);
+            Component newLine = toolStats.configTools.formatLore("crops-harvested", "{crops}", newCropsMinedFormatted);
+            if (oldLine == null || newLine == null) {
+                return null;
+            }
+            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+            meta.lore(newLore);
+        }
+        clone.setItemMeta(meta);
+        return clone;
+    }
+
+    /**
+     * Add x to the blocks mined stat.
+     *
+     * @param playerTool The tool to update.
+     */
+    public ItemStack updateBlocksMined(ItemStack playerTool, int add) {
+        ItemStack clone = playerTool.clone();
+        ItemMeta meta = clone.getItemMeta();
+        if (meta == null) {
+            toolStats.logger.warning(clone + " does NOT have any meta! Unable to update stats.");
+            return null;
+        }
+
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        // check for tokens
+        if (toolStats.config.getBoolean("tokens.enabled")) {
+            toolStats.logger.info("tokens are enabled!");
+            // if the item has this token, then continue
+            // if the item does not, ignore
+            boolean validTokens = toolStats.itemChecker.checkTokens(container, "blocks-mined");
+            if (!validTokens) {
+                return null;
+            }
+        } else {
+            toolStats.logger.info("tokens are disabled!");
+        }
+
+        // read the current stats from the item
+        // if they don't exist, then start from 0
+        Integer blocksMined = 0;
+        if (container.has(toolStats.genericMined, PersistentDataType.INTEGER)) {
+            blocksMined = container.get(toolStats.genericMined, PersistentDataType.INTEGER);
+        }
+
+        if (blocksMined == null) {
+            blocksMined = 0;
+            toolStats.logger.warning(clone + " does not have valid generic-mined set! Resting to zero. This should NEVER happen.");
+        }
+
+        container.set(toolStats.genericMined, PersistentDataType.INTEGER, blocksMined + add);
+
+        // do we add the lore based on the config?
+        if (toolStats.configTools.checkConfig(clone.getType(), "blocks-mined")) {
+            String oldBlocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined);
+            String newBlocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined + add);
+            Component oldLine = toolStats.configTools.formatLore("blocks-mined", "{blocks}", oldBlocksMinedFormatted);
+            Component newLine = toolStats.configTools.formatLore("blocks-mined", "{blocks}", newBlocksMinedFormatted);
+            if (oldLine == null || newLine == null) {
+                return null;
+            }
+            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+            meta.lore(newLore);
+            toolStats.logger.info("adding lore!");
+        }
+        clone.setItemMeta(meta);
+        toolStats.logger.info("reached end of function!");
+        return clone;
+    }
+
+    /**
+     * Add +1 to the player kills stat.
+     *
+     * @param playerWeapon The tool to update.
+     */
+    public ItemStack updatePlayerKills(ItemStack playerWeapon, int add) {
+        ItemStack clone = playerWeapon.clone();
+        ItemMeta meta = clone.getItemMeta();
+        if (meta == null) {
+            toolStats.logger.warning(clone + " does NOT have any meta! Unable to update stats.");
+            return null;
+        }
+
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        // check for tokens
+        if (toolStats.config.getBoolean("tokens.enabled")) {
+            // if the item has this token, then continue
+            // if the item does not, ignore
+            boolean validTokens = toolStats.itemChecker.checkTokens(container, "player-kills");
+            if (!validTokens) {
+                return null;
+            }
+        }
+
+        Integer playerKills = 0;
+        if (container.has(toolStats.swordPlayerKills, PersistentDataType.INTEGER)) {
+            playerKills = container.get(toolStats.swordPlayerKills, PersistentDataType.INTEGER);
+        }
+
+        if (playerKills == null) {
+            playerKills = 0;
+            toolStats.logger.warning(clone + " does not have valid player-kills set! Resting to zero. This should NEVER happen.");
+        }
+
+        container.set(toolStats.swordPlayerKills, PersistentDataType.INTEGER, playerKills + add);
+
+        // do we add the lore based on the config?
+        if (toolStats.configTools.checkConfig(clone.getType(), "player-kills")) {
+            String oldPlayerKillsFormatted = toolStats.numberFormat.formatInt(playerKills);
+            String newPlayerKillsFormatted = toolStats.numberFormat.formatInt(playerKills + add);
+            Component oldLine = toolStats.configTools.formatLore("kills.player", "{kills}", oldPlayerKillsFormatted);
+            Component newLine = toolStats.configTools.formatLore("kills.player", "{kills}", newPlayerKillsFormatted);
+            if (oldLine == null || newLine == null) {
+                return null;
+            }
+            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+            meta.lore(newLore);
+        }
+        clone.setItemMeta(meta);
+        return clone;
+    }
+
+    /**
+     * Add x to the mob kills stat.
+     *
+     * @param playerWeapon The tool to update.
+     */
+    public ItemStack updateMobKills(ItemStack playerWeapon, int add) {
+        ItemStack clone = playerWeapon.clone();
+        ItemMeta meta = clone.getItemMeta();
+        if (meta == null) {
+            toolStats.logger.warning(clone + " does NOT have any meta! Unable to update stats.");
+            return null;
+        }
+
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        // check for tokens
+        if (toolStats.config.getBoolean("tokens.enabled")) {
+            // if the item has this token, then continue
+            // if the item does not, ignore
+            boolean validTokens = toolStats.itemChecker.checkTokens(container, "mob-kills");
+            if (!validTokens) {
+                return null;
+            }
+        }
+
+        Integer mobKills = 0;
+        if (container.has(toolStats.swordMobKills, PersistentDataType.INTEGER)) {
+            mobKills = container.get(toolStats.swordMobKills, PersistentDataType.INTEGER);
+        }
+
+        if (mobKills == null) {
+            mobKills = 0;
+            toolStats.logger.warning(clone + " does not have valid mob-kills set! Resting to zero. This should NEVER happen.");
+        }
+
+        container.set(toolStats.swordMobKills, PersistentDataType.INTEGER, mobKills + add);
+
+        // do we add the lore based on the config?
+        if (toolStats.configTools.checkConfig(clone.getType(), "mob-kills")) {
+            String oldMobKillsFormatted = toolStats.numberFormat.formatInt(mobKills);
+            String newMobKillsFormatted = toolStats.numberFormat.formatInt(mobKills + add);
+            Component oldLine = toolStats.configTools.formatLore("kills.mob", "{kills}", oldMobKillsFormatted);
+            Component newLine = toolStats.configTools.formatLore("kills.mob", "{kills}", newMobKillsFormatted);
+            if (oldLine == null || newLine == null) {
+                return null;
+            }
+            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+            meta.lore(newLore);
+        }
+        clone.setItemMeta(meta);
+        return clone;
+    }
+
+    /**
+     * Add damage to an armor piece.
+     *
+     * @param armorPiece The armor to update.
+     */
+    public ItemStack updateDamage(ItemStack armorPiece, double damage) {
+        // ignore if the damage is zero or negative
+        if (damage < 0) {
+            return null;
+        }
+        ItemStack clone = armorPiece.clone();
+        ItemMeta meta = clone.getItemMeta();
+        if (meta == null) {
+            toolStats.logger.warning(clone + " does NOT have any meta! Unable to update stats.");
+            return null;
+        }
+
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        // check for tokens
+        if (toolStats.config.getBoolean("tokens.enabled")) {
+            // if the item has this token, then continue
+            // if the item does not, ignore
+            boolean validTokens = toolStats.itemChecker.checkTokens(container, "damage-taken");
+            if (!validTokens) {
+                return null;
+            }
+        }
+
+        Double damageTaken = 0.0;
+        if (container.has(toolStats.armorDamage, PersistentDataType.DOUBLE)) {
+            damageTaken = container.get(toolStats.armorDamage, PersistentDataType.DOUBLE);
+        }
+
+        if (damageTaken == null) {
+            damageTaken = 0.0;
+            toolStats.logger.warning(clone + " does not have valid damage-taken set! Resting to zero. This should NEVER happen.");
+        }
+
+        container.set(toolStats.armorDamage, PersistentDataType.DOUBLE, damageTaken + damage);
+
+        if (toolStats.config.getBoolean("enabled.armor-damage")) {
+            String oldDamageFormatted = toolStats.numberFormat.formatDouble(damageTaken);
+            String newDamageFormatted = toolStats.numberFormat.formatDouble(damageTaken + damage);
+            Component oldLine = toolStats.configTools.formatLore("damage-taken", "{damage}", oldDamageFormatted);
+            Component newLine = toolStats.configTools.formatLore("damage-taken", "{damage}", newDamageFormatted);
+            if (oldLine == null || newLine == null) {
+                return null;
+            }
+            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+            meta.lore(newLore);
+        }
+        clone.setItemMeta(meta);
+        return clone;
+    }
+
+    /**
+     * Add flight time to an elytra.
+     *
+     * @param elytra The player's elytra.
+     */
+    public ItemStack updateFlightTime(ItemStack elytra, long duration) {
+        ItemStack clone = elytra.clone();
+        ItemMeta meta = clone.getItemMeta();
+        if (meta == null) {
+            toolStats.logger.warning(clone + " does NOT have any meta! Unable to update stats.");
+            return null;
+        }
+
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        // check for tokens
+        if (toolStats.config.getBoolean("tokens.enabled")) {
+            // if the item has this token, then continue
+            // if the item does not, ignore
+            boolean validTokens = toolStats.itemChecker.checkTokens(container, "flight-time");
+            if (!validTokens) {
+                return null;
+            }
+        }
+
+        // read the current stats from the item
+        // if they don't exist, then start from 0
+        Long flightTime = 0L;
+        if (container.has(toolStats.flightTime, PersistentDataType.LONG)) {
+            flightTime = container.get(toolStats.flightTime, PersistentDataType.LONG);
+        }
+
+        if (flightTime == null) {
+            flightTime = 0L;
+            toolStats.logger.warning(flightTime + " does not have valid flight-time set! Resting to zero. This should NEVER happen.");
+        }
+
+        container.set(toolStats.flightTime, PersistentDataType.LONG, flightTime + duration);
+
+        // do we add the lore based on the config?
+        if (toolStats.config.getBoolean("enabled.flight-time")) {
+            String oldFlightFormatted = toolStats.numberFormat.formatDouble((double) flightTime / 1000);
+            String newFlightFormatted = toolStats.numberFormat.formatDouble((double) (flightTime + duration) / 1000);
+            Component oldLine = toolStats.configTools.formatLore("flight-time", "{time}", oldFlightFormatted);
+            Component newLine = toolStats.configTools.formatLore("flight-time", "{time}", newFlightFormatted);
+            if (oldLine == null || newLine == null) {
+                return null;
+            }
+            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+            meta.lore(newLore);
+        }
+        clone.setItemMeta(meta);
+        return clone;
+    }
+
+    /**
+     * Add x to sheep sheared stat.
+     *
+     * @param shears The shears.
+     */
+    public ItemStack updateSheepSheared(ItemStack shears, int add) {
+        ItemStack clone = shears.clone();
+        ItemMeta meta = clone.getItemMeta();
+        if (meta == null) {
+            toolStats.logger.warning(clone + " does NOT have any meta! Unable to update stats.");
+            return null;
+        }
+
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        // check for tokens
+        if (toolStats.config.getBoolean("tokens.enabled")) {
+            // if the item has this token, then continue
+            // if the item does not, ignore
+            boolean validTokens = toolStats.itemChecker.checkTokens(container, "sheep-sheared");
+            if (!validTokens) {
+                return null;
+            }
+        }
+
+        Integer sheepSheared = 0;
+        if (container.has(toolStats.shearsSheared, PersistentDataType.INTEGER)) {
+            sheepSheared = container.get(toolStats.shearsSheared, PersistentDataType.INTEGER);
+        }
+
+        if (sheepSheared == null) {
+            sheepSheared = 0;
+            toolStats.logger.warning(clone + " does not have valid sheared set! Resting to zero. This should NEVER happen.");
+        }
+
+        container.set(toolStats.shearsSheared, PersistentDataType.INTEGER, sheepSheared + add);
+
+        if (toolStats.config.getBoolean("enabled.sheep-sheared")) {
+            String oldSheepFormatted = toolStats.numberFormat.formatInt(sheepSheared);
+            String newSheepFormatted = toolStats.numberFormat.formatInt(sheepSheared + add);
+            Component oldLine = toolStats.configTools.formatLore("sheep-sheared", "{sheep}", oldSheepFormatted);
+            Component newLine = toolStats.configTools.formatLore("sheep-sheared", "{sheep}", newSheepFormatted);
+            if (oldLine == null || newLine == null) {
+                return null;
+            }
+            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+            meta.lore(newLore);
+        }
+        clone.setItemMeta(meta);
+        return clone;
+    }
+
+    /**
+     * Add x to arrows shot stat.
+     *
+     * @param bow The bow.
+     */
+    public ItemStack updateArrowsShot(ItemStack bow, int add) {
+        ItemStack clone = bow.clone();
+        ItemMeta meta = clone.getItemMeta();
+        if (meta == null) {
+            toolStats.logger.warning(clone + " does NOT have any meta! Unable to update stats.");
+            return null;
+        }
+
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        // check for tokens
+        if (toolStats.config.getBoolean("tokens.enabled")) {
+            // if the item has this token, then continue
+            // if the item does not, ignore
+            boolean validTokens = toolStats.itemChecker.checkTokens(container, "arrows-shot");
+            if (!validTokens) {
+                return null;
+            }
+        }
+
+        // read the current stats from the item
+        // if they don't exist, then start from 0
+        Integer arrowsShot = 0;
+        if (container.has(toolStats.arrowsShot, PersistentDataType.INTEGER)) {
+            arrowsShot = container.get(toolStats.arrowsShot, PersistentDataType.INTEGER);
+        }
+
+        if (arrowsShot == null) {
+            arrowsShot = 0;
+            toolStats.logger.warning(arrowsShot + " does not have valid arrows-shot set! Resting to zero. This should NEVER happen.");
+        }
+
+        container.set(toolStats.arrowsShot, PersistentDataType.INTEGER, arrowsShot + add);
+
+        // do we add the lore based on the config?
+        if (toolStats.config.getBoolean("enabled.arrows-shot")) {
+            String oldArrowsFormatted = toolStats.numberFormat.formatInt(arrowsShot);
+            String newArrowsFormatted = toolStats.numberFormat.formatInt(arrowsShot + add);
+            Component oldLine = toolStats.configTools.formatLore("arrows-shot", "{arrows}", oldArrowsFormatted);
+            Component newLine = toolStats.configTools.formatLore("arrows-shot", "{arrows}", newArrowsFormatted);
+            if (oldLine == null || newLine == null) {
+                return null;
+            }
+            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+            meta.lore(newLore);
+        }
+        clone.setItemMeta(meta);
+        return clone;
+    }
+
+    /**
+     * Add x to fish caught stat.
+     *
+     * @param fishingRod The fishing rod.
+     */
+    public ItemStack updateFishCaught(ItemStack fishingRod, int add) {
+        ItemStack clone = fishingRod.clone();
+        ItemMeta meta = clone.getItemMeta();
+        if (meta == null) {
+            toolStats.logger.warning(clone + " does NOT have any meta! Unable to update stats.");
+            return null;
+        }
+
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        // check for tokens
+        if (toolStats.config.getBoolean("tokens.enabled")) {
+            // if the item has this token, then continue
+            // if the item does not, ignore
+            boolean validTokens = toolStats.itemChecker.checkTokens(container, "fish-caught");
+            if (!validTokens) {
+                return null;
+            }
+        }
+
+        Integer fishCaught = 0;
+        if (container.has(toolStats.fishingRodCaught, PersistentDataType.INTEGER)) {
+            fishCaught = container.get(toolStats.fishingRodCaught, PersistentDataType.INTEGER);
+        }
+
+        if (fishCaught == null) {
+            fishCaught = 0;
+            toolStats.logger.warning(clone + " does not have valid fish-caught set! Resting to zero. This should NEVER happen.");
+        }
+
+        container.set(toolStats.fishingRodCaught, PersistentDataType.INTEGER, fishCaught + add);
+
+        if (toolStats.config.getBoolean("enabled.fish-caught")) {
+            String oldFishFormatted = toolStats.numberFormat.formatInt(fishCaught);
+            String newFishFormatted = toolStats.numberFormat.formatInt(fishCaught + add);
+            Component oldLine = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", oldFishFormatted);
+            Component newLine = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", newFishFormatted);
+            if (oldLine == null || newLine == null) {
+                return null;
+            }
+            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+            meta.lore(newLore);
+        }
+        clone.setItemMeta(meta);
+        return clone;
     }
 }

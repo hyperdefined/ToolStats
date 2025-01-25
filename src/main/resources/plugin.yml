@@ -23,3 +23,6 @@ permissions:
   toolstats.reset.confirm:
     description: Allows the usage of /toolstats reset confirm.
     default: true
+  toolstats.givetokens:
+    description: Allows the usage of /toolstats givetoken.
+    default: op

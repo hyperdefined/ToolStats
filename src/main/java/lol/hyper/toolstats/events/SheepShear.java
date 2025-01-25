@@ -18,7 +18,6 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import net.kyori.adventure.text.Component;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -30,12 +29,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class SheepShear implements Listener {
 
@@ -71,9 +65,26 @@ public class SheepShear implements Listener {
         }
 
         // update the stats
-        addLore(heldShears);
+        ItemStack newItem = toolStats.itemLore.updateSheepSheared(heldShears, 1);
+        if (newItem != null) {
+            PlayerInventory inventory = player.getInventory();
+            boolean isMain = inventory.getItemInMainHand().getType() == Material.SHEARS;
+            boolean isOffHand = inventory.getItemInOffHand().getType() == Material.SHEARS;
+            if (isMain) {
+                inventory.setItemInMainHand(newItem);
+            }
+            if (isOffHand) {
+                inventory.setItemInOffHand(newItem);
+            }
+        }
     }
 
+    /**
+     * Get the player's shears.
+     *
+     * @param inventory Their inventory.
+     * @return Their shears, either main or offhand.
+     */
     private static @Nullable ItemStack getShears(PlayerInventory inventory) {
         ItemStack main = inventory.getItemInMainHand();
         ItemStack offHand = inventory.getItemInOffHand();
@@ -92,43 +103,5 @@ public class SheepShear implements Listener {
         }
 
         return null;
-    }
-
-    /**
-     * Adds tags to shears.
-     *
-     * @param newShears The shears.
-     */
-    private void addLore(ItemStack newShears) {
-        ItemMeta meta = newShears.getItemMeta();
-        if (meta == null) {
-            toolStats.logger.warning(newShears + " does NOT have any meta! Unable to update stats.");
-            return;
-        }
-        Integer sheepSheared = 0;
-        PersistentDataContainer container = meta.getPersistentDataContainer();
-        if (container.has(toolStats.shearsSheared, PersistentDataType.INTEGER)) {
-            sheepSheared = container.get(toolStats.shearsSheared, PersistentDataType.INTEGER);
-        }
-
-        if (sheepSheared == null) {
-            sheepSheared = 0;
-            toolStats.logger.warning(newShears + " does not have valid sheared set! Resting to zero. This should NEVER happen.");
-        }
-
-        container.set(toolStats.shearsSheared, PersistentDataType.INTEGER, sheepSheared + 1);
-
-        if (toolStats.config.getBoolean("enabled.sheep-sheared")) {
-            String oldSheepFormatted = toolStats.numberFormat.formatInt(sheepSheared);
-            String newSheepFormatted = toolStats.numberFormat.formatInt(sheepSheared + 1);
-            Component oldLine = toolStats.configTools.formatLore("sheep-sheared", "{sheep}", oldSheepFormatted);
-            Component newLine = toolStats.configTools.formatLore("sheep-sheared", "{sheep}", newSheepFormatted);
-            if (oldLine == null || newLine == null) {
-                return;
-            }
-            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.lore(newLore);
-        }
-        newShears.setItemMeta(meta);
     }
 }

@@ -61,14 +61,25 @@ public class PlayerFish implements Listener {
             return;
         }
 
-        ItemStack fishingRod = getItemStack(player);
+        ItemStack fishingRod = getFishingRod(player.getInventory());
         // player swapped items?
         if (fishingRod == null) {
             return;
         }
 
         // update the fishing rod!
-        updateFishCount(fishingRod);
+        ItemStack newFishingRod = toolStats.itemLore.updateFishCaught(fishingRod, 1);
+        if (newFishingRod != null) {
+            PlayerInventory inventory = player.getInventory();
+            boolean isMain = inventory.getItemInMainHand().getType() == Material.FISHING_ROD;
+            boolean isOffHand = inventory.getItemInOffHand().getType() == Material.FISHING_ROD;
+            if (isMain) {
+                inventory.setItemInMainHand(newFishingRod);
+            }
+            if (isOffHand) {
+                inventory.setItemInOffHand(newFishingRod);
+            }
+        }
 
         // check if the player caught an item
         if (event.getCaught() == null) {
@@ -84,62 +95,30 @@ public class PlayerFish implements Listener {
         }
     }
 
-    private static @Nullable ItemStack getItemStack(Player player) {
-        PlayerInventory inventory = player.getInventory();
-        boolean isMainHand = inventory.getItemInMainHand().getType() == Material.FISHING_ROD;
-        boolean isOffHand = inventory.getItemInOffHand().getType() == Material.FISHING_ROD;
-        ItemStack fishingRod = null;
-        if (isMainHand) {
-            fishingRod = inventory.getItemInMainHand();
+    /**
+     * Get the player's fishing rod.
+     *
+     * @param inventory Their inventory.
+     * @return Their fishing rod, either main or offhand.
+     */
+    private static @Nullable ItemStack getFishingRod(PlayerInventory inventory) {
+        ItemStack main = inventory.getItemInMainHand();
+        ItemStack offHand = inventory.getItemInOffHand();
+
+        boolean isMain = main.getType() == Material.FISHING_ROD;
+        boolean isOffHand = offHand.getType() == Material.FISHING_ROD;
+
+        // if the player is holding a fishing rod in their main hand, use that one
+        // if the fishing rod is in their offhand instead, use that one after checking main hand
+        // Minecraft prioritizes main hand if the player holds in both hands
+        if (isMain) {
+            return main;
         }
         if (isOffHand) {
-            fishingRod = inventory.getItemInOffHand();
+            return offHand;
         }
 
-        // if the player is hold fishing rods in both hands
-        // default to main hand since that takes priority
-        if (isMainHand && isOffHand) {
-            fishingRod = inventory.getItemInMainHand();
-        }
-        return fishingRod;
-    }
-
-    /**
-     * Update a fishing rod's fish count.
-     *
-     * @param fishingRod The fishing rod to update.
-     */
-    private void updateFishCount(ItemStack fishingRod) {
-        ItemMeta meta = fishingRod.getItemMeta();
-        if (meta == null) {
-            toolStats.logger.warning(fishingRod + " does NOT have any meta! Unable to update stats.");
-            return;
-        }
-        Integer fishCaught = 0;
-        PersistentDataContainer container = meta.getPersistentDataContainer();
-        if (container.has(toolStats.fishingRodCaught, PersistentDataType.INTEGER)) {
-            fishCaught = container.get(toolStats.fishingRodCaught, PersistentDataType.INTEGER);
-        }
-
-        if (fishCaught == null) {
-            fishCaught = 0;
-            toolStats.logger.warning(fishingRod + " does not have valid fish-caught set! Resting to zero. This should NEVER happen.");
-        }
-
-        container.set(toolStats.fishingRodCaught, PersistentDataType.INTEGER, fishCaught + 1);
-
-        if (toolStats.config.getBoolean("enabled.fish-caught")) {
-            String oldFishFormatted = toolStats.numberFormat.formatInt(fishCaught);
-            String newFishFormatted = toolStats.numberFormat.formatInt(fishCaught + 1);
-            Component oldLine = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", oldFishFormatted);
-            Component newLine = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", newFishFormatted);
-            if (oldLine == null || newLine == null) {
-                return;
-            }
-            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.lore(newLore);
-        }
-        fishingRod.setItemMeta(meta);
+        return null;
     }
 
     /**

@@ -30,6 +30,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -59,7 +60,27 @@ public class CommandToolStats implements TabExecutor {
         switch (args[0]) {
             case "reload": {
                 if (sender.hasPermission("toolstats.reload")) {
+                    boolean oldTokensStatus = toolStats.tokens;
                     toolStats.loadConfig();
+                    toolStats.tokenCrafting.getRecipes().clear();
+                    toolStats.tokenCrafting.setup();
+                    // if the server went from tokens off -> on, add the recipes
+                    // if the server went from tokens on -> off, remove the recipes
+                    if (toolStats.tokens != oldTokensStatus) {
+                        // tokens are now enabled
+                        if (toolStats.tokens) {
+                            if (toolStats.config.getBoolean("tokens.craft-token")) {
+                                for (ShapedRecipe recipe : toolStats.tokenCrafting.getRecipes()) {
+                                    Bukkit.addRecipe(recipe);
+                                }
+                            }
+                        } else {
+                            // tokens are now disabled
+                            for (ShapedRecipe recipe : toolStats.tokenCrafting.getRecipes()) {
+                                Bukkit.removeRecipe(recipe.getKey());
+                            }
+                        }
+                    }
                     sender.sendMessage(Component.text("Configuration reloaded!", NamedTextColor.GREEN));
                 } else {
                     sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
@@ -94,6 +115,46 @@ public class CommandToolStats implements TabExecutor {
                 sender.sendMessage(Component.text("If the owner of the item is broken, it will reset to the person holding it.", NamedTextColor.GREEN));
                 sender.sendMessage(Component.text("Only use this if the tags on the tool are incorrect.", NamedTextColor.GREEN));
                 sender.sendMessage(Component.text("Type /toolstats reset confirm to confirm this.", NamedTextColor.GREEN));
+                return true;
+            }
+            case "givetokens": {
+                if (!sender.hasPermission("toolstats.givetokens")) {
+                    sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
+                    return true;
+                }
+                // Make sure /toolstats givetoken <player> <token> is present
+                if (args.length < 3) {
+                    sender.sendMessage(Component.text("Invalid syntax. Usage: /toolstats givetokens <player> <token>", NamedTextColor.RED));
+                    return true;
+                }
+                Player target = Bukkit.getPlayerExact(args[1]);
+                if (target == null) {
+                    sender.sendMessage(Component.text("Player not found.", NamedTextColor.RED));
+                    return true;
+                }
+                String tokenType = args[2];
+                if (!toolStats.tokenCrafting.getTokenTypes().contains(tokenType)) {
+                    sender.sendMessage(Component.text("Invalid token type.", NamedTextColor.RED));
+                    return true;
+                }
+                // if the user does not send in a number, default to 1
+                int amount = 1;
+                if (args.length >= 4) {
+                    try {
+                        amount = Integer.parseInt(args[3]);
+                        if (amount <= 0) { // Optional: Prevent negative or zero values
+                            sender.sendMessage(Component.text("Token quantity must be above or 1.", NamedTextColor.RED));
+                            return true;
+                        }
+                    } catch (NumberFormatException exception) {
+                        sender.sendMessage(Component.text("Invalid token quantity.", NamedTextColor.RED));
+                        return true;
+                    }
+                }
+                giveToken(target, tokenType, amount);
+                if (sender instanceof Player) {
+                    sender.sendMessage(Component.text("Gave " + target.getName() + " " + amount + " " + tokenType + " tokens.", NamedTextColor.GREEN));
+                }
                 return true;
             }
             default: {
@@ -312,24 +373,95 @@ public class CommandToolStats implements TabExecutor {
         player.getInventory().setItem(slot, finalItem);
     }
 
+    /**
+     * Gives a player a token.
+     *
+     * @param target    The player.
+     * @param tokenType The token type.
+     */
+    private void giveToken(Player target, String tokenType, int amount) {
+        switch (tokenType) {
+            case "crops-mined": {
+                ItemStack itemStack = toolStats.tokenItems.cropsMined();
+                itemStack.setAmount(amount);
+                target.getInventory().addItem(itemStack);
+                break;
+            }
+            case "blocks-mined": {
+                ItemStack itemStack = toolStats.tokenItems.blocksMined();
+                itemStack.setAmount(amount);
+                target.getInventory().addItem(itemStack);
+                break;
+            }
+            case "damage-taken": {
+                ItemStack itemStack = toolStats.tokenItems.damageTaken();
+                itemStack.setAmount(amount);
+                target.getInventory().addItem(itemStack);
+                break;
+            }
+            case "mob-kills": {
+                ItemStack itemStack = toolStats.tokenItems.mobKills();
+                itemStack.setAmount(amount);
+                target.getInventory().addItem(itemStack);
+                break;
+            }
+            case "player-kills": {
+                ItemStack itemStack = toolStats.tokenItems.playerKills();
+                itemStack.setAmount(amount);
+                target.getInventory().addItem(itemStack);
+                break;
+            }
+            case "arrows-shot": {
+                ItemStack itemStack = toolStats.tokenItems.arrowsShot();
+                itemStack.setAmount(amount);
+                target.getInventory().addItem(itemStack);
+                break;
+            }
+            case "sheep-sheared": {
+                ItemStack itemStack = toolStats.tokenItems.sheepSheared();
+                itemStack.setAmount(amount);
+                target.getInventory().addItem(itemStack);
+                break;
+            }
+            case "flight-time": {
+                ItemStack itemStack = toolStats.tokenItems.flightTime();
+                itemStack.setAmount(amount);
+                target.getInventory().addItem(itemStack);
+                break;
+            }
+            case "fish-caught": {
+                ItemStack itemStack = toolStats.tokenItems.fishCaught();
+                itemStack.setAmount(amount);
+                target.getInventory().addItem(itemStack);
+                break;
+            }
+        }
+    }
+
     @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (args.length == 1) {
+            List<String> suggestions = new ArrayList<>();
             if (sender.hasPermission("toolstats.reload")) {
-                return Arrays.asList("reset", "reload");
+                suggestions.add("reload");
             }
             if (sender.hasPermission("toolstats.reset")) {
-                return Collections.singletonList("reset");
+                suggestions.add("reset");
             }
-        }
-        if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("reset")) {
-                if (sender.hasPermission("toolstats.reset.confirm")) {
-                    return Collections.singletonList("confirm");
-                }
+            if (sender.hasPermission("toolstats.givetokens")) {
+                suggestions.add("givetokens");
             }
+            return suggestions.isEmpty() ? null : suggestions;
         }
+
+        if (args.length == 2 && args[0].equalsIgnoreCase("reset") && sender.hasPermission("toolstats.reset.confirm")) {
+            return Collections.singletonList("confirm");
+        }
+        if (args.length == 3 && args[0].equalsIgnoreCase("givetokens") && sender.hasPermission("toolstats.givetokens")) {
+            return toolStats.tokenCrafting.getTokenTypes();
+        }
+
         return null;
     }
 }

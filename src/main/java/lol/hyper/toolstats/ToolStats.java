@@ -21,16 +21,15 @@ import lol.hyper.githubreleaseapi.GitHubRelease;
 import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
 import lol.hyper.toolstats.commands.CommandToolStats;
 import lol.hyper.toolstats.events.*;
-import lol.hyper.toolstats.tools.HashMaker;
-import lol.hyper.toolstats.tools.ItemChecker;
-import lol.hyper.toolstats.tools.ItemLore;
-import lol.hyper.toolstats.tools.NumberFormat;
+import lol.hyper.toolstats.tools.*;
 import lol.hyper.toolstats.tools.config.ConfigTools;
 import lol.hyper.toolstats.tools.config.ConfigUpdater;
+import lol.hyper.toolstats.tools.config.TokenItems;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -92,6 +91,14 @@ public final class ToolStats extends JavaPlugin {
      */
     public final NamespacedKey flightTime = new NamespacedKey(this, "flightTime");
     /**
+     * Key for token type. This is for the token itself.
+     */
+    public final NamespacedKey tokenType = new NamespacedKey(this, "token-type");
+    /**
+     * Key for applied token. This is what goes onto the tool/armor to record the type.
+     */
+    public final NamespacedKey tokenApplied = new NamespacedKey(this, "token-applied");
+    /**
      * Stores how an item was created.
      * 0 = crafted.
      * 1 = dropped.
@@ -103,9 +110,10 @@ public final class ToolStats extends JavaPlugin {
      */
     public final NamespacedKey originType = new NamespacedKey(this, "origin");
 
-    public final int CONFIG_VERSION = 8;
+    public final int CONFIG_VERSION = 9;
     public final Logger logger = this.getLogger();
     public final File configFile = new File(this.getDataFolder(), "config.yml");
+    public boolean tokens = false;
 
     public BlocksMined blocksMined;
     public ChunkPopulate chunkPopulate;
@@ -130,6 +138,10 @@ public final class ToolStats extends JavaPlugin {
     public ItemChecker itemChecker;
     public ShootBow shootBow;
     public ConfigTools configTools;
+    public TokenItems tokenItems;
+    public TokenCrafting tokenCrafting;
+    public AnvilEvent anvilEvent;
+    public PrepareCraft prepareCraft;
 
     @Override
     public void onEnable() {
@@ -137,7 +149,17 @@ public final class ToolStats extends JavaPlugin {
             this.saveResource("config.yml", true);
             logger.info("Copying default config!");
         }
+
         loadConfig();
+        configTools = new ConfigTools(this);
+        tokenItems = new TokenItems(this);
+        tokenCrafting = new TokenCrafting(this);
+        tokenCrafting.setup();
+        for (ShapedRecipe recipe : tokenCrafting.getRecipes()) {
+            if (tokens && config.getBoolean("tokens.craft-tokens")) {
+                Bukkit.addRecipe(recipe);
+            }
+        }
         hashMaker = new HashMaker(this);
         blocksMined = new BlocksMined(this);
         craftItem = new CraftItem(this);
@@ -156,9 +178,11 @@ public final class ToolStats extends JavaPlugin {
         playerJoin = new PlayerJoin(this);
         creativeEvent = new CreativeEvent(this);
         playerMove = new PlayerMove(this);
-        itemChecker = new ItemChecker();
+        itemChecker = new ItemChecker(this);
+        itemChecker.setup();
         shootBow = new ShootBow(this);
-        configTools = new ConfigTools(this);
+        anvilEvent = new AnvilEvent(this);
+        prepareCraft = new PrepareCraft(this);
 
         Bukkit.getServer().getPluginManager().registerEvents(blocksMined, this);
         Bukkit.getServer().getPluginManager().registerEvents(chunkPopulate, this);
@@ -176,6 +200,8 @@ public final class ToolStats extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(creativeEvent, this);
         Bukkit.getServer().getPluginManager().registerEvents(shootBow, this);
         Bukkit.getServer().getPluginManager().registerEvents(playerMove, this);
+        Bukkit.getServer().getPluginManager().registerEvents(anvilEvent, this);
+        Bukkit.getServer().getPluginManager().registerEvents(prepareCraft, this);
 
         this.getCommand("toolstats").setExecutor(commandToolStats);
 
@@ -190,6 +216,13 @@ public final class ToolStats extends JavaPlugin {
             ConfigUpdater configUpdater = new ConfigUpdater(this);
             configUpdater.updateConfig();
         }
+
+        if (config.getBoolean("tokens.enabled")) {
+            logger.info("Tokens are enabled! All stat tracking (besides origins) is forced disabled.");
+            logger.info("If you want to track stats on items, add the correct token to it!");
+        }
+
+        tokens = config.getBoolean("tokens.enabled");
 
         numberFormat = new NumberFormat(this);
     }

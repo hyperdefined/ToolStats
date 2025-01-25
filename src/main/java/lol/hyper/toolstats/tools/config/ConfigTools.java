@@ -20,6 +20,7 @@ package lol.hyper.toolstats.tools.config;
 import lol.hyper.toolstats.ToolStats;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 
@@ -31,7 +32,6 @@ public class ConfigTools {
     private final ToolStats toolStats;
     public static final Pattern COLOR_CODES = Pattern.compile("[&§]([0-9a-fk-or])");
     public static final Pattern CONFIG_HEX_PATTERN = Pattern.compile("[&§]#([A-Fa-f0-9]{6})");
-    public static final Pattern MINECRAFT_HEX_PATTERN = Pattern.compile("§x(?:§[a-fA-F0-9]){6}|§[a-fA-F0-9]");
 
     public ConfigTools(ToolStats toolStats) {
         this.toolStats = toolStats;
@@ -124,22 +124,42 @@ public class ConfigTools {
             component = LegacyComponentSerializer.legacyAmpersand().deserialize(lore);
         } else {
             // otherwise format them normally
-            component = Component.text(lore);
+            component = MiniMessage.miniMessage().deserialize(lore);
         }
 
         return component.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
     }
 
     /**
-     * Remove all color codes from a message.
+     * Format a string from the config.
      *
-     * @param message The message.
-     * @return The message without color codes.
+     * @param configName The config to format.
+     * @return Formatted string, null if the configName doesn't exist.
      */
-    public String removeColor(String message) {
-        message = MINECRAFT_HEX_PATTERN.matcher(message).replaceAll("");
-        message = COLOR_CODES.matcher(message).replaceAll("");
-        message = CONFIG_HEX_PATTERN.matcher(message).replaceAll("");
-        return message;
+    public Component format(String configName) {
+        String message = toolStats.config.getString(configName);
+        if (message == null) {
+            toolStats.logger.warning("Unable to find config message for: " + configName);
+            return null;
+        }
+
+        // if the config message is empty, don't send it
+        if (message.isEmpty()) {
+            return null;
+        }
+
+        // the final component for this lore
+        Component component;
+        // if we match the old color codes, then format them as so
+        Matcher hexMatcher = CONFIG_HEX_PATTERN.matcher(message);
+        Matcher colorMatcher = COLOR_CODES.matcher(message);
+        if (hexMatcher.find() || colorMatcher.find()) {
+            component = LegacyComponentSerializer.legacyAmpersand().deserialize(message);
+        } else {
+            // otherwise format them normally
+            component = MiniMessage.miniMessage().deserialize(message);
+        }
+
+        return component;
     }
 }
