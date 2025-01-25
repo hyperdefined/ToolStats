@@ -9,7 +9,7 @@
 	<a href="https://buymeacoffee.com/hyperdefined"><img alt="buymeacoffee-singular" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/donate/buymeacoffee-singular_vector.svg"></a>
 </p>
 
-ToolStats is a Paper plugin that display various stats about tools. This plugin is inspired off of [GearStats](https://www.spigotmc.org/resources/gearstats.12960/). You can disable/enable which stats are shown on which tools via the config. Note: stats are tracked regardless of config setting. The config is to disable the lore on the item.
+ToolStats is a Paper plugin that display various stats about tools. This plugin is inspired off of [GearStats](https://www.spigotmc.org/resources/gearstats.12960/). You can either track all statistics by default, or a use a token system to add statistics to tool/armor. You can configure how each statistic is shown on the item, or disable it!
 
 Here is everything it tracks:
 * Blocks mined (pickaxes, shovels, axes, hoes, shears)
@@ -22,7 +22,7 @@ Here is everything it tracks:
 * Arrows shot (bows/crossbows)
 * Flight time with elytras.
 
-The best part is, this data is stored on the item itself. You can also change how the lore is displayed on the items!
+The best part is, this data is stored on the item itself.
 
 If item lore is ever incorrect/missing, you can run `/toolstats reset`. This command fixes the lore on whatever item you are holding.
 
