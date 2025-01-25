@@ -43,7 +43,6 @@ public class PrepareCraft implements Listener {
             if (item == null || item.getType() != Material.PAPER) {
                 continue;
             }
-            toolStats.logger.info(item.getType().toString());
             ItemMeta meta = item.getItemMeta();
             if (meta == null) {
                 continue;
@@ -51,10 +50,7 @@ public class PrepareCraft implements Listener {
             // if the paper item has our PDC, cancel it
             PersistentDataContainer container = meta.getPersistentDataContainer();
             if (container.has(toolStats.tokenType)) {
-                toolStats.logger.info("has PDC");
                 event.getInventory().setResult(null);
-            } else {
-                toolStats.logger.info("no PDC");
             }
         }
     }
