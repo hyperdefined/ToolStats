@@ -78,6 +78,13 @@ public class BlockBreak implements Listener {
                     // replace item in main hand
                     heldItem.setItemMeta(newMeta);
                 }
+            } else {
+                // item is a hoe, but not breaking crops
+                ItemMeta newMeta = toolStats.itemLore.updateBlocksMined(heldItem, 1);
+                if (newMeta != null) {
+                    // replace item in main hand
+                    heldItem.setItemMeta(newMeta);
+                }
             }
         } else {
             // item is not a hoe
