@@ -69,6 +69,7 @@ public class CommandToolStats implements TabExecutor {
                     if (toolStats.tokens != oldTokensStatus) {
                         // tokens are now enabled
                         if (toolStats.tokens) {
+                            sender.sendMessage(Component.text("It looks like you ENABLED the token system. While this is fine, it can break. Please restart your server instead.", NamedTextColor.YELLOW));
                             if (toolStats.config.getBoolean("tokens.craft-token")) {
                                 for (ShapedRecipe recipe : toolStats.tokenCrafting.getRecipes()) {
                                     Bukkit.addRecipe(recipe);
@@ -76,6 +77,7 @@ public class CommandToolStats implements TabExecutor {
                             }
                         } else {
                             // tokens are now disabled
+                            sender.sendMessage(Component.text("It looks like you DISABLED the token system. While this is fine, it can break. Please restart your server instead.", NamedTextColor.YELLOW));
                             for (ShapedRecipe recipe : toolStats.tokenCrafting.getRecipes()) {
                                 Bukkit.removeRecipe(recipe.getKey());
                             }
