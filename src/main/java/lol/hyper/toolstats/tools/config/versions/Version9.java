@@ -52,7 +52,8 @@ public class Version9 {
         toolStats.logger.info("Updating config.yml to version 9.");
         toolStats.config.set("config-version", 9);
 
-        toolStats.logger.info("Adding new tokens configuration!");
+        toolStats.logger.info("Adding new tokens configuration! Don't worry, this is disabled by default.");
+        toolStats.logger.info("You can find more information here: https://github.com/hyperdefined/ToolStats/wiki/Token-System");
         // false by default so it doesn't break servers on updating
         toolStats.config.set("tokens.enabled", false);
         toolStats.config.set("tokens.craft-tokens", true);
@@ -71,6 +72,7 @@ public class Version9 {
         addToken("damage-taken", "&7ToolStats: &8Damage Taken Token", "&8Combine with an armor piece in an anvil to track damage taken.");
         addToken("arrows-shot", "&7ToolStats: &8Arrows Shot Token", "&8Combine with a bow or crossbow in an anvil to track arrows shot.");
         addToken("flight-time", "&7ToolStats: &8Flight Time Token", "&8Combine with an elytra in an anvil to track flight time.");
+        addToken("reset", "&7ToolStats: &8Reset Token", "&8Combine in an anvil with to reset ALL stats for this item. Tokens on this item stay.");
 
         // save the config and reload it
         try {
