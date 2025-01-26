@@ -178,42 +178,43 @@ public class AnvilEvent implements Listener {
         ItemStack newItem = toolStats.itemChecker.addToken(firstSlotItem, targetToken);
         switch (targetToken) {
             case "crops-mined": {
-                event.setResult(toolStats.itemLore.updateCropsMined(newItem, 0));
+                newItem.setItemMeta(toolStats.itemLore.updateCropsMined(newItem, 0));
                 break;
             }
             case "blocks-mined": {
-                event.setResult(toolStats.itemLore.updateBlocksMined(newItem, 0));
+                newItem.setItemMeta(toolStats.itemLore.updateBlocksMined(newItem, 0));
                 break;
             }
             case "damage-taken": {
-                event.setResult(toolStats.itemLore.updateDamage(newItem, 0.0));
+                newItem.setItemMeta(toolStats.itemLore.updateDamage(newItem, 0.0));
                 break;
             }
             case "mob-kills": {
-                event.setResult(toolStats.itemLore.updateMobKills(newItem, 0));
+                newItem.setItemMeta(toolStats.itemLore.updateMobKills(newItem, 0));
                 break;
             }
             case "player-kills": {
-                event.setResult(toolStats.itemLore.updatePlayerKills(newItem, 0));
+                newItem.setItemMeta(toolStats.itemLore.updatePlayerKills(newItem, 0));
                 break;
             }
             case "arrows-shot": {
-                event.setResult(toolStats.itemLore.updateArrowsShot(newItem, 0));
+                newItem.setItemMeta(toolStats.itemLore.updateArrowsShot(newItem, 0));
                 break;
             }
             case "sheep-sheared": {
-                event.setResult(toolStats.itemLore.updateSheepSheared(newItem, 0));
+                newItem.setItemMeta(toolStats.itemLore.updateSheepSheared(newItem, 0));
                 break;
             }
             case "flight-time": {
-                event.setResult(toolStats.itemLore.updateFlightTime(newItem, 0));
+                newItem.setItemMeta(toolStats.itemLore.updateFlightTime(newItem, 0));
                 break;
             }
             case "fish-caught": {
-                event.setResult(toolStats.itemLore.updateFishCaught(newItem, 0));
+                newItem.setItemMeta(toolStats.itemLore.updateFishCaught(newItem, 0));
                 break;
             }
         }
+        event.setResult(newItem);
         event.getView().setRepairCost(toolStats.itemChecker.getCost(targetToken));
     }
 }

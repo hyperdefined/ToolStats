@@ -30,6 +30,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Locale;
 
@@ -72,19 +73,19 @@ public class BlocksMined implements Listener {
                 if (ageable.getAge() != ageable.getMaximumAge()) {
                     return;
                 }
-                ItemStack newItem = toolStats.itemLore.updateCropsMined(heldItem, 1);
-                if (newItem != null) {
+                ItemMeta newMeta = toolStats.itemLore.updateCropsMined(heldItem, 1);
+                if (newMeta != null) {
                     // replace item in main hand
-                    inventory.setItemInMainHand(newItem);
+                    heldItem.setItemMeta(newMeta);
                 }
             }
         } else {
             // item is not a hoe
             // update the blocks mined
-            ItemStack newItem = toolStats.itemLore.updateBlocksMined(heldItem, 1);
-            if (newItem != null) {
+            ItemMeta newMeta = toolStats.itemLore.updateBlocksMined(heldItem, 1);
+            if (newMeta != null) {
                 // replace item in main hand
-                inventory.setItemInMainHand(newItem);
+                heldItem.setItemMeta(newMeta);
             }
         }
     }

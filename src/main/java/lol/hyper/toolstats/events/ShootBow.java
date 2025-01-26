@@ -28,6 +28,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
 public class ShootBow implements Listener {
@@ -56,16 +57,16 @@ public class ShootBow implements Listener {
             return;
         }
 
-        ItemStack newItem = toolStats.itemLore.updateArrowsShot(heldBow, 1);
+        ItemMeta newItem = toolStats.itemLore.updateArrowsShot(heldBow, 1);
         if (newItem != null) {
             PlayerInventory inventory = player.getInventory();
             boolean isMain = inventory.getItemInMainHand().getType() == Material.BOW || inventory.getItemInMainHand().getType() == Material.CROSSBOW;
             boolean isOffHand = inventory.getItemInOffHand().getType() == Material.BOW || inventory.getItemInOffHand().getType() == Material.CROSSBOW;
             if (isMain) {
-                inventory.setItemInMainHand(newItem);
+                inventory.getItemInMainHand().setItemMeta(newItem);
             }
             if (isOffHand) {
-                inventory.setItemInOffHand(newItem);
+                inventory.getItemInOffHand().setItemMeta(newItem);
             }
         }
     }

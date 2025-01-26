@@ -29,6 +29,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class SheepShear implements Listener {
 
@@ -64,16 +65,16 @@ public class SheepShear implements Listener {
         }
 
         // update the stats
-        ItemStack newItem = toolStats.itemLore.updateSheepSheared(heldShears, 1);
+        ItemMeta newItem = toolStats.itemLore.updateSheepSheared(heldShears, 1);
         if (newItem != null) {
             PlayerInventory inventory = player.getInventory();
             boolean isMain = inventory.getItemInMainHand().getType() == Material.SHEARS;
             boolean isOffHand = inventory.getItemInOffHand().getType() == Material.SHEARS;
             if (isMain) {
-                inventory.setItemInMainHand(newItem);
+                inventory.getItemInMainHand().setItemMeta(newItem);
             }
             if (isOffHand) {
-                inventory.setItemInOffHand(newItem);
+                inventory.getItemInOffHand().setItemMeta(newItem);
             }
         }
     }

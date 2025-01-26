@@ -218,7 +218,7 @@ public class ItemLore {
      *
      * @param playerTool The tool to update.
      */
-    public ItemStack updateCropsMined(ItemStack playerTool, int add) {
+    public ItemMeta updateCropsMined(ItemStack playerTool, int add) {
         ItemStack clone = playerTool.clone();
         ItemMeta meta = clone.getItemMeta();
         if (meta == null) {
@@ -263,8 +263,7 @@ public class ItemLore {
             List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
             meta.lore(newLore);
         }
-        clone.setItemMeta(meta);
-        return clone;
+        return meta;
     }
 
     /**
@@ -272,7 +271,7 @@ public class ItemLore {
      *
      * @param playerTool The tool to update.
      */
-    public ItemStack updateBlocksMined(ItemStack playerTool, int add) {
+    public ItemMeta updateBlocksMined(ItemStack playerTool, int add) {
         ItemStack clone = playerTool.clone();
         ItemMeta meta = clone.getItemMeta();
         if (meta == null) {
@@ -317,8 +316,7 @@ public class ItemLore {
             List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
             meta.lore(newLore);
         }
-        clone.setItemMeta(meta);
-        return clone;
+        return meta;
     }
 
     /**
@@ -326,7 +324,7 @@ public class ItemLore {
      *
      * @param playerWeapon The tool to update.
      */
-    public ItemStack updatePlayerKills(ItemStack playerWeapon, int add) {
+    public ItemMeta updatePlayerKills(ItemStack playerWeapon, int add) {
         ItemStack clone = playerWeapon.clone();
         ItemMeta meta = clone.getItemMeta();
         if (meta == null) {
@@ -369,8 +367,7 @@ public class ItemLore {
             List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
             meta.lore(newLore);
         }
-        clone.setItemMeta(meta);
-        return clone;
+        return meta;
     }
 
     /**
@@ -378,7 +375,7 @@ public class ItemLore {
      *
      * @param playerWeapon The tool to update.
      */
-    public ItemStack updateMobKills(ItemStack playerWeapon, int add) {
+    public ItemMeta updateMobKills(ItemStack playerWeapon, int add) {
         ItemStack clone = playerWeapon.clone();
         ItemMeta meta = clone.getItemMeta();
         if (meta == null) {
@@ -421,8 +418,7 @@ public class ItemLore {
             List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
             meta.lore(newLore);
         }
-        clone.setItemMeta(meta);
-        return clone;
+        return meta;
     }
 
     /**
@@ -430,7 +426,7 @@ public class ItemLore {
      *
      * @param armorPiece The armor to update.
      */
-    public ItemStack updateDamage(ItemStack armorPiece, double damage) {
+    public ItemMeta updateDamage(ItemStack armorPiece, double damage) {
         // ignore if the damage is zero or negative
         if (damage < 0) {
             return null;
@@ -476,8 +472,7 @@ public class ItemLore {
             List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
             meta.lore(newLore);
         }
-        clone.setItemMeta(meta);
-        return clone;
+        return meta;
     }
 
     /**
@@ -485,7 +480,7 @@ public class ItemLore {
      *
      * @param elytra The player's elytra.
      */
-    public ItemStack updateFlightTime(ItemStack elytra, long duration) {
+    public ItemMeta updateFlightTime(ItemStack elytra, long duration) {
         ItemStack clone = elytra.clone();
         ItemMeta meta = clone.getItemMeta();
         if (meta == null) {
@@ -530,8 +525,7 @@ public class ItemLore {
             List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
             meta.lore(newLore);
         }
-        clone.setItemMeta(meta);
-        return clone;
+        return meta;
     }
 
     /**
@@ -539,7 +533,7 @@ public class ItemLore {
      *
      * @param shears The shears.
      */
-    public ItemStack updateSheepSheared(ItemStack shears, int add) {
+    public ItemMeta updateSheepSheared(ItemStack shears, int add) {
         ItemStack clone = shears.clone();
         ItemMeta meta = clone.getItemMeta();
         if (meta == null) {
@@ -581,8 +575,7 @@ public class ItemLore {
             List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
             meta.lore(newLore);
         }
-        clone.setItemMeta(meta);
-        return clone;
+        return meta;
     }
 
     /**
@@ -590,7 +583,7 @@ public class ItemLore {
      *
      * @param bow The bow.
      */
-    public ItemStack updateArrowsShot(ItemStack bow, int add) {
+    public ItemMeta updateArrowsShot(ItemStack bow, int add) {
         ItemStack clone = bow.clone();
         ItemMeta meta = clone.getItemMeta();
         if (meta == null) {
@@ -635,8 +628,7 @@ public class ItemLore {
             List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
             meta.lore(newLore);
         }
-        clone.setItemMeta(meta);
-        return clone;
+        return meta;
     }
 
     /**
@@ -644,7 +636,7 @@ public class ItemLore {
      *
      * @param fishingRod The fishing rod.
      */
-    public ItemStack updateFishCaught(ItemStack fishingRod, int add) {
+    public ItemMeta updateFishCaught(ItemStack fishingRod, int add) {
         ItemStack clone = fishingRod.clone();
         ItemMeta meta = clone.getItemMeta();
         if (meta == null) {
@@ -686,7 +678,6 @@ public class ItemLore {
             List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
             meta.lore(newLore);
         }
-        clone.setItemMeta(meta);
-        return clone;
+        return meta;
     }
 }

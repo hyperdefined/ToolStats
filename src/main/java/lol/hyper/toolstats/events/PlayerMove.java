@@ -26,6 +26,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,9 +57,9 @@ public class PlayerMove implements Listener {
                 // make sure the player is wearing an elytra
                 if (chest != null && chest.getType() == Material.ELYTRA) {
                     long duration = (System.currentTimeMillis() - playerStartFlight.get(player));
-                    ItemStack newItem = toolStats.itemLore.updateFlightTime(chest, duration);
+                    ItemMeta newItem = toolStats.itemLore.updateFlightTime(chest, duration);
                     if (newItem != null) {
-                        inventory.setChestplate(newItem);
+                        inventory.getChestplate().setItemMeta(newItem);
                     }
                 }
                 playerStartFlight.remove(player);

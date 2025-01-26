@@ -31,6 +31,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
@@ -75,31 +76,33 @@ public class EntityDamage implements Listener {
                 }
                 // a player is killing another player
                 if (mobBeingAttacked instanceof Player) {
-                    ItemStack newItem = toolStats.itemLore.updatePlayerKills(heldItem, 1);
+                    ItemMeta newItem = toolStats.itemLore.updatePlayerKills(heldItem, 1);
                     if (newItem != null) {
-                        attackingPlayerInventory.setItemInMainHand(newItem);
+                        attackingPlayerInventory.getItemInMainHand().setItemMeta(newItem);
                     }
                     return;
                 }
                 // player is killing regular mob
-                ItemStack newItem = toolStats.itemLore.updateMobKills(heldItem, 1);
+                ItemMeta newItem = toolStats.itemLore.updateMobKills(heldItem, 1);
                 if (newItem != null) {
-                    attackingPlayerInventory.setItemInMainHand(newItem);
+                    attackingPlayerInventory.getItemInMainHand().setItemMeta(newItem);
                 }
                 trackedMobs.add(mobBeingAttacked.getUniqueId());
             }
             // trident is being thrown at something
             if (event.getDamager() instanceof Trident trident) {
-                ItemStack newTrident;
+                ItemStack newTrident = trident.getItemStack();
+                ItemMeta newMeta = null;
                 // trident is killing player
                 if (mobBeingAttacked instanceof Player) {
-                    newTrident = toolStats.itemLore.updatePlayerKills(trident.getItemStack(), 1);
+                    newMeta = toolStats.itemLore.updatePlayerKills(trident.getItemStack(), 1);
                 } else {
                     // trident is killing a mob
-                    newTrident = toolStats.itemLore.updateMobKills(trident.getItemStack(), 1);
+                    newMeta = toolStats.itemLore.updateMobKills(trident.getItemStack(), 1);
                     trackedMobs.add(mobBeingAttacked.getUniqueId());
                 }
-                if (newTrident != null) {
+                if (newMeta != null) {
+                    newTrident.setItemMeta(newMeta);
                     trident.setItemStack(newTrident);
                 }
             }
@@ -118,15 +121,15 @@ public class EntityDamage implements Listener {
 
                     // player is shooting another player
                     if (mobBeingAttacked instanceof Player) {
-                        ItemStack newItem = toolStats.itemLore.updatePlayerKills(heldBow, 1);
+                        ItemMeta newItem = toolStats.itemLore.updatePlayerKills(heldBow, 1);
                         if (newItem != null) {
-                            shootingPlayerInventory.setItemInMainHand(newItem);
+                            shootingPlayerInventory.getItemInMainHand().setItemMeta(newItem);
                         }
                     } else {
                         // player is shooting a mob
-                        ItemStack newItem = toolStats.itemLore.updateMobKills(heldBow, 1);
+                        ItemMeta newItem = toolStats.itemLore.updateMobKills(heldBow, 1);
                         if (newItem != null) {
-                            shootingPlayerInventory.setItemInMainHand(newItem);
+                            shootingPlayerInventory.getItemInMainHand().setItemMeta(newItem);
                         }
                         trackedMobs.add(mobBeingAttacked.getUniqueId());
                     }
@@ -140,13 +143,12 @@ public class EntityDamage implements Listener {
             }
             PlayerInventory playerInventory = playerTakingDamage.getInventory();
             ItemStack[] armorContents = playerInventory.getArmorContents();
-            for (int i = 0; i < armorContents.length; i++) {
-                ItemStack armorPiece = armorContents[i];
+            for (ItemStack armorPiece : armorContents) {
                 if (armorPiece != null) {
                     if (toolStats.itemChecker.isArmor(armorPiece.getType())) {
-                        ItemStack newItem = toolStats.itemLore.updateDamage(armorPiece, event.getFinalDamage());
+                        ItemMeta newItem = toolStats.itemLore.updateDamage(armorPiece, event.getFinalDamage());
                         if (newItem != null) {
-                            armorContents[i] = newItem;
+                            armorPiece.setItemMeta(newItem);
                         }
                     }
                 }
@@ -176,13 +178,12 @@ public class EntityDamage implements Listener {
             }
             PlayerInventory playerInventory = playerTakingDamage.getInventory();
             ItemStack[] armorContents = playerInventory.getArmorContents();
-            for (int i = 0; i < armorContents.length; i++) {
-                ItemStack armorPiece = armorContents[i];
+            for (ItemStack armorPiece : armorContents) {
                 if (armorPiece != null) {
                     if (toolStats.itemChecker.isArmor(armorPiece.getType())) {
-                        ItemStack newItem = toolStats.itemLore.updateDamage(armorPiece, event.getFinalDamage());
+                        ItemMeta newItem = toolStats.itemLore.updateDamage(armorPiece, event.getFinalDamage());
                         if (newItem != null) {
-                            armorContents[i] = newItem;
+                            armorPiece.setItemMeta(newItem);
                         }
                     }
                 }
@@ -212,13 +213,12 @@ public class EntityDamage implements Listener {
             }
             PlayerInventory playerInventory = playerTakingDamage.getInventory();
             ItemStack[] armorContents = playerInventory.getArmorContents();
-            for (int i = 0; i < armorContents.length; i++) {
-                ItemStack armorPiece = armorContents[i];
+            for (ItemStack armorPiece : armorContents) {
                 if (armorPiece != null) {
                     if (toolStats.itemChecker.isArmor(armorPiece.getType())) {
-                        ItemStack newItem = toolStats.itemLore.updateDamage(armorPiece, event.getFinalDamage());
+                        ItemMeta newItem = toolStats.itemLore.updateDamage(armorPiece, event.getFinalDamage());
                         if (newItem != null) {
-                            armorContents[i] = newItem;
+                            armorPiece.setItemMeta(newItem);
                         }
                     }
                 }
