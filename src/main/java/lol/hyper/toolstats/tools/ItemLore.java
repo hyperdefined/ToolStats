@@ -425,11 +425,15 @@ public class ItemLore {
      * Add damage to an armor piece.
      *
      * @param armorPiece The armor to update.
+     * @param damage     The amount of damage to apply.
+     * @param bypass     Bypass the negative damage check.
      */
-    public ItemMeta updateDamage(ItemStack armorPiece, double damage) {
+    public ItemMeta updateDamage(ItemStack armorPiece, double damage, boolean bypass) {
         // ignore if the damage is zero or negative
         if (damage < 0) {
-            return null;
+            if (!bypass) {
+                return null;
+            }
         }
         ItemStack clone = armorPiece.clone();
         ItemMeta meta = clone.getItemMeta();

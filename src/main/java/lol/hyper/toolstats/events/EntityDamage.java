@@ -146,7 +146,7 @@ public class EntityDamage implements Listener {
             for (ItemStack armorPiece : armorContents) {
                 if (armorPiece != null) {
                     if (toolStats.itemChecker.isArmor(armorPiece.getType())) {
-                        ItemMeta newItem = toolStats.itemLore.updateDamage(armorPiece, event.getFinalDamage());
+                        ItemMeta newItem = toolStats.itemLore.updateDamage(armorPiece, event.getFinalDamage(), false);
                         if (newItem != null) {
                             armorPiece.setItemMeta(newItem);
                         }
@@ -181,7 +181,7 @@ public class EntityDamage implements Listener {
             for (ItemStack armorPiece : armorContents) {
                 if (armorPiece != null) {
                     if (toolStats.itemChecker.isArmor(armorPiece.getType())) {
-                        ItemMeta newItem = toolStats.itemLore.updateDamage(armorPiece, event.getFinalDamage());
+                        ItemMeta newItem = toolStats.itemLore.updateDamage(armorPiece, event.getFinalDamage(),false);
                         if (newItem != null) {
                             armorPiece.setItemMeta(newItem);
                         }
@@ -216,7 +216,7 @@ public class EntityDamage implements Listener {
             for (ItemStack armorPiece : armorContents) {
                 if (armorPiece != null) {
                     if (toolStats.itemChecker.isArmor(armorPiece.getType())) {
-                        ItemMeta newItem = toolStats.itemLore.updateDamage(armorPiece, event.getFinalDamage());
+                        ItemMeta newItem = toolStats.itemLore.updateDamage(armorPiece, event.getFinalDamage(), false);
                         if (newItem != null) {
                             armorPiece.setItemMeta(newItem);
                         }

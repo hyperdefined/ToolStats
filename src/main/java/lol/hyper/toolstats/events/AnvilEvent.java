@@ -25,6 +25,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -82,6 +83,11 @@ public class AnvilEvent implements Listener {
 
         // clone the item
         ItemStack clone = firstSlot.clone();
+
+        if (tokenType.equalsIgnoreCase("reset")) {
+            reset(event, clone);
+            return;
+        }
 
         // if the item is a mining tool
         if (toolStats.itemChecker.isMineTool(firstSlotMaterial)) {
@@ -186,7 +192,7 @@ public class AnvilEvent implements Listener {
                 break;
             }
             case "damage-taken": {
-                newItem.setItemMeta(toolStats.itemLore.updateDamage(newItem, 0.0));
+                newItem.setItemMeta(toolStats.itemLore.updateDamage(newItem, 0.0, false));
                 break;
             }
             case "mob-kills": {
@@ -216,5 +222,97 @@ public class AnvilEvent implements Listener {
         }
         event.setResult(newItem);
         event.getView().setRepairCost(toolStats.itemChecker.getCost(targetToken));
+    }
+
+    /**
+     * Reset an item's stats. This function is... gross.
+     * Because of how the lore system is set up, we have to basically revert the stats.
+     * The lore function requires the old value, then adds x to the current stat.
+     * This is required, so it can find the old line in the lore and update it.
+     * So we simply make the stat negative, and add it to reset it to zero.
+     * Gross? Yeah, but I don't want to rewrite the lore system again...
+     *
+     * @param event     The PrepareAnvilEvent event.
+     * @param inputItem The input item to reset.
+     */
+    private void reset(PrepareAnvilEvent event, ItemStack inputItem) {
+        ItemStack finalItem = inputItem.clone();
+        ItemMeta meta = finalItem.getItemMeta();
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+
+        if (container.has(toolStats.playerKills)) {
+            Integer playerKills = container.get(toolStats.playerKills, PersistentDataType.INTEGER);
+            if (playerKills == null) {
+                return;
+            }
+            meta = toolStats.itemLore.updatePlayerKills(finalItem, -playerKills);
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.mobKills)) {
+            Integer mobKills = container.get(toolStats.mobKills, PersistentDataType.INTEGER);
+            if (mobKills == null) {
+                return;
+            }
+            meta = toolStats.itemLore.updateMobKills(finalItem, -mobKills);
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.blocksMined)) {
+            Integer blocksMined = container.get(toolStats.blocksMined, PersistentDataType.INTEGER);
+            if (blocksMined == null) {
+                return;
+            }
+            meta = toolStats.itemLore.updateBlocksMined(finalItem, -blocksMined);
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.cropsHarvested)) {
+            Integer cropsHarvested = container.get(toolStats.playerKills, PersistentDataType.INTEGER);
+            if (cropsHarvested == null) {
+                return;
+            }
+            meta = toolStats.itemLore.updateCropsMined(finalItem, -cropsHarvested);
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.fishCaught)) {
+            Integer fishCaught = container.get(toolStats.fishCaught, PersistentDataType.INTEGER);
+            if (fishCaught == null) {
+                return;
+            }
+            meta = toolStats.itemLore.updateFishCaught(finalItem, -fishCaught);
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.sheepSheared)) {
+            Integer sheepSheared = container.get(toolStats.sheepSheared, PersistentDataType.INTEGER);
+            if (sheepSheared == null) {
+                return;
+            }
+            meta = toolStats.itemLore.updateSheepSheared(finalItem, -sheepSheared);
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.armorDamage)) {
+            Double armorDamage = container.get(toolStats.armorDamage, PersistentDataType.DOUBLE);
+            if (armorDamage == null) {
+                return;
+            }
+            meta = toolStats.itemLore.updateDamage(finalItem, -armorDamage, true);
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.arrowsShot)) {
+            Integer arrowsShot = container.get(toolStats.arrowsShot, PersistentDataType.INTEGER);
+            if (arrowsShot == null) {
+                return;
+            }
+            meta = toolStats.itemLore.updateArrowsShot(finalItem, -arrowsShot);
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.flightTime)) {
+            Long flightTime = container.get(toolStats.flightTime, PersistentDataType.LONG);
+            if (flightTime == null) {
+                return;
+            }
+            meta = toolStats.itemLore.updateFlightTime(finalItem, -flightTime);
+            finalItem.setItemMeta(meta);
+        }
+        event.setResult(finalItem);
+        event.getView().setRepairCost(toolStats.itemChecker.getCost("reset"));
     }
 }
