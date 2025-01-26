@@ -43,7 +43,7 @@ public final class ToolStats extends JavaPlugin {
     /**
      * Stores who created an item.
      */
-    public final NamespacedKey genericOwner = new NamespacedKey(this, "owner");
+    public final NamespacedKey itemOwner = new NamespacedKey(this, "owner");
     /**
      * Stores when the item was created.
      */
@@ -51,15 +51,15 @@ public final class ToolStats extends JavaPlugin {
     /**
      * Stores how many player kills.
      */
-    public final NamespacedKey swordPlayerKills = new NamespacedKey(this, "player-kills");
+    public final NamespacedKey playerKills = new NamespacedKey(this, "player-kills");
     /**
      * Stores how many mob kills.
      */
-    public final NamespacedKey swordMobKills = new NamespacedKey(this, "mob-kills");
+    public final NamespacedKey mobKills = new NamespacedKey(this, "mob-kills");
     /**
      * Stores how many blocks were mined.
      */
-    public final NamespacedKey genericMined = new NamespacedKey(this, "generic-mined");
+    public final NamespacedKey blocksMined = new NamespacedKey(this, "generic-mined");
     /**
      * Stores how many crops were harvested.
      */
@@ -67,11 +67,11 @@ public final class ToolStats extends JavaPlugin {
     /**
      * Stores how many fish were caught.
      */
-    public final NamespacedKey fishingRodCaught = new NamespacedKey(this, "fish-caught");
+    public final NamespacedKey fishCaught = new NamespacedKey(this, "fish-caught");
     /**
      * Stores how many sheep were sheared.
      */
-    public final NamespacedKey shearsSheared = new NamespacedKey(this, "sheared");
+    public final NamespacedKey sheepSheared = new NamespacedKey(this, "sheared");
     /**
      * Stores how much damage an armor piece has taken.
      */
@@ -118,7 +118,7 @@ public final class ToolStats extends JavaPlugin {
     public boolean tokens = false;
     public Set<NamespacedKey> tokenKeys = new HashSet<>();
 
-    public BlocksMined blocksMined;
+    public BlockBreak blockBreak;
     public ChunkPopulate chunkPopulate;
     public CraftItem craftItem;
     public EntityDeath entityDeath;
@@ -165,7 +165,7 @@ public final class ToolStats extends JavaPlugin {
             }
         }
         hashMaker = new HashMaker(this);
-        blocksMined = new BlocksMined(this);
+        blockBreak = new BlockBreak(this);
         craftItem = new CraftItem(this);
         chunkPopulate = new ChunkPopulate(this);
         entityDeath = new EntityDeath(this);
@@ -190,17 +190,17 @@ public final class ToolStats extends JavaPlugin {
         grindstoneEvent = new GrindstoneEvent(this);
 
         // save which stat can be used by a reset token
-        tokenKeys.add(genericMined);
-        tokenKeys.add(swordPlayerKills);
-        tokenKeys.add(swordMobKills);
+        tokenKeys.add(blocksMined);
+        tokenKeys.add(playerKills);
+        tokenKeys.add(mobKills);
         tokenKeys.add(cropsHarvested);
-        tokenKeys.add(shearsSheared);
-        tokenKeys.add(fishingRodCaught);
+        tokenKeys.add(sheepSheared);
+        tokenKeys.add(fishCaught);
         tokenKeys.add(flightTime);
         tokenKeys.add(arrowsShot);
         tokenKeys.add(armorDamage);
 
-        Bukkit.getServer().getPluginManager().registerEvents(blocksMined, this);
+        Bukkit.getServer().getPluginManager().registerEvents(blockBreak, this);
         Bukkit.getServer().getPluginManager().registerEvents(chunkPopulate, this);
         Bukkit.getServer().getPluginManager().registerEvents(craftItem, this);
         Bukkit.getServer().getPluginManager().registerEvents(entityDeath, this);

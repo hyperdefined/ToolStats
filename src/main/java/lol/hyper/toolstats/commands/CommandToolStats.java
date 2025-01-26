@@ -227,8 +227,8 @@ public class CommandToolStats implements TabExecutor {
         }
 
         if (toolStats.configTools.checkConfig(original.getType(), "created-by")) {
-            if (container.has(toolStats.genericOwner, new UUIDDataType())) {
-                UUID owner = container.get(toolStats.genericOwner, new UUIDDataType());
+            if (container.has(toolStats.itemOwner, new UUIDDataType())) {
+                UUID owner = container.get(toolStats.itemOwner, new UUIDDataType());
                 String ownerName = null;
                 // if we can read the current owner
                 if (owner != null) {
@@ -241,7 +241,7 @@ public class CommandToolStats implements TabExecutor {
                 if (ownerName == null) {
                     player.sendMessage(Component.text("The owner of this item is null. Setting to " + player.getName() + ".", NamedTextColor.RED));
                     ownerName = player.getName();
-                    container.set(toolStats.genericOwner, new UUIDDataType(), player.getUniqueId());
+                    container.set(toolStats.itemOwner, new UUIDDataType(), player.getUniqueId());
                 }
 
                 // show how the item was created based on the previous lore
@@ -309,16 +309,16 @@ public class CommandToolStats implements TabExecutor {
             }
         }
         if (toolStats.configTools.checkConfig(original.getType(), "player-kills")) {
-            if (container.has(toolStats.swordPlayerKills, PersistentDataType.INTEGER)) {
-                Integer kills = container.get(toolStats.swordPlayerKills, PersistentDataType.INTEGER);
+            if (container.has(toolStats.playerKills, PersistentDataType.INTEGER)) {
+                Integer kills = container.get(toolStats.playerKills, PersistentDataType.INTEGER);
                 if (kills != null) {
                     lore.add(toolStats.configTools.formatLore("kills.player", "{kills}", toolStats.numberFormat.formatInt(kills)));
                 }
             }
         }
         if (toolStats.configTools.checkConfig(original.getType(), "mob-kills")) {
-            if (container.has(toolStats.swordMobKills, PersistentDataType.INTEGER)) {
-                Integer kills = container.get(toolStats.swordMobKills, PersistentDataType.INTEGER);
+            if (container.has(toolStats.mobKills, PersistentDataType.INTEGER)) {
+                Integer kills = container.get(toolStats.mobKills, PersistentDataType.INTEGER);
                 if (kills != null) {
                     lore.add(toolStats.configTools.formatLore("kills.mob", "{kills}", toolStats.numberFormat.formatInt(kills)));
                 }
@@ -333,24 +333,24 @@ public class CommandToolStats implements TabExecutor {
                     }
                 }
             }
-            if (container.has(toolStats.genericMined, PersistentDataType.INTEGER)) {
-                Integer blocksMined = container.get(toolStats.genericMined, PersistentDataType.INTEGER);
+            if (container.has(toolStats.blocksMined, PersistentDataType.INTEGER)) {
+                Integer blocksMined = container.get(toolStats.blocksMined, PersistentDataType.INTEGER);
                 if (blocksMined != null) {
                     lore.add(toolStats.configTools.formatLore("blocks-mined", "{blocks}", toolStats.numberFormat.formatInt(blocksMined)));
                 }
             }
         }
         if (toolStats.config.getBoolean("enabled.fish-caught")) {
-            if (container.has(toolStats.fishingRodCaught, PersistentDataType.INTEGER)) {
-                Integer fish = container.get(toolStats.fishingRodCaught, PersistentDataType.INTEGER);
+            if (container.has(toolStats.fishCaught, PersistentDataType.INTEGER)) {
+                Integer fish = container.get(toolStats.fishCaught, PersistentDataType.INTEGER);
                 if (fish != null) {
                     lore.add(toolStats.configTools.formatLore("fished.fish-caught", "{fish}", toolStats.numberFormat.formatInt(fish)));
                 }
             }
         }
         if (toolStats.config.getBoolean("enabled.sheep-sheared")) {
-            if (container.has(toolStats.shearsSheared, PersistentDataType.INTEGER)) {
-                Integer sheep = container.get(toolStats.shearsSheared, PersistentDataType.INTEGER);
+            if (container.has(toolStats.sheepSheared, PersistentDataType.INTEGER)) {
+                Integer sheep = container.get(toolStats.sheepSheared, PersistentDataType.INTEGER);
                 if (sheep != null) {
                     lore.add(toolStats.configTools.formatLore("sheep-sheared", "{sheep}", toolStats.numberFormat.formatInt(sheep)));
                 }

@@ -34,11 +34,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Locale;
 
-public class BlocksMined implements Listener {
+public class BlockBreak implements Listener {
 
     private final ToolStats toolStats;
 
-    public BlocksMined(ToolStats toolStats) {
+    public BlockBreak(ToolStats toolStats) {
         this.toolStats = toolStats;
     }
 

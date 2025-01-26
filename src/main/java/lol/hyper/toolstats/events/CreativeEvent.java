@@ -100,7 +100,7 @@ public class CreativeEvent implements Listener {
         }
 
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
-        container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
+        container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
         container.set(toolStats.originType, PersistentDataType.INTEGER, 6);
 
         if (toolStats.configTools.checkConfig(newSpawnedItem.getType(), "spawned-in")) {

@@ -108,17 +108,17 @@ public class GrindstoneEvent implements Listener {
         for (String token : tokens) {
             switch (appliedTokens) {
                 case "player-kills": {
-                    container.set(toolStats.swordPlayerKills, PersistentDataType.INTEGER, 0);
+                    container.set(toolStats.playerKills, PersistentDataType.INTEGER, 0);
                     finalMeta = toolStats.itemLore.updatePlayerKills(inputItem, 0);
                     break;
                 }
                 case "mob-kills": {
-                    container.set(toolStats.swordMobKills, PersistentDataType.INTEGER, 0);
+                    container.set(toolStats.mobKills, PersistentDataType.INTEGER, 0);
                     finalMeta = toolStats.itemLore.updateMobKills(inputItem, 0);
                     break;
                 }
                 case "blocks-mined": {
-                    container.set(toolStats.genericMined, PersistentDataType.INTEGER, 0);
+                    container.set(toolStats.blocksMined, PersistentDataType.INTEGER, 0);
                     finalMeta = toolStats.itemLore.updateBlocksMined(inputItem, 0);
                     break;
                 }
@@ -128,12 +128,12 @@ public class GrindstoneEvent implements Listener {
                     break;
                 }
                 case "fish-caught": {
-                    container.set(toolStats.fishingRodCaught, PersistentDataType.INTEGER, 0);
+                    container.set(toolStats.fishCaught, PersistentDataType.INTEGER, 0);
                     finalMeta = toolStats.itemLore.updateFishCaught(inputItem, 0);
                     break;
                 }
                 case "sheep-sheared": {
-                    container.set(toolStats.shearsSheared, PersistentDataType.INTEGER, 0);
+                    container.set(toolStats.sheepSheared, PersistentDataType.INTEGER, 0);
                     finalMeta = toolStats.itemLore.updateSheepSheared(inputItem, 0);
                     break;
                 }

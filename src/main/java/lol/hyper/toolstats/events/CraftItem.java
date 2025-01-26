@@ -126,7 +126,7 @@ public class CraftItem implements Listener {
 
         // if the item already has the tag
         // this is to prevent duplicate tags
-        if (container.has(toolStats.timeCreated, PersistentDataType.LONG) || container.has(toolStats.genericOwner, PersistentDataType.LONG)) {
+        if (container.has(toolStats.timeCreated, PersistentDataType.LONG) || container.has(toolStats.itemOwner, PersistentDataType.LONG)) {
             return null;
         }
 
@@ -137,7 +137,7 @@ public class CraftItem implements Listener {
         }
 
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
-        container.set(toolStats.genericOwner, new UUIDDataType(), owner.getUniqueId());
+        container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
         container.set(toolStats.originType, PersistentDataType.INTEGER, 0);
 
         List<Component> lore;

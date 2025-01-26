@@ -66,10 +66,10 @@ public class InventoryOpen implements Listener {
             if (toolStats.config.getBoolean("generate-hash-for-items")) {
                 if (!container.has(toolStats.hash, PersistentDataType.STRING)) {
                     // make sure the item has an owner
-                    if (!container.has(toolStats.genericOwner, new UUIDDataType())) {
+                    if (!container.has(toolStats.itemOwner, new UUIDDataType())) {
                         continue;
                     }
-                    UUID owner = container.get(toolStats.genericOwner, new UUIDDataType());
+                    UUID owner = container.get(toolStats.itemOwner, new UUIDDataType());
                     if (owner == null) {
                         continue;
                     }

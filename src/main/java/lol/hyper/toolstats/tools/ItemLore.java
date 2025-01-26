@@ -293,8 +293,8 @@ public class ItemLore {
         // read the current stats from the item
         // if they don't exist, then start from 0
         Integer blocksMined = 0;
-        if (container.has(toolStats.genericMined, PersistentDataType.INTEGER)) {
-            blocksMined = container.get(toolStats.genericMined, PersistentDataType.INTEGER);
+        if (container.has(toolStats.blocksMined, PersistentDataType.INTEGER)) {
+            blocksMined = container.get(toolStats.blocksMined, PersistentDataType.INTEGER);
         }
 
         if (blocksMined == null) {
@@ -302,7 +302,7 @@ public class ItemLore {
             toolStats.logger.warning(clone + " does not have valid generic-mined set! Resting to zero. This should NEVER happen.");
         }
 
-        container.set(toolStats.genericMined, PersistentDataType.INTEGER, blocksMined + add);
+        container.set(toolStats.blocksMined, PersistentDataType.INTEGER, blocksMined + add);
 
         // do we add the lore based on the config?
         if (toolStats.configTools.checkConfig(clone.getType(), "blocks-mined")) {
@@ -344,8 +344,8 @@ public class ItemLore {
         }
 
         Integer playerKills = 0;
-        if (container.has(toolStats.swordPlayerKills, PersistentDataType.INTEGER)) {
-            playerKills = container.get(toolStats.swordPlayerKills, PersistentDataType.INTEGER);
+        if (container.has(toolStats.playerKills, PersistentDataType.INTEGER)) {
+            playerKills = container.get(toolStats.playerKills, PersistentDataType.INTEGER);
         }
 
         if (playerKills == null) {
@@ -353,7 +353,7 @@ public class ItemLore {
             toolStats.logger.warning(clone + " does not have valid player-kills set! Resting to zero. This should NEVER happen.");
         }
 
-        container.set(toolStats.swordPlayerKills, PersistentDataType.INTEGER, playerKills + add);
+        container.set(toolStats.playerKills, PersistentDataType.INTEGER, playerKills + add);
 
         // do we add the lore based on the config?
         if (toolStats.configTools.checkConfig(clone.getType(), "player-kills")) {
@@ -395,8 +395,8 @@ public class ItemLore {
         }
 
         Integer mobKills = 0;
-        if (container.has(toolStats.swordMobKills, PersistentDataType.INTEGER)) {
-            mobKills = container.get(toolStats.swordMobKills, PersistentDataType.INTEGER);
+        if (container.has(toolStats.mobKills, PersistentDataType.INTEGER)) {
+            mobKills = container.get(toolStats.mobKills, PersistentDataType.INTEGER);
         }
 
         if (mobKills == null) {
@@ -404,7 +404,7 @@ public class ItemLore {
             toolStats.logger.warning(clone + " does not have valid mob-kills set! Resting to zero. This should NEVER happen.");
         }
 
-        container.set(toolStats.swordMobKills, PersistentDataType.INTEGER, mobKills + add);
+        container.set(toolStats.mobKills, PersistentDataType.INTEGER, mobKills + add);
 
         // do we add the lore based on the config?
         if (toolStats.configTools.checkConfig(clone.getType(), "mob-kills")) {
@@ -553,8 +553,8 @@ public class ItemLore {
         }
 
         Integer sheepSheared = 0;
-        if (container.has(toolStats.shearsSheared, PersistentDataType.INTEGER)) {
-            sheepSheared = container.get(toolStats.shearsSheared, PersistentDataType.INTEGER);
+        if (container.has(toolStats.sheepSheared, PersistentDataType.INTEGER)) {
+            sheepSheared = container.get(toolStats.sheepSheared, PersistentDataType.INTEGER);
         }
 
         if (sheepSheared == null) {
@@ -562,7 +562,7 @@ public class ItemLore {
             toolStats.logger.warning(clone + " does not have valid sheared set! Resting to zero. This should NEVER happen.");
         }
 
-        container.set(toolStats.shearsSheared, PersistentDataType.INTEGER, sheepSheared + add);
+        container.set(toolStats.sheepSheared, PersistentDataType.INTEGER, sheepSheared + add);
 
         if (toolStats.config.getBoolean("enabled.sheep-sheared")) {
             String oldSheepFormatted = toolStats.numberFormat.formatInt(sheepSheared);
@@ -656,8 +656,8 @@ public class ItemLore {
         }
 
         Integer fishCaught = 0;
-        if (container.has(toolStats.fishingRodCaught, PersistentDataType.INTEGER)) {
-            fishCaught = container.get(toolStats.fishingRodCaught, PersistentDataType.INTEGER);
+        if (container.has(toolStats.fishCaught, PersistentDataType.INTEGER)) {
+            fishCaught = container.get(toolStats.fishCaught, PersistentDataType.INTEGER);
         }
 
         if (fishCaught == null) {
@@ -665,7 +665,7 @@ public class ItemLore {
             toolStats.logger.warning(clone + " does not have valid fish-caught set! Resting to zero. This should NEVER happen.");
         }
 
-        container.set(toolStats.fishingRodCaught, PersistentDataType.INTEGER, fishCaught + add);
+        container.set(toolStats.fishCaught, PersistentDataType.INTEGER, fishCaught + add);
 
         if (toolStats.config.getBoolean("enabled.fish-caught")) {
             String oldFishFormatted = toolStats.numberFormat.formatInt(fishCaught);
