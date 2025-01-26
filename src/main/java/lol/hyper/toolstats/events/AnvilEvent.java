@@ -87,7 +87,12 @@ public class AnvilEvent implements Listener {
         if (toolStats.itemChecker.isMineTool(firstSlotMaterial)) {
             if (firstSlotMaterial.toString().toLowerCase(Locale.ROOT).contains("hoe")) {
                 // the item is a hoe
-                addToken(event, tokenType, "crops-mined", clone);
+                if (tokenType.equalsIgnoreCase("blocks-mined")) {
+                    addToken(event, tokenType, "blocks-mined", clone);
+                }
+                if (tokenType.equalsIgnoreCase("crops-mined")) {
+                    addToken(event, tokenType, "crops-mined", clone);
+                }
             } else {
                 // since shears will fall under here, check if the token is for sheep sheared
                 if (firstSlotMaterial == Material.SHEARS && tokenType.equals("sheep-sheared")) {
