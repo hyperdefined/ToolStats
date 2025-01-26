@@ -69,9 +69,14 @@ public class AnvilEvent implements Listener {
             return;
         }
 
-        //get the type from the token
+        // get the type from the token
         String tokenType = secondSlotContainer.get(toolStats.tokenType, PersistentDataType.STRING);
         if (tokenType == null) {
+            return;
+        }
+
+        // don't let the player use more than one
+        if (secondSlot.getAmount() > 1) {
             return;
         }
 
