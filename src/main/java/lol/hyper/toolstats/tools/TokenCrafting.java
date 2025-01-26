@@ -102,7 +102,7 @@ public class TokenCrafting {
 
         NamespacedKey resetKey = new NamespacedKey(toolStats, "reset-token");
         ShapedRecipe resetRecipe = new ShapedRecipe(resetKey, toolStats.tokenItems.resetToken());
-        resetRecipe.shape(" P ", "P P", " P ");
+        resetRecipe.shape(" P ", "PPP", " P ");
         resetRecipe.setIngredient('P', Material.PAPER);
         recipes.add(resetRecipe);
 
