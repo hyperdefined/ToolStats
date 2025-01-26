@@ -145,7 +145,6 @@ public final class ToolStats extends JavaPlugin {
     public TokenCrafting tokenCrafting;
     public AnvilEvent anvilEvent;
     public PrepareCraft prepareCraft;
-    public GrindstoneEvent grindstoneEvent;
 
     @Override
     public void onEnable() {
@@ -187,7 +186,6 @@ public final class ToolStats extends JavaPlugin {
         shootBow = new ShootBow(this);
         anvilEvent = new AnvilEvent(this);
         prepareCraft = new PrepareCraft(this);
-        grindstoneEvent = new GrindstoneEvent(this);
 
         // save which stat can be used by a reset token
         tokenKeys.add(blocksMined);
@@ -218,7 +216,6 @@ public final class ToolStats extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(playerMove, this);
         Bukkit.getServer().getPluginManager().registerEvents(anvilEvent, this);
         Bukkit.getServer().getPluginManager().registerEvents(prepareCraft, this);
-        Bukkit.getServer().getPluginManager().registerEvents(grindstoneEvent, this);
 
         this.getCommand("toolstats").setExecutor(commandToolStats);
 

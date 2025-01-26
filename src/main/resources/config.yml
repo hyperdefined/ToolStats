@@ -42,7 +42,8 @@ tokens:
       levels: 1
     reset:
       title: "&7ToolStats: &8Reset Item"
-      lore: "&8Use in a grindstone to reset ALL stats for this item. Tokens on this item stay."
+      lore: "&8Combine in an anvil with to reset ALL stats for this item. Tokens on this item stay."
+      levels: 1
 
 enabled:
   # Will show ownership of items when they are created/found.

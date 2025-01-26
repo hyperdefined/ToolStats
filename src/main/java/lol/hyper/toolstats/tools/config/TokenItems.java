@@ -215,6 +215,7 @@ public class TokenItems {
         token.setItemMeta(tokenMeta);
         return token;
     }
+    
     public ItemStack resetToken() {
         // set up the item
         ItemStack token = new ItemStack(Material.PAPER);
