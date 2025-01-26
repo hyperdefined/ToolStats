@@ -101,6 +101,17 @@ public class AnvilEvent implements Listener {
                 }
                 addToken(event, tokenType, "blocks-mined", clone);
             }
+            // axes are a mining tool, so double check them here for player/mob kills
+            if (firstSlotMaterial.toString().toLowerCase(Locale.ROOT).contains("_axe")) {
+                if (tokenType.equalsIgnoreCase("player-kills")) {
+                    addToken(event, tokenType, "player-kills", clone);
+                    return;
+                }
+                if (tokenType.equalsIgnoreCase("mobs-kills")) {
+                    addToken(event, tokenType, "mobs-kills", clone);
+                    return;
+                }
+            }
             return;
         }
         if (toolStats.itemChecker.isArmor(firstSlotMaterial)) {
