@@ -283,15 +283,12 @@ public class ItemLore {
         PersistentDataContainer container = meta.getPersistentDataContainer();
         // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
-            toolStats.logger.info("tokens are enabled!");
             // if the item has this token, then continue
             // if the item does not, ignore
             boolean validTokens = toolStats.itemChecker.checkTokens(container, "blocks-mined");
             if (!validTokens) {
                 return null;
             }
-        } else {
-            toolStats.logger.info("tokens are disabled!");
         }
 
         // read the current stats from the item
@@ -319,10 +316,8 @@ public class ItemLore {
             }
             List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
             meta.lore(newLore);
-            toolStats.logger.info("adding lore!");
         }
         clone.setItemMeta(meta);
-        toolStats.logger.info("reached end of function!");
         return clone;
     }
 

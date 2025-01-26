@@ -83,7 +83,6 @@ public class BlocksMined implements Listener {
             // update the blocks mined
             ItemStack newItem = toolStats.itemLore.updateBlocksMined(heldItem, 1);
             if (newItem != null) {
-                toolStats.logger.info(newItem.toString());
                 // replace item in main hand
                 inventory.setItemInMainHand(newItem);
             }

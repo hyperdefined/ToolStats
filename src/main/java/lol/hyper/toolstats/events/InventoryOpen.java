@@ -78,7 +78,6 @@ public class InventoryOpen implements Listener {
                         continue;
                     }
                     String hash = toolStats.hashMaker.makeHash(itemStack.getType(), owner, timestamp);
-                    toolStats.logger.info(hash);
                     container.set(toolStats.hash, PersistentDataType.STRING, hash);
                 }
             }
