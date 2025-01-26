@@ -232,8 +232,9 @@ public final class ToolStats extends JavaPlugin {
         }
 
         if (config.getBoolean("tokens.enabled")) {
-            logger.info("Tokens are enabled! All stat tracking (besides origins) is forced disabled.");
-            logger.info("If you want to track stats on items, add the correct token to it!");
+            logger.info("The token system is enabled! This means you must apply tokens to items in order for them to track.");
+            logger.info("Item origins (crafted, traded, found, etc) will still apply to items.");
+            logger.info("https://github.com/hyperdefined/ToolStats/wiki/Token-System");
         }
 
         tokens = config.getBoolean("tokens.enabled");
