@@ -259,8 +259,6 @@ public class ItemLore {
             cropsMined = container.get(toolStats.cropsHarvested, PersistentDataType.INTEGER);
         }
 
-        toolStats.logger.info("woooo!!!!!!!!!!");
-
         if (cropsMined == null) {
             cropsMined = 0;
             toolStats.logger.warning(clone + " does not have valid crops-mined set! Resting to zero. This should NEVER happen.");
