@@ -34,6 +34,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public final class ToolStats extends JavaPlugin {
@@ -114,6 +116,7 @@ public final class ToolStats extends JavaPlugin {
     public final Logger logger = this.getLogger();
     public final File configFile = new File(this.getDataFolder(), "config.yml");
     public boolean tokens = false;
+    public Set<NamespacedKey> tokenKeys = new HashSet<>();
 
     public BlocksMined blocksMined;
     public ChunkPopulate chunkPopulate;
@@ -142,6 +145,7 @@ public final class ToolStats extends JavaPlugin {
     public TokenCrafting tokenCrafting;
     public AnvilEvent anvilEvent;
     public PrepareCraft prepareCraft;
+    public GrindstoneEvent grindstoneEvent;
 
     @Override
     public void onEnable() {
@@ -183,6 +187,18 @@ public final class ToolStats extends JavaPlugin {
         shootBow = new ShootBow(this);
         anvilEvent = new AnvilEvent(this);
         prepareCraft = new PrepareCraft(this);
+        grindstoneEvent = new GrindstoneEvent(this);
+
+        // save which stat can be used by a reset token
+        tokenKeys.add(genericMined);
+        tokenKeys.add(swordPlayerKills);
+        tokenKeys.add(swordMobKills);
+        tokenKeys.add(cropsHarvested);
+        tokenKeys.add(shearsSheared);
+        tokenKeys.add(fishingRodCaught);
+        tokenKeys.add(flightTime);
+        tokenKeys.add(arrowsShot);
+        tokenKeys.add(armorDamage);
 
         Bukkit.getServer().getPluginManager().registerEvents(blocksMined, this);
         Bukkit.getServer().getPluginManager().registerEvents(chunkPopulate, this);
@@ -202,6 +218,7 @@ public final class ToolStats extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(playerMove, this);
         Bukkit.getServer().getPluginManager().registerEvents(anvilEvent, this);
         Bukkit.getServer().getPluginManager().registerEvents(prepareCraft, this);
+        Bukkit.getServer().getPluginManager().registerEvents(grindstoneEvent, this);
 
         this.getCommand("toolstats").setExecutor(commandToolStats);
 

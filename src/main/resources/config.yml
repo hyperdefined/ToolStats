@@ -5,9 +5,9 @@ tokens:
   craft-tokens: true
   data:
     player-kills:
-        title: "&7ToolStats: &8Player Kills Token"
-        lore: "&8Combine with a melee or ranged weapon in an anvil to track player kills."
-        levels: 1
+      title: "&7ToolStats: &8Player Kills Token"
+      lore: "&8Combine with a melee or ranged weapon in an anvil to track player kills."
+      levels: 1
     mob-kills:
       title: "&7ToolStats: &8Mob Kills Token"
       lore: "&8Combine with a melee or ranged weapon in an anvil to track mob kills."
@@ -40,6 +40,9 @@ tokens:
       title: "&7ToolStats: &8Flight Time Token"
       lore: "&8Combine with an elytra in an anvil to track flight time."
       levels: 1
+    reset:
+      title: "&7ToolStats: &8Reset Item"
+      lore: "&8Use in a grindstone to reset ALL stats for this item. Tokens on this item stay."
 
 enabled:
   # Will show ownership of items when they are created/found.

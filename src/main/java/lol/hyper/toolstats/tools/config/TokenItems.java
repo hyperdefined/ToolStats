@@ -215,4 +215,23 @@ public class TokenItems {
         token.setItemMeta(tokenMeta);
         return token;
     }
+    public ItemStack resetToken() {
+        // set up the item
+        ItemStack token = new ItemStack(Material.PAPER);
+        ItemMeta tokenMeta = token.getItemMeta();
+        PersistentDataContainer tokenData = tokenMeta.getPersistentDataContainer();
+
+        // set the title and lore
+        Component title = toolStats.configTools.format("tokens.data.reset.title");
+        Component lore = toolStats.configTools.format("tokens.data.reset.lore");
+        tokenMeta.displayName(title);
+        List<Component> newLore = new ArrayList<>();
+        newLore.add(lore);
+        tokenMeta.lore(newLore);
+
+        // set the PDC
+        tokenData.set(toolStats.tokenType, PersistentDataType.STRING, "reset");
+        token.setItemMeta(tokenMeta);
+        return token;
+    }
 }

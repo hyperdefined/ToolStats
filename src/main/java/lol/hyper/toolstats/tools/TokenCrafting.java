@@ -100,6 +100,12 @@ public class TokenCrafting {
         flightTimeRecipe.setIngredient('F', Material.FEATHER);
         recipes.add(flightTimeRecipe);
 
+        NamespacedKey resetKey = new NamespacedKey(toolStats, "reset-token");
+        ShapedRecipe resetRecipe = new ShapedRecipe(resetKey, toolStats.tokenItems.resetToken());
+        resetRecipe.shape(" P ", "P P", " P ");
+        resetRecipe.setIngredient('P', Material.PAPER);
+        recipes.add(resetRecipe);
+
         tokenTypes.add("crops-mined");
         tokenTypes.add("blocks-mined");
         tokenTypes.add("damage-taken");
@@ -109,6 +115,7 @@ public class TokenCrafting {
         tokenTypes.add("sheep-sheared");
         tokenTypes.add("flight-time");
         tokenTypes.add("fish-caught");
+        tokenTypes.add("reset");
     }
 
     public Set<ShapedRecipe> getRecipes() {
