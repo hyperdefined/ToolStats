@@ -58,6 +58,19 @@ public class PlayerJoin implements Listener {
             }
             PersistentDataContainer container = itemMeta.getPersistentDataContainer();
 
+            if (toolStats.config.getBoolean("tokens.enabled")) {
+                // if the token system is on and the item doesn't have stat keys
+                if (toolStats.itemChecker.keyCheck(container) && !container.has(toolStats.tokenType)) {
+                    // add the tokens
+                    String newTokens = toolStats.itemChecker.addTokensToExisting(itemStack);
+                    if (newTokens == null) {
+                        return;
+                    }
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    itemStack.setItemMeta(itemMeta);
+                }
+            }
+
             // generate a hash if the item doesn't have one
             if (!container.has(toolStats.hash, PersistentDataType.STRING)) {
                 // make sure the item has an owner

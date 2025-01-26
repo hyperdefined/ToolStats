@@ -62,6 +62,19 @@ public class InventoryOpen implements Listener {
             }
             PersistentDataContainer container = itemMeta.getPersistentDataContainer();
 
+            if (toolStats.config.getBoolean("tokens.enabled")) {
+                // if the token system is on and the item doesn't have stat keys
+                if (toolStats.itemChecker.keyCheck(container) && !container.has(toolStats.tokenType)) {
+                    // add the tokens
+                    String newTokens = toolStats.itemChecker.addTokensToExisting(itemStack);
+                    if (newTokens == null) {
+                        return;
+                    }
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    itemStack.setItemMeta(itemMeta);
+                }
+            }
+
             // generate a hash if the item doesn't have one (if it's enabled in the config)
             if (toolStats.config.getBoolean("generate-hash-for-items")) {
                 if (!container.has(toolStats.hash, PersistentDataType.STRING)) {
@@ -85,6 +98,8 @@ public class InventoryOpen implements Listener {
             if (location != null) {
                 Bukkit.getRegionScheduler().runDelayed(toolStats, location, scheduledTask -> itemStack.setItemMeta(clone), 1);
             }
+
+
         }
     }
 }

@@ -19,6 +19,7 @@ package lol.hyper.toolstats.tools;
 
 import lol.hyper.toolstats.ToolStats;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -279,5 +280,66 @@ public class ItemChecker {
         }
 
         return null;
+    }
+
+    /**
+     * Checks the keys of the item and returns the tokens we should add.
+     * If the server swaps token systems this should allow compatability.
+     *
+     * @param item The input item.
+     * @return The tokens we should add.
+     */
+    public String addTokensToExisting(ItemStack item) {
+        ItemStack clone = item.clone();
+        ItemMeta meta = clone.getItemMeta();
+        if (meta == null) {
+            return null;
+        }
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        ArrayList<String> tokens = new ArrayList<>();
+        if (container.has(toolStats.playerKills)) {
+            tokens.add("player-kills");
+        }
+        if (container.has(toolStats.mobKills)) {
+            tokens.add("mob-kills");
+        }
+        if (container.has(toolStats.blocksMined)) {
+            tokens.add("blocks-mined");
+        }
+        if (container.has(toolStats.cropsHarvested)) {
+            tokens.add("crops-mined");
+        }
+        if (container.has(toolStats.fishCaught)) {
+            tokens.add("fish-caught");
+        }
+        if (container.has(toolStats.sheepSheared)) {
+            tokens.add("sheep-sheared");
+        }
+        if (container.has(toolStats.armorDamage)) {
+            tokens.add("damage-taken");
+        }
+        if (container.has(toolStats.arrowsShot)) {
+            tokens.add("arrows-shot");
+        }
+        if (container.has(toolStats.flightTime)) {
+            tokens.add("flight-time");
+        }
+        if (tokens.isEmpty()) {
+            return null;
+        }
+
+        return String.join(",", tokens);
+    }
+
+    /**
+     * Check to see if a given container has our keys for stats.
+     *
+     * @param container The container.
+     * @return True/false if the container has keys.
+     */
+    public boolean keyCheck(PersistentDataContainer container) {
+        return container.getKeys().stream()
+                .map(NamespacedKey::getKey)
+                .anyMatch(key -> toolStats.tokenKeys.stream().anyMatch(tokenKey -> tokenKey.getKey().equalsIgnoreCase(key)));
     }
 }

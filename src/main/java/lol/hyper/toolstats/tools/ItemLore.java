@@ -230,12 +230,27 @@ public class ItemLore {
         PersistentDataContainer container = meta.getPersistentDataContainer();
 
         // check for tokens
+        boolean validToken = toolStats.itemChecker.checkTokens(container, "crops-mined");
+        // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
-            // if the item has this token, then continue
-            // if the item does not, ignore
-            boolean validTokens = toolStats.itemChecker.checkTokens(container, "crops-mined");
-            if (!validTokens) {
+            // if the item has stats but no token, add the token
+            if (container.has(toolStats.cropsHarvested) && !validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
+            }
+
+            // the item does not have a valid token
+            if (!validToken) {
                 return null;
+            }
+        } else {
+            if (!validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
             }
         }
 
@@ -243,6 +258,8 @@ public class ItemLore {
         if (container.has(toolStats.cropsHarvested, PersistentDataType.INTEGER)) {
             cropsMined = container.get(toolStats.cropsHarvested, PersistentDataType.INTEGER);
         }
+
+        toolStats.logger.info("woooo!!!!!!!!!!");
 
         if (cropsMined == null) {
             cropsMined = 0;
@@ -280,13 +297,27 @@ public class ItemLore {
         }
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
+        boolean validToken = toolStats.itemChecker.checkTokens(container, "blocks-mined");
         // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
-            // if the item has this token, then continue
-            // if the item does not, ignore
-            boolean validTokens = toolStats.itemChecker.checkTokens(container, "blocks-mined");
-            if (!validTokens) {
+            // if the item has stats but no token, add the token
+            if (container.has(toolStats.blocksMined) && !validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
+            }
+
+            // the item does not have a valid token
+            if (!validToken) {
                 return null;
+            }
+        } else {
+            if (!validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
             }
         }
 
@@ -334,12 +365,27 @@ public class ItemLore {
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
         // check for tokens
+        boolean validToken = toolStats.itemChecker.checkTokens(container, "player-kills");
+        // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
-            // if the item has this token, then continue
-            // if the item does not, ignore
-            boolean validTokens = toolStats.itemChecker.checkTokens(container, "player-kills");
-            if (!validTokens) {
+            // if the item has stats but no token, add the token
+            if (container.has(toolStats.playerKills) && !validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
+            }
+
+            // the item does not have a valid token
+            if (!validToken) {
                 return null;
+            }
+        } else {
+            if (!validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
             }
         }
 
@@ -385,12 +431,27 @@ public class ItemLore {
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
         // check for tokens
+        boolean validToken = toolStats.itemChecker.checkTokens(container, "mob-kills");
+        // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
-            // if the item has this token, then continue
-            // if the item does not, ignore
-            boolean validTokens = toolStats.itemChecker.checkTokens(container, "mob-kills");
-            if (!validTokens) {
+            // if the item has stats but no token, add the token
+            if (container.has(toolStats.mobKills) && !validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
+            }
+
+            // the item does not have a valid token
+            if (!validToken) {
                 return null;
+            }
+        } else {
+            if (!validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
             }
         }
 
@@ -444,12 +505,27 @@ public class ItemLore {
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
         // check for tokens
+        boolean validToken = toolStats.itemChecker.checkTokens(container, "damage-taken");
+        // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
-            // if the item has this token, then continue
-            // if the item does not, ignore
-            boolean validTokens = toolStats.itemChecker.checkTokens(container, "damage-taken");
-            if (!validTokens) {
+            // if the item has stats but no token, add the token
+            if (container.has(toolStats.armorDamage) && !validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
+            }
+
+            // the item does not have a valid token
+            if (!validToken) {
                 return null;
+            }
+        } else {
+            if (!validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
             }
         }
 
@@ -494,12 +570,27 @@ public class ItemLore {
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
         // check for tokens
+        boolean validToken = toolStats.itemChecker.checkTokens(container, "flight-time");
+        // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
-            // if the item has this token, then continue
-            // if the item does not, ignore
-            boolean validTokens = toolStats.itemChecker.checkTokens(container, "flight-time");
-            if (!validTokens) {
+            // if the item has stats but no token, add the token
+            if (container.has(toolStats.flightTime) && !validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
+            }
+
+            // the item does not have a valid token
+            if (!validToken) {
                 return null;
+            }
+        } else {
+            if (!validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
             }
         }
 
@@ -547,12 +638,27 @@ public class ItemLore {
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
         // check for tokens
+        boolean validToken = toolStats.itemChecker.checkTokens(container, "sheep-sheared");
+        // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
-            // if the item has this token, then continue
-            // if the item does not, ignore
-            boolean validTokens = toolStats.itemChecker.checkTokens(container, "sheep-sheared");
-            if (!validTokens) {
+            // if the item has stats but no token, add the token
+            if (container.has(toolStats.sheepSheared) && !validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
+            }
+
+            // the item does not have a valid token
+            if (!validToken) {
                 return null;
+            }
+        } else {
+            if (!validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
             }
         }
 
@@ -597,12 +703,27 @@ public class ItemLore {
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
         // check for tokens
+        boolean validToken = toolStats.itemChecker.checkTokens(container, "arrows-shot");
+        // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
-            // if the item has this token, then continue
-            // if the item does not, ignore
-            boolean validTokens = toolStats.itemChecker.checkTokens(container, "arrows-shot");
-            if (!validTokens) {
+            // if the item has stats but no token, add the token
+            if (container.has(toolStats.arrowsShot) && !validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
+            }
+
+            // the item does not have a valid token
+            if (!validToken) {
                 return null;
+            }
+        } else {
+            if (!validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
             }
         }
 
@@ -650,12 +771,27 @@ public class ItemLore {
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
         // check for tokens
+        boolean validToken = toolStats.itemChecker.checkTokens(container, "fish-caught");
+        // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
-            // if the item has this token, then continue
-            // if the item does not, ignore
-            boolean validTokens = toolStats.itemChecker.checkTokens(container, "fish-caught");
-            if (!validTokens) {
+            // if the item has stats but no token, add the token
+            if (container.has(toolStats.fishCaught) && !validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
+            }
+
+            // the item does not have a valid token
+            if (!validToken) {
                 return null;
+            }
+        } else {
+            if (!validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
             }
         }
 
