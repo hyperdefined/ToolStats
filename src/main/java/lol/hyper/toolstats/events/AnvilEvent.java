@@ -107,8 +107,8 @@ public class AnvilEvent implements Listener {
                     addToken(event, tokenType, "player-kills", clone);
                     return;
                 }
-                if (tokenType.equalsIgnoreCase("mobs-kills")) {
-                    addToken(event, tokenType, "mobs-kills", clone);
+                if (tokenType.equalsIgnoreCase("mob-kills")) {
+                    addToken(event, tokenType, "mob-kills", clone);
                     return;
                 }
             }
@@ -123,8 +123,8 @@ public class AnvilEvent implements Listener {
                 addToken(event, tokenType, "player-kills", clone);
                 return;
             }
-            if (tokenType.equalsIgnoreCase("mobs-kills")) {
-                addToken(event, tokenType, "mobs-kills", clone);
+            if (tokenType.equalsIgnoreCase("mob-kills")) {
+                addToken(event, tokenType, "mob-kills", clone);
                 return;
             }
             return;
@@ -134,8 +134,8 @@ public class AnvilEvent implements Listener {
                 addToken(event, tokenType, "player-kills", clone);
                 return;
             }
-            if (tokenType.equalsIgnoreCase("mobs-kills")) {
-                addToken(event, tokenType, "mobs-kills", clone);
+            if (tokenType.equalsIgnoreCase("mob-kills")) {
+                addToken(event, tokenType, "mob-kills", clone);
                 return;
             }
             if (tokenType.equalsIgnoreCase("arrows-shot")) {
