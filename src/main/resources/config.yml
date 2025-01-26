@@ -1,7 +1,7 @@
 # Use token system for tracking stats.
 # See https://github.com/hyperdefined/ToolStats/wiki/Token-System
 tokens:
-  enabled: true
+  enabled: false
   craft-tokens: true
   data:
     player-kills:
