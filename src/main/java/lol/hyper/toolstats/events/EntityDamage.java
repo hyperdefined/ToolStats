@@ -92,7 +92,7 @@ public class EntityDamage implements Listener {
             // trident is being thrown at something
             if (event.getDamager() instanceof Trident trident) {
                 ItemStack newTrident = trident.getItemStack();
-                ItemMeta newMeta = null;
+                ItemMeta newMeta;
                 // trident is killing player
                 if (mobBeingAttacked instanceof Player) {
                     newMeta = toolStats.itemLore.updatePlayerKills(trident.getItemStack(), 1);

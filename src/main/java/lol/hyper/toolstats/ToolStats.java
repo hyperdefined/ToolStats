@@ -116,7 +116,7 @@ public final class ToolStats extends JavaPlugin {
     public final Logger logger = this.getLogger();
     public final File configFile = new File(this.getDataFolder(), "config.yml");
     public boolean tokens = false;
-    public Set<NamespacedKey> tokenKeys = new HashSet<>();
+    public final Set<NamespacedKey> tokenKeys = new HashSet<>();
 
     public BlockBreak blockBreak;
     public ChunkPopulate chunkPopulate;
