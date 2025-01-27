@@ -24,6 +24,9 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -161,5 +164,35 @@ public class ConfigTools {
         }
 
         return component.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
+    }
+
+    /**
+     * Get the token item's lore from config.
+     *
+     * @param tokenType The type.
+     * @return The lore.
+     */
+    public List<Component> getTokenLore(String tokenType) {
+        List<String> raw = toolStats.config.getStringList("tokens.data." + tokenType + ".lore");
+        if (raw.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<Component> finalLore = new ArrayList<>();
+        for (String line : raw) {
+            Component component;
+            // if we match the old color codes, then format them as so
+            Matcher hexMatcher = CONFIG_HEX_PATTERN.matcher(line);
+            Matcher colorMatcher = COLOR_CODES.matcher(line);
+            if (hexMatcher.find() || colorMatcher.find()) {
+                component = LegacyComponentSerializer.legacyAmpersand().deserialize(line);
+            } else {
+                // otherwise format them normally
+                component = MiniMessage.miniMessage().deserialize(line);
+            }
+            component = component.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
+            finalLore.add(component);
+        }
+        return finalLore;
     }
 }

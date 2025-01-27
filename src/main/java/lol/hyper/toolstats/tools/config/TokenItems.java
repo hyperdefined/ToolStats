@@ -44,11 +44,9 @@ public class TokenItems {
 
         // set the title and lore
         Component title = toolStats.configTools.format("tokens.data.player-kills.title");
-        Component lore = toolStats.configTools.format("tokens.data.player-kills.lore");
+        List<Component> lore = toolStats.configTools.getTokenLore("player-kills");
         tokenMeta.displayName(title);
-        List<Component> newLore = new ArrayList<>();
-        newLore.add(lore);
-        tokenMeta.lore(newLore);
+        tokenMeta.lore(lore);
 
         // set the PDC
         tokenData.set(toolStats.tokenType, PersistentDataType.STRING, "player-kills");
@@ -64,11 +62,9 @@ public class TokenItems {
 
         // set the title and lore
         Component title = toolStats.configTools.format("tokens.data.mob-kills.title");
-        Component lore = toolStats.configTools.format("tokens.data.mob-kills.lore");
+        List<Component> lore = toolStats.configTools.getTokenLore("mob-kills");
         tokenMeta.displayName(title);
-        List<Component> newLore = new ArrayList<>();
-        newLore.add(lore);
-        tokenMeta.lore(newLore);
+        tokenMeta.lore(lore);
 
         // set the PDC
         tokenData.set(toolStats.tokenType, PersistentDataType.STRING, "mob-kills");
@@ -84,11 +80,9 @@ public class TokenItems {
 
         // set the title and lore
         Component title = toolStats.configTools.format("tokens.data.blocks-mined.title");
-        Component lore = toolStats.configTools.format("tokens.data.blocks-mined.lore");
+        List<Component> lore = toolStats.configTools.getTokenLore("blocks-mined");
         tokenMeta.displayName(title);
-        List<Component> newLore = new ArrayList<>();
-        newLore.add(lore);
-        tokenMeta.lore(newLore);
+        tokenMeta.lore(lore);
 
         // set the PDC
         tokenData.set(toolStats.tokenType, PersistentDataType.STRING, "blocks-mined");
@@ -104,11 +98,9 @@ public class TokenItems {
 
         // set the title and lore
         Component title = toolStats.configTools.format("tokens.data.crops-mined.title");
-        Component lore = toolStats.configTools.format("tokens.data.crops-mined.lore");
+        List<Component> lore = toolStats.configTools.getTokenLore("crops-mined");
         tokenMeta.displayName(title);
-        List<Component> newLore = new ArrayList<>();
-        newLore.add(lore);
-        tokenMeta.lore(newLore);
+        tokenMeta.lore(lore);
 
         // set the PDC
         tokenData.set(toolStats.tokenType, PersistentDataType.STRING, "crops-mined");
@@ -124,11 +116,9 @@ public class TokenItems {
 
         // set the title and lore
         Component title = toolStats.configTools.format("tokens.data.fish-caught.title");
-        Component lore = toolStats.configTools.format("tokens.data.fish-caught.lore");
+        List<Component> lore = toolStats.configTools.getTokenLore("fight-caught");
         tokenMeta.displayName(title);
-        List<Component> newLore = new ArrayList<>();
-        newLore.add(lore);
-        tokenMeta.lore(newLore);
+        tokenMeta.lore(lore);
 
         // set the PDC
         tokenData.set(toolStats.tokenType, PersistentDataType.STRING, "fish-caught");
@@ -144,11 +134,9 @@ public class TokenItems {
 
         // set the title and lore
         Component title = toolStats.configTools.format("tokens.data.sheep-sheared.title");
-        Component lore = toolStats.configTools.format("tokens.data.sheep-sheared.lore");
+        List<Component> lore = toolStats.configTools.getTokenLore("sheep-sheared");
         tokenMeta.displayName(title);
-        List<Component> newLore = new ArrayList<>();
-        newLore.add(lore);
-        tokenMeta.lore(newLore);
+        tokenMeta.lore(lore);
 
         // set the PDC
         tokenData.set(toolStats.tokenType, PersistentDataType.STRING, "sheep-sheared");
@@ -164,11 +152,9 @@ public class TokenItems {
 
         // set the title and lore
         Component title = toolStats.configTools.format("tokens.data.damage-taken.title");
-        Component lore = toolStats.configTools.format("tokens.data.damage-taken.lore");
+        List<Component> lore = toolStats.configTools.getTokenLore("damage-taken");
         tokenMeta.displayName(title);
-        List<Component> newLore = new ArrayList<>();
-        newLore.add(lore);
-        tokenMeta.lore(newLore);
+        tokenMeta.lore(lore);
 
         // set the PDC
         tokenData.set(toolStats.tokenType, PersistentDataType.STRING, "damage-taken");
@@ -184,11 +170,9 @@ public class TokenItems {
 
         // set the title and lore
         Component title = toolStats.configTools.format("tokens.data.arrows-shot.title");
-        Component lore = toolStats.configTools.format("tokens.data.arrows-shot.lore");
+        List<Component> lore = toolStats.configTools.getTokenLore("arrows-shot");
         tokenMeta.displayName(title);
-        List<Component> newLore = new ArrayList<>();
-        newLore.add(lore);
-        tokenMeta.lore(newLore);
+        tokenMeta.lore(lore);
 
         // set the PDC
         tokenData.set(toolStats.tokenType, PersistentDataType.STRING, "arrows-shot");
@@ -204,11 +188,9 @@ public class TokenItems {
 
         // set the title and lore
         Component title = toolStats.configTools.format("tokens.data.flight-time.title");
-        Component lore = toolStats.configTools.format("tokens.data.flight-time.lore");
+        List<Component> lore = toolStats.configTools.getTokenLore("flight-time");
         tokenMeta.displayName(title);
-        List<Component> newLore = new ArrayList<>();
-        newLore.add(lore);
-        tokenMeta.lore(newLore);
+        tokenMeta.lore(lore);
 
         // set the PDC
         tokenData.set(toolStats.tokenType, PersistentDataType.STRING, "flight-time");
@@ -224,11 +206,9 @@ public class TokenItems {
 
         // set the title and lore
         Component title = toolStats.configTools.format("tokens.data.reset.title");
-        Component lore = toolStats.configTools.format("tokens.data.reset.lore");
+        List<Component> lore = toolStats.configTools.getTokenLore("reset");
         tokenMeta.displayName(title);
-        List<Component> newLore = new ArrayList<>();
-        newLore.add(lore);
-        tokenMeta.lore(newLore);
+        tokenMeta.lore(lore);
 
         // set the PDC
         tokenData.set(toolStats.tokenType, PersistentDataType.STRING, "reset");
