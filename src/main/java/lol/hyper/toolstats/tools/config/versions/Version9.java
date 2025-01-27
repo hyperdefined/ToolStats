@@ -95,7 +95,9 @@ public class Version9 {
     private void addToken(String tokenType, String title, String lore) {
         toolStats.logger.info("Adding token type configuration for " + tokenType);
         toolStats.config.set("tokens.data." + tokenType + ".title", title);
-        toolStats.config.set("tokens.data." + tokenType + ".lore", lore);
+        List<String> loreList = new ArrayList<>();
+        loreList.add(lore);
+        toolStats.config.set("tokens.data." + tokenType + ".lore", loreList);
         toolStats.config.set("tokens.data." + tokenType + ".levels", 1);
     }
 }
