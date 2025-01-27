@@ -160,6 +160,6 @@ public class ConfigTools {
             component = MiniMessage.miniMessage().deserialize(message);
         }
 
-        return component;
+        return component.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
     }
 }
