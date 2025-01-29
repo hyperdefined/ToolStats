@@ -229,6 +229,26 @@ public class ItemLore {
         // if they don't exist, then start from 0
         PersistentDataContainer container = meta.getPersistentDataContainer();
 
+        // if it's disabled, don't update the stats
+        // check to see if the item has the stats, remove them if it does
+        if (!toolStats.config.getBoolean("enabled.crops-harvested")) {
+            if (container.has(toolStats.cropsHarvested)) {
+                Integer cropsMined = container.get(toolStats.cropsHarvested, PersistentDataType.INTEGER);
+                if (cropsMined == null) {
+                    return null;
+                }
+                container.remove(toolStats.cropsHarvested);
+                if (meta.hasLore()) {
+                    String oldCropsMinedFormatted = toolStats.numberFormat.formatInt(cropsMined);
+                    Component lineToRemove = toolStats.configTools.formatLore("crops-harvested", "{crops}", oldCropsMinedFormatted);
+                    List<Component> newLore = removeLore(meta.lore(), lineToRemove);
+                    meta.lore(newLore);
+                }
+                return meta;
+            }
+            return null;
+        }
+
         // check for tokens
         boolean validToken = toolStats.itemChecker.checkTokens(container, "crops-mined");
         // check for tokens
@@ -265,19 +285,15 @@ public class ItemLore {
         }
 
         container.set(toolStats.cropsHarvested, PersistentDataType.INTEGER, cropsMined + add);
-
-        // do we add the lore based on the config?
-        if (toolStats.configTools.checkConfig(clone.getType(), "blocks-mined")) {
-            String oldCropsMinedFormatted = toolStats.numberFormat.formatInt(cropsMined);
-            String newCropsMinedFormatted = toolStats.numberFormat.formatInt(cropsMined + add);
-            Component oldLine = toolStats.configTools.formatLore("crops-harvested", "{crops}", oldCropsMinedFormatted);
-            Component newLine = toolStats.configTools.formatLore("crops-harvested", "{crops}", newCropsMinedFormatted);
-            if (oldLine == null || newLine == null) {
-                return null;
-            }
-            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.lore(newLore);
+        String oldCropsMinedFormatted = toolStats.numberFormat.formatInt(cropsMined);
+        String newCropsMinedFormatted = toolStats.numberFormat.formatInt(cropsMined + add);
+        Component oldLine = toolStats.configTools.formatLore("crops-harvested", "{crops}", oldCropsMinedFormatted);
+        Component newLine = toolStats.configTools.formatLore("crops-harvested", "{crops}", newCropsMinedFormatted);
+        if (oldLine == null || newLine == null) {
+            return null;
         }
+        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+        meta.lore(newLore);
         return meta;
     }
 
@@ -295,6 +311,31 @@ public class ItemLore {
         }
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
+
+        // if it's disabled, don't update the stats
+        // check to see if the item has the stats, remove them if it does
+        if (!toolStats.configTools.checkConfig(clone.getType(), "blocks-mined")) {
+            toolStats.logger.info("config is disabled for item");
+            if (container.has(toolStats.blocksMined)) {
+                toolStats.logger.info("however, item has data!");
+                Integer blocksMined = container.get(toolStats.blocksMined, PersistentDataType.INTEGER);
+                if (blocksMined == null) {
+                    return null;
+                }
+                container.remove(toolStats.blocksMined);
+                if (meta.hasLore()) {
+                    String oldBlocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined);
+                    Component lineToRemove = toolStats.configTools.formatLore("blocks-mined", "{blocks}", oldBlocksMinedFormatted);
+                    List<Component> newLore = removeLore(meta.lore(), lineToRemove);
+                    meta.lore(newLore);
+                }
+                toolStats.logger.info("removed lore, returning: " + meta);
+                return meta;
+            }
+            toolStats.logger.info("item did not have data, ignoring adding stats");
+            return null;
+        }
+
         boolean validToken = toolStats.itemChecker.checkTokens(container, "blocks-mined");
         // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
@@ -332,19 +373,15 @@ public class ItemLore {
         }
 
         container.set(toolStats.blocksMined, PersistentDataType.INTEGER, blocksMined + add);
-
-        // do we add the lore based on the config?
-        if (toolStats.configTools.checkConfig(clone.getType(), "blocks-mined")) {
-            String oldBlocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined);
-            String newBlocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined + add);
-            Component oldLine = toolStats.configTools.formatLore("blocks-mined", "{blocks}", oldBlocksMinedFormatted);
-            Component newLine = toolStats.configTools.formatLore("blocks-mined", "{blocks}", newBlocksMinedFormatted);
-            if (oldLine == null || newLine == null) {
-                return null;
-            }
-            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.lore(newLore);
+        String oldBlocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined);
+        String newBlocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined + add);
+        Component oldLine = toolStats.configTools.formatLore("blocks-mined", "{blocks}", oldBlocksMinedFormatted);
+        Component newLine = toolStats.configTools.formatLore("blocks-mined", "{blocks}", newBlocksMinedFormatted);
+        if (oldLine == null || newLine == null) {
+            return null;
         }
+        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+        meta.lore(newLore);
         return meta;
     }
 
@@ -362,6 +399,27 @@ public class ItemLore {
         }
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
+
+        // if it's disabled, don't update the stats
+        // check to see if the item has the stats, remove them if it does
+        if (!toolStats.configTools.checkConfig(clone.getType(), "player-kills")) {
+            if (container.has(toolStats.playerKills)) {
+                Integer playerKills = container.get(toolStats.playerKills, PersistentDataType.INTEGER);
+                if (playerKills == null) {
+                    return null;
+                }
+                container.remove(toolStats.playerKills);
+                if (meta.hasLore()) {
+                    String oldPlayerKillsFormatted = toolStats.numberFormat.formatInt(playerKills);
+                    Component lineToRemove = toolStats.configTools.formatLore("player-kills", "{kills}", oldPlayerKillsFormatted);
+                    List<Component> newLore = removeLore(meta.lore(), lineToRemove);
+                    meta.lore(newLore);
+                }
+                return meta;
+            }
+            return null;
+        }
+
         // check for tokens
         boolean validToken = toolStats.itemChecker.checkTokens(container, "player-kills");
         // check for tokens
@@ -398,19 +456,15 @@ public class ItemLore {
         }
 
         container.set(toolStats.playerKills, PersistentDataType.INTEGER, playerKills + add);
-
-        // do we add the lore based on the config?
-        if (toolStats.configTools.checkConfig(clone.getType(), "player-kills")) {
-            String oldPlayerKillsFormatted = toolStats.numberFormat.formatInt(playerKills);
-            String newPlayerKillsFormatted = toolStats.numberFormat.formatInt(playerKills + add);
-            Component oldLine = toolStats.configTools.formatLore("kills.player", "{kills}", oldPlayerKillsFormatted);
-            Component newLine = toolStats.configTools.formatLore("kills.player", "{kills}", newPlayerKillsFormatted);
-            if (oldLine == null || newLine == null) {
-                return null;
-            }
-            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.lore(newLore);
+        String oldPlayerKillsFormatted = toolStats.numberFormat.formatInt(playerKills);
+        String newPlayerKillsFormatted = toolStats.numberFormat.formatInt(playerKills + add);
+        Component oldLine = toolStats.configTools.formatLore("kills.player", "{kills}", oldPlayerKillsFormatted);
+        Component newLine = toolStats.configTools.formatLore("kills.player", "{kills}", newPlayerKillsFormatted);
+        if (oldLine == null || newLine == null) {
+            return null;
         }
+        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+        meta.lore(newLore);
         return meta;
     }
 
@@ -428,6 +482,27 @@ public class ItemLore {
         }
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
+
+        // if it's disabled, don't update the stats
+        // check to see if the item has the stats, remove them if it does
+        if (!toolStats.configTools.checkConfig(clone.getType(), "mob-kills")) {
+            if (container.has(toolStats.mobKills)) {
+                Integer mobKills = container.get(toolStats.mobKills, PersistentDataType.INTEGER);
+                if (mobKills == null) {
+                    return null;
+                }
+                container.remove(toolStats.mobKills);
+                if (meta.hasLore()) {
+                    String oldMobKillsFormatted = toolStats.numberFormat.formatInt(mobKills);
+                    Component lineToRemove = toolStats.configTools.formatLore("mob-kills", "{kills}", oldMobKillsFormatted);
+                    List<Component> newLore = removeLore(meta.lore(), lineToRemove);
+                    meta.lore(newLore);
+                }
+                return meta;
+            }
+            return null;
+        }
+
         // check for tokens
         boolean validToken = toolStats.itemChecker.checkTokens(container, "mob-kills");
         // check for tokens
@@ -464,19 +539,15 @@ public class ItemLore {
         }
 
         container.set(toolStats.mobKills, PersistentDataType.INTEGER, mobKills + add);
-
-        // do we add the lore based on the config?
-        if (toolStats.configTools.checkConfig(clone.getType(), "mob-kills")) {
-            String oldMobKillsFormatted = toolStats.numberFormat.formatInt(mobKills);
-            String newMobKillsFormatted = toolStats.numberFormat.formatInt(mobKills + add);
-            Component oldLine = toolStats.configTools.formatLore("kills.mob", "{kills}", oldMobKillsFormatted);
-            Component newLine = toolStats.configTools.formatLore("kills.mob", "{kills}", newMobKillsFormatted);
-            if (oldLine == null || newLine == null) {
-                return null;
-            }
-            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.lore(newLore);
+        String oldMobKillsFormatted = toolStats.numberFormat.formatInt(mobKills);
+        String newMobKillsFormatted = toolStats.numberFormat.formatInt(mobKills + add);
+        Component oldLine = toolStats.configTools.formatLore("kills.mob", "{kills}", oldMobKillsFormatted);
+        Component newLine = toolStats.configTools.formatLore("kills.mob", "{kills}", newMobKillsFormatted);
+        if (oldLine == null || newLine == null) {
+            return null;
         }
+        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+        meta.lore(newLore);
         return meta;
     }
 
@@ -502,6 +573,27 @@ public class ItemLore {
         }
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
+
+        // if it's disabled, don't update the stats
+        // check to see if the item has the stats, remove them if it does
+        if (!toolStats.config.getBoolean("enabled.armor-damage")) {
+            if (container.has(toolStats.armorDamage)) {
+                Double armorDamage = container.get(toolStats.armorDamage, PersistentDataType.DOUBLE);
+                if (armorDamage == null) {
+                    return null;
+                }
+                container.remove(toolStats.armorDamage);
+                if (meta.hasLore()) {
+                    String oldDamageTakenFormatted = toolStats.numberFormat.formatDouble(armorDamage);
+                    Component lineToRemove = toolStats.configTools.formatLore("damage-taken", "{damage}", oldDamageTakenFormatted);
+                    List<Component> newLore = removeLore(meta.lore(), lineToRemove);
+                    meta.lore(newLore);
+                }
+                return meta;
+            }
+            return null;
+        }
+
         // check for tokens
         boolean validToken = toolStats.itemChecker.checkTokens(container, "damage-taken");
         // check for tokens
@@ -538,18 +630,15 @@ public class ItemLore {
         }
 
         container.set(toolStats.armorDamage, PersistentDataType.DOUBLE, damageTaken + damage);
-
-        if (toolStats.config.getBoolean("enabled.armor-damage")) {
-            String oldDamageFormatted = toolStats.numberFormat.formatDouble(damageTaken);
-            String newDamageFormatted = toolStats.numberFormat.formatDouble(damageTaken + damage);
-            Component oldLine = toolStats.configTools.formatLore("damage-taken", "{damage}", oldDamageFormatted);
-            Component newLine = toolStats.configTools.formatLore("damage-taken", "{damage}", newDamageFormatted);
-            if (oldLine == null || newLine == null) {
-                return null;
-            }
-            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.lore(newLore);
+        String oldDamageFormatted = toolStats.numberFormat.formatDouble(damageTaken);
+        String newDamageFormatted = toolStats.numberFormat.formatDouble(damageTaken + damage);
+        Component oldLine = toolStats.configTools.formatLore("damage-taken", "{damage}", oldDamageFormatted);
+        Component newLine = toolStats.configTools.formatLore("damage-taken", "{damage}", newDamageFormatted);
+        if (oldLine == null || newLine == null) {
+            return null;
         }
+        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+        meta.lore(newLore);
         return meta;
     }
 
@@ -567,6 +656,27 @@ public class ItemLore {
         }
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
+
+        // if it's disabled, don't update the stats
+        // check to see if the item has the stats, remove them if it does
+        if (!toolStats.config.getBoolean("enabled.flight-time")) {
+            if (container.has(toolStats.flightTime)) {
+                Long flightTime = container.get(toolStats.flightTime, PersistentDataType.LONG);
+                if (flightTime == null) {
+                    return null;
+                }
+                container.remove(toolStats.flightTime);
+                if (meta.hasLore()) {
+                    String oldFlightTimeFormatted = toolStats.numberFormat.formatDouble(flightTime);
+                    Component lineToRemove = toolStats.configTools.formatLore("flight-time", "{time}", oldFlightTimeFormatted);
+                    List<Component> newLore = removeLore(meta.lore(), lineToRemove);
+                    meta.lore(newLore);
+                }
+                return meta;
+            }
+            return null;
+        }
+
         // check for tokens
         boolean validToken = toolStats.itemChecker.checkTokens(container, "flight-time");
         // check for tokens
@@ -605,19 +715,15 @@ public class ItemLore {
         }
 
         container.set(toolStats.flightTime, PersistentDataType.LONG, flightTime + duration);
-
-        // do we add the lore based on the config?
-        if (toolStats.config.getBoolean("enabled.flight-time")) {
-            String oldFlightFormatted = toolStats.numberFormat.formatDouble((double) flightTime / 1000);
-            String newFlightFormatted = toolStats.numberFormat.formatDouble((double) (flightTime + duration) / 1000);
-            Component oldLine = toolStats.configTools.formatLore("flight-time", "{time}", oldFlightFormatted);
-            Component newLine = toolStats.configTools.formatLore("flight-time", "{time}", newFlightFormatted);
-            if (oldLine == null || newLine == null) {
-                return null;
-            }
-            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.lore(newLore);
+        String oldFlightFormatted = toolStats.numberFormat.formatDouble((double) flightTime / 1000);
+        String newFlightFormatted = toolStats.numberFormat.formatDouble((double) (flightTime + duration) / 1000);
+        Component oldLine = toolStats.configTools.formatLore("flight-time", "{time}", oldFlightFormatted);
+        Component newLine = toolStats.configTools.formatLore("flight-time", "{time}", newFlightFormatted);
+        if (oldLine == null || newLine == null) {
+            return null;
         }
+        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+        meta.lore(newLore);
         return meta;
     }
 
@@ -635,6 +741,27 @@ public class ItemLore {
         }
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
+
+        // if it's disabled, don't update the stats
+        // check to see if the item has the stats, remove them if it does
+        if (!toolStats.config.getBoolean("enabled.sheep-sheared")) {
+            if (container.has(toolStats.sheepSheared)) {
+                Integer sheepSheared = container.get(toolStats.sheepSheared, PersistentDataType.INTEGER);
+                if (sheepSheared == null) {
+                    return null;
+                }
+                container.remove(toolStats.sheepSheared);
+                if (meta.hasLore()) {
+                    String oldSheepShearedFormatted = toolStats.numberFormat.formatDouble(sheepSheared);
+                    Component lineToRemove = toolStats.configTools.formatLore("sheep-sheared", "{sheep}", oldSheepShearedFormatted);
+                    List<Component> newLore = removeLore(meta.lore(), lineToRemove);
+                    meta.lore(newLore);
+                }
+                return meta;
+            }
+            return null;
+        }
+
         // check for tokens
         boolean validToken = toolStats.itemChecker.checkTokens(container, "sheep-sheared");
         // check for tokens
@@ -671,18 +798,15 @@ public class ItemLore {
         }
 
         container.set(toolStats.sheepSheared, PersistentDataType.INTEGER, sheepSheared + add);
-
-        if (toolStats.config.getBoolean("enabled.sheep-sheared")) {
-            String oldSheepFormatted = toolStats.numberFormat.formatInt(sheepSheared);
-            String newSheepFormatted = toolStats.numberFormat.formatInt(sheepSheared + add);
-            Component oldLine = toolStats.configTools.formatLore("sheep-sheared", "{sheep}", oldSheepFormatted);
-            Component newLine = toolStats.configTools.formatLore("sheep-sheared", "{sheep}", newSheepFormatted);
-            if (oldLine == null || newLine == null) {
-                return null;
-            }
-            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.lore(newLore);
+        String oldSheepFormatted = toolStats.numberFormat.formatInt(sheepSheared);
+        String newSheepFormatted = toolStats.numberFormat.formatInt(sheepSheared + add);
+        Component oldLine = toolStats.configTools.formatLore("sheep-sheared", "{sheep}", oldSheepFormatted);
+        Component newLine = toolStats.configTools.formatLore("sheep-sheared", "{sheep}", newSheepFormatted);
+        if (oldLine == null || newLine == null) {
+            return null;
         }
+        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+        meta.lore(newLore);
         return meta;
     }
 
@@ -700,6 +824,27 @@ public class ItemLore {
         }
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
+
+        // if it's disabled, don't update the stats
+        // check to see if the item has the stats, remove them if it does
+        if (!toolStats.config.getBoolean("enabled.arrows-shot")) {
+            if (container.has(toolStats.arrowsShot)) {
+                Integer arrowsShot = container.get(toolStats.arrowsShot, PersistentDataType.INTEGER);
+                if (arrowsShot == null) {
+                    return null;
+                }
+                container.remove(toolStats.arrowsShot);
+                if (meta.hasLore()) {
+                    String oldArrowsShotFormatted = toolStats.numberFormat.formatDouble(arrowsShot);
+                    Component lineToRemove = toolStats.configTools.formatLore("arrows-shot", "{arrows}", oldArrowsShotFormatted);
+                    List<Component> newLore = removeLore(meta.lore(), lineToRemove);
+                    meta.lore(newLore);
+                }
+                return meta;
+            }
+            return null;
+        }
+
         // check for tokens
         boolean validToken = toolStats.itemChecker.checkTokens(container, "arrows-shot");
         // check for tokens
@@ -738,19 +883,15 @@ public class ItemLore {
         }
 
         container.set(toolStats.arrowsShot, PersistentDataType.INTEGER, arrowsShot + add);
-
-        // do we add the lore based on the config?
-        if (toolStats.config.getBoolean("enabled.arrows-shot")) {
-            String oldArrowsFormatted = toolStats.numberFormat.formatInt(arrowsShot);
-            String newArrowsFormatted = toolStats.numberFormat.formatInt(arrowsShot + add);
-            Component oldLine = toolStats.configTools.formatLore("arrows-shot", "{arrows}", oldArrowsFormatted);
-            Component newLine = toolStats.configTools.formatLore("arrows-shot", "{arrows}", newArrowsFormatted);
-            if (oldLine == null || newLine == null) {
-                return null;
-            }
-            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.lore(newLore);
+        String oldArrowsFormatted = toolStats.numberFormat.formatInt(arrowsShot);
+        String newArrowsFormatted = toolStats.numberFormat.formatInt(arrowsShot + add);
+        Component oldLine = toolStats.configTools.formatLore("arrows-shot", "{arrows}", oldArrowsFormatted);
+        Component newLine = toolStats.configTools.formatLore("arrows-shot", "{arrows}", newArrowsFormatted);
+        if (oldLine == null || newLine == null) {
+            return null;
         }
+        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+        meta.lore(newLore);
         return meta;
     }
 
@@ -768,6 +909,27 @@ public class ItemLore {
         }
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
+
+        // if it's disabled, don't update the stats
+        // check to see if the item has the stats, remove them if it does
+        if (!toolStats.config.getBoolean("enabled.fish-caught")) {
+            if (container.has(toolStats.fishCaught)) {
+                Integer fishCaught = container.get(toolStats.fishCaught, PersistentDataType.INTEGER);
+                if (fishCaught == null) {
+                    return null;
+                }
+                container.remove(toolStats.fishCaught);
+                if (meta.hasLore()) {
+                    String oldFishCaught = toolStats.numberFormat.formatDouble(fishCaught);
+                    Component lineToRemove = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", oldFishCaught);
+                    List<Component> newLore = removeLore(meta.lore(), lineToRemove);
+                    meta.lore(newLore);
+                }
+                return meta;
+            }
+            return null;
+        }
+
         // check for tokens
         boolean validToken = toolStats.itemChecker.checkTokens(container, "fish-caught");
         // check for tokens
@@ -804,18 +966,28 @@ public class ItemLore {
         }
 
         container.set(toolStats.fishCaught, PersistentDataType.INTEGER, fishCaught + add);
-
-        if (toolStats.config.getBoolean("enabled.fish-caught")) {
-            String oldFishFormatted = toolStats.numberFormat.formatInt(fishCaught);
-            String newFishFormatted = toolStats.numberFormat.formatInt(fishCaught + add);
-            Component oldLine = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", oldFishFormatted);
-            Component newLine = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", newFishFormatted);
-            if (oldLine == null || newLine == null) {
-                return null;
-            }
-            List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
-            meta.lore(newLore);
+        String oldFishFormatted = toolStats.numberFormat.formatInt(fishCaught);
+        String newFishFormatted = toolStats.numberFormat.formatInt(fishCaught + add);
+        Component oldLine = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", oldFishFormatted);
+        Component newLine = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", newFishFormatted);
+        if (oldLine == null || newLine == null) {
+            return null;
         }
+        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+        meta.lore(newLore);
         return meta;
+    }
+
+    /**
+     * Remove a given lore from an item.
+     *
+     * @param inputLore The item's lore.
+     * @param toRemove  The line to remove.
+     * @return The lore with the line removed.
+     */
+    public List<Component> removeLore(List<Component> inputLore, Component toRemove) {
+        List<Component> newLore = new ArrayList<>(inputLore);
+        newLore.removeIf(line -> PlainTextComponentSerializer.plainText().serialize(line).equals(PlainTextComponentSerializer.plainText().serialize(toRemove)));
+        return newLore;
     }
 }
