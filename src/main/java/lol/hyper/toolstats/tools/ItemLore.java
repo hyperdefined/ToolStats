@@ -328,9 +328,7 @@ public class ItemLore {
         // if it's disabled, don't update the stats
         // check to see if the item has the stats, remove them if it does
         if (!toolStats.configTools.checkConfig(clone.getType(), "blocks-mined")) {
-            toolStats.logger.info("config is disabled for item");
             if (container.has(toolStats.blocksMined)) {
-                toolStats.logger.info("however, item has data!");
                 Integer blocksMined = container.get(toolStats.blocksMined, PersistentDataType.INTEGER);
                 if (blocksMined == null) {
                     return null;
@@ -342,10 +340,8 @@ public class ItemLore {
                     List<Component> newLore = removeLore(meta.lore(), lineToRemove);
                     meta.lore(newLore);
                 }
-                toolStats.logger.info("removed lore, returning: " + meta);
                 return meta;
             }
-            toolStats.logger.info("item did not have data, ignoring adding stats");
             return null;
         }
 
