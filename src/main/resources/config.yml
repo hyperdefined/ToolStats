@@ -67,6 +67,7 @@ enabled:
     bow: true
     armor: true
     mace: true
+    fishing-rod: true
   # Will show time the item is created
   created-date:
     pickaxe: true
@@ -78,6 +79,7 @@ enabled:
     bow: true
     armor: true
     mace: true
+    fishing-rod: true
   # Will show "Fished by <player>"
   fished-tag:
     pickaxe: true
@@ -88,6 +90,7 @@ enabled:
     shears: true
     bow: true
     armor: true
+    fishing-rod: true
   # Will show "Found by <player>"
   looted-tag:
     pickaxe: true
@@ -98,6 +101,7 @@ enabled:
     shears: true
     bow: true
     armor: true
+    fishing-rod: true
   # Will show "Trade by <player>"
   traded-tag:
     pickaxe: true
@@ -108,6 +112,7 @@ enabled:
     shears: true
     bow: true
     armor: true
+    fishing-rod: true
   player-kills:
     sword: true
     axe: true
@@ -137,6 +142,7 @@ enabled:
     bow: true
     armor: true
     mace: true
+    fishing-rod: true
   fish-caught: true
   sheep-sheared: true
   armor-damage: true
@@ -144,6 +150,7 @@ enabled:
   elytra-tag: true
   arrows-shot: true
   flight-time: true
+  crops-harvested: true
 
 messages:
   created:
@@ -194,6 +201,6 @@ number-formats:
 # When any tool is created, it will generate a hash for the item.
 # This hash is not on the item lore, only stored in the NBT data.
 # This has no use currently, but can be used for future features for dupe detection.
-generate-hash-for-items: true
+generate-hash-for-items: false
 
 config-version: 9
