@@ -18,10 +18,7 @@
 package lol.hyper.toolstats.tools.config;
 
 import lol.hyper.toolstats.ToolStats;
-import lol.hyper.toolstats.tools.config.versions.Version6;
-import lol.hyper.toolstats.tools.config.versions.Version7;
-import lol.hyper.toolstats.tools.config.versions.Version8;
-import lol.hyper.toolstats.tools.config.versions.Version9;
+import lol.hyper.toolstats.tools.config.versions.*;
 
 public class ConfigUpdater {
 
@@ -34,31 +31,30 @@ public class ConfigUpdater {
     public void updateConfig() {
         int version = toolStats.config.getInt("config-version");
 
-        switch(version) {
-            case 5: {
-                // Version 5 to 6
-                Version6 version6 = new Version6(toolStats);
-                version6.update();
-                break;
-            }
-            case 6: {
-                // Version 6 to 7
-                Version7 version7 = new Version7(toolStats);
-                version7.update();
-                break;
-            }
-            case 7: {
-                // Version 7 to 8
-                Version8 version8 = new Version8(toolStats);
-                version8.update();
-                break;
-            }
-            case 8: {
-                // Version 8 to 9
-                Version9 version9 = new Version9(toolStats);
-                version9.update();
-                break;
-            }
+        // Version 5 to 6
+        if (version == 5) {
+            Version6 version6 = new Version6(toolStats);
+            version6.update();
+        }
+        // Version 6 to 7
+        if (version == 6) {
+            Version7 version7 = new Version7(toolStats);
+            version7.update();
+        }
+        // Version 7 to 8
+        if (version == 7) {
+            Version8 version8 = new Version8(toolStats);
+            version8.update();
+        }
+        // Version 8 to 9
+        if (version == 8) {
+            Version9 version9 = new Version9(toolStats);
+            version9.update();
+        }
+        // Version 9 to 10
+        if (version == 9) {
+            Version10 version10 = new Version10(toolStats);
+            version10.update();
         }
     }
 }
