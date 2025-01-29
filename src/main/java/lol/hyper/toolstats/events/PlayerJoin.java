@@ -72,24 +72,33 @@ public class PlayerJoin implements Listener {
             }
 
             // generate a hash if the item doesn't have one
-            if (!container.has(toolStats.hash, PersistentDataType.STRING)) {
-                // make sure the item has an owner
-                if (!container.has(toolStats.itemOwner, new UUIDDataType())) {
-                    continue;
+            if (toolStats.config.getBoolean("generate-hash-for-items")) {
+                if (!container.has(toolStats.hash, PersistentDataType.STRING)) {
+                    UUID owner = null;
+                    // get the current owner if there is one.
+                    if (container.has(toolStats.itemOwner, new UUIDDataType())) {
+                        owner = container.get(toolStats.itemOwner, new UUIDDataType());
+                    }
+                    // if there is no owner, use the player holding it
+                    if (owner == null) {
+                        owner = player.getUniqueId();
+                    }
+                    Long timestamp = container.get(toolStats.timeCreated, PersistentDataType.LONG);
+                    if (timestamp == null) {
+                        // if there is no time created, use now
+                        timestamp = System.currentTimeMillis();
+                    }
+                    String hash = toolStats.hashMaker.makeHash(itemStack.getType(), owner, timestamp);
+                    container.set(toolStats.hash, PersistentDataType.STRING, hash);
+                    itemStack.setItemMeta(itemMeta);
                 }
-                UUID owner = container.get(toolStats.itemOwner, new UUIDDataType());
-                if (owner == null) {
-                    continue;
+            } else {
+                // if hashes are disabled but the item has one, remove it.
+                if (container.has(toolStats.hash, PersistentDataType.STRING)) {
+                    container.remove(toolStats.hash);
+                    itemStack.setItemMeta(itemMeta);
                 }
-                Long timestamp = container.get(toolStats.timeCreated, PersistentDataType.LONG);
-                if (timestamp == null) {
-                    continue;
-                }
-                String hash = toolStats.hashMaker.makeHash(itemStack.getType(), owner, timestamp);
-                container.set(toolStats.hash, PersistentDataType.STRING, hash);
             }
-            ItemMeta clone = itemMeta.clone();
-            player.getScheduler().runDelayed(toolStats, scheduledTask -> itemStack.setItemMeta(clone), null, 1);
         }
     }
 }

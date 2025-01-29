@@ -19,8 +19,7 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import lol.hyper.toolstats.tools.UUIDDataType;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -47,7 +46,7 @@ public class InventoryOpen implements Listener {
         }
 
         Inventory inventory = event.getInventory();
-        Location location = event.getInventory().getLocation();
+        Player player = (Player) event.getPlayer();
         for (ItemStack itemStack : inventory) {
             if (itemStack == null) {
                 continue;
@@ -75,31 +74,35 @@ public class InventoryOpen implements Listener {
                 }
             }
 
-            // generate a hash if the item doesn't have one (if it's enabled in the config)
+            // generate a hash if the item doesn't have one (and enabled)
+            // if hashes are disabled and the item has one, remove it.
             if (toolStats.config.getBoolean("generate-hash-for-items")) {
                 if (!container.has(toolStats.hash, PersistentDataType.STRING)) {
-                    // make sure the item has an owner
-                    if (!container.has(toolStats.itemOwner, new UUIDDataType())) {
-                        continue;
+                    UUID owner = null;
+                    // get the current owner if there is one.
+                    if (container.has(toolStats.itemOwner, new UUIDDataType())) {
+                        owner = container.get(toolStats.itemOwner, new UUIDDataType());
                     }
-                    UUID owner = container.get(toolStats.itemOwner, new UUIDDataType());
+                    // if there is no owner, use the player holding it
                     if (owner == null) {
-                        continue;
+                        owner = player.getUniqueId();
                     }
                     Long timestamp = container.get(toolStats.timeCreated, PersistentDataType.LONG);
                     if (timestamp == null) {
-                        continue;
+                        // if there is no time created, use now
+                        timestamp = System.currentTimeMillis();
                     }
                     String hash = toolStats.hashMaker.makeHash(itemStack.getType(), owner, timestamp);
                     container.set(toolStats.hash, PersistentDataType.STRING, hash);
+                    itemStack.setItemMeta(itemMeta);
+                }
+            } else {
+                // if hashes are disabled but the item has one, remove it.
+                if (container.has(toolStats.hash, PersistentDataType.STRING)) {
+                    container.remove(toolStats.hash);
+                    itemStack.setItemMeta(itemMeta);
                 }
             }
-            ItemMeta clone = itemMeta.clone();
-            if (location != null) {
-                Bukkit.getRegionScheduler().runDelayed(toolStats, location, scheduledTask -> itemStack.setItemMeta(clone), 1);
-            }
-
-
         }
     }
 }
