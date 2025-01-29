@@ -184,39 +184,84 @@ public class AnvilEvent implements Listener {
         ItemStack newItem = toolStats.itemChecker.addToken(firstSlotItem, targetToken);
         switch (targetToken) {
             case "crops-mined": {
-                newItem.setItemMeta(toolStats.itemLore.updateCropsMined(newItem, 0));
+                if (toolStats.config.getBoolean("enabled.crops-harvested")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateCropsMined(newItem, 0));
+                } else {
+                    event.setResult(null);
+                    return;
+                }
                 break;
             }
             case "blocks-mined": {
-                newItem.setItemMeta(toolStats.itemLore.updateBlocksMined(newItem, 0));
+                if (toolStats.configTools.checkConfig(newItem.getType(), "blocks-mined")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateBlocksMined(newItem, 0));
+                } else {
+                    event.setResult(null);
+                    return;
+                }
                 break;
             }
             case "damage-taken": {
-                newItem.setItemMeta(toolStats.itemLore.updateDamage(newItem, 0.0, false));
+                if (toolStats.config.getBoolean("enabled.armor-damage")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateDamage(newItem, 0.0, false));
+                } else {
+                    event.setResult(null);
+                    return;
+                }
                 break;
             }
             case "mob-kills": {
-                newItem.setItemMeta(toolStats.itemLore.updateMobKills(newItem, 0));
+                if (toolStats.configTools.checkConfig(newItem.getType(), "mob-kills")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateMobKills(newItem, 0));
+                } else {
+                    event.setResult(null);
+                    return;
+                }
                 break;
             }
             case "player-kills": {
-                newItem.setItemMeta(toolStats.itemLore.updatePlayerKills(newItem, 0));
+                if (toolStats.configTools.checkConfig(newItem.getType(), "player-kills")) {
+                    newItem.setItemMeta(toolStats.itemLore.updatePlayerKills(newItem, 0));
+                } else {
+                    event.setResult(null);
+                    return;
+                }
                 break;
             }
             case "arrows-shot": {
-                newItem.setItemMeta(toolStats.itemLore.updateArrowsShot(newItem, 0));
+                if (toolStats.config.getBoolean("enabled.arrows-shot")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateArrowsShot(newItem, 0));
+                } else {
+                    event.setResult(null);
+                    return;
+                }
                 break;
             }
             case "sheep-sheared": {
-                newItem.setItemMeta(toolStats.itemLore.updateSheepSheared(newItem, 0));
+                if (toolStats.config.getBoolean("enabled.sheep-sheared")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateSheepSheared(newItem, 0));
+                } else {
+                    event.setResult(null);
+                    return;
+                }
                 break;
             }
             case "flight-time": {
-                newItem.setItemMeta(toolStats.itemLore.updateFlightTime(newItem, 0));
+                if (toolStats.config.getBoolean("enabled.flight-time")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateFlightTime(newItem, 0));
+                } else {
+                    event.setResult(null);
+                    return;
+                }
                 break;
             }
             case "fish-caught": {
-                newItem.setItemMeta(toolStats.itemLore.updateFishCaught(newItem, 0));
+                if (toolStats.config.getBoolean("enabled.fish-caught")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateFishCaught(newItem, 0));
+                } else {
+                    event.setResult(null);
+                    return;
+                }
                 break;
             }
         }
