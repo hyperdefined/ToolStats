@@ -92,7 +92,7 @@ public class GenerateLoot implements Listener {
      * @param owner     The player that found the item.
      * @return The item with the lore.
      */
-    private ItemStack addLore(ItemStack itemStack, Player owner) {
+    private ItemStack addLootedOrigin(ItemStack itemStack, Player owner) {
         ItemStack newItem = itemStack.clone();
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) {
@@ -101,6 +101,10 @@ public class GenerateLoot implements Listener {
         long timeCreated = System.currentTimeMillis();
         Date finalDate = new Date(timeCreated);
         PersistentDataContainer container = meta.getPersistentDataContainer();
+
+        if (!toolStats.configTools.checkConfig(newItem.getType(), "looted-tag")) {
+            return null;
+        }
 
         if (container.has(toolStats.timeCreated, PersistentDataType.LONG) || container.has(toolStats.itemOwner, PersistentDataType.LONG)) {
             return null;
@@ -115,12 +119,9 @@ public class GenerateLoot implements Listener {
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
         container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
         container.set(toolStats.originType, PersistentDataType.INTEGER, 2);
-
-        if (toolStats.configTools.checkConfig(newItem.getType(), "looted-tag")) {
-            String formattedDate = toolStats.numberFormat.formatDate(finalDate);
-            List<Component> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
-            meta.lore(newLore);
-        }
+        String formattedDate = toolStats.numberFormat.formatDate(finalDate);
+        List<Component> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
+        meta.lore(newLore);
         newItem.setItemMeta(meta);
         return newItem;
     }
@@ -139,7 +140,7 @@ public class GenerateLoot implements Listener {
                 continue;
             }
             if (toolStats.itemChecker.isValidItem(itemStack.getType())) {
-                ItemStack newItem = addLore(itemStack, player);
+                ItemStack newItem = addLootedOrigin(itemStack, player);
                 if (newItem != null) {
                     loot.set(i, newItem);
                 }

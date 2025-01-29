@@ -85,7 +85,7 @@ public class CraftItem implements Listener {
                         // if the slot was empty before we crafted, this means we just made it
                         if (oldSlotItem == null) {
                             // add the lore
-                            ItemStack newItem = addLore(newSlotItem, player);
+                            ItemStack newItem = addCraftOrigin(newSlotItem, player);
                             if (newItem != null) {
                                 player.getInventory().setItem(i, newItem);
                             }
@@ -97,7 +97,7 @@ public class CraftItem implements Listener {
         }
 
         // the player did not shift click
-        ItemStack newItem = addLore(craftedItem, player);
+        ItemStack newItem = addCraftOrigin(craftedItem, player);
         if (newItem != null) {
             // set the result
             event.setCurrentItem(newItem);
@@ -111,7 +111,7 @@ public class CraftItem implements Listener {
      * @param owner     The player crafting.
      * @return A copy of the item with the tags + lore.
      */
-    private ItemStack addLore(ItemStack itemStack, Player owner) {
+    private ItemStack addCraftOrigin(ItemStack itemStack, Player owner) {
         // clone the item
         ItemStack newItem = itemStack.clone();
         ItemMeta meta = newItem.getItemMeta();
@@ -130,25 +130,19 @@ public class CraftItem implements Listener {
             return null;
         }
 
-        // only make the hash if it's enabled
-        if (toolStats.config.getBoolean("generate-hash-for-items")) {
-            String hash = toolStats.hashMaker.makeHash(newItem.getType(), owner.getUniqueId(), timeCreated);
-            container.set(toolStats.hash, PersistentDataType.STRING, hash);
-        }
-
-        container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
-        container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
-        container.set(toolStats.originType, PersistentDataType.INTEGER, 0);
-
-        List<Component> lore;
         // get the current lore the item
+        List<Component> lore;
         if (meta.hasLore()) {
             lore = meta.lore();
         } else {
             lore = new ArrayList<>();
         }
-        // do we add the lore based on the config?
+
+        // if creation date is enabled, add it
         if (toolStats.configTools.checkConfig(itemStack.getType(), "created-date")) {
+            container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
+            container.set(toolStats.originType, PersistentDataType.INTEGER, 0);
+
             String date = toolStats.numberFormat.formatDate(finalDate);
             Component newLine = toolStats.configTools.formatLore("created.created-on", "{date}", date);
             if (newLine == null) {
@@ -157,13 +151,24 @@ public class CraftItem implements Listener {
             lore.add(newLine);
             meta.lore(lore);
         }
+
+        // if creation owner is enabled, add it
         if (toolStats.configTools.checkConfig(itemStack.getType(), "created-by")) {
+            container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
+            container.set(toolStats.originType, PersistentDataType.INTEGER, 0);
+
             Component newLine = toolStats.configTools.formatLore("created.created-by", "{player}", owner.getName());
             if (newLine == null) {
                 return null;
             }
             lore.add(newLine);
             meta.lore(lore);
+        }
+
+        // if hash is enabled, add it
+        if (toolStats.config.getBoolean("generate-hash-for-items")) {
+            String hash = toolStats.hashMaker.makeHash(newItem.getType(), owner.getUniqueId(), timeCreated);
+            container.set(toolStats.hash, PersistentDataType.STRING, hash);
         }
         newItem.setItemMeta(meta);
         return newItem;

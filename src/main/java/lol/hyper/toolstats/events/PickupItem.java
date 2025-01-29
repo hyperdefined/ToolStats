@@ -22,7 +22,10 @@ import lol.hyper.toolstats.tools.UUIDDataType;
 import net.kyori.adventure.text.Component;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -64,7 +67,7 @@ public class PickupItem implements Listener {
                 if (itemStack.getType() == Material.ELYTRA) {
                     // the elytra has the new key, set the lore to it
                     if (container.has(toolStats.newElytra, PersistentDataType.INTEGER)) {
-                        ItemStack newElytra = addLore(itemStack, (Player) event.getEntity());
+                        ItemStack newElytra = addElytraOrigin(itemStack, (Player) event.getEntity());
                         if (newElytra != null) {
                             item.setItemStack(newElytra);
                         }
@@ -80,7 +83,7 @@ public class PickupItem implements Listener {
      * @param itemStack The elytra to add lore to.
      * @param owner     The player who found it.
      */
-    private ItemStack addLore(ItemStack itemStack, Player owner) {
+    private ItemStack addElytraOrigin(ItemStack itemStack, Player owner) {
         ItemStack finalItem = itemStack.clone();
         ItemMeta meta = finalItem.getItemMeta();
         if (meta == null) {
@@ -89,6 +92,10 @@ public class PickupItem implements Listener {
         long timeCreated = System.currentTimeMillis();
         Date finalDate = new Date(timeCreated);
         PersistentDataContainer container = meta.getPersistentDataContainer();
+
+        if (!toolStats.config.getBoolean("enabled.elytra-tag")) {
+            return null;
+        }
 
         // only make the hash if it's enabled
         if (toolStats.config.getBoolean("generate-hash-for-items")) {
@@ -100,12 +107,9 @@ public class PickupItem implements Listener {
         container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
         container.set(toolStats.originType, PersistentDataType.INTEGER, 4);
         container.remove(toolStats.newElytra);
-
-        if (toolStats.config.getBoolean("enabled.elytra-tag")) {
-            String formattedDate = toolStats.numberFormat.formatDate(finalDate);
-            List<Component> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
-            meta.lore(newLore);
-        }
+        String formattedDate = toolStats.numberFormat.formatDate(finalDate);
+        List<Component> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
+        meta.lore(newLore);
         finalItem.setItemMeta(meta);
         return finalItem;
     }

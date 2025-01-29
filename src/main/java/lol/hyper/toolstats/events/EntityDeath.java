@@ -84,18 +84,19 @@ public class EntityDeath implements Listener {
             return null;
         }
 
+        if (!toolStats.config.getBoolean("enabled.dropped-by")) {
+            return null;
+        }
+
         PersistentDataContainer container = meta.getPersistentDataContainer();
         container.set(toolStats.originType, PersistentDataType.INTEGER, 1);
-
-        if (toolStats.config.getBoolean("enabled.dropped-by")) {
-            String mobName = toolStats.config.getString("messages.mob." + entity.getType());
-            if (mobName == null) {
-                mobName = entity.getName();
-            }
-            Component newLine = toolStats.configTools.formatLore("dropped-by", "{name}", mobName);
-            List<Component> newLore = toolStats.itemLore.addItemLore(meta, newLine);
-            meta.lore(newLore);
+        String mobName = toolStats.config.getString("messages.mob." + entity.getType());
+        if (mobName == null) {
+            mobName = entity.getName();
         }
+        Component newLine = toolStats.configTools.formatLore("dropped-by", "{name}", mobName);
+        List<Component> newLore = toolStats.itemLore.addItemLore(meta, newLine);
+        meta.lore(newLore);
         newItem.setItemMeta(meta);
         return newItem;
     }

@@ -65,50 +65,53 @@ public class CreativeEvent implements Listener {
         }
 
         // add the tags to the item
-        ItemStack newItem = addLore(spawnedItem, player);
+        ItemStack newItem = addCreativeOrigin(spawnedItem, player);
         if (newItem != null) {
             event.setCursor(newItem);
         }
     }
 
     /**
-     * Adds tags to newly spawned items in creative.
+     * Adds spawned in tags to item.
      *
-     * @param spawnedItem The item.
+     * @param itemStack The item add item to.
+     * @param owner     The player spawning in.
+     * @return A copy of the item with the tags + lore.
      */
-    private ItemStack addLore(ItemStack spawnedItem, Player owner) {
-        ItemStack newSpawnedItem = spawnedItem.clone();
+    private ItemStack addCreativeOrigin(ItemStack itemStack, Player owner) {
+        ItemStack newSpawnedItem = itemStack.clone();
         ItemMeta meta = newSpawnedItem.getItemMeta();
         if (meta == null) {
-            toolStats.logger.warning(newSpawnedItem + " does NOT have any meta! Unable to update stats.");
+            toolStats.logger.warning(itemStack + " does NOT have any meta! Unable to update stats.");
             return null;
         }
-
+        // get the current time
         long timeCreated = System.currentTimeMillis();
         Date finalDate = new Date(timeCreated);
         PersistentDataContainer container = meta.getPersistentDataContainer();
 
-        // if the item already has an origin set, don't add it again
-        if (container.has(toolStats.originType, PersistentDataType.INTEGER)) {
+        // if the item already has the tag
+        // this is to prevent duplicate tags
+        if (container.has(toolStats.timeCreated, PersistentDataType.LONG) || container.has(toolStats.itemOwner, PersistentDataType.LONG)) {
             return null;
         }
 
-        // only make the hash if it's enabled
+        // if hash is enabled, add it
         if (toolStats.config.getBoolean("generate-hash-for-items")) {
-            String hash = toolStats.hashMaker.makeHash(spawnedItem.getType(), owner.getUniqueId(), timeCreated);
+            String hash = toolStats.hashMaker.makeHash(newSpawnedItem.getType(), owner.getUniqueId(), timeCreated);
             container.set(toolStats.hash, PersistentDataType.STRING, hash);
         }
 
-        container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
-        container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
-        container.set(toolStats.originType, PersistentDataType.INTEGER, 6);
-
+        // if spawned in is enabled, add it
         if (toolStats.configTools.checkConfig(newSpawnedItem.getType(), "spawned-in")) {
+            container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
+            container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
+            container.set(toolStats.originType, PersistentDataType.INTEGER, 6);
+
             String formattedDate = toolStats.numberFormat.formatDate(finalDate);
             List<Component> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
             meta.lore(newLore);
         }
-
         newSpawnedItem.setItemMeta(meta);
         return newSpawnedItem;
     }

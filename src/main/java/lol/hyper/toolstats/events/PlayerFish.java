@@ -111,22 +111,26 @@ public class PlayerFish implements Listener {
         Date finalDate = new Date(timeCreated);
         PersistentDataContainer container = meta.getPersistentDataContainer();
 
+        if (!toolStats.configTools.checkConfig(newItem.getType(), "fished-tag")) {
+            return null;
+        }
+
         if (container.has(toolStats.timeCreated, PersistentDataType.LONG) || container.has(toolStats.itemOwner, PersistentDataType.LONG)) {
             return null;
         }
 
-        String hash = toolStats.hashMaker.makeHash(newItem.getType(), owner.getUniqueId(), timeCreated);
+        // only make the hash if it's enabled
+        if (toolStats.config.getBoolean("generate-hash-for-items")) {
+            String hash = toolStats.hashMaker.makeHash(newItem.getType(), owner.getUniqueId(), timeCreated);
+            container.set(toolStats.hash, PersistentDataType.STRING, hash);
+        }
 
-        container.set(toolStats.hash, PersistentDataType.STRING, hash);
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
         container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
         container.set(toolStats.originType, PersistentDataType.INTEGER, 5);
-
-        if (toolStats.configTools.checkConfig(newItem.getType(), "fished-tag")) {
-            String formattedDate = toolStats.numberFormat.formatDate(finalDate);
-            List<Component> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
-            meta.lore(newLore);
-        }
+        String formattedDate = toolStats.numberFormat.formatDate(finalDate);
+        List<Component> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
+        meta.lore(newLore);
         newItem.setItemMeta(meta);
         return newItem;
     }

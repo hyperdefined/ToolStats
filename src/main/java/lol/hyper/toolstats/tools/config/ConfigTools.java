@@ -45,7 +45,7 @@ public class ConfigTools {
      *
      * @param material   The item type to check.
      * @param configName The config we are checking under.
-     * @return If we want to allow lore or not.
+     * @return If we want to add data or not.
      */
     public boolean checkConfig(Material material, String configName) {
         String itemName = material.toString().toLowerCase();

@@ -89,6 +89,19 @@ public class ItemLore {
     }
 
     /**
+     * Remove a given lore from an item.
+     *
+     * @param inputLore The item's lore.
+     * @param toRemove  The line to remove.
+     * @return The lore with the line removed.
+     */
+    public List<Component> removeLore(List<Component> inputLore, Component toRemove) {
+        List<Component> newLore = new ArrayList<>(inputLore);
+        newLore.removeIf(line -> PlainTextComponentSerializer.plainText().serialize(line).equals(PlainTextComponentSerializer.plainText().serialize(toRemove)));
+        return newLore;
+    }
+
+    /**
      * Adds new ownership to an item.
      *
      * @param itemMeta      The item meta.
@@ -976,18 +989,5 @@ public class ItemLore {
         List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
         meta.lore(newLore);
         return meta;
-    }
-
-    /**
-     * Remove a given lore from an item.
-     *
-     * @param inputLore The item's lore.
-     * @param toRemove  The line to remove.
-     * @return The lore with the line removed.
-     */
-    public List<Component> removeLore(List<Component> inputLore, Component toRemove) {
-        List<Component> newLore = new ArrayList<>(inputLore);
-        newLore.removeIf(line -> PlainTextComponentSerializer.plainText().serialize(line).equals(PlainTextComponentSerializer.plainText().serialize(toRemove)));
-        return newLore;
     }
 }

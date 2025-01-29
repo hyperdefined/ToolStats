@@ -94,7 +94,7 @@ public class VillagerTrade implements Listener {
                         // if the slot was empty before we traded, this means we just traded it
                         if (oldSlotItem == null) {
                             // add the lore
-                            ItemStack newItem = addLore(newSlotItem, player);
+                            ItemStack newItem = addTradeOrigin(newSlotItem, player);
                             if (newItem != null) {
                                 player.getInventory().setItem(i, newItem);
                             }
@@ -104,7 +104,7 @@ public class VillagerTrade implements Listener {
             }, null, 1);
             return;
         }
-        ItemStack newItem = addLore(tradedItem, player);
+        ItemStack newItem = addTradeOrigin(tradedItem, player);
         if (newItem != null) {
             // set the new item
             inventory.setItem(event.getSlot(), newItem);
@@ -118,7 +118,7 @@ public class VillagerTrade implements Listener {
      * @param owner   The player who traded.
      * @return The item with lore.
      */
-    private ItemStack addLore(ItemStack oldItem, Player owner) {
+    private ItemStack addTradeOrigin(ItemStack oldItem, Player owner) {
         ItemStack newItem = oldItem.clone();
         ItemMeta meta = newItem.getItemMeta();
         if (meta == null) {
@@ -133,6 +133,10 @@ public class VillagerTrade implements Listener {
             return null;
         }
 
+        if (!toolStats.configTools.checkConfig(newItem.getType(), "traded-tag")) {
+            return null;
+        }
+
         // only make the hash if it's enabled
         if (toolStats.config.getBoolean("generate-hash-for-items")) {
             String hash = toolStats.hashMaker.makeHash(newItem.getType(), owner.getUniqueId(), timeCreated);
@@ -142,12 +146,9 @@ public class VillagerTrade implements Listener {
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
         container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
         container.set(toolStats.originType, PersistentDataType.INTEGER, 3);
-
-        if (toolStats.configTools.checkConfig(newItem.getType(), "traded-tag")) {
-            String formattedDate = toolStats.numberFormat.formatDate(finalDate);
-            List<Component> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
-            meta.lore(newLore);
-        }
+        String formattedDate = toolStats.numberFormat.formatDate(finalDate);
+        List<Component> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
+        meta.lore(newLore);
         newItem.setItemMeta(meta);
         return newItem;
     }
