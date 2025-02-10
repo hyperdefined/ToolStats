@@ -203,4 +203,4 @@ number-formats:
 # This has no use currently, but can be used for future features for dupe detection.
 generate-hash-for-items: false
 
-config-version: 9
+config-version: 10
