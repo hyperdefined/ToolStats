@@ -63,8 +63,7 @@ public class ShootBow implements Listener {
             boolean isOffHand = inventory.getItemInOffHand().getType() == Material.BOW || inventory.getItemInOffHand().getType() == Material.CROSSBOW;
             if (isMain) {
                 inventory.getItemInMainHand().setItemMeta(newItem);
-            }
-            if (isOffHand) {
+            } else if (isOffHand) {
                 inventory.getItemInOffHand().setItemMeta(newItem);
             }
         }

@@ -72,8 +72,7 @@ public class SheepShear implements Listener {
             boolean isOffHand = inventory.getItemInOffHand().getType() == Material.SHEARS;
             if (isMain) {
                 inventory.getItemInMainHand().setItemMeta(newItem);
-            }
-            if (isOffHand) {
+            } else if (isOffHand) {
                 inventory.getItemInOffHand().setItemMeta(newItem);
             }
         }

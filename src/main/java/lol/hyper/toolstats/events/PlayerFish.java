@@ -74,8 +74,7 @@ public class PlayerFish implements Listener {
             boolean isOffHand = inventory.getItemInOffHand().getType() == Material.FISHING_ROD;
             if (isMain) {
                 inventory.getItemInMainHand().setItemMeta(newFishingRod);
-            }
-            if (isOffHand) {
+            } else if (isOffHand) {
                 inventory.getItemInOffHand().setItemMeta(newFishingRod);
             }
         }
