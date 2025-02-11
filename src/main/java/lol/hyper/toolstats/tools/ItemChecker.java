@@ -220,6 +220,9 @@ public class ItemChecker {
         // if the player is holding a bow in their main hand, use that one
         // if the bow is in their offhand instead, use that one after checking main hand
         // Minecraft prioritizes main hand if the player holds in both hands
+        if (isMain && isOffHand) {
+            return main;
+        }
         if (isMain) {
             return main;
         }
@@ -246,6 +249,9 @@ public class ItemChecker {
         // if the player is holding shears in their main hand, use that one
         // if the shears are in their offhand instead, use that one after checking main hand
         // Minecraft prioritizes main hand if the player holds in both hands
+        if (isMain && isOffHand) {
+            return main;
+        }
         if (isMain) {
             return main;
         }
@@ -272,6 +278,9 @@ public class ItemChecker {
         // if the player is holding a fishing rod in their main hand, use that one
         // if the fishing rod is in their offhand instead, use that one after checking main hand
         // Minecraft prioritizes main hand if the player holds in both hands
+        if (isMain && isOffHand) {
+            return main;
+        }
         if (isMain) {
             return main;
         }

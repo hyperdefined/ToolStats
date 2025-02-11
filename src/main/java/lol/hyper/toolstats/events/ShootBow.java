@@ -56,15 +56,17 @@ public class ShootBow implements Listener {
             return;
         }
 
-        ItemMeta newItem = toolStats.itemLore.updateArrowsShot(heldBow, 1);
-        if (newItem != null) {
+        ItemMeta newBow = toolStats.itemLore.updateArrowsShot(heldBow, 1);
+        if (newBow != null) {
             PlayerInventory inventory = player.getInventory();
             boolean isMain = inventory.getItemInMainHand().getType() == Material.BOW || inventory.getItemInMainHand().getType() == Material.CROSSBOW;
             boolean isOffHand = inventory.getItemInOffHand().getType() == Material.BOW || inventory.getItemInOffHand().getType() == Material.CROSSBOW;
-            if (isMain) {
-                inventory.getItemInMainHand().setItemMeta(newItem);
+            if (isMain && isOffHand) {
+                inventory.getItemInMainHand().setItemMeta(newBow);
+            } else if (isMain) {
+                inventory.getItemInMainHand().setItemMeta(newBow);
             } else if (isOffHand) {
-                inventory.getItemInOffHand().setItemMeta(newItem);
+                inventory.getItemInOffHand().setItemMeta(newBow);
             }
         }
     }

@@ -23,7 +23,7 @@
 
     <groupId>lol.hyper</groupId>
     <artifactId>toolstats</artifactId>
-    <version>1.9.2</version>
+    <version>1.9.2-hotfix</version>
     <packaging>jar</packaging>
 
     <name>ToolStats</name>

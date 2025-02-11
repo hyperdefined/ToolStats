@@ -65,15 +65,17 @@ public class SheepShear implements Listener {
         }
 
         // update the stats
-        ItemMeta newItem = toolStats.itemLore.updateSheepSheared(heldShears, 1);
-        if (newItem != null) {
+        ItemMeta newShears = toolStats.itemLore.updateSheepSheared(heldShears, 1);
+        if (newShears != null) {
             PlayerInventory inventory = player.getInventory();
             boolean isMain = inventory.getItemInMainHand().getType() == Material.SHEARS;
             boolean isOffHand = inventory.getItemInOffHand().getType() == Material.SHEARS;
-            if (isMain) {
-                inventory.getItemInMainHand().setItemMeta(newItem);
+            if (isMain && isOffHand) {
+                inventory.getItemInMainHand().setItemMeta(newShears);
+            } else if (isMain) {
+                inventory.getItemInMainHand().setItemMeta(newShears);
             } else if (isOffHand) {
-                inventory.getItemInOffHand().setItemMeta(newItem);
+                inventory.getItemInOffHand().setItemMeta(newShears);
             }
         }
     }
