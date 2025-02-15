@@ -19,6 +19,7 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -119,17 +120,32 @@ public class EntityDamage implements Listener {
                         return;
                     }
 
+                    boolean isMain = shootingPlayerInventory.getItemInMainHand().getType() == Material.BOW ||  shootingPlayerInventory.getItemInMainHand().getType() == Material.CROSSBOW;
+                    boolean isOffHand =  shootingPlayerInventory.getItemInOffHand().getType() == Material.BOW || shootingPlayerInventory.getItemInOffHand().getType() == Material.CROSSBOW;
+
                     // player is shooting another player
                     if (mobBeingAttacked instanceof Player) {
-                        ItemMeta newItem = toolStats.itemLore.updatePlayerKills(heldBow, 1);
-                        if (newItem != null) {
-                            shootingPlayerInventory.getItemInMainHand().setItemMeta(newItem);
+                        ItemMeta newBow = toolStats.itemLore.updatePlayerKills(heldBow, 1);
+                        if (newBow != null) {
+                            if (isMain && isOffHand) {
+                                shootingPlayerInventory.getItemInMainHand().setItemMeta(newBow);
+                            } else if (isMain) {
+                                shootingPlayerInventory.getItemInMainHand().setItemMeta(newBow);
+                            } else if (isOffHand) {
+                                shootingPlayerInventory.getItemInOffHand().setItemMeta(newBow);
+                            }
                         }
                     } else {
                         // player is shooting a mob
-                        ItemMeta newItem = toolStats.itemLore.updateMobKills(heldBow, 1);
-                        if (newItem != null) {
-                            shootingPlayerInventory.getItemInMainHand().setItemMeta(newItem);
+                        ItemMeta newBow = toolStats.itemLore.updateMobKills(heldBow, 1);
+                        if (newBow != null) {
+                            if (isMain && isOffHand) {
+                                shootingPlayerInventory.getItemInMainHand().setItemMeta(newBow);
+                            } else if (isMain) {
+                                shootingPlayerInventory.getItemInMainHand().setItemMeta(newBow);
+                            } else if (isOffHand) {
+                                shootingPlayerInventory.getItemInOffHand().setItemMeta(newBow);
+                            }
                         }
                         trackedMobs.add(mobBeingAttacked.getUniqueId());
                     }
