@@ -815,8 +815,8 @@ public class ItemLore {
         }
 
         container.set(toolStats.flightTime, PersistentDataType.LONG, flightTime + duration);
-        String oldFlightFormatted = toolStats.numberFormat.formatDouble((double) flightTime / 1000);
-        String newFlightFormatted = toolStats.numberFormat.formatDouble((double) (flightTime + duration) / 1000);
+        String oldFlightFormatted = toolStats.numberFormat.formatTime(flightTime);
+        String newFlightFormatted = toolStats.numberFormat.formatTime(flightTime + duration);
         Component oldLine = toolStats.configTools.formatLore("flight-time", "{time}", oldFlightFormatted);
         Component newLine = toolStats.configTools.formatLore("flight-time", "{time}", newFlightFormatted);
         if (oldLine == null || newLine == null) {
