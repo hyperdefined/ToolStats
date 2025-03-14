@@ -27,6 +27,7 @@ import org.bukkit.Material;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -128,6 +129,75 @@ public class ConfigTools {
         } else {
             // otherwise format them normally
             component = MiniMessage.miniMessage().deserialize(lore);
+        }
+
+        return component.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
+    }
+
+    /**
+     * Format a string with several placeholders to be ready for lore usage.
+     * @param configName The message to use.
+     * @param placeHoldersValues Map containing placeholders names as keys and values.
+     * @return Formatted string, null if the configName doesn't exist.
+     */
+    public Component formatLoreMultiplePlaceholders(String configName, Map<String, String> placeHoldersValues) {
+        String lore = toolStats.config.getString("messages." + configName);
+        if (lore == null) {
+            toolStats.logger.warning("Unable to find config message for: messages." + configName);
+            return null;
+        }
+
+        // if the config message is empty, don't send it
+        if (lore.isEmpty()) {
+            return null;
+        }
+
+        Pattern pattern = Pattern.compile("\\{([^}]+)\\}");
+        Matcher matcher = pattern.matcher(lore);
+
+        StringBuffer result = new StringBuffer();
+    
+        while (matcher.find()) {
+            String placeholder = matcher.group(1);
+            if (placeHoldersValues.containsKey(placeholder)) {
+                matcher.appendReplacement(result, placeHoldersValues.get(placeholder));
+            } else {
+                // Placeholder not found in our time values, so remove it and any unit suffix
+                // Find the next non-alphanumeric character after this placeholder to remove the unit
+                int end = matcher.end();
+                while (end < lore.length() && 
+                    !Character.isWhitespace(lore.charAt(end)) && 
+                    !lore.substring(end, end + 1).matches("[^a-zA-Z]")) {
+                    end++;
+                }
+                
+                matcher.appendReplacement(result, "");
+                
+                // Remove trailing space if there is one
+                if (end < lore.length() && Character.isWhitespace(lore.charAt(end))) {
+                    // Skip this space in the next append
+                    end++;
+                }
+                
+                // Adjust region to char after skipped placeholder
+                matcher.region(end, lore.length());
+            }
+        }
+        
+        matcher.appendTail(result);
+
+        Component component;
+        // Clean output text
+        String outputText = result.toString().replaceAll("\\s+", " ").trim();
+
+        // if we match the old color codes, then format them as so
+        Matcher hexMatcher = CONFIG_HEX_PATTERN.matcher(outputText);
+        Matcher colorMatcher = COLOR_CODES.matcher(outputText);
+        if (hexMatcher.find() || colorMatcher.find()) {
+            component = LegacyComponentSerializer.legacyAmpersand().deserialize(outputText);
+        } else {
+            // otherwise format them normally
+            component = MiniMessage.miniMessage().deserialize(outputText);
         }
 
         return component.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);

@@ -23,7 +23,9 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class NumberFormat {
 
@@ -138,39 +140,57 @@ public class NumberFormat {
     }
 
     /**
-     * Formats time in milliseconds in a human readable format.
-     * @param time The time in milliseconds to format.
-     * @return The time in a human readable format.
+     * Returns a human readable form of time in milliseconds.
+     * E.g. given 3752348000L outputs 1 years, 5 months, 2 weeks, 3 days, 14 hours, 12 minutes, 28 seconds.
+     * @param time The time in ms.
+     * @return Map with units as keys and time value, e.g. "years" (key) -> 1 (value)
      */
-    public String formatTime(Long time) {
+    public Map<String, String> formatTime(Long time) {
         final int SECONDS_PER_MINUTE = 60;
         final int MINUTES_PER_HOUR = 60;
         final int HOURS_PER_DAY = 24;
-        final int DAYS_PER_WEEK = 7;
         final int DAYS_PER_MONTH = 30;  // Approximation
         final int DAYS_PER_YEAR = 365;  // Approximation
 
         long totalSeconds = time / 1000;
 
+        Map<String, String> timeUnits = new HashMap<>();
+        
         long years = totalSeconds / (DAYS_PER_YEAR * HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
+        if (years > 0) {
+            timeUnits.put("years", Long.toString(years));
+        }
         totalSeconds %= (DAYS_PER_YEAR * HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
 
         long months = totalSeconds / (DAYS_PER_MONTH * HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
+        if (months > 0) {
+            timeUnits.put("months", Long.toString(months));
+        }
         totalSeconds %= (DAYS_PER_MONTH * HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
 
-        long weeks = totalSeconds / (DAYS_PER_WEEK * HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
-        totalSeconds %= (DAYS_PER_WEEK * HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
-
         long days = totalSeconds / (HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
+        if (days > 0) {
+            timeUnits.put("days", Long.toString(days));
+        }
         totalSeconds %= (HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
 
         long hours = totalSeconds / (MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
+        if (hours > 0) {
+            timeUnits.put("hours", Long.toString(hours));
+        }
         totalSeconds %= (MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
 
         long minutes = totalSeconds / SECONDS_PER_MINUTE;
+        if (minutes > 0) {
+            timeUnits.put("minutes", Long.toString(minutes));
+        }
         totalSeconds %= SECONDS_PER_MINUTE;
 
         long seconds = totalSeconds;
-        return "";
+        if (seconds > 0 || timeUnits.isEmpty()) {  // Always include seconds if everything else is zero
+            timeUnits.put("seconds", Long.toString(seconds));
+        }
+        
+        return timeUnits;
     }
 }

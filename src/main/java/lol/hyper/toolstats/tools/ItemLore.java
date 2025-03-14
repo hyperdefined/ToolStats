@@ -27,6 +27,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ItemLore {
 
@@ -767,8 +768,8 @@ public class ItemLore {
                 }
                 container.remove(toolStats.flightTime);
                 if (meta.hasLore()) {
-                    String oldFlightTimeFormatted = toolStats.numberFormat.formatDouble(flightTime);
-                    Component lineToRemove = toolStats.configTools.formatLore("flight-time", "{time}", oldFlightTimeFormatted);
+                    Map<String, String> oldFlightTimeFormatted = toolStats.numberFormat.formatTime(flightTime);
+                    Component lineToRemove = toolStats.configTools.formatLoreMultiplePlaceholders("flight-time", oldFlightTimeFormatted);
                     List<Component> newLore = removeLore(meta.lore(), lineToRemove);
                     meta.lore(newLore);
                 }
@@ -815,10 +816,10 @@ public class ItemLore {
         }
 
         container.set(toolStats.flightTime, PersistentDataType.LONG, flightTime + duration);
-        String oldFlightFormatted = toolStats.numberFormat.formatTime(flightTime);
-        String newFlightFormatted = toolStats.numberFormat.formatTime(flightTime + duration);
-        Component oldLine = toolStats.configTools.formatLore("flight-time", "{time}", oldFlightFormatted);
-        Component newLine = toolStats.configTools.formatLore("flight-time", "{time}", newFlightFormatted);
+        Map<String, String> oldFlightFormatted = toolStats.numberFormat.formatTime(flightTime);
+        Map<String, String> newFlightFormatted = toolStats.numberFormat.formatTime(flightTime + duration);
+        Component oldLine = toolStats.configTools.formatLoreMultiplePlaceholders("flight-time", oldFlightFormatted);
+        Component newLine = toolStats.configTools.formatLoreMultiplePlaceholders("flight-time", newFlightFormatted);
         if (oldLine == null || newLine == null) {
             return null;
         }
