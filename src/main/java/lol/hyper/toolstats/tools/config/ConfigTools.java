@@ -204,6 +204,47 @@ public class ConfigTools {
     }
 
     /**
+     * Gets the prefix of a lore message. Use to update existig lores in items.
+     * @param configName The config name of the lore to update.
+     * @return Component containing the prefix only.
+     */
+    public Component getLorePrefix(String configName) {
+        String lore = toolStats.config.getString("messages." + configName);
+        if (lore == null) {
+            toolStats.logger.warning("Unable to find config message for: messages." + configName);
+            return null;
+        }
+
+        // if the config message is empty, don't send it
+        if (lore.isEmpty()) {
+            return null;
+        }
+
+        String prefix;
+        int bracketIndex = lore.indexOf("{");
+
+        if (bracketIndex == -1) {
+            toolStats.logger.warning("Config message is formatted incorrectly! : messages." + configName);
+            return null;
+        } else {
+            prefix = lore.substring(0, bracketIndex);
+        }
+        Component component;
+
+        // if we match the old color codes, then format them as so
+        Matcher hexMatcher = CONFIG_HEX_PATTERN.matcher(prefix);
+        Matcher colorMatcher = COLOR_CODES.matcher(prefix);
+        if (hexMatcher.find() || colorMatcher.find()) {
+            component = LegacyComponentSerializer.legacyAmpersand().deserialize(prefix);
+        } else {
+            // otherwise format them normally
+            component = MiniMessage.miniMessage().deserialize(prefix);
+        }
+
+        return component.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
+    }
+
+    /**
      * Format a string from the config.
      *
      * @param configName The config to format.

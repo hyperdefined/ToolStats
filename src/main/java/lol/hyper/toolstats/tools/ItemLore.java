@@ -45,23 +45,27 @@ public class ItemLore {
      * @param newLine  The new line to replace oldLine.
      * @return The item's new lore.
      */
-    public List<Component> updateItemLore(ItemMeta itemMeta, Component oldLine, Component newLine) {
-        List<Component> itemLore;
+    public List<Component> updateItemLore(ItemMeta itemMeta, Component oldLinePrefix, Component newLine) {
+        List<Component> itemLore; 
         if (itemMeta.hasLore()) {
             itemLore = itemMeta.lore();
-            // keep track of line index
-            // this doesn't mess the lore of existing items
+            boolean lineFound = false;
+            
             for (int x = 0; x < itemLore.size(); x++) {
                 String line = PlainTextComponentSerializer.plainText().serialize(itemLore.get(x));
-                // find the old line to update, keeping index
-                // this means we update this line only!
-                if (line.equals(PlainTextComponentSerializer.plainText().serialize(oldLine))) {
+                String oldLinePrefixSerialized = PlainTextComponentSerializer.plainText().serialize(oldLinePrefix);
+                // Match by prefix for all items
+                if (line.startsWith(oldLinePrefixSerialized)) {
                     itemLore.set(x, newLine);
-                    return itemLore;
+                    lineFound = true;
+                    break;
                 }
             }
-            // if the item has lore, but we didn't find the line
-            itemLore.add(newLine);
+            
+            // Add new line if not found
+            if (!lineFound) {
+                itemLore.add(newLine);
+            }
         } else {
             // if the item has no lore, create a new list and add the line
             itemLore = new ArrayList<>();
@@ -96,9 +100,9 @@ public class ItemLore {
      * @param toRemove  The line to remove.
      * @return The lore with the line removed.
      */
-    public List<Component> removeLore(List<Component> inputLore, Component toRemove) {
+    public List<Component> removeLore(List<Component> inputLore, Component toRemovePrefix) {
         List<Component> newLore = new ArrayList<>(inputLore);
-        newLore.removeIf(line -> PlainTextComponentSerializer.plainText().serialize(line).equals(PlainTextComponentSerializer.plainText().serialize(toRemove)));
+        newLore.removeIf(line -> PlainTextComponentSerializer.plainText().serialize(line).startsWith(PlainTextComponentSerializer.plainText().serialize(toRemovePrefix)));
         return newLore;
     }
 
@@ -253,9 +257,8 @@ public class ItemLore {
                 }
                 container.remove(toolStats.cropsHarvested);
                 if (meta.hasLore()) {
-                    String oldCropsMinedFormatted = toolStats.numberFormat.formatInt(cropsMined);
-                    Component lineToRemove = toolStats.configTools.formatLore("crops-harvested", "{crops}", oldCropsMinedFormatted);
-                    List<Component> newLore = removeLore(meta.lore(), lineToRemove);
+                    Component lineToRemovePrefix = toolStats.configTools.getLorePrefix("crops-harvested");
+                    List<Component> newLore = removeLore(meta.lore(), lineToRemovePrefix);
                     meta.lore(newLore);
                 }
                 return meta;
@@ -306,7 +309,8 @@ public class ItemLore {
         if (oldLine == null || newLine == null) {
             return null;
         }
-        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+        Component oldLinePrefix = toolStats.configTools.getLorePrefix("crops-harvested");
+        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLinePrefix, newLine);
         meta.lore(newLore);
         return meta;
     }
@@ -336,9 +340,8 @@ public class ItemLore {
                 }
                 container.remove(toolStats.blocksMined);
                 if (meta.hasLore()) {
-                    String oldBlocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined);
-                    Component lineToRemove = toolStats.configTools.formatLore("blocks-mined", "{blocks}", oldBlocksMinedFormatted);
-                    List<Component> newLore = removeLore(meta.lore(), lineToRemove);
+                    Component lineToRemovePrefix = toolStats.configTools.getLorePrefix("blocks-mined");
+                    List<Component> newLore = removeLore(meta.lore(), lineToRemovePrefix);
                     meta.lore(newLore);
                 }
                 return meta;
@@ -390,7 +393,8 @@ public class ItemLore {
         if (oldLine == null || newLine == null) {
             return null;
         }
-        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+        Component oldLinePrefix = toolStats.configTools.getLorePrefix("blocks-mined");
+        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLinePrefix, newLine);
         meta.lore(newLore);
         return meta;
     }
@@ -420,9 +424,8 @@ public class ItemLore {
                 }
                 container.remove(toolStats.playerKills);
                 if (meta.hasLore()) {
-                    String oldPlayerKillsFormatted = toolStats.numberFormat.formatInt(playerKills);
-                    Component lineToRemove = toolStats.configTools.formatLore("player-kills", "{kills}", oldPlayerKillsFormatted);
-                    List<Component> newLore = removeLore(meta.lore(), lineToRemove);
+                    Component lineToRemovePrefix = toolStats.configTools.getLorePrefix("player-kills");
+                    List<Component> newLore = removeLore(meta.lore(), lineToRemovePrefix);
                     meta.lore(newLore);
                 }
                 return meta;
@@ -473,7 +476,8 @@ public class ItemLore {
         if (oldLine == null || newLine == null) {
             return null;
         }
-        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+        Component oldLinePrefix = toolStats.configTools.getLorePrefix("kills.player");
+        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLinePrefix, newLine);
         meta.lore(newLore);
         return meta;
     }
@@ -503,9 +507,8 @@ public class ItemLore {
                 }
                 container.remove(toolStats.mobKills);
                 if (meta.hasLore()) {
-                    String oldMobKillsFormatted = toolStats.numberFormat.formatInt(mobKills);
-                    Component lineToRemove = toolStats.configTools.formatLore("mob-kills", "{kills}", oldMobKillsFormatted);
-                    List<Component> newLore = removeLore(meta.lore(), lineToRemove);
+                    Component lineToRemovePrefix = toolStats.configTools.getLorePrefix("mob-kills");
+                    List<Component> newLore = removeLore(meta.lore(), lineToRemovePrefix);
                     meta.lore(newLore);
                 }
                 return meta;
@@ -556,7 +559,8 @@ public class ItemLore {
         if (oldLine == null || newLine == null) {
             return null;
         }
-        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+        Component oldLinePrefix = toolStats.configTools.getLorePrefix("kills.mob");
+        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLinePrefix, newLine);
         meta.lore(newLore);
         return meta;
     }
@@ -594,9 +598,8 @@ public class ItemLore {
                 }
                 container.remove(toolStats.armorDamage);
                 if (meta.hasLore()) {
-                    String oldDamageTakenFormatted = toolStats.numberFormat.formatDouble(armorDamage);
-                    Component lineToRemove = toolStats.configTools.formatLore("damage-taken", "{damage}", oldDamageTakenFormatted);
-                    List<Component> newLore = removeLore(meta.lore(), lineToRemove);
+                    Component lineToRemovePrefix = toolStats.configTools.getLorePrefix("damage-taken");
+                    List<Component> newLore = removeLore(meta.lore(), lineToRemovePrefix);
                     meta.lore(newLore);
                 }
                 return meta;
@@ -647,7 +650,8 @@ public class ItemLore {
         if (oldLine == null || newLine == null) {
             return null;
         }
-        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+        Component oldLinePrefix = toolStats.configTools.getLorePrefix("damage-taken");
+        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLinePrefix, newLine);
         meta.lore(newLore);
         return meta;
     }
@@ -677,9 +681,8 @@ public class ItemLore {
                 }
                 container.remove(toolStats.flightTime);
                 if (meta.hasLore()) {
-                    Map<String, String> oldFlightTimeFormatted = toolStats.numberFormat.formatTime(flightTime);
-                    Component lineToRemove = toolStats.configTools.formatLoreMultiplePlaceholders("flight-time", oldFlightTimeFormatted);
-                    List<Component> newLore = removeLore(meta.lore(), lineToRemove);
+                    Component lineToRemovePrefix = toolStats.configTools.getLorePrefix("flight-time");
+                    List<Component> newLore = removeLore(meta.lore(), lineToRemovePrefix);
                     meta.lore(newLore);
                 }
                 return meta;
@@ -732,7 +735,8 @@ public class ItemLore {
         if (oldLine == null || newLine == null) {
             return null;
         }
-        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+        Component oldLinePrefix = toolStats.configTools.getLorePrefix("flight-time");
+        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLinePrefix, newLine);
         meta.lore(newLore);
         return meta;
     }
@@ -762,9 +766,8 @@ public class ItemLore {
                 }
                 container.remove(toolStats.sheepSheared);
                 if (meta.hasLore()) {
-                    String oldSheepShearedFormatted = toolStats.numberFormat.formatDouble(sheepSheared);
-                    Component lineToRemove = toolStats.configTools.formatLore("sheep-sheared", "{sheep}", oldSheepShearedFormatted);
-                    List<Component> newLore = removeLore(meta.lore(), lineToRemove);
+                    Component lineToRemovePrefix = toolStats.configTools.getLorePrefix("sheep-sheared");
+                    List<Component> newLore = removeLore(meta.lore(), lineToRemovePrefix);
                     meta.lore(newLore);
                 }
                 return meta;
@@ -815,7 +818,8 @@ public class ItemLore {
         if (oldLine == null || newLine == null) {
             return null;
         }
-        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+        Component oldLinePrefix = toolStats.configTools.getLorePrefix("sheep-sheared");
+        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLinePrefix, newLine);
         meta.lore(newLore);
         return meta;
     }
@@ -845,9 +849,8 @@ public class ItemLore {
                 }
                 container.remove(toolStats.arrowsShot);
                 if (meta.hasLore()) {
-                    String oldArrowsShotFormatted = toolStats.numberFormat.formatDouble(arrowsShot);
-                    Component lineToRemove = toolStats.configTools.formatLore("arrows-shot", "{arrows}", oldArrowsShotFormatted);
-                    List<Component> newLore = removeLore(meta.lore(), lineToRemove);
+                    Component lineToRemovePrefix = toolStats.configTools.getLorePrefix("arrows-shot");
+                    List<Component> newLore = removeLore(meta.lore(), lineToRemovePrefix);
                     meta.lore(newLore);
                 }
                 return meta;
@@ -900,7 +903,8 @@ public class ItemLore {
         if (oldLine == null || newLine == null) {
             return null;
         }
-        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+        Component oldLinePrefix = toolStats.configTools.getLorePrefix("arrows-shot");
+        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLinePrefix, newLine);
         meta.lore(newLore);
         return meta;
     }
@@ -930,9 +934,8 @@ public class ItemLore {
                 }
                 container.remove(toolStats.fishCaught);
                 if (meta.hasLore()) {
-                    String oldFishCaught = toolStats.numberFormat.formatDouble(fishCaught);
-                    Component lineToRemove = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", oldFishCaught);
-                    List<Component> newLore = removeLore(meta.lore(), lineToRemove);
+                    Component lineToRemovePrefix = toolStats.configTools.getLorePrefix("fished.fish-caught");
+                    List<Component> newLore = removeLore(meta.lore(), lineToRemovePrefix);
                     meta.lore(newLore);
                 }
                 return meta;
@@ -983,7 +986,8 @@ public class ItemLore {
         if (oldLine == null || newLine == null) {
             return null;
         }
-        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+        Component oldLinePrefix = toolStats.configTools.getLorePrefix("fished.fish-caught");
+        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLinePrefix, newLine);
         meta.lore(newLore);
         return meta;
     }
