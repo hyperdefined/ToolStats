@@ -136,4 +136,41 @@ public class NumberFormat {
     public String formatDate(Date date) {
         return DATE_FORMAT.format(date);
     }
+
+    /**
+     * Formats time in milliseconds in a human readable format.
+     * @param time The time in milliseconds to format.
+     * @return The time in a human readable format.
+     */
+    public String formatTime(Long time) {
+        final int SECONDS_PER_MINUTE = 60;
+        final int MINUTES_PER_HOUR = 60;
+        final int HOURS_PER_DAY = 24;
+        final int DAYS_PER_WEEK = 7;
+        final int DAYS_PER_MONTH = 30;  // Approximation
+        final int DAYS_PER_YEAR = 365;  // Approximation
+
+        long totalSeconds = time / 1000;
+
+        long years = totalSeconds / (DAYS_PER_YEAR * HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
+        totalSeconds %= (DAYS_PER_YEAR * HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
+
+        long months = totalSeconds / (DAYS_PER_MONTH * HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
+        totalSeconds %= (DAYS_PER_MONTH * HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
+
+        long weeks = totalSeconds / (DAYS_PER_WEEK * HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
+        totalSeconds %= (DAYS_PER_WEEK * HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
+
+        long days = totalSeconds / (HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
+        totalSeconds %= (HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
+
+        long hours = totalSeconds / (MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
+        totalSeconds %= (MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
+
+        long minutes = totalSeconds / SECONDS_PER_MINUTE;
+        totalSeconds %= SECONDS_PER_MINUTE;
+
+        long seconds = totalSeconds;
+        return "";
+    }
 }
