@@ -52,7 +52,7 @@ public class Version11 {
         toolStats.config.set("config-version", 11);
 
         toolStats.logger.info("Updating entry for messages.flight-time");
-        toolStats.config.set("messages.flight-time", "&7Flight time: &8{years}y {months}m {days}d {hours}s {minutes}m {seconds}s");
+        toolStats.config.set("messages.flight-time", "&7Flight time: &8{years}y {months}m {days}d {hours}h {minutes}m {seconds}s");
         
         // save the config and reload it
         try {
