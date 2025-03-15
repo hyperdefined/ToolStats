@@ -136,7 +136,8 @@ public class ConfigTools {
 
     /**
      * Format a string with several placeholders to be ready for lore usage.
-     * @param configName The message to use.
+     *
+     * @param configName         The message to use.
      * @param placeHoldersValues Map containing placeholders names as keys and values.
      * @return Formatted string, null if the configName doesn't exist.
      */
@@ -161,13 +162,13 @@ public class ConfigTools {
         while (matcher.find()) {
             String placeholder = matcher.group(1);
             String unit = matcher.group(2);
-            
+
             result.append(lore, lastEnd, matcher.start());
-            
+
             if (placeHoldersValues.containsKey(placeholder)) {
                 result.append(placeHoldersValues.get(placeholder)).append(unit).append(" ");
             }
-            
+
             // Update lastEnd to end of the match
             lastEnd = matcher.end();
         }
