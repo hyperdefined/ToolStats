@@ -424,7 +424,7 @@ public class ItemLore {
                 }
                 container.remove(toolStats.playerKills);
                 if (meta.hasLore()) {
-                    Component lineToRemovePrefix = toolStats.configTools.getLorePrefix("player-kills");
+                    Component lineToRemovePrefix = toolStats.configTools.getLorePrefix("kills.player");
                     List<Component> newLore = removeLore(meta.lore(), lineToRemovePrefix);
                     meta.lore(newLore);
                 }
@@ -507,7 +507,7 @@ public class ItemLore {
                 }
                 container.remove(toolStats.mobKills);
                 if (meta.hasLore()) {
-                    Component lineToRemovePrefix = toolStats.configTools.getLorePrefix("mob-kills");
+                    Component lineToRemovePrefix = toolStats.configTools.getLorePrefix("kills.mob");
                     List<Component> newLore = removeLore(meta.lore(), lineToRemovePrefix);
                     meta.lore(newLore);
                 }
