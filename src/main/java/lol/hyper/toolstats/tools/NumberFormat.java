@@ -141,7 +141,7 @@ public class NumberFormat {
 
     /**
      * Returns a human readable form of time in milliseconds.
-     * E.g. given 3752348000L outputs 1 years, 5 months, 2 weeks, 3 days, 14 hours, 12 minutes, 28 seconds.
+     * E.g. given 3752348000L outputs 1 years, 5 months, 3 days, 14 hours, 12 minutes, 28 seconds.
      * @param time The time in ms.
      * @return Map with units as keys and time value, e.g. "years" (key) -> 1 (value)
      */
