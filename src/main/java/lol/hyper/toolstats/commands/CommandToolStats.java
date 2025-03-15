@@ -210,7 +210,8 @@ public class CommandToolStats implements TabExecutor {
 
             if (flightTime != null) {
                 if (toolStats.config.getBoolean("enabled.flight-time")) {
-                    Component line = toolStats.configTools.formatLore("flight-time", "{time}", toolStats.numberFormat.formatDouble((double) flightTime / 1000));
+                    Map<String, String> flightTimeFormatted = toolStats.numberFormat.formatTime(flightTime);
+                    Component line = toolStats.configTools.formatLoreMultiplePlaceholders("flight-time", flightTimeFormatted);
                     lore.add(line);
                 }
             }
