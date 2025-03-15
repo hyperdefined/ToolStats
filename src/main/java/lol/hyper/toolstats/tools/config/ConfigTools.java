@@ -152,39 +152,28 @@ public class ConfigTools {
             return null;
         }
 
-        Pattern pattern = Pattern.compile("\\{([^}]+)\\}");
+        Pattern pattern = Pattern.compile("\\{([^}]+)\\}(\\S*)\\s*");
         Matcher matcher = pattern.matcher(lore);
 
-        StringBuffer result = new StringBuffer();
-    
+        StringBuilder result = new StringBuilder();
+        int lastEnd = 0;
+
         while (matcher.find()) {
             String placeholder = matcher.group(1);
+            String unit = matcher.group(2);
+            
+            result.append(lore, lastEnd, matcher.start());
+            
             if (placeHoldersValues.containsKey(placeholder)) {
-                matcher.appendReplacement(result, placeHoldersValues.get(placeholder));
-            } else {
-                // Placeholder not found in our time values, so remove it and any unit suffix
-                // Find the next non-alphanumeric character after this placeholder to remove the unit
-                int end = matcher.end();
-                while (end < lore.length() && 
-                    !Character.isWhitespace(lore.charAt(end)) && 
-                    !lore.substring(end, end + 1).matches("[^a-zA-Z]")) {
-                    end++;
-                }
-                
-                matcher.appendReplacement(result, "");
-                
-                // Remove trailing space if there is one
-                if (end < lore.length() && Character.isWhitespace(lore.charAt(end))) {
-                    // Skip this space in the next append
-                    end++;
-                }
-                
-                // Adjust region to char after skipped placeholder
-                matcher.region(end, lore.length());
+                result.append(placeHoldersValues.get(placeholder)).append(unit).append(" ");
             }
+            
+            // Update lastEnd to end of the match
+            lastEnd = matcher.end();
         }
-        
-        matcher.appendTail(result);
+        if (lastEnd < lore.length()) {
+            result.append(lore.substring(lastEnd));
+        }
 
         Component component;
         // Clean output text

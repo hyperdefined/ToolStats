@@ -86,9 +86,9 @@ public class Version11 {
         toolStats.logger.info("Adding enabled.damage-done.bow to config.yml");
         toolStats.logger.info("Adding enabled.damage-done.mace to config.yml");
 
-        toolStats.logger.info("Changing messages.flight-time to new format");
+        toolStats.logger.info("Updating entry for messages.flight-time");
         toolStats.config.set("messages.flight-time", "&7Flight time: &8{years}y {months}m {days}d {hours}h {minutes}m {seconds}s");
-
+        
         // save the config and reload it
         try {
             toolStats.config.save("plugins" + File.separator + "ToolStats" + File.separator + "config.yml");
