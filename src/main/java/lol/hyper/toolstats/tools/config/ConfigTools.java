@@ -210,7 +210,7 @@ public class ConfigTools {
         }
 
         String prefix;
-        int bracketIndex = lore.indexOf("{");
+        int bracketIndex = lore.indexOf('{');
 
         if (bracketIndex == -1) {
             toolStats.logger.warning("Config message is formatted incorrectly! : messages." + configName);
