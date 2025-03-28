@@ -56,5 +56,10 @@ public class ConfigUpdater {
             Version10 version10 = new Version10(toolStats);
             version10.update();
         }
+        // Version 10 to 11
+        if (version == 10) {
+            Version11 version11 = new Version11(toolStats);
+            version11.update();
+        }
     }
 }
