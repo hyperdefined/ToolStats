@@ -81,6 +81,7 @@ public class EntityDamage implements Listener {
                     if (newItem != null) {
                         attackingPlayerInventory.getItemInMainHand().setItemMeta(newItem);
                     }
+                    updateArmorDamage(((Player) mobBeingAttacked).getInventory(), event.getFinalDamage());
                     return;
                 }
                 // player is killing regular mob
@@ -96,6 +97,7 @@ public class EntityDamage implements Listener {
                 ItemMeta newMeta;
                 // trident is killing player
                 if (mobBeingAttacked instanceof Player) {
+                    updateArmorDamage(((Player) mobBeingAttacked).getInventory(), event.getFinalDamage());
                     newMeta = toolStats.itemLore.updatePlayerKills(trident.getItemStack(), 1);
                 } else {
                     // trident is killing a mob
@@ -135,6 +137,7 @@ public class EntityDamage implements Listener {
                                 shootingPlayerInventory.getItemInOffHand().setItemMeta(newBow);
                             }
                         }
+                        updateArmorDamage(((Player) mobBeingAttacked).getInventory(), event.getFinalDamage());
                     } else {
                         // player is shooting a mob
                         ItemMeta newBow = toolStats.itemLore.updateMobKills(heldBow, 1);
@@ -157,21 +160,7 @@ public class EntityDamage implements Listener {
             if (playerTakingDamage.getGameMode() == GameMode.CREATIVE || playerTakingDamage.getGameMode() == GameMode.SPECTATOR) {
                 return;
             }
-            PlayerInventory playerInventory = playerTakingDamage.getInventory();
-            ItemStack[] armorContents = playerInventory.getArmorContents();
-            for (ItemStack armorPiece : armorContents) {
-                if (armorPiece != null) {
-                    if (toolStats.itemChecker.isArmor(armorPiece.getType())) {
-                        ItemMeta newItem = toolStats.itemLore.updateDamage(armorPiece, event.getFinalDamage(), false);
-                        if (newItem != null) {
-                            armorPiece.setItemMeta(newItem);
-                        }
-                    }
-                }
-            }
-
-            // apply the new armor
-            playerInventory.setArmorContents(armorContents);
+            updateArmorDamage(playerTakingDamage.getInventory(), event.getFinalDamage());
         }
     }
 
@@ -192,21 +181,7 @@ public class EntityDamage implements Listener {
             if (playerTakingDamage.getGameMode() == GameMode.CREATIVE || playerTakingDamage.getGameMode() == GameMode.SPECTATOR) {
                 return;
             }
-            PlayerInventory playerInventory = playerTakingDamage.getInventory();
-            ItemStack[] armorContents = playerInventory.getArmorContents();
-            for (ItemStack armorPiece : armorContents) {
-                if (armorPiece != null) {
-                    if (toolStats.itemChecker.isArmor(armorPiece.getType())) {
-                        ItemMeta newItem = toolStats.itemLore.updateDamage(armorPiece, event.getFinalDamage(),false);
-                        if (newItem != null) {
-                            armorPiece.setItemMeta(newItem);
-                        }
-                    }
-                }
-            }
-
-            // apply the new armor
-            playerInventory.setArmorContents(armorContents);
+            updateArmorDamage(playerTakingDamage.getInventory(), event.getFinalDamage());
         }
     }
 
@@ -227,21 +202,23 @@ public class EntityDamage implements Listener {
             if (playerTakingDamage.getGameMode() == GameMode.CREATIVE || playerTakingDamage.getGameMode() == GameMode.SPECTATOR) {
                 return;
             }
-            PlayerInventory playerInventory = playerTakingDamage.getInventory();
-            ItemStack[] armorContents = playerInventory.getArmorContents();
-            for (ItemStack armorPiece : armorContents) {
-                if (armorPiece != null) {
-                    if (toolStats.itemChecker.isArmor(armorPiece.getType())) {
-                        ItemMeta newItem = toolStats.itemLore.updateDamage(armorPiece, event.getFinalDamage(), false);
-                        if (newItem != null) {
-                            armorPiece.setItemMeta(newItem);
-                        }
+            updateArmorDamage(playerTakingDamage.getInventory(), event.getFinalDamage());
+        }
+    }
+
+    private void updateArmorDamage(PlayerInventory playerInventory, double damage) {
+        ItemStack[] armorContents = playerInventory.getArmorContents();
+        for (ItemStack armorPiece : armorContents) {
+            if (armorPiece != null) {
+                if (toolStats.itemChecker.isArmor(armorPiece.getType())) {
+                    ItemMeta newItem = toolStats.itemLore.updateDamage(armorPiece, damage, false);
+                    if (newItem != null) {
+                        armorPiece.setItemMeta(newItem);
                     }
                 }
             }
-
-            // apply the new armor
-            playerInventory.setArmorContents(armorContents);
         }
+        // apply the new armor
+        playerInventory.setArmorContents(armorContents);
     }
 }
