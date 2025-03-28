@@ -253,9 +253,9 @@ public final class ToolStats extends JavaPlugin {
             return;
         }
         GitHubRelease current;
-        try{
+        try {
             current = api.getReleaseByTag(this.getPluginMeta().getVersion());
-        }catch(ReleaseNotFoundException e){
+        } catch (ReleaseNotFoundException e) {
             logger.warning("You are running a version that does not exist on GitHub. If you are in a dev environment, you can ignore this. Otherwise, this is a bug!");
             return;
         }
