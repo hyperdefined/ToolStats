@@ -19,6 +19,7 @@ package lol.hyper.toolstats;
 
 import lol.hyper.githubreleaseapi.GitHubRelease;
 import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
+import lol.hyper.githubreleaseapi.ReleaseNotFoundException;
 import lol.hyper.toolstats.commands.CommandToolStats;
 import lol.hyper.toolstats.events.*;
 import lol.hyper.toolstats.tools.*;
@@ -251,12 +252,14 @@ public final class ToolStats extends JavaPlugin {
             e.printStackTrace();
             return;
         }
-        GitHubRelease current = api.getReleaseByTag(this.getPluginMeta().getVersion());
-        GitHubRelease latest = api.getLatestVersion();
-        if (current == null) {
+        GitHubRelease current;
+        try{
+            current = api.getReleaseByTag(this.getPluginMeta().getVersion());
+        }catch(ReleaseNotFoundException e){
             logger.warning("You are running a version that does not exist on GitHub. If you are in a dev environment, you can ignore this. Otherwise, this is a bug!");
             return;
         }
+        GitHubRelease latest = api.getLatestVersion();
         int buildsBehind = api.getBuildsBehind(current);
         if (buildsBehind == 0) {
             logger.info("You are running the latest version.");
