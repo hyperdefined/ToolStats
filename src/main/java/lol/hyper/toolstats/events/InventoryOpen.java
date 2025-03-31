@@ -23,6 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -46,6 +47,11 @@ public class InventoryOpen implements Listener {
         }
 
         Inventory inventory = event.getInventory();
+        // only check these
+        if (inventory.getType() != InventoryType.CHEST || inventory.getType() != InventoryType.BARREL || inventory.getType() != InventoryType.SHULKER_BOX || inventory.getType() != InventoryType.ENDER_CHEST) {
+            return;
+        }
+
         Player player = (Player) event.getPlayer();
         for (ItemStack itemStack : inventory) {
             if (itemStack == null) {
