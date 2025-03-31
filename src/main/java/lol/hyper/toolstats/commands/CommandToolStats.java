@@ -407,6 +407,12 @@ public class CommandToolStats implements TabExecutor {
                 target.getInventory().addItem(itemStack);
                 break;
             }
+            case "damage-done": {
+                ItemStack itemStack = toolStats.tokenItems.damageDone();
+                itemStack.setAmount(amount);
+                target.getInventory().addItem(itemStack);
+                break;
+            }
             case "mob-kills": {
                 ItemStack itemStack = toolStats.tokenItems.mobKills();
                 itemStack.setAmount(amount);

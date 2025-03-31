@@ -122,6 +122,7 @@ public class TokenCrafting {
         tokenTypes.add("crops-mined");
         tokenTypes.add("blocks-mined");
         tokenTypes.add("damage-taken");
+        tokenTypes.add("damage-done");
         tokenTypes.add("mob-kills");
         tokenTypes.add("player-kills");
         tokenTypes.add("arrows-shot");
