@@ -113,6 +113,12 @@ public class TokenCrafting {
         resetRecipe.setIngredient('P', Material.PAPER);
         recipes.add(resetRecipe);
 
+        NamespacedKey removeKey = new NamespacedKey(toolStats, "remove-token");
+        ShapedRecipe removeRecipe = new ShapedRecipe(removeKey, toolStats.tokenItems.removeToken());
+        resetRecipe.shape(" P ", "P P", " P ");
+        resetRecipe.setIngredient('P', Material.PAPER);
+        recipes.add(removeRecipe);
+
         tokenTypes.add("crops-mined");
         tokenTypes.add("blocks-mined");
         tokenTypes.add("damage-taken");
@@ -123,6 +129,7 @@ public class TokenCrafting {
         tokenTypes.add("flight-time");
         tokenTypes.add("fish-caught");
         tokenTypes.add("reset");
+        tokenTypes.add("remove");
     }
 
     public Set<ShapedRecipe> getRecipes() {

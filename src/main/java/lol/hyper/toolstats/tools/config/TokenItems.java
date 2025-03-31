@@ -233,4 +233,22 @@ public class TokenItems {
         token.setItemMeta(tokenMeta);
         return token;
     }
+
+    public ItemStack removeToken() {
+        // set up the item
+        ItemStack token = new ItemStack(Material.PAPER);
+        ItemMeta tokenMeta = token.getItemMeta();
+        PersistentDataContainer tokenData = tokenMeta.getPersistentDataContainer();
+
+        // set the title and lore
+        Component title = toolStats.configTools.format("tokens.data.remove.title");
+        List<Component> lore = toolStats.configTools.getTokenLore("remove");
+        tokenMeta.displayName(title);
+        tokenMeta.lore(lore);
+
+        // set the PDC
+        tokenData.set(toolStats.tokenType, PersistentDataType.STRING, "remove");
+        token.setItemMeta(tokenMeta);
+        return token;
+    }
 }

@@ -18,6 +18,7 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -86,6 +87,11 @@ public class AnvilEvent implements Listener {
 
         if (tokenType.equalsIgnoreCase("reset")) {
             reset(event, clone);
+            return;
+        }
+
+        if (tokenType.equalsIgnoreCase("remove")) {
+            remove(event, clone);
             return;
         }
 
@@ -384,5 +390,156 @@ public class AnvilEvent implements Listener {
         }
         event.setResult(finalItem);
         event.getView().setRepairCost(toolStats.itemChecker.getCost("reset"));
+    }
+
+    /**
+     * Remove all stats from an item.
+     *
+     * @param event     The PrepareAnvilEvent event.
+     * @param inputItem The input item to remove stats from.
+     */
+    private void remove(PrepareAnvilEvent event, ItemStack inputItem) {
+        ItemStack finalItem = inputItem.clone();
+        ItemMeta meta = finalItem.getItemMeta();
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+
+        // remove the applied tokens
+        if (container.has(toolStats.tokenApplied)) {
+            container.remove(toolStats.tokenApplied);
+        }
+
+        if (container.has(toolStats.playerKills)) {
+            Integer playerKills = container.get(toolStats.playerKills, PersistentDataType.INTEGER);
+            if (playerKills == null) {
+                return;
+            }
+
+            container.remove(toolStats.playerKills);
+
+            String playerKillsFormatted = toolStats.numberFormat.formatInt(playerKills);
+            Component lineToRemove = toolStats.configTools.formatLore("kills.player", "{kills}", playerKillsFormatted);
+            meta.lore(toolStats.itemLore.removeLore(meta.lore(), lineToRemove));
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.mobKills)) {
+            Integer mobKills = container.get(toolStats.mobKills, PersistentDataType.INTEGER);
+            if (mobKills == null) {
+                return;
+            }
+
+            container.remove(toolStats.mobKills);
+
+            String mobKillsFormatted = toolStats.numberFormat.formatInt(mobKills);
+            Component lineToRemove = toolStats.configTools.formatLore("kills.mob", "{kills}", mobKillsFormatted);
+            meta.lore(toolStats.itemLore.removeLore(meta.lore(), lineToRemove));
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.blocksMined)) {
+            Integer blocksMined = container.get(toolStats.blocksMined, PersistentDataType.INTEGER);
+            if (blocksMined == null) {
+                return;
+            }
+
+            container.remove(toolStats.blocksMined);
+
+            String blocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined);
+            Component lineToRemove = toolStats.configTools.formatLore("blocks-mined", "{blocks}", blocksMinedFormatted);
+            meta.lore(toolStats.itemLore.removeLore(meta.lore(), lineToRemove));
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.cropsHarvested)) {
+            Integer cropsHarvested = container.get(toolStats.playerKills, PersistentDataType.INTEGER);
+            if (cropsHarvested == null) {
+                return;
+            }
+
+            container.remove(toolStats.cropsHarvested);
+
+            String cropsHarvestedFormatted = toolStats.numberFormat.formatInt(cropsHarvested);
+            Component lineToRemove = toolStats.configTools.formatLore("crops-harvested", "{crops}", cropsHarvestedFormatted);
+            meta.lore(toolStats.itemLore.removeLore(meta.lore(), lineToRemove));
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.fishCaught)) {
+            Integer fishCaught = container.get(toolStats.fishCaught, PersistentDataType.INTEGER);
+            if (fishCaught == null) {
+                return;
+            }
+
+            container.remove(toolStats.fishCaught);
+
+            String fishCaughtFormatted = toolStats.numberFormat.formatInt(fishCaught);
+            Component lineToRemove = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", fishCaughtFormatted);
+            meta.lore(toolStats.itemLore.removeLore(meta.lore(), lineToRemove));
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.sheepSheared)) {
+            Integer sheepSheared = container.get(toolStats.sheepSheared, PersistentDataType.INTEGER);
+            if (sheepSheared == null) {
+                return;
+            }
+
+            container.remove(toolStats.sheepSheared);
+
+            String sheepShearedFormatted = toolStats.numberFormat.formatInt(sheepSheared);
+            Component lineToRemove = toolStats.configTools.formatLore("sheep.sheared", "{sheep}", sheepShearedFormatted);
+            meta.lore(toolStats.itemLore.removeLore(meta.lore(), lineToRemove));
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.armorDamage)) {
+            Double armorDamage = container.get(toolStats.armorDamage, PersistentDataType.DOUBLE);
+            if (armorDamage == null) {
+                return;
+            }
+
+            container.remove(toolStats.armorDamage);
+
+            String armorDamageFormatted = toolStats.numberFormat.formatDouble(armorDamage);
+            Component lineToRemove = toolStats.configTools.formatLore("damage-taken", "{damage}", armorDamageFormatted);
+            meta.lore(toolStats.itemLore.removeLore(meta.lore(), lineToRemove));
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.damageDone)) {
+            Double damageDone = container.get(toolStats.damageDone, PersistentDataType.DOUBLE);
+            if (damageDone == null) {
+                return;
+            }
+
+            container.remove(toolStats.damageDone);
+
+            String damageDoneFormatted = toolStats.numberFormat.formatDouble(damageDone);
+            Component lineToRemove = toolStats.configTools.formatLore("damage-done", "{damage}", damageDoneFormatted);
+            meta.lore(toolStats.itemLore.removeLore(meta.lore(), lineToRemove));
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.arrowsShot)) {
+            Integer arrowsShot = container.get(toolStats.arrowsShot, PersistentDataType.INTEGER);
+            if (arrowsShot == null) {
+                return;
+            }
+
+            container.remove(toolStats.arrowsShot);
+
+            String arrowsShotFormatted = toolStats.numberFormat.formatInt(arrowsShot);
+            Component lineToRemove = toolStats.configTools.formatLore("arrows-shot", "{arrows}", arrowsShotFormatted);
+            meta.lore(toolStats.itemLore.removeLore(meta.lore(), lineToRemove));
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.flightTime)) {
+            Long flightTime = container.get(toolStats.flightTime, PersistentDataType.LONG);
+            if (flightTime == null) {
+                return;
+            }
+
+            container.remove(toolStats.flightTime);
+
+            String flightTimeFormatted = toolStats.numberFormat.formatDouble(flightTime);
+            Component lineToRemove = toolStats.configTools.formatLore("flight-time", "{time}", flightTimeFormatted);
+            meta.lore(toolStats.itemLore.removeLore(meta.lore(), lineToRemove));
+            finalItem.setItemMeta(meta);
+        }
+
+        event.setResult(finalItem);
+        event.getView().setRepairCost(toolStats.itemChecker.getCost("remove"));
     }
 }

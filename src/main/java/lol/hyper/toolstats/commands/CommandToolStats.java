@@ -448,6 +448,12 @@ public class CommandToolStats implements TabExecutor {
                 target.getInventory().addItem(itemStack);
                 break;
             }
+            case "remove": {
+                ItemStack itemStack = toolStats.tokenItems.removeToken();
+                itemStack.setAmount(amount);
+                target.getInventory().addItem(itemStack);
+                break;
+            }
         }
     }
 
