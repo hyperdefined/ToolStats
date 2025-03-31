@@ -162,6 +162,24 @@ public class TokenItems {
         return token;
     }
 
+    public ItemStack damageDone() {
+        // set up the item
+        ItemStack token = new ItemStack(Material.PAPER);
+        ItemMeta tokenMeta = token.getItemMeta();
+        PersistentDataContainer tokenData = tokenMeta.getPersistentDataContainer();
+
+        // set the title and lore
+        Component title = toolStats.configTools.format("tokens.data.damage-done.title");
+        List<Component> lore = toolStats.configTools.getTokenLore("damage-done");
+        tokenMeta.displayName(title);
+        tokenMeta.lore(lore);
+
+        // set the PDC
+        tokenData.set(toolStats.tokenType, PersistentDataType.STRING, "damage-done");
+        token.setItemMeta(tokenMeta);
+        return token;
+    }
+
     public ItemStack arrowsShot() {
         // set up the item
         ItemStack token = new ItemStack(Material.PAPER);

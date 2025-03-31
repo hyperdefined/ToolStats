@@ -78,6 +78,10 @@ public final class ToolStats extends JavaPlugin {
      */
     public final NamespacedKey armorDamage = new NamespacedKey(this, "damage-taken");
     /**
+     * Stores how much damage a weapon has done.
+     */
+    public final NamespacedKey damageDone = new NamespacedKey(this, "damage-done");
+    /**
      * Key for tracking new elytras that spawn.
      */
     public final NamespacedKey newElytra = new NamespacedKey(this, "new");
@@ -113,7 +117,7 @@ public final class ToolStats extends JavaPlugin {
      */
     public final NamespacedKey originType = new NamespacedKey(this, "origin");
 
-    public final int CONFIG_VERSION = 10;
+    public final int CONFIG_VERSION = 11;
     public final Logger logger = this.getLogger();
     public final File configFile = new File(this.getDataFolder(), "config.yml");
     public boolean tokens = false;

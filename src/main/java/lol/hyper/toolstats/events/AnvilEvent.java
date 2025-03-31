@@ -133,6 +133,10 @@ public class AnvilEvent implements Listener {
                 addToken(event, tokenType, "mob-kills", clone);
                 return;
             }
+            if (tokenType.equalsIgnoreCase("damage-done")) {
+                addToken(event, tokenType, "damage-done", clone);
+                return;
+            }
             return;
         }
         if (firstSlotMaterial == Material.BOW || firstSlotMaterial == Material.CROSSBOW) {
@@ -146,6 +150,10 @@ public class AnvilEvent implements Listener {
             }
             if (tokenType.equalsIgnoreCase("arrows-shot")) {
                 addToken(event, tokenType, "arrows-shot", clone);
+                return;
+            }
+            if (tokenType.equalsIgnoreCase("damage-done")) {
+                addToken(event, tokenType, "damage-done", clone);
                 return;
             }
             return;
@@ -203,7 +211,16 @@ public class AnvilEvent implements Listener {
             }
             case "damage-taken": {
                 if (toolStats.config.getBoolean("enabled.armor-damage")) {
-                    newItem.setItemMeta(toolStats.itemLore.updateDamage(newItem, 0.0, false));
+                    newItem.setItemMeta(toolStats.itemLore.updateArmorDamage(newItem, 0.0, false));
+                } else {
+                    event.setResult(null);
+                    return;
+                }
+                break;
+            }
+            case "damage-done": {
+                if (toolStats.configTools.checkConfig(newItem.getType(), "damage-done")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateWeaponDamage(newItem, 0.0, false));
                 } else {
                     event.setResult(null);
                     return;
@@ -338,7 +355,15 @@ public class AnvilEvent implements Listener {
             if (armorDamage == null) {
                 return;
             }
-            meta = toolStats.itemLore.updateDamage(finalItem, -armorDamage, true);
+            meta = toolStats.itemLore.updateArmorDamage(finalItem, -armorDamage, true);
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.damageDone)) {
+            Double damageDone = container.get(toolStats.damageDone, PersistentDataType.DOUBLE);
+            if (damageDone == null) {
+                return;
+            }
+            meta = toolStats.itemLore.updateArmorDamage(finalItem, -damageDone, true);
             finalItem.setItemMeta(meta);
         }
         if (container.has(toolStats.arrowsShot)) {

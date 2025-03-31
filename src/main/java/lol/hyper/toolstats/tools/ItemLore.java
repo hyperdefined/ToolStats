@@ -567,7 +567,7 @@ public class ItemLore {
      * @param damage     The amount of damage to apply.
      * @param bypass     Bypass the negative damage check.
      */
-    public ItemMeta updateDamage(ItemStack armorPiece, double damage, boolean bypass) {
+    public ItemMeta updateArmorDamage(ItemStack armorPiece, double damage, boolean bypass) {
         // ignore if the damage is zero or negative
         if (damage < 0) {
             if (!bypass) {
@@ -643,6 +643,97 @@ public class ItemLore {
         String newDamageFormatted = toolStats.numberFormat.formatDouble(damageTaken + damage);
         Component oldLine = toolStats.configTools.formatLore("damage-taken", "{damage}", oldDamageFormatted);
         Component newLine = toolStats.configTools.formatLore("damage-taken", "{damage}", newDamageFormatted);
+        if (oldLine == null || newLine == null) {
+            return null;
+        }
+        List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
+        meta.lore(newLore);
+        return meta;
+    }
+
+    /**
+     * Add damage to a weapon.
+     *
+     * @param weapon The weapon to update.
+     * @param damage The amount of damage to apply.
+     * @param bypass Bypass the negative damage check.
+     */
+    public ItemMeta updateWeaponDamage(ItemStack weapon, double damage, boolean bypass) {
+        // ignore if the damage is zero or negative
+        if (damage < 0) {
+            if (!bypass) {
+                return null;
+            }
+        }
+        ItemStack clone = weapon.clone();
+        ItemMeta meta = clone.getItemMeta();
+        if (meta == null) {
+            toolStats.logger.warning(clone + " does NOT have any meta! Unable to update stats.");
+            return null;
+        }
+
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+
+        // if it's disabled, don't update the stats
+        // check to see if the item has the stats, remove them if it does
+        if (!toolStats.configTools.checkConfig(clone.getType(), "damage-done")) {
+            if (container.has(toolStats.damageDone)) {
+                Double damageDone = container.get(toolStats.damageDone, PersistentDataType.DOUBLE);
+                if (damageDone == null) {
+                    return null;
+                }
+                container.remove(toolStats.damageDone);
+                if (meta.hasLore()) {
+                    String oldDamageDoneFormatted = toolStats.numberFormat.formatDouble(damageDone);
+                    Component lineToRemove = toolStats.configTools.formatLore("damage-done", "{damage}", oldDamageDoneFormatted);
+                    List<Component> newLore = removeLore(meta.lore(), lineToRemove);
+                    meta.lore(newLore);
+                }
+                return meta;
+            }
+            return null;
+        }
+
+        // check for tokens
+        boolean validToken = toolStats.itemChecker.checkTokens(container, "damage-done");
+        // check for tokens
+        if (toolStats.config.getBoolean("tokens.enabled")) {
+            // if the item has stats but no token, add the token
+            if (container.has(toolStats.damageDone) && !validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
+            }
+
+            // the item does not have a valid token
+            if (!validToken) {
+                return null;
+            }
+        } else {
+            if (!validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
+            }
+        }
+
+        Double damageDone = 0.0;
+        if (container.has(toolStats.damageDone, PersistentDataType.DOUBLE)) {
+            damageDone = container.get(toolStats.damageDone, PersistentDataType.DOUBLE);
+        }
+
+        if (damageDone == null) {
+            damageDone = 0.0;
+            toolStats.logger.warning(clone + " does not have valid damage-done set! Resting to zero. This should NEVER happen.");
+        }
+
+        container.set(toolStats.damageDone, PersistentDataType.DOUBLE, damageDone + damage);
+        String oldDamageFormatted = toolStats.numberFormat.formatDouble(damageDone);
+        String newDamageFormatted = toolStats.numberFormat.formatDouble(damageDone + damage);
+        Component oldLine = toolStats.configTools.formatLore("damage-done", "{damage}", oldDamageFormatted);
+        Component newLine = toolStats.configTools.formatLore("damage-done", "{damage}", newDamageFormatted);
         if (oldLine == null || newLine == null) {
             return null;
         }

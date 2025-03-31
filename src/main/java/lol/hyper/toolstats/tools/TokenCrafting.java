@@ -86,6 +86,13 @@ public class TokenCrafting {
         armorDamageRecipe.setIngredient('C', Material.LEATHER_CHESTPLATE);
         recipes.add(armorDamageRecipe);
 
+        NamespacedKey damageDoneKey = new NamespacedKey(toolStats, "damage-done-token");
+        ShapedRecipe damageDoneRecipe = new ShapedRecipe(damageDoneKey, toolStats.tokenItems.damageDone());
+        damageDoneRecipe.shape(" P ", "PSP", " P ");
+        damageDoneRecipe.setIngredient('P', Material.PAPER);
+        damageDoneRecipe.setIngredient('S', Material.SHIELD);
+        recipes.add(damageDoneRecipe);
+
         NamespacedKey arrowsShotKey = new NamespacedKey(toolStats, "arrows-shot-token");
         ShapedRecipe arrowsShotRecipe = new ShapedRecipe(arrowsShotKey, toolStats.tokenItems.arrowsShot());
         arrowsShotRecipe.shape(" P ", "PAP", " P ");

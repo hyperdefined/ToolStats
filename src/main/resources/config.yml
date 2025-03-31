@@ -39,6 +39,11 @@ tokens:
       lore:
         - "&8Combine with an armor piece in an anvil to track damage taken."
       levels: 1
+    damage-done:
+      title: "&7ToolStats: &8Damage Done Token"
+      lore:
+        - "&8Combine with a melee or ranged weapon in an anvil to track damage done."
+      levels: 1
     arrows-shot:
       title: "&7ToolStats: &8Arrows Shot Token"
       lore:
@@ -53,6 +58,11 @@ tokens:
       title: "&7ToolStats: &8Reset Token"
       lore:
         - "&8Combine in an anvil with to reset ALL stats for this item. Tokens on this item stay."
+      levels: 1
+    remove:
+      title: "&7ToolStats: &8Remove Token"
+      lore:
+        - "&8Combine in an anvil with to REMOVE ALL stats and tokens for this item."
       levels: 1
 
 enabled:
@@ -113,6 +123,12 @@ enabled:
     bow: true
     armor: true
     fishing-rod: true
+  damage-done:
+    sword: true
+    axe: true
+    trident: true
+    bow: true
+    mace: true
   player-kills:
     sword: true
     axe: true
@@ -181,6 +197,7 @@ messages:
   damage-taken: "&7Damage taken: &8{damage}"
   arrows-shot: "&7Arrows shot: &8{arrows}"
   flight-time: "&7Flight time: &8{time}"
+  damage-done: "&7Damage done: &8{damage}"
   # Set display name for mobs. See: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
   mobs:
     ZOMBIE: "Zombie"
@@ -203,4 +220,4 @@ number-formats:
 # This has no use currently, but can be used for future features for dupe detection.
 generate-hash-for-items: false
 
-config-version: 10
+config-version: 11

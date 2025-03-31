@@ -333,6 +333,9 @@ public class ItemChecker {
         if (container.has(toolStats.flightTime)) {
             tokens.add("flight-time");
         }
+        if (container.has(toolStats.damageDone)) {
+            tokens.add("damage-done");
+        }
         if (tokens.isEmpty()) {
             return null;
         }
