@@ -48,7 +48,7 @@ public class CommandToolStats implements TabExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
         if (!sender.hasPermission("toolstats.command")) {
             sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
             return true;
@@ -460,7 +460,7 @@ public class CommandToolStats implements TabExecutor {
 
     @Nullable
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
         if (args.length == 1) {
             List<String> suggestions = new ArrayList<>();
             if (sender.hasPermission("toolstats.reload")) {
