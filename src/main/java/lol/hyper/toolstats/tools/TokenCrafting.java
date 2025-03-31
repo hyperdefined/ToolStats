@@ -115,8 +115,8 @@ public class TokenCrafting {
 
         NamespacedKey removeKey = new NamespacedKey(toolStats, "remove-token");
         ShapedRecipe removeRecipe = new ShapedRecipe(removeKey, toolStats.tokenItems.removeToken());
-        resetRecipe.shape(" P ", "P P", " P ");
-        resetRecipe.setIngredient('P', Material.PAPER);
+        removeRecipe.shape(" P ", "P P", " P ");
+        removeRecipe.setIngredient('P', Material.PAPER);
         recipes.add(removeRecipe);
 
         tokenTypes.add("crops-mined");
