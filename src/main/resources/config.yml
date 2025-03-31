@@ -196,7 +196,7 @@ messages:
   dropped-by: "&7Dropped by: &8{name}" # name will be player/mob name
   damage-taken: "&7Damage taken: &8{damage}"
   arrows-shot: "&7Arrows shot: &8{arrows}"
-  flight-time: "&7Flight time: &8{time}"
+  flight-time: "&7Flight time: &8{years}y {months}m {days}d {hours}h {minutes}m {seconds}s"
   damage-done: "&7Damage done: &8{damage}"
   # Set display name for mobs. See: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
   mobs:
