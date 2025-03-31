@@ -20,6 +20,7 @@ package lol.hyper.toolstats.tools;
 import lol.hyper.toolstats.ToolStats;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -768,6 +769,13 @@ public class ItemLore {
                 }
                 container.remove(toolStats.flightTime);
                 if (meta.hasLore()) {
+                    // if the old format is in the config, check to see if the old format is on the elytra
+                    if (toolStats.config.getString("messages.flight-time-old") != null) {
+                        String oldFormatFormatted = toolStats.numberFormat.formatDouble((double) flightTime / 1000);
+                        Component oldFormat = toolStats.configTools.formatLore("flight-time-old", "{time}", oldFormatFormatted);
+                        meta.lore(removeLore(meta.lore(), oldFormat));
+                    }
+
                     Map<String, String> oldFlightTimeFormatted = toolStats.numberFormat.formatTime(flightTime);
                     Component lineToRemove = toolStats.configTools.formatLoreMultiplePlaceholders("flight-time", oldFlightTimeFormatted);
                     List<Component> newLore = removeLore(meta.lore(), lineToRemove);
@@ -818,6 +826,12 @@ public class ItemLore {
         container.set(toolStats.flightTime, PersistentDataType.LONG, flightTime + duration);
         Map<String, String> oldFlightFormatted = toolStats.numberFormat.formatTime(flightTime);
         Map<String, String> newFlightFormatted = toolStats.numberFormat.formatTime(flightTime + duration);
+        // if the old format is in the config, check to see if the old format is on the elytra
+        if (toolStats.config.getString("messages.flight-time-old") != null) {
+            String oldFormatFormatted = toolStats.numberFormat.formatDouble((double) flightTime / 1000);
+            Component oldFormat = toolStats.configTools.formatLore("flight-time-old", "{time}", oldFormatFormatted);
+            meta.lore(removeLore(meta.lore(), oldFormat));
+        }
         Component oldLine = toolStats.configTools.formatLoreMultiplePlaceholders("flight-time", oldFlightFormatted);
         Component newLine = toolStats.configTools.formatLoreMultiplePlaceholders("flight-time", newFlightFormatted);
         if (oldLine == null || newLine == null) {

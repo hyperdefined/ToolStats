@@ -87,6 +87,8 @@ public class Version11 {
         toolStats.logger.info("Adding enabled.damage-done.mace to config.yml");
 
         toolStats.logger.info("Updating entry for messages.flight-time");
+        String oldFlightTime = toolStats.config.getString("messages.flight-time");
+        toolStats.config.set("messages.flight-time-old", oldFlightTime);
         toolStats.config.set("messages.flight-time", "&7Flight time: &8{years}y {months}m {days}d {hours}h {minutes}m {seconds}s");
         
         // save the config and reload it
