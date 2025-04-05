@@ -187,7 +187,7 @@ public class EntityDamage implements Listener {
 
         boolean isMain = playerInventory.getItemInMainHand().getType() == Material.BOW || playerInventory.getItemInMainHand().getType() == Material.CROSSBOW;
         boolean isOffHand = playerInventory.getItemInOffHand().getType() == Material.BOW || playerInventory.getItemInOffHand().getType() == Material.CROSSBOW;
-        ItemMeta newBowDamage = toolStats.itemLore.updateWeaponDamage(playerInventory.getItemInMainHand(), damage, false);
+        ItemMeta newBowDamage = toolStats.itemLore.updateWeaponDamage(heldBow, damage, false);
         //toolStats.logger.info(newBowDamage.toString());
 
         // player is shooting another player
