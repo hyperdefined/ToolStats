@@ -940,9 +940,11 @@ public class ItemLore {
         Map<String, String> newFlightFormatted = toolStats.numberFormat.formatTime(flightTime + duration);
         // if the old format is in the config, check to see if the old format is on the elytra
         if (toolStats.config.getString("messages.flight-time-old") != null) {
-            String oldFormatFormatted = toolStats.numberFormat.formatDouble((double) flightTime / 1000);
-            Component oldFormat = toolStats.configTools.formatLore("flight-time-old", "{time}", oldFormatFormatted);
-            meta.lore(removeLore(meta.lore(), oldFormat));
+            if (meta.hasLore()) {
+                String oldFormatFormatted = toolStats.numberFormat.formatDouble((double) flightTime / 1000);
+                Component oldFormat = toolStats.configTools.formatLore("flight-time-old", "{time}", oldFormatFormatted);
+                meta.lore(removeLore(meta.lore(), oldFormat));
+            }
         }
         Component oldLine = toolStats.configTools.formatLoreMultiplePlaceholders("flight-time", oldFlightFormatted);
         Component newLine = toolStats.configTools.formatLoreMultiplePlaceholders("flight-time", newFlightFormatted);
