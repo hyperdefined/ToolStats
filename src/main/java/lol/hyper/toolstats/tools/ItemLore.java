@@ -261,7 +261,6 @@ public class ItemLore {
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "crops-mined");
                         if (!newTokens.isEmpty()) {
-                            toolStats.logger.info("New tokens: " + newTokens);
                             container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
                             container.remove(toolStats.tokenApplied);
@@ -360,7 +359,6 @@ public class ItemLore {
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "blocks-mined");
                         if (!newTokens.isEmpty()) {
-                            toolStats.logger.info("New tokens: " + newTokens);
                             container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
                             container.remove(toolStats.tokenApplied);
@@ -460,7 +458,6 @@ public class ItemLore {
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "player-kills");
                         if (!newTokens.isEmpty()) {
-                            toolStats.logger.info("New tokens: " + newTokens);
                             container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
                             container.remove(toolStats.tokenApplied);
@@ -559,7 +556,6 @@ public class ItemLore {
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "mob-kills");
                         if (!newTokens.isEmpty()) {
-                            toolStats.logger.info("New tokens: " + newTokens);
                             container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
                             container.remove(toolStats.tokenApplied);
@@ -666,7 +662,6 @@ public class ItemLore {
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "damage-taken");
                         if (!newTokens.isEmpty()) {
-                            toolStats.logger.info("New tokens: " + newTokens);
                             container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
                             container.remove(toolStats.tokenApplied);
@@ -773,7 +768,6 @@ public class ItemLore {
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "damage-done");
                         if (!newTokens.isEmpty()) {
-                            toolStats.logger.info("New tokens: " + newTokens);
                             container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
                             container.remove(toolStats.tokenApplied);
@@ -872,7 +866,6 @@ public class ItemLore {
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "flight-time");
                         if (!newTokens.isEmpty()) {
-                            toolStats.logger.info("New tokens: " + newTokens);
                             container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
                             container.remove(toolStats.tokenApplied);
@@ -989,7 +982,6 @@ public class ItemLore {
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "sheep-sheared");
                         if (!newTokens.isEmpty()) {
-                            toolStats.logger.info("New tokens: " + newTokens);
                             container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
                             container.remove(toolStats.tokenApplied);
@@ -1088,7 +1080,6 @@ public class ItemLore {
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "arrows-shot");
                         if (!newTokens.isEmpty()) {
-                            toolStats.logger.info("New tokens: " + newTokens);
                             container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
                             container.remove(toolStats.tokenApplied);
@@ -1189,7 +1180,6 @@ public class ItemLore {
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "fish-caught");
                         if (!newTokens.isEmpty()) {
-                            toolStats.logger.info("New tokens: " + newTokens);
                             container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
                             container.remove(toolStats.tokenApplied);
