@@ -367,6 +367,14 @@ public class CommandToolStats implements TabExecutor {
                 }
             }
         }
+        if (toolStats.configTools.checkConfig(original.getType(), "damage-done")) {
+            if (container.has(toolStats.damageDone, PersistentDataType.DOUBLE)) {
+                Double damage = container.get(toolStats.damageDone, PersistentDataType.DOUBLE);
+                if (damage != null) {
+                    lore.add(toolStats.configTools.formatLore("damage-done", "{damage}", toolStats.numberFormat.formatDouble(damage)));
+                }
+            }
+        }
         if (toolStats.config.getBoolean("enabled.arrows-shot")) {
             if (container.has(toolStats.arrowsShot, PersistentDataType.INTEGER)) {
                 Integer arrows = container.get(toolStats.arrowsShot, PersistentDataType.INTEGER);
