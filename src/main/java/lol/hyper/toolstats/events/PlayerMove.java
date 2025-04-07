@@ -41,7 +41,7 @@ public class PlayerMove implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onCraft(PlayerMoveEvent event) {
+    public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         // player starts to fly
         if (player.isGliding()) {
