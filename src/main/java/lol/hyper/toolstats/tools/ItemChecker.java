@@ -27,10 +27,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class ItemChecker {
 
@@ -341,6 +338,26 @@ public class ItemChecker {
         }
 
         return String.join(",", tokens);
+    }
+
+
+    /**
+     * Remove a given token from a list of tokens.
+     *
+     * @param appliedTokens The tokens on the item.
+     * @param toRemove      The token to remove.
+     * @return The list of tokens.
+     */
+    public List<String> removeToken(String appliedTokens, String toRemove) {
+        // remove the tokens if they exist
+        List<String> tokenList = new ArrayList<>(Arrays.asList(appliedTokens.split(",")));
+        tokenList.remove(toRemove);
+
+        if (tokenList.isEmpty()) {
+            return Collections.emptyList();
+        } else {
+            return tokenList;
+        }
     }
 
     /**

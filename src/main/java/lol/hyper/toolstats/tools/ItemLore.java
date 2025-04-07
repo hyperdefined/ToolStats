@@ -252,6 +252,22 @@ public class ItemLore {
                     return null;
                 }
                 container.remove(toolStats.cropsHarvested);
+                // remove the applied token if this stat is disabled
+                if (container.has(toolStats.tokenApplied)) {
+                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (appliedTokens != null) {
+                        // remove the token from the list
+                        // if the list is empty, remove the PDC
+                        // otherwise set the PDC back with the new list
+                        List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "crops-mined");
+                        if (!newTokens.isEmpty()) {
+                            toolStats.logger.info("New tokens: " + newTokens);
+                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        } else {
+                            container.remove(toolStats.tokenApplied);
+                        }
+                    }
+                }
                 if (meta.hasLore()) {
                     String oldCropsMinedFormatted = toolStats.numberFormat.formatInt(cropsMined);
                     Component lineToRemove = toolStats.configTools.formatLore("crops-harvested", "{crops}", oldCropsMinedFormatted);
@@ -335,6 +351,22 @@ public class ItemLore {
                     return null;
                 }
                 container.remove(toolStats.blocksMined);
+                // remove the applied token if this stat is disabled
+                if (container.has(toolStats.tokenApplied)) {
+                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (appliedTokens != null) {
+                        // remove the token from the list
+                        // if the list is empty, remove the PDC
+                        // otherwise set the PDC back with the new list
+                        List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "blocks-mined");
+                        if (!newTokens.isEmpty()) {
+                            toolStats.logger.info("New tokens: " + newTokens);
+                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        } else {
+                            container.remove(toolStats.tokenApplied);
+                        }
+                    }
+                }
                 if (meta.hasLore()) {
                     String oldBlocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined);
                     Component lineToRemove = toolStats.configTools.formatLore("blocks-mined", "{blocks}", oldBlocksMinedFormatted);
@@ -419,6 +451,22 @@ public class ItemLore {
                     return null;
                 }
                 container.remove(toolStats.playerKills);
+                // remove the applied token if this stat is disabled
+                if (container.has(toolStats.tokenApplied)) {
+                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (appliedTokens != null) {
+                        // remove the token from the list
+                        // if the list is empty, remove the PDC
+                        // otherwise set the PDC back with the new list
+                        List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "player-kills");
+                        if (!newTokens.isEmpty()) {
+                            toolStats.logger.info("New tokens: " + newTokens);
+                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        } else {
+                            container.remove(toolStats.tokenApplied);
+                        }
+                    }
+                }
                 if (meta.hasLore()) {
                     String oldPlayerKillsFormatted = toolStats.numberFormat.formatInt(playerKills);
                     Component lineToRemove = toolStats.configTools.formatLore("player-kills", "{kills}", oldPlayerKillsFormatted);
@@ -502,6 +550,22 @@ public class ItemLore {
                     return null;
                 }
                 container.remove(toolStats.mobKills);
+                // remove the applied token if this stat is disabled
+                if (container.has(toolStats.tokenApplied)) {
+                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (appliedTokens != null) {
+                        // remove the token from the list
+                        // if the list is empty, remove the PDC
+                        // otherwise set the PDC back with the new list
+                        List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "mob-kills");
+                        if (!newTokens.isEmpty()) {
+                            toolStats.logger.info("New tokens: " + newTokens);
+                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        } else {
+                            container.remove(toolStats.tokenApplied);
+                        }
+                    }
+                }
                 if (meta.hasLore()) {
                     String oldMobKillsFormatted = toolStats.numberFormat.formatInt(mobKills);
                     Component lineToRemove = toolStats.configTools.formatLore("mob-kills", "{kills}", oldMobKillsFormatted);
@@ -593,6 +657,22 @@ public class ItemLore {
                     return null;
                 }
                 container.remove(toolStats.armorDamage);
+                // remove the applied token if this stat is disabled
+                if (container.has(toolStats.tokenApplied)) {
+                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (appliedTokens != null) {
+                        // remove the token from the list
+                        // if the list is empty, remove the PDC
+                        // otherwise set the PDC back with the new list
+                        List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "damage-taken");
+                        if (!newTokens.isEmpty()) {
+                            toolStats.logger.info("New tokens: " + newTokens);
+                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        } else {
+                            container.remove(toolStats.tokenApplied);
+                        }
+                    }
+                }
                 if (meta.hasLore()) {
                     String oldDamageTakenFormatted = toolStats.numberFormat.formatDouble(armorDamage);
                     Component lineToRemove = toolStats.configTools.formatLore("damage-taken", "{damage}", oldDamageTakenFormatted);
@@ -684,6 +764,22 @@ public class ItemLore {
                     return null;
                 }
                 container.remove(toolStats.damageDone);
+                // remove the applied token if this stat is disabled
+                if (container.has(toolStats.tokenApplied)) {
+                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (appliedTokens != null) {
+                        // remove the token from the list
+                        // if the list is empty, remove the PDC
+                        // otherwise set the PDC back with the new list
+                        List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "damage-done");
+                        if (!newTokens.isEmpty()) {
+                            toolStats.logger.info("New tokens: " + newTokens);
+                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        } else {
+                            container.remove(toolStats.tokenApplied);
+                        }
+                    }
+                }
                 if (meta.hasLore()) {
                     String oldDamageDoneFormatted = toolStats.numberFormat.formatDouble(damageDone);
                     Component lineToRemove = toolStats.configTools.formatLore("damage-done", "{damage}", oldDamageDoneFormatted);
@@ -767,12 +863,29 @@ public class ItemLore {
                     return null;
                 }
                 container.remove(toolStats.flightTime);
+                // remove the applied token if this stat is disabled
+                if (container.has(toolStats.tokenApplied)) {
+                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (appliedTokens != null) {
+                        // remove the token from the list
+                        // if the list is empty, remove the PDC
+                        // otherwise set the PDC back with the new list
+                        List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "flight-time");
+                        if (!newTokens.isEmpty()) {
+                            toolStats.logger.info("New tokens: " + newTokens);
+                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        } else {
+                            container.remove(toolStats.tokenApplied);
+                        }
+                    }
+                }
                 if (meta.hasLore()) {
                     // if the old format is in the config, check to see if the old format is on the elytra
                     if (toolStats.config.getString("messages.flight-time-old") != null) {
                         String oldFormatFormatted = toolStats.numberFormat.formatDouble((double) flightTime / 1000);
                         Component oldFormat = toolStats.configTools.formatLore("flight-time-old", "{time}", oldFormatFormatted);
-                        meta.lore(removeLore(meta.lore(), oldFormat));
+                        List<Component> newLore = removeLore(meta.lore(), oldFormat);
+                        meta.lore(newLore);
                     }
 
                     Map<String, String> oldFlightTimeFormatted = toolStats.numberFormat.formatTime(flightTime);
@@ -865,6 +978,22 @@ public class ItemLore {
                     return null;
                 }
                 container.remove(toolStats.sheepSheared);
+                // remove the applied token if this stat is disabled
+                if (container.has(toolStats.tokenApplied)) {
+                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (appliedTokens != null) {
+                        // remove the token from the list
+                        // if the list is empty, remove the PDC
+                        // otherwise set the PDC back with the new list
+                        List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "sheep-sheared");
+                        if (!newTokens.isEmpty()) {
+                            toolStats.logger.info("New tokens: " + newTokens);
+                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        } else {
+                            container.remove(toolStats.tokenApplied);
+                        }
+                    }
+                }
                 if (meta.hasLore()) {
                     String oldSheepShearedFormatted = toolStats.numberFormat.formatDouble(sheepSheared);
                     Component lineToRemove = toolStats.configTools.formatLore("sheep-sheared", "{sheep}", oldSheepShearedFormatted);
@@ -948,6 +1077,22 @@ public class ItemLore {
                     return null;
                 }
                 container.remove(toolStats.arrowsShot);
+                // remove the applied token if this stat is disabled
+                if (container.has(toolStats.tokenApplied)) {
+                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (appliedTokens != null) {
+                        // remove the token from the list
+                        // if the list is empty, remove the PDC
+                        // otherwise set the PDC back with the new list
+                        List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "arrows-shot");
+                        if (!newTokens.isEmpty()) {
+                            toolStats.logger.info("New tokens: " + newTokens);
+                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        } else {
+                            container.remove(toolStats.tokenApplied);
+                        }
+                    }
+                }
                 if (meta.hasLore()) {
                     String oldArrowsShotFormatted = toolStats.numberFormat.formatDouble(arrowsShot);
                     Component lineToRemove = toolStats.configTools.formatLore("arrows-shot", "{arrows}", oldArrowsShotFormatted);
@@ -1033,6 +1178,22 @@ public class ItemLore {
                     return null;
                 }
                 container.remove(toolStats.fishCaught);
+                // remove the applied token if this stat is disabled
+                if (container.has(toolStats.tokenApplied)) {
+                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (appliedTokens != null) {
+                        // remove the token from the list
+                        // if the list is empty, remove the PDC
+                        // otherwise set the PDC back with the new list
+                        List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "fish-caught");
+                        if (!newTokens.isEmpty()) {
+                            toolStats.logger.info("New tokens: " + newTokens);
+                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        } else {
+                            container.remove(toolStats.tokenApplied);
+                        }
+                    }
+                }
                 if (meta.hasLore()) {
                     String oldFishCaught = toolStats.numberFormat.formatDouble(fishCaught);
                     Component lineToRemove = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", oldFishCaught);
