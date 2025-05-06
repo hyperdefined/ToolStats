@@ -39,6 +39,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CommandToolStats implements TabExecutor {
 
@@ -1114,11 +1115,31 @@ public class CommandToolStats implements TabExecutor {
             if (sender.hasPermission("toolstats.givetokens")) {
                 suggestions.add("givetokens");
             }
+            if (sender.hasPermission("toolstats.edit")) {
+                suggestions.add("edit");
+            }
+            if (sender.hasPermission("toolstats.remove")) {
+                suggestions.add("remove");
+            }
             return suggestions.isEmpty() ? null : suggestions;
         }
 
         if (args.length == 2 && args[0].equalsIgnoreCase("reset") && sender.hasPermission("toolstats.reset.confirm")) {
             return Collections.singletonList("confirm");
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("edit") && sender.hasPermission("toolstats.edit")) {
+            // yes I am lazy
+            return toolStats.tokenCrafting.getTokenTypes().stream()
+                    .filter(s -> !s.equals("remove") && !s.equals("reset"))
+                    .map(s -> s.equals("crops-mined") ? "crops-harvested" : s)
+                    .collect(Collectors.toList());
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("remove") && sender.hasPermission("toolstats.remove")) {
+            // yes I am lazy
+            return toolStats.tokenCrafting.getTokenTypes().stream()
+                    .filter(s -> !s.equals("remove") && !s.equals("reset"))
+                    .map(s -> s.equals("crops-mined") ? "crops-harvested" : s)
+                    .collect(Collectors.toList());
         }
         if (args.length == 3 && args[0].equalsIgnoreCase("givetokens") && sender.hasPermission("toolstats.givetokens")) {
             return toolStats.tokenCrafting.getTokenTypes();
