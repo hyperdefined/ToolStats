@@ -92,7 +92,7 @@ public class CommandToolStats implements TabExecutor {
             }
             // /toolstats edit stat value
             case "edit": {
-                if (!sender.hasPermission("toolstats.reset")) {
+                if (!sender.hasPermission("toolstats.edit")) {
                     sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
                     return true;
                 }
@@ -105,6 +105,23 @@ public class CommandToolStats implements TabExecutor {
                     return true;
                 }
                 handleEdit(args[1], args[2], (Player) sender);
+                return true;
+            }
+            // /toolstats remove stat
+            case "remove": {
+                if (!sender.hasPermission("toolstats.remove")) {
+                    sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
+                    return true;
+                }
+                if (sender instanceof ConsoleCommandSender) {
+                    sender.sendMessage(Component.text("You must be a player for this command.", NamedTextColor.RED));
+                    return true;
+                }
+                if (args.length < 2) {
+                    sender.sendMessage(Component.text("Invalid syntax. Usage: /toolstats remove <stat>", NamedTextColor.RED));
+                    return true;
+                }
+                handleRemove(args[1], (Player) sender);
                 return true;
 
             }
@@ -491,6 +508,13 @@ public class CommandToolStats implements TabExecutor {
         }
     }
 
+    /**
+     * Handle edit subcommand.
+     *
+     * @param stat      The stat to edit.
+     * @param userValue The value the user entered.
+     * @param player    The player using the command.
+     */
     private void handleEdit(String stat, Object userValue, Player player) {
         ItemStack editedItem = player.getInventory().getItemInMainHand().clone();
         if (!toolStats.itemChecker.isValidItem(editedItem.getType())) {
@@ -500,7 +524,7 @@ public class CommandToolStats implements TabExecutor {
         ItemMeta editedItemMeta = editedItem.getItemMeta();
         PersistentDataContainer container = editedItemMeta.getPersistentDataContainer();
         switch (stat) {
-            case "crops-mined": {
+            case "crops-harvested": {
                 if (!toolStats.config.getBoolean("enabled.crops-harvested")) {
                     player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
                     return;
@@ -749,7 +773,7 @@ public class CommandToolStats implements TabExecutor {
                         player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
                         return;
                     }
-                    Long statValue = container.get(toolStats.arrowsShot, PersistentDataType.LONG);
+                    Long statValue = container.get(toolStats.flightTime, PersistentDataType.LONG);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
@@ -792,6 +816,284 @@ public class CommandToolStats implements TabExecutor {
             }
             default: {
                 player.sendMessage(Component.text("That is not a valid stat to update.", NamedTextColor.RED));
+                return;
+            }
+        }
+        editedItem.setItemMeta(editedItemMeta);
+        player.getInventory().setItemInMainHand(editedItem);
+    }
+
+    /**
+     * Handle remove subcommand.
+     *
+     * @param stat   The stat to remove.
+     * @param player The player using the command.
+     */
+    private void handleRemove(String stat, Player player) {
+        ItemStack editedItem = player.getInventory().getItemInMainHand().clone();
+        if (!toolStats.itemChecker.isValidItem(editedItem.getType())) {
+            player.sendMessage(Component.text("This is not a valid item.", NamedTextColor.RED));
+            return;
+        }
+        ItemMeta editedItemMeta = editedItem.getItemMeta();
+        PersistentDataContainer container = editedItemMeta.getPersistentDataContainer();
+        switch (stat) {
+            case "crops-harvested": {
+                if (container.has(toolStats.cropsHarvested)) {
+                    Integer statValue = container.get(toolStats.cropsHarvested, PersistentDataType.INTEGER);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (tokens == null) {
+                        player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    container.remove(toolStats.cropsHarvested);
+                    List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "crops-mined");
+                    if (newTokens.isEmpty()) {
+                        container.remove(toolStats.tokenApplied);
+                    } else {
+                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                    }
+
+                    Component oldLine = toolStats.configTools.formatLore("crops-harvested", "{crops}", toolStats.numberFormat.formatInt(statValue));
+                    List<Component> newLore = toolStats.itemLore.removeLore(editedItemMeta.lore(), oldLine);
+                    editedItemMeta.lore(newLore);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "blocks-mined": {
+                if (container.has(toolStats.blocksMined)) {
+                    Integer statValue = container.get(toolStats.blocksMined, PersistentDataType.INTEGER);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (tokens == null) {
+                        player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    container.remove(toolStats.blocksMined);
+                    List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "blocks-mined");
+                    if (newTokens.isEmpty()) {
+                        container.remove(toolStats.tokenApplied);
+                    } else {
+                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                    }
+
+                    Component oldLine = toolStats.configTools.formatLore("blocks-mined", "{blocks}", toolStats.numberFormat.formatInt(statValue));
+                    List<Component> newLore = toolStats.itemLore.removeLore(editedItemMeta.lore(), oldLine);
+                    editedItemMeta.lore(newLore);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "damage-taken": {
+                if (container.has(toolStats.armorDamage)) {
+                    Double statValue = container.get(toolStats.armorDamage, PersistentDataType.DOUBLE);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (tokens == null) {
+                        player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    container.remove(toolStats.armorDamage);
+                    List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "damage-taken");
+                    if (newTokens.isEmpty()) {
+                        container.remove(toolStats.tokenApplied);
+                    } else {
+                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                    }
+
+                    Component oldLine = toolStats.configTools.formatLore("damage-taken", "{damage}", toolStats.numberFormat.formatDouble(statValue));
+                    List<Component> newLore = toolStats.itemLore.removeLore(editedItemMeta.lore(), oldLine);
+                    editedItemMeta.lore(newLore);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "damage-done": {
+                if (container.has(toolStats.damageDone)) {
+                    Double statValue = container.get(toolStats.damageDone, PersistentDataType.DOUBLE);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (tokens == null) {
+                        player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    container.remove(toolStats.damageDone);
+                    List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "damage-done");
+                    if (newTokens.isEmpty()) {
+                        container.remove(toolStats.tokenApplied);
+                    } else {
+                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                    }
+
+                    Component oldLine = toolStats.configTools.formatLore("damage-done", "{damage}", toolStats.numberFormat.formatDouble(statValue));
+                    List<Component> newLore = toolStats.itemLore.removeLore(editedItemMeta.lore(), oldLine);
+                    editedItemMeta.lore(newLore);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "mob-kills": {
+                if (container.has(toolStats.mobKills)) {
+                    Integer statValue = container.get(toolStats.mobKills, PersistentDataType.INTEGER);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (tokens == null) {
+                        player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    container.remove(toolStats.mobKills);
+                    List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "mob-kills");
+                    if (newTokens.isEmpty()) {
+                        container.remove(toolStats.tokenApplied);
+                    } else {
+                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                    }
+
+                    Component oldLine = toolStats.configTools.formatLore("kills.mob", "{kills}", toolStats.numberFormat.formatInt(statValue));
+                    List<Component> newLore = toolStats.itemLore.removeLore(editedItemMeta.lore(), oldLine);
+                    editedItemMeta.lore(newLore);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "player-kills": {
+                if (container.has(toolStats.playerKills)) {
+                    Integer statValue = container.get(toolStats.playerKills, PersistentDataType.INTEGER);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (tokens == null) {
+                        player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    container.remove(toolStats.playerKills);
+                    List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "player-kills");
+                    if (newTokens.isEmpty()) {
+                        container.remove(toolStats.tokenApplied);
+                    } else {
+                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                    }
+
+                    Component oldLine = toolStats.configTools.formatLore("kills.player", "{kills}", toolStats.numberFormat.formatInt(statValue));
+                    List<Component> newLore = toolStats.itemLore.removeLore(editedItemMeta.lore(), oldLine);
+                    editedItemMeta.lore(newLore);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "sheep-sheared": {
+                if (container.has(toolStats.sheepSheared)) {
+                    Integer statValue = container.get(toolStats.sheepSheared, PersistentDataType.INTEGER);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (tokens == null) {
+                        player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    container.remove(toolStats.sheepSheared);
+                    List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "sheep-sheared");
+                    if (newTokens.isEmpty()) {
+                        container.remove(toolStats.tokenApplied);
+                    } else {
+                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                    }
+
+                    Component oldLine = toolStats.configTools.formatLore("sheep-sheared", "{sheep}", toolStats.numberFormat.formatInt(statValue));
+                    List<Component> newLore = toolStats.itemLore.removeLore(editedItemMeta.lore(), oldLine);
+                    editedItemMeta.lore(newLore);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "flight-time": {
+                if (container.has(toolStats.flightTime)) {
+                    Long statValue = container.get(toolStats.flightTime, PersistentDataType.LONG);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (tokens == null) {
+                        player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    container.remove(toolStats.flightTime);
+                    List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "flight-time");
+                    if (newTokens.isEmpty()) {
+                        container.remove(toolStats.tokenApplied);
+                    } else {
+                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                    }
+
+                    Map<String, String> timeFormatted = toolStats.numberFormat.formatTime(statValue);
+                    Component oldLine = toolStats.configTools.formatLoreMultiplePlaceholders("flight-time", timeFormatted);
+                    List<Component> newLore = toolStats.itemLore.removeLore(editedItemMeta.lore(), oldLine);
+                    editedItemMeta.lore(newLore);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "fight-caught": {
+                if (container.has(toolStats.fishCaught)) {
+                    Integer statValue = container.get(toolStats.fishCaught, PersistentDataType.INTEGER);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (tokens == null) {
+                        player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    container.remove(toolStats.fishCaught);
+                    List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "fight-caught");
+                    if (newTokens.isEmpty()) {
+                        container.remove(toolStats.tokenApplied);
+                    } else {
+                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                    }
+
+                    Component oldLine = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", toolStats.numberFormat.formatInt(statValue));
+                    List<Component> newLore = toolStats.itemLore.removeLore(editedItemMeta.lore(), oldLine);
+                    editedItemMeta.lore(newLore);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            default: {
+                player.sendMessage(Component.text("That is not a valid stat to update.", NamedTextColor.RED));
+                return;
             }
         }
         editedItem.setItemMeta(editedItemMeta);
