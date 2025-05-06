@@ -30,6 +30,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -88,6 +89,24 @@ public class CommandToolStats implements TabExecutor {
                     sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
                 }
                 return true;
+            }
+            // /toolstats edit stat value
+            case "edit": {
+                if (!sender.hasPermission("toolstats.reset")) {
+                    sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
+                    return true;
+                }
+                if (sender instanceof ConsoleCommandSender) {
+                    sender.sendMessage(Component.text("You must be a player for this command.", NamedTextColor.RED));
+                    return true;
+                }
+                if (args.length < 3) {
+                    sender.sendMessage(Component.text("Invalid syntax. Usage: /toolstats edit <stat> <value>", NamedTextColor.RED));
+                    return true;
+                }
+                handleEdit(args[1], args[2], (Player) sender);
+                return true;
+
             }
             case "reset": {
                 if (!sender.hasPermission("toolstats.reset")) {
@@ -470,6 +489,313 @@ public class CommandToolStats implements TabExecutor {
                 break;
             }
         }
+    }
+
+    private void handleEdit(String stat, Object userValue, Player player) {
+        ItemStack editedItem = player.getInventory().getItemInMainHand().clone();
+        if (!toolStats.itemChecker.isValidItem(editedItem.getType())) {
+            player.sendMessage(Component.text("This is not a valid item.", NamedTextColor.RED));
+            return;
+        }
+        ItemMeta editedItemMeta = editedItem.getItemMeta();
+        PersistentDataContainer container = editedItemMeta.getPersistentDataContainer();
+        switch (stat) {
+            case "crops-mined": {
+                if (!toolStats.config.getBoolean("enabled.crops-harvested")) {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                if (container.has(toolStats.cropsHarvested)) {
+                    int value;
+                    try {
+                        value = Integer.parseInt((String) userValue);
+                    } catch (NumberFormatException exception) {
+                        player.sendMessage(Component.text("That is not a valid number.", NamedTextColor.RED));
+                        return;
+                    }
+                    if (value < 0) {
+                        player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
+                        return;
+                    }
+                    Integer statValue = container.get(toolStats.cropsHarvested, PersistentDataType.INTEGER);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    int difference = value - statValue;
+                    editedItemMeta = toolStats.itemLore.updateCropsMined(editedItem, difference);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "blocks-mined": {
+                if (!toolStats.configTools.checkConfig(editedItem.getType(), "blocks-mined")) {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                if (container.has(toolStats.blocksMined)) {
+                    int value;
+                    try {
+                        value = Integer.parseInt((String) userValue);
+                    } catch (NumberFormatException exception) {
+                        player.sendMessage(Component.text("That is not a valid number.", NamedTextColor.RED));
+                        return;
+                    }
+                    if (value < 0) {
+                        player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
+                        return;
+                    }
+                    Integer statValue = container.get(toolStats.blocksMined, PersistentDataType.INTEGER);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    int difference = value - statValue;
+                    editedItemMeta = toolStats.itemLore.updateBlocksMined(editedItem, difference);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "damage-taken": {
+                if (!toolStats.config.getBoolean("enabled.armor-damage")) {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                if (container.has(toolStats.armorDamage)) {
+                    double value;
+                    try {
+                        value = Double.parseDouble((String) userValue);
+                    } catch (NumberFormatException exception) {
+                        player.sendMessage(Component.text("That is not a valid number.", NamedTextColor.RED));
+                        return;
+                    }
+                    if (value < 0) {
+                        player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
+                        return;
+                    }
+                    Double statValue = container.get(toolStats.armorDamage, PersistentDataType.DOUBLE);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    double difference = value - statValue;
+                    editedItemMeta = toolStats.itemLore.updateArmorDamage(editedItem, difference, false);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "damage-done": {
+                if (!toolStats.configTools.checkConfig(editedItem.getType(), "damage-done")) {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                if (container.has(toolStats.damageDone)) {
+                    double value;
+                    try {
+                        value = Double.parseDouble((String) userValue);
+                    } catch (NumberFormatException exception) {
+                        player.sendMessage(Component.text("That is not a valid number.", NamedTextColor.RED));
+                        return;
+                    }
+                    if (value < 0) {
+                        player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
+                        return;
+                    }
+                    Double statValue = container.get(toolStats.damageDone, PersistentDataType.DOUBLE);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    double difference = value - statValue;
+                    editedItemMeta = toolStats.itemLore.updateWeaponDamage(editedItem, difference, false);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "mob-kills": {
+                if (!toolStats.configTools.checkConfig(editedItem.getType(), "mob-kills")) {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                if (container.has(toolStats.mobKills)) {
+                    int value;
+                    try {
+                        value = Integer.parseInt((String) userValue);
+                    } catch (NumberFormatException exception) {
+                        player.sendMessage(Component.text("That is not a valid number.", NamedTextColor.RED));
+                        return;
+                    }
+                    if (value < 0) {
+                        player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
+                        return;
+                    }
+                    Integer statValue = container.get(toolStats.mobKills, PersistentDataType.INTEGER);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    int difference = value - statValue;
+                    editedItemMeta = toolStats.itemLore.updateMobKills(editedItem, difference);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "player-kills": {
+                if (!toolStats.configTools.checkConfig(editedItem.getType(), "player-kills")) {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                if (container.has(toolStats.playerKills)) {
+                    int value;
+                    try {
+                        value = Integer.parseInt((String) userValue);
+                    } catch (NumberFormatException exception) {
+                        player.sendMessage(Component.text("That is not a valid number.", NamedTextColor.RED));
+                        return;
+                    }
+                    if (value < 0) {
+                        player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
+                        return;
+                    }
+                    Integer statValue = container.get(toolStats.playerKills, PersistentDataType.INTEGER);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    int difference = value - statValue;
+                    editedItemMeta = toolStats.itemLore.updatePlayerKills(editedItem, difference);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "arrows-shot": {
+                if (!toolStats.config.getBoolean("enabled.arrows-shot")) {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                if (container.has(toolStats.arrowsShot)) {
+                    int value;
+                    try {
+                        value = Integer.parseInt((String) userValue);
+                    } catch (NumberFormatException exception) {
+                        player.sendMessage(Component.text("That is not a valid number.", NamedTextColor.RED));
+                        return;
+                    }
+                    if (value < 0) {
+                        player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
+                        return;
+                    }
+                    Integer statValue = container.get(toolStats.arrowsShot, PersistentDataType.INTEGER);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    int difference = value - statValue;
+                    editedItemMeta = toolStats.itemLore.updateArrowsShot(editedItem, difference);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "sheep-sheared": {
+                if (!toolStats.config.getBoolean("enabled.sheep-sheared")) {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                if (container.has(toolStats.sheepSheared)) {
+                    int value;
+                    try {
+                        value = Integer.parseInt((String) userValue);
+                    } catch (NumberFormatException exception) {
+                        player.sendMessage(Component.text("That is not a valid number.", NamedTextColor.RED));
+                        return;
+                    }
+                    if (value < 0) {
+                        player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
+                        return;
+                    }
+                    Integer statValue = container.get(toolStats.sheepSheared, PersistentDataType.INTEGER);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    int difference = value - statValue;
+                    editedItemMeta = toolStats.itemLore.updateSheepSheared(editedItem, difference);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "flight-time": {
+                if (!toolStats.config.getBoolean("enabled.flight-time")) {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                if (container.has(toolStats.flightTime)) {
+                    int value;
+                    try {
+                        value = Integer.parseInt((String) userValue);
+                    } catch (NumberFormatException exception) {
+                        player.sendMessage(Component.text("That is not a valid number.", NamedTextColor.RED));
+                        return;
+                    }
+                    if (value < 0) {
+                        player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
+                        return;
+                    }
+                    Long statValue = container.get(toolStats.arrowsShot, PersistentDataType.LONG);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    long difference = value - statValue;
+                    editedItemMeta = toolStats.itemLore.updateFlightTime(editedItem, difference);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "fight-caught": {
+                if (!toolStats.config.getBoolean("enabled.fight-caught")) {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                if (container.has(toolStats.fishCaught)) {
+                    int value;
+                    try {
+                        value = Integer.parseInt((String) userValue);
+                    } catch (NumberFormatException exception) {
+                        player.sendMessage(Component.text("That is not a valid number.", NamedTextColor.RED));
+                        return;
+                    }
+                    if (value < 0) {
+                        player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
+                        return;
+                    }
+                    Integer statValue = container.get(toolStats.fishCaught, PersistentDataType.INTEGER);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    int difference = value - statValue;
+                    editedItemMeta = toolStats.itemLore.updateFishCaught(editedItem, difference);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            default: {
+                player.sendMessage(Component.text("That is not a valid stat to update.", NamedTextColor.RED));
+            }
+        }
+        editedItem.setItemMeta(editedItemMeta);
+        player.getInventory().setItemInMainHand(editedItem);
     }
 
     @Nullable
