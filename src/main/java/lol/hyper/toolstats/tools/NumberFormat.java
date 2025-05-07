@@ -22,6 +22,10 @@ import lol.hyper.toolstats.ToolStats;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -35,6 +39,7 @@ public class NumberFormat {
 
     /**
      * Utility class to format different numbers
+     *
      * @param toolStats Plugin instance.
      */
     public NumberFormat(ToolStats toolStats) {
@@ -140,8 +145,9 @@ public class NumberFormat {
     }
 
     /**
-     * Returns a human readable form of time in milliseconds.
-     * E.g. given 3752348000L outputs 1 years, 5 months, 3 days, 14 hours, 12 minutes, 28 seconds.
+     * Returns a human-readable form of time in milliseconds.
+     * E.g. given 3752348000L outputs 1 year, 5 months, 3 days, 14 hours, 12 minutes, 28 seconds.
+     *
      * @param time The time in ms.
      * @return Map with units as keys and time value, e.g. "years" (key) -> 1 (value)
      */
@@ -155,7 +161,7 @@ public class NumberFormat {
         long totalSeconds = time / 1000;
 
         Map<String, String> timeUnits = new HashMap<>();
-        
+
         long years = totalSeconds / (DAYS_PER_YEAR * HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
         if (years > 0) {
             timeUnits.put("years", Long.toString(years));
@@ -190,7 +196,16 @@ public class NumberFormat {
         if (seconds > 0 || timeUnits.isEmpty()) {  // Always include seconds if everything else is zero
             timeUnits.put("seconds", Long.toString(seconds));
         }
-        
+
         return timeUnits;
+    }
+
+    public Date normalizeTime(Long time) {
+        Instant instant = Instant.ofEpochMilli(time);
+        ZoneId zone = ZoneId.systemDefault();
+
+        LocalDate localDate = instant.atZone(zone).toLocalDate();
+        ZonedDateTime midnight = localDate.atStartOfDay(zone);
+        return Date.from(midnight.toInstant());
     }
 }

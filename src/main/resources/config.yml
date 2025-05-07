@@ -265,4 +265,8 @@ number-formats:
 # This has no use currently, but can be used for future features for dupe detection.
 generate-hash-for-items: false
 
-config-version: 11
+# Make when items are created at midnight on the date.
+# This makes dates for items more "normalized" instead of being at different times.
+normalize-time-creation: false
+
+config-version: 12

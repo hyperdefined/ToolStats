@@ -127,7 +127,13 @@ public class VillagerTrade implements Listener {
             return null;
         }
         long timeCreated = System.currentTimeMillis();
-        Date finalDate = new Date(timeCreated);
+        Date finalDate;
+        if (toolStats.config.getBoolean("normalize-time-creation")) {
+            finalDate = toolStats.numberFormat.normalizeTime(timeCreated);
+            timeCreated = finalDate.getTime();
+        } else {
+            finalDate = new Date(timeCreated);
+        }
         PersistentDataContainer container = meta.getPersistentDataContainer();
 
         if (container.has(toolStats.timeCreated, PersistentDataType.LONG) || container.has(toolStats.itemOwner, PersistentDataType.LONG)) {

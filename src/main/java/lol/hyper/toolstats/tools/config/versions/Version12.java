@@ -93,6 +93,9 @@ public class Version12 {
         toolStats.config.set("messages.crafted.crafted-by", craftedByMessage);
         toolStats.config.set("messages.crafted.crafted-on", craftedOnMessage);
 
+        toolStats.logger.info("Adding normalize-time-creation");
+        toolStats.config.set("normalize-time-creation", false);
+
         // save the config and reload it
         try {
             toolStats.config.save("plugins" + File.separator + "ToolStats" + File.separator + "config.yml");

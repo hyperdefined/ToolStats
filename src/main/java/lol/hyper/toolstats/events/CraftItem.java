@@ -121,7 +121,13 @@ public class CraftItem implements Listener {
         }
         // get the current time
         long timeCreated = System.currentTimeMillis();
-        Date finalDate = new Date(timeCreated);
+        Date finalDate;
+        if (toolStats.config.getBoolean("normalize-time-creation")) {
+            finalDate = toolStats.numberFormat.normalizeTime(timeCreated);
+            timeCreated = finalDate.getTime();
+        } else {
+            finalDate = new Date(timeCreated);
+        }
         PersistentDataContainer container = meta.getPersistentDataContainer();
 
         // if the item already has the tag
