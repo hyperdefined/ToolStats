@@ -30,6 +30,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -96,22 +97,45 @@ public class CreativeEvent implements Listener {
             return null;
         }
 
+        // get the current lore the item
+        List<Component> lore;
+        if (meta.hasLore()) {
+            lore = meta.lore();
+        } else {
+            lore = new ArrayList<>();
+        }
+
+        if (toolStats.configTools.checkConfig(itemStack.getType(), "spawned-in-on")) {
+            container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
+            container.set(toolStats.originType, PersistentDataType.INTEGER, 6);
+
+            String date = toolStats.numberFormat.formatDate(finalDate);
+            Component newLine = toolStats.configTools.formatLore("spawned-in.spawned-on", "{date}", date);
+            if (newLine == null) {
+                return null;
+            }
+            lore.add(newLine);
+            meta.lore(lore);
+        }
+
+        if (toolStats.configTools.checkConfig(itemStack.getType(), "spawned-in-by")) {
+            container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
+            container.set(toolStats.originType, PersistentDataType.INTEGER, 6);
+
+            Component newLine = toolStats.configTools.formatLore("spawned-in.spawned-by", "{player}", owner.getName());
+            if (newLine == null) {
+                return null;
+            }
+            lore.add(newLine);
+            meta.lore(lore);
+        }
+
         // if hash is enabled, add it
         if (toolStats.config.getBoolean("generate-hash-for-items")) {
             String hash = toolStats.hashMaker.makeHash(newSpawnedItem.getType(), owner.getUniqueId(), timeCreated);
             container.set(toolStats.hash, PersistentDataType.STRING, hash);
         }
 
-        // if spawned in is enabled, add it
-        if (toolStats.configTools.checkConfig(newSpawnedItem.getType(), "spawned-in")) {
-            container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
-            container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
-            container.set(toolStats.originType, PersistentDataType.INTEGER, 6);
-
-            String formattedDate = toolStats.numberFormat.formatDate(finalDate);
-            List<Component> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
-            meta.lore(newLore);
-        }
         newSpawnedItem.setItemMeta(meta);
         return newSpawnedItem;
     }

@@ -35,6 +35,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -103,13 +104,25 @@ public class PickupItem implements Listener {
             container.set(toolStats.hash, PersistentDataType.STRING, hash);
         }
 
+        // get the current lore the item
+        List<Component> lore;
+        if (meta.hasLore()) {
+            lore = meta.lore();
+        } else {
+            lore = new ArrayList<>();
+        }
+
         container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
         container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
         container.set(toolStats.originType, PersistentDataType.INTEGER, 4);
         container.remove(toolStats.newElytra);
+
         String formattedDate = toolStats.numberFormat.formatDate(finalDate);
-        List<Component> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
-        meta.lore(newLore);
+        Component dateCreatedLore = toolStats.configTools.formatLore("looted.found-on", "{date}", formattedDate);
+        Component itemOwnerLore = toolStats.configTools.formatLore("looted.found-by", "{player}", owner.getName());
+        lore.add(dateCreatedLore);
+        lore.add(itemOwnerLore);
+        meta.lore(lore);
         finalItem.setItemMeta(meta);
         return finalItem;
     }

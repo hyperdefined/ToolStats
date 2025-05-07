@@ -34,6 +34,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -88,7 +89,7 @@ public class PlayerFish implements Listener {
         ItemStack caughtItem = ((Item) event.getCaught()).getItemStack();
         Item caughtItemEntity = (Item) event.getCaught();
         if (toolStats.itemChecker.isValidItem(caughtItem.getType())) {
-            ItemStack newItem = addNewLore(caughtItem, player);
+            ItemStack newItem = addFishedOrigin(caughtItem, player);
             if (newItem != null) {
                 caughtItemEntity.setItemStack(newItem);
             }
@@ -102,7 +103,7 @@ public class PlayerFish implements Listener {
      * @param owner        The player who caught it.
      * @return A copy of the new item with lore.
      */
-    private ItemStack addNewLore(ItemStack originalItem, Player owner) {
+    private ItemStack addFishedOrigin(ItemStack originalItem, Player owner) {
         ItemStack newItem = originalItem.clone();
         ItemMeta meta = originalItem.getItemMeta();
         if (meta == null) {
@@ -112,26 +113,49 @@ public class PlayerFish implements Listener {
         Date finalDate = new Date(timeCreated);
         PersistentDataContainer container = meta.getPersistentDataContainer();
 
-        if (!toolStats.configTools.checkConfig(newItem.getType(), "fished-tag")) {
-            return null;
-        }
-
         if (container.has(toolStats.timeCreated, PersistentDataType.LONG) || container.has(toolStats.itemOwner, PersistentDataType.LONG)) {
             return null;
         }
 
-        // only make the hash if it's enabled
+        // get the current lore the item
+        List<Component> lore;
+        if (meta.hasLore()) {
+            lore = meta.lore();
+        } else {
+            lore = new ArrayList<>();
+        }
+
+        if (toolStats.configTools.checkConfig(newItem.getType(), "fished-on")) {
+            container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
+            container.set(toolStats.originType, PersistentDataType.INTEGER, 5);
+
+            String date = toolStats.numberFormat.formatDate(finalDate);
+            Component newLine = toolStats.configTools.formatLore("fished.caught-on", "{date}", date);
+            if (newLine == null) {
+                return null;
+            }
+            lore.add(newLine);
+            meta.lore(lore);
+        }
+
+        if (toolStats.configTools.checkConfig(newItem.getType(), "fished-by")) {
+            container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
+            container.set(toolStats.originType, PersistentDataType.INTEGER, 5);
+
+            Component newLine = toolStats.configTools.formatLore("fished.caught-by", "{player}", owner.getName());
+            if (newLine == null) {
+                return null;
+            }
+            lore.add(newLine);
+            meta.lore(lore);
+        }
+
+        // if hash is enabled, add it
         if (toolStats.config.getBoolean("generate-hash-for-items")) {
             String hash = toolStats.hashMaker.makeHash(newItem.getType(), owner.getUniqueId(), timeCreated);
             container.set(toolStats.hash, PersistentDataType.STRING, hash);
         }
 
-        container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
-        container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
-        container.set(toolStats.originType, PersistentDataType.INTEGER, 5);
-        String formattedDate = toolStats.numberFormat.formatDate(finalDate);
-        List<Component> newLore = toolStats.itemLore.addNewOwner(meta, owner.getName(), formattedDate);
-        meta.lore(newLore);
         newItem.setItemMeta(meta);
         return newItem;
     }

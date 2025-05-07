@@ -49,6 +49,11 @@ public class ConfigTools {
      * @return If we want to add data or not.
      */
     public boolean checkConfig(Material material, String configName) {
+        if (toolStats.config.getConfigurationSection("enabled." + configName) == null) {
+            toolStats.logger.warning("Missing config section for enabled" + configName);
+            return false;
+        }
+
         String itemName = material.toString().toLowerCase();
         String itemType = null;
         // hardcode these
@@ -75,7 +80,6 @@ public class ConfigTools {
         } else {
             itemType = itemName.substring(itemName.indexOf('_') + 1);
         }
-
         return switch (itemType) {
             case "pickaxe" -> toolStats.config.getBoolean("enabled." + configName + ".pickaxe");
             case "sword" -> toolStats.config.getBoolean("enabled." + configName + ".sword");

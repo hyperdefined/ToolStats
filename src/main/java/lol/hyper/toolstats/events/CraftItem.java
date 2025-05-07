@@ -139,12 +139,12 @@ public class CraftItem implements Listener {
         }
 
         // if creation date is enabled, add it
-        if (toolStats.configTools.checkConfig(itemStack.getType(), "created-date")) {
+        if (toolStats.configTools.checkConfig(itemStack.getType(), "crafted-on")) {
             container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
             container.set(toolStats.originType, PersistentDataType.INTEGER, 0);
 
             String date = toolStats.numberFormat.formatDate(finalDate);
-            Component newLine = toolStats.configTools.formatLore("created.created-on", "{date}", date);
+            Component newLine = toolStats.configTools.formatLore("crafted.crafted-on", "{date}", date);
             if (newLine == null) {
                 return null;
             }
@@ -153,11 +153,11 @@ public class CraftItem implements Listener {
         }
 
         // if creation owner is enabled, add it
-        if (toolStats.configTools.checkConfig(itemStack.getType(), "created-by")) {
+        if (toolStats.configTools.checkConfig(itemStack.getType(), "crafted-by")) {
             container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
             container.set(toolStats.originType, PersistentDataType.INTEGER, 0);
 
-            Component newLine = toolStats.configTools.formatLore("created.created-by", "{player}", owner.getName());
+            Component newLine = toolStats.configTools.formatLore("crafted.crafted-by", "{player}", owner.getName());
             if (newLine == null) {
                 return null;
             }

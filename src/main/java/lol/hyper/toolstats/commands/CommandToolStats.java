@@ -266,84 +266,92 @@ public class CommandToolStats implements TabExecutor {
             player.getInventory().setItem(slot, finalItem);
         }
 
-        if (toolStats.configTools.checkConfig(original.getType(), "created-by")) {
-            if (container.has(toolStats.itemOwner, new UUIDDataType())) {
-                UUID owner = container.get(toolStats.itemOwner, new UUIDDataType());
-                String ownerName = null;
-                // if we can read the current owner
-                if (owner != null) {
-                    OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(owner);
-                    ownerName = offlinePlayer.getName();
-                }
+        if (container.has(toolStats.itemOwner, new UUIDDataType())) {
+            UUID owner = container.get(toolStats.itemOwner, new UUIDDataType());
+            String ownerName = null;
+            // if we can read the current owner
+            if (owner != null) {
+                OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(owner);
+                ownerName = offlinePlayer.getName();
+            }
 
-                // if the owner's name is null for whatever reason, set the new owner
-                // to the current player running the command
-                if (ownerName == null) {
-                    player.sendMessage(Component.text("The owner of this item is null. Setting to " + player.getName() + ".", NamedTextColor.RED));
-                    ownerName = player.getName();
-                    container.set(toolStats.itemOwner, new UUIDDataType(), player.getUniqueId());
-                }
+            // if the owner's name is null for whatever reason, set the new owner
+            // to the current player running the command
+            if (ownerName == null) {
+                player.sendMessage(Component.text("The owner of this item is null. Setting to " + player.getName() + ".", NamedTextColor.RED));
+                ownerName = player.getName();
+                container.set(toolStats.itemOwner, new UUIDDataType(), player.getUniqueId());
+            }
 
-                // show how the item was created based on the previous lore
-                switch (origin) {
-                    case 0: {
-                        lore.add(toolStats.configTools.formatLore("created.created-by", "{player}", ownerName));
-                        break;
+            // show how the item was created based on the previous lore
+            switch (origin) {
+                case 0: {
+                    if (toolStats.configTools.checkConfig(original.getType(), "crafted-by")) {
+                        lore.add(toolStats.configTools.formatLore("crafted.crafted-by", "{player}", ownerName));
                     }
-                    case 2: {
+                    break;
+                }
+                case 2: {
+                    if (toolStats.configTools.checkConfig(original.getType(), "looted-by")) {
                         lore.add(toolStats.configTools.formatLore("looted.looted-by", "{player}", ownerName));
-                        break;
                     }
-                    case 3: {
+                    break;
+                }
+                case 3: {
+                    if (toolStats.configTools.checkConfig(original.getType(), "traded-by")) {
                         lore.add(toolStats.configTools.formatLore("traded.traded-by", "{player}", ownerName));
-                        break;
                     }
-                    case 4: {
-                        lore.add(toolStats.configTools.formatLore("looted.found-by", "{player}", ownerName));
-                        break;
-                    }
-                    case 5: {
+                    break;
+                }
+                case 5: {
+                    if (toolStats.configTools.checkConfig(original.getType(), "fished-by")) {
                         lore.add(toolStats.configTools.formatLore("fished.caught-by", "{player}", ownerName));
-                        break;
                     }
-                    case 6: {
+                    break;
+                }
+                case 6: {
+                    if (toolStats.configTools.checkConfig(original.getType(), "spawned-in-by")) {
                         lore.add(toolStats.configTools.formatLore("spawned-in.spawned-by", "{player}", ownerName));
-                        break;
                     }
+                    break;
                 }
             }
         }
-        if (toolStats.configTools.checkConfig(original.getType(), "created-date")) {
-            if (container.has(toolStats.timeCreated, PersistentDataType.LONG)) {
-                Long time = container.get(toolStats.timeCreated, PersistentDataType.LONG);
-                if (time != null) {
-                    String date = toolStats.numberFormat.formatDate(new Date(time));
-                    // show how when the item was created based on the previous lore
-                    switch (origin) {
-                        case 0: {
-                            lore.add(toolStats.configTools.formatLore("created.created-on", "{date}", date));
-                            break;
+        if (container.has(toolStats.timeCreated, PersistentDataType.LONG)) {
+            Long time = container.get(toolStats.timeCreated, PersistentDataType.LONG);
+            if (time != null) {
+                String date = toolStats.numberFormat.formatDate(new Date(time));
+                // show how when the item was created based on the previous lore
+                switch (origin) {
+                    case 0: {
+                        if (toolStats.configTools.checkConfig(original.getType(), "crafted-on")) {
+                            lore.add(toolStats.configTools.formatLore("crafted.crafted-on", "{date}", date));
                         }
-                        case 2: {
+                        break;
+                    }
+                    case 2: {
+                        if (toolStats.configTools.checkConfig(original.getType(), "looted-on")) {
                             lore.add(toolStats.configTools.formatLore("looted.looted-on", "{date}", date));
-                            break;
                         }
-                        case 3: {
+                        break;
+                    }
+                    case 3: {
+                        if (toolStats.configTools.checkConfig(original.getType(), "traded-on")) {
                             lore.add(toolStats.configTools.formatLore("traded.traded-on", "{date}", date));
-                            break;
                         }
-                        case 4: {
-                            lore.add(toolStats.configTools.formatLore("looted.found-on", "{date}", date));
-                            break;
-                        }
-                        case 5: {
+                        break;
+                    }
+                    case 5: {
+                        if (toolStats.configTools.checkConfig(original.getType(), "fished-on")) {
                             lore.add(toolStats.configTools.formatLore("fished.caught-on", "{date}", date));
-                            break;
                         }
-                        case 6: {
+                        break;
+                    }
+                    case 6: {
+                        if (toolStats.configTools.checkConfig(original.getType(), "spawned-in-on")) {
                             lore.add(toolStats.configTools.formatLore("spawned-in.spawned-on", "{date}", date));
-                            break;
                         }
+                        break;
                     }
                 }
             }

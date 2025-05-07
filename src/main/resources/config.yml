@@ -66,8 +66,8 @@ tokens:
       levels: 1
 
 enabled:
-  # Will show ownership of items when they are created/found.
-  created-by:
+  # Will show "Crafted by <player>"
+  crafted-by:
     pickaxe: true
     sword: true
     shovel: true
@@ -78,8 +78,8 @@ enabled:
     armor: true
     mace: true
     fishing-rod: true
-  # Will show time the item is created
-  created-date:
+  # Will show "Crafted on <date>"
+  crafted-on:
     pickaxe: true
     sword: true
     shovel: true
@@ -91,7 +91,18 @@ enabled:
     mace: true
     fishing-rod: true
   # Will show "Fished by <player>"
-  fished-tag:
+  fished-by:
+    pickaxe: true
+    sword: true
+    shovel: true
+    axe: true
+    hoe: true
+    shears: true
+    bow: true
+    armor: true
+    fishing-rod: true
+  # Will show "Fished on <date>"
+  fished-on:
     pickaxe: true
     sword: true
     shovel: true
@@ -102,7 +113,7 @@ enabled:
     armor: true
     fishing-rod: true
   # Will show "Found by <player>"
-  looted-tag:
+  looted-by:
     pickaxe: true
     sword: true
     shovel: true
@@ -112,8 +123,30 @@ enabled:
     bow: true
     armor: true
     fishing-rod: true
-  # Will show "Trade by <player>"
-  traded-tag:
+  # Will show "Found on <date>"
+  looted-on:
+    pickaxe: true
+    sword: true
+    shovel: true
+    axe: true
+    hoe: true
+    shears: true
+    bow: true
+    armor: true
+    fishing-rod: true
+  # Will show "Traded by <player>"
+  traded-by:
+    pickaxe: true
+    sword: true
+    shovel: true
+    axe: true
+    hoe: true
+    shears: true
+    bow: true
+    armor: true
+    fishing-rod: true
+  # Will show "Traded on <date>"
+  traded-on:
     pickaxe: true
     sword: true
     shovel: true
@@ -148,7 +181,19 @@ enabled:
     hoe: true
     shears: true
   # Will show "Spawned in by <player>"
-  spawned-in:
+  spawned-in-by:
+    pickaxe: true
+    sword: true
+    shovel: true
+    axe: true
+    hoe: true
+    shears: true
+    bow: true
+    armor: true
+    mace: true
+    fishing-rod: true
+  # Will show "Spawned in on <date>"
+  spawned-in-on:
     pickaxe: true
     sword: true
     shovel: true
@@ -169,9 +214,9 @@ enabled:
   crops-harvested: true
 
 messages:
-  created:
-    created-by: "&7Crafted by: &8{player}"
-    created-on: "&7Crafted on: &8{date}"
+  crafted:
+    crafted-by: "&7Crafted by: &8{player}"
+    crafted-on: "&7Crafted on: &8{date}"
   fished:
     caught-by: "&7Caught by: &8{player}"
     caught-on: "&7Caught on: &8{date}"
