@@ -54,7 +54,7 @@ public class PickupItem implements Listener {
         }
         Entity entity = event.getEntity();
         if (entity instanceof Player player) {
-            if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+            if (player.getGameMode() == GameMode.CREATIVE && !toolStats.config.getBoolean("allow-creative")) {
                 return;
             }
             Item item = event.getItem();

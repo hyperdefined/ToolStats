@@ -156,7 +156,7 @@ public class EntityDamage implements Listener {
 
         // player is taking damage
         if (mobBeingAttacked instanceof Player playerTakingDamage) {
-            if (playerTakingDamage.getGameMode() == GameMode.CREATIVE || playerTakingDamage.getGameMode() == GameMode.SPECTATOR) {
+            if (playerTakingDamage.getGameMode() == GameMode.CREATIVE && !toolStats.config.getBoolean("allow-creative")) {
                 return;
             }
             updateArmorDamage(playerTakingDamage.getInventory(), event.getFinalDamage());

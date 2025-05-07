@@ -271,4 +271,7 @@ generate-hash-for-items: false
 # This makes dates for items more "normalized" instead of being at different times.
 normalize-time-creation: false
 
+# Allows stats and origins to be tracked if the player is in creative mode.
+allow-creative: false
+
 config-version: 12

@@ -46,7 +46,7 @@ public class ShootBow implements Listener {
             return;
         }
 
-        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.ADVENTURE) {
+        if (player.getGameMode() == GameMode.CREATIVE && !toolStats.config.getBoolean("allow-creative")) {
             return;
         }
 

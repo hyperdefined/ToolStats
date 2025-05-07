@@ -50,7 +50,7 @@ public class CraftItem implements Listener {
             return;
         }
         Player player = (Player) event.getWhoClicked();
-        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+        if (player.getGameMode() == GameMode.CREATIVE && !toolStats.config.getBoolean("allow-creative")) {
             return;
         }
         ItemStack craftedItem = event.getCurrentItem();

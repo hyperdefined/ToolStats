@@ -48,7 +48,7 @@ public class BlockBreak implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+        if (player.getGameMode() == GameMode.CREATIVE && !toolStats.config.getBoolean("allow-creative")) {
             return;
         }
         PlayerInventory inventory = player.getInventory();

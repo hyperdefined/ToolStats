@@ -58,7 +58,7 @@ public class PlayerInteract implements Listener {
         }
 
         Player player = event.getPlayer();
-        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+        if (player.getGameMode() == GameMode.CREATIVE && !toolStats.config.getBoolean("allow-creative")) {
             return;
         }
         // store when a player opens a chest
@@ -72,7 +72,7 @@ public class PlayerInteract implements Listener {
     public void onInteract(PlayerInteractEntityEvent event) {
         Entity clicked = event.getRightClicked();
         Player player = event.getPlayer();
-        if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
+        if (player.getGameMode() == GameMode.CREATIVE && !toolStats.config.getBoolean("allow-creative")) {
             return;
         }
         // store when a player opens a minecart
