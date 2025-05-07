@@ -30,6 +30,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -84,19 +86,44 @@ public class EntityDeath implements Listener {
             return null;
         }
 
-        if (!toolStats.config.getBoolean("enabled.dropped-by")) {
-            return null;
+        long timeCreated = System.currentTimeMillis();
+        Date finalDate;
+        if (toolStats.config.getBoolean("normalize-time-creation")) {
+            finalDate = toolStats.numberFormat.normalizeTime(timeCreated);
+            timeCreated = finalDate.getTime();
+        } else {
+            finalDate = new Date(timeCreated);
         }
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
-        container.set(toolStats.originType, PersistentDataType.INTEGER, 1);
         String mobName = toolStats.config.getString("messages.mob." + entity.getType());
         if (mobName == null) {
             mobName = entity.getName();
         }
-        Component newLine = toolStats.configTools.formatLore("dropped-by", "{name}", mobName);
-        List<Component> newLore = toolStats.itemLore.addItemLore(meta, newLine);
-        meta.lore(newLore);
+
+        List<Component> lore;
+        if (meta.hasLore()) {
+            lore = meta.lore();
+        } else {
+            lore = new ArrayList<>();
+        }
+
+        if (toolStats.config.getBoolean("enabled.dropped-on")) {
+            container.set(toolStats.originType, PersistentDataType.INTEGER, 1);
+            container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
+            String date = toolStats.numberFormat.formatDate(finalDate);
+            Component droppedOn = toolStats.configTools.formatLore("dropped-on", "{date}", date);
+            lore.add(droppedOn);
+        }
+
+        if (toolStats.config.getBoolean("enabled.dropped-by")) {
+            container.set(toolStats.originType, PersistentDataType.INTEGER, 1);
+            container.set(toolStats.droppedBy, PersistentDataType.STRING, mobName);
+            Component droppedBy = toolStats.configTools.formatLore("dropped-by", "{name}", mobName);
+            lore.add(droppedBy);
+        }
+
+        meta.lore(lore);
         newItem.setItemMeta(meta);
         return newItem;
     }

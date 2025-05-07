@@ -266,6 +266,17 @@ public class CommandToolStats implements TabExecutor {
             player.getInventory().setItem(slot, finalItem);
         }
 
+        if (container.has(toolStats.droppedBy, PersistentDataType.STRING)) {
+            if (toolStats.config.getBoolean("enabled.dropped-by")) {
+                if (container.has(toolStats.droppedBy)) {
+                    String droppedBy = container.get(toolStats.droppedBy, PersistentDataType.STRING);
+                    lore.add(toolStats.configTools.formatLore("dropped-by", "{name}", droppedBy));
+                } else {
+                    player.sendMessage(Component.text("Unable to set 'dropped-by', as this item has no record of it."));
+                }
+            }
+        }
+
         if (container.has(toolStats.itemOwner, new UUIDDataType())) {
             UUID owner = container.get(toolStats.itemOwner, new UUIDDataType());
             String ownerName = null;
@@ -326,6 +337,12 @@ public class CommandToolStats implements TabExecutor {
                     case 0: {
                         if (toolStats.configTools.checkConfig(original.getType(), "crafted-on")) {
                             lore.add(toolStats.configTools.formatLore("crafted.crafted-on", "{date}", date));
+                        }
+                        break;
+                    }
+                    case 1: {
+                        if (toolStats.config.getBoolean("enabled.dropped-on")) {
+                            lore.add(toolStats.configTools.formatLore("dropped-on", "{date}", date));
                         }
                         break;
                     }

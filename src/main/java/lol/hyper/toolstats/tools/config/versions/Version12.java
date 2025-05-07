@@ -80,6 +80,13 @@ public class Version12 {
         toolStats.config.set("enabled.traded-tag", null);
         toolStats.config.set("enabled.spawned-in", null);
 
+        toolStats.logger.info("Adding enabled.dropped-on");
+        boolean droppedBy = toolStats.config.getBoolean("enabled.dropped-by");
+        toolStats.config.set("enabled.dropped-on", droppedBy);
+
+        toolStats.logger.info("Adding messages.dropped-on");
+        toolStats.config.set("messages.dropped-on", "&7Dropped on: &8{date}");
+
 
         // rename crafted to crafted here
         // copy the old ones first

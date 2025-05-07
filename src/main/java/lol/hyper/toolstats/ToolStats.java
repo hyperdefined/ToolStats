@@ -94,6 +94,10 @@ public final class ToolStats extends JavaPlugin {
      */
     public final NamespacedKey arrowsShot = new NamespacedKey(this, "arrows-shot");
     /**
+     * Key for arrows shot.
+     */
+    public final NamespacedKey droppedBy = new NamespacedKey(this, "dropped-by");
+    /**
      * Key for tracking flight time.
      */
     public final NamespacedKey flightTime = new NamespacedKey(this, "flightTime");

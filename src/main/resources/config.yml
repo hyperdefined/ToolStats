@@ -208,6 +208,7 @@ enabled:
   sheep-sheared: true
   armor-damage: true
   dropped-by: true
+  dropped-on: true
   elytra-tag: true
   arrows-shot: true
   flight-time: true
@@ -238,7 +239,8 @@ messages:
   blocks-mined: "&7Blocks mined: &8{blocks}"
   crops-harvested: "&7Crops harvested: &8{crops}"
   sheep-sheared: "&7Sheep sheared: &8{sheep}"
-  dropped-by: "&7Dropped by: &8{name}" # name will be player/mob name
+  dropped-by: "&7Dropped by: &8{name}" # name will be mob name
+  dropped-on: "&7Dropped on: &8{date}"
   damage-taken: "&7Damage taken: &8{damage}"
   arrows-shot: "&7Arrows shot: &8{arrows}"
   flight-time: "&7Flight time: &8{years}y {months}m {days}d {hours}h {minutes}m {seconds}s"
