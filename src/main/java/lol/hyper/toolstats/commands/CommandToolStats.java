@@ -775,6 +775,7 @@ public class CommandToolStats implements TabExecutor {
         }
         editedItem.setItemMeta(editedItemMeta);
         player.getInventory().setItemInMainHand(editedItem);
+        player.sendMessage(Component.text("Removed stat " + stat + " for held item!", NamedTextColor.GREEN));
     }
 
     /**
@@ -1052,6 +1053,7 @@ public class CommandToolStats implements TabExecutor {
         }
         editedItem.setItemMeta(editedItemMeta);
         player.getInventory().setItemInMainHand(editedItem);
+        player.sendMessage(Component.text("Updated stat " + stat + " for held item!", NamedTextColor.GREEN));
     }
 
     @Nullable
