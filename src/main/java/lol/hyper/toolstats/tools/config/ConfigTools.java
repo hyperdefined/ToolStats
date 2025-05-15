@@ -245,7 +245,7 @@ public class ConfigTools {
         List<Component> finalLore = new ArrayList<>();
         for (String line : raw) {
             if (line.contains("{levels}")) {
-                Integer levels = toolStats.config.getInt("tokes.data." + tokenType + ".levels");
+                Integer levels = toolStats.config.getInt("tokens.data." + tokenType + ".levels");
                 // will return 0 if it doesn't exist
                 if (levels != 0) {
                     line = line.replace("{levels}", String.valueOf(levels));

@@ -176,6 +176,10 @@ public class TokenData {
         tokenMeta.displayName(title);
         tokenMeta.lore(lore);
 
+        // set the PDC
+        tokenData.set(toolStats.tokenType, PersistentDataType.STRING, tokenType);
+        token.setItemMeta(tokenMeta);
+
         // set the custom model data
         if (tokenConfig.getBoolean("custom-model-data.enabled")) {
             String type = tokenConfig.getString("custom-model-data.type");
@@ -194,36 +198,26 @@ public class TokenData {
             }
         }
 
-        // set the PDC
-        tokenData.set(toolStats.tokenType, PersistentDataType.STRING, tokenType);
-        token.setItemMeta(tokenMeta);
         return token;
     }
 
     private CustomModelData setData(String type, Object data) {
         switch (type.toLowerCase(Locale.ROOT)) {
             case "float": {
-                Float f;
-                if (data instanceof Float) {
-                    f = (Float) data;
-                } else {
-                    toolStats.logger.info(type + " is not a valid float!");
+                float f;
+                try {
+                    f = Float.parseFloat(data.toString());
+                } catch (NumberFormatException e) {
+                    toolStats.logger.info(data + " is not a valid float!");
                     return null;
                 }
                 return CustomModelData.customModelData().addFloat(f).build();
             }
             case "string": {
-                String s;
-                if (data instanceof String) {
-                    s = (String) data;
-                } else {
-                    toolStats.logger.info(type + " is not a valid string!");
-                    return null;
-                }
-                return CustomModelData.customModelData().addString(s).build();
+                return CustomModelData.customModelData().addString(data.toString()).build();
             }
             default: {
-                toolStats.logger.info(type + " is not a valid data type!");
+                toolStats.logger.info(data + " is not a valid data type!");
                 return null;
             }
         }
