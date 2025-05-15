@@ -40,7 +40,7 @@ public class PrepareCraft implements Listener {
         // get the items in the crafting grid
         ItemStack[] grid = event.getInventory().getMatrix();
         for (ItemStack item : grid) {
-            if (item == null || item.getType() != Material.PAPER) {
+            if (item == null) {
                 continue;
             }
             ItemMeta meta = item.getItemMeta();

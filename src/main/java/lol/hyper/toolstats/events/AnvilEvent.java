@@ -57,7 +57,6 @@ public class AnvilEvent implements Listener {
         }
 
         Material firstSlotMaterial = firstSlot.getType();
-        Material secondSlotMaterial = secondSlot.getType();
 
         // make sure the first item is a valid item
         if (!toolStats.itemChecker.isValidItem(firstSlotMaterial)) {
@@ -67,7 +66,7 @@ public class AnvilEvent implements Listener {
         PersistentDataContainer secondSlotContainer = secondSlot.getItemMeta().getPersistentDataContainer();
 
         // make sure the 2nd item is one of ours
-        if (secondSlotMaterial != Material.PAPER || !secondSlotContainer.has(toolStats.tokenType, PersistentDataType.STRING)) {
+        if (!secondSlotContainer.has(toolStats.tokenType, PersistentDataType.STRING)) {
             return;
         }
 
