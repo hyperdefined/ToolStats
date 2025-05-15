@@ -10,6 +10,7 @@ tokens:
         - "&8Combine with a melee or ranged weapon in an anvil to track player kills."
         - "&8Uses &7{levels} &8level."
       levels: 1
+      material: PAPER
       custom-model-data:
         enabled: false
         type: float
@@ -20,6 +21,7 @@ tokens:
         - "&8Combine with a melee or ranged weapon in an anvil to track mob kills."
         - "&8Uses &7{levels} &8level."
       levels: 1
+      material: PAPER
       custom-model-data:
         enabled: false
         type: float
@@ -30,6 +32,7 @@ tokens:
         - "&8Combine with a pickaxe, axe, shovel, or shears in an anvil to track blocks mined."
         - "&8Uses &7{levels} &8level."
       levels: 1
+      material: PAPER
       custom-model-data:
         enabled: false
         type: float
@@ -40,6 +43,7 @@ tokens:
         - "&8Combine with a hoe in an anvil to track crops broken."
         - "&8Uses &7{levels} &8level."
       levels: 1
+      material: PAPER
       custom-model-data:
         enabled: false
         type: float
@@ -50,6 +54,7 @@ tokens:
         - "&8Combine with a fishing rod in an anvil to track fish caught."
         - "&8Uses &7{levels} &8level."
       levels: 1
+      material: PAPER
       custom-model-data:
         enabled: false
         type: float
@@ -60,6 +65,7 @@ tokens:
         - "&8Combine with shears in an anvil to track sheep sheared."
         - "&8Uses &7{levels} &8level."
       levels: 1
+      material: PAPER
       custom-model-data:
         enabled: false
         type: float
@@ -70,6 +76,7 @@ tokens:
         - "&8Combine with an armor piece in an anvil to track damage taken."
         - "&8Uses &7{levels} &8level."
       levels: 1
+      material: PAPER
       custom-model-data:
         enabled: false
         type: float
@@ -80,6 +87,7 @@ tokens:
         - "&8Combine with a melee or ranged weapon in an anvil to track damage done."
         - "&8Uses &7{levels} &8level."
       levels: 1
+      material: PAPER
       custom-model-data:
         enabled: false
         type: float
@@ -90,6 +98,7 @@ tokens:
         - "&8Combine with a bow or crossbow in an anvil to track arrows shot."
         - "&8Uses &7{levels} &8level."
       levels: 1
+      material: PAPER
       custom-model-data:
         enabled: false
         type: float
@@ -100,6 +109,7 @@ tokens:
         - "&8Combine with an elytra in an anvil to track flight time."
         - "&8Uses &7{levels} &8level."
       levels: 1
+      material: PAPER
       custom-model-data:
         enabled: false
         type: float
@@ -110,6 +120,7 @@ tokens:
         - "&8Combine in an anvil with to reset ALL stats for this item. Tokens on this item stay."
         - "&8Uses &7{levels} &8level."
       levels: 1
+      material: PAPER
       custom-model-data:
         enabled: false
         type: float
@@ -120,6 +131,7 @@ tokens:
         - "&8Combine in an anvil with to REMOVE ALL stats and tokens for this item."
         - "&8Uses &7{levels} &8level."
       levels: 1
+      material: PAPER
       custom-model-data:
         enabled: false
         type: float
