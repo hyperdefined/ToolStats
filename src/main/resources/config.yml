@@ -346,4 +346,4 @@ normalize-time-creation: false
 # Allows stats and origins to be tracked if the player is in creative mode.
 allow-creative: false
 
-config-version: 12
+config-version: 13

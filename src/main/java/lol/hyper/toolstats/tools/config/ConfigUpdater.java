@@ -31,40 +31,15 @@ public class ConfigUpdater {
     public void updateConfig() {
         int version = toolStats.config.getInt("config-version");
 
-        // Version 5 to 6
-        if (version == 5) {
-            Version6 version6 = new Version6(toolStats);
-            version6.update();
-        }
-        // Version 6 to 7
-        if (version == 6) {
-            Version7 version7 = new Version7(toolStats);
-            version7.update();
-        }
-        // Version 7 to 8
-        if (version == 7) {
-            Version8 version8 = new Version8(toolStats);
-            version8.update();
-        }
-        // Version 8 to 9
-        if (version == 8) {
-            Version9 version9 = new Version9(toolStats);
-            version9.update();
-        }
-        // Version 9 to 10
-        if (version == 9) {
-            Version10 version10 = new Version10(toolStats);
-            version10.update();
-        }
-        // Version 10 to 11
-        if (version == 10) {
-            Version11 version11 = new Version11(toolStats);
-            version11.update();
-        }
-        // Version 11 to 12
-        if (version == 11) {
-            Version12 version12 = new Version12(toolStats);
-            version12.update();
+        switch (version) {
+            case 5 -> new Version6(toolStats).update(); // 5 to 6
+            case 6 -> new Version7(toolStats).update(); // 6 to 7
+            case 7 -> new Version8(toolStats).update(); // 7 to 8
+            case 8 -> new Version9(toolStats).update(); // 8 to 9
+            case 9 -> new Version10(toolStats).update(); // 9 to 10
+            case 10 -> new Version11(toolStats).update(); // 10 to 11
+            case 11 -> new Version12(toolStats).update(); // 11 to 12
+            case 12 -> new Version13(toolStats).update(); // 12 to 13
         }
     }
 }
