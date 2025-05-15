@@ -18,7 +18,6 @@
 package lol.hyper.toolstats.tools.config.versions;
 
 import lol.hyper.toolstats.ToolStats;
-import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.File;
 import java.io.IOException;

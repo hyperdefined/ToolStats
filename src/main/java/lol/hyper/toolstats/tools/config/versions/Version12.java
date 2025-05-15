@@ -17,16 +17,11 @@
 
 package lol.hyper.toolstats.tools.config.versions;
 
-import it.unimi.dsi.fastutil.Pair;
 import lol.hyper.toolstats.ToolStats;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.Deque;
 
 public class Version12 {
 
