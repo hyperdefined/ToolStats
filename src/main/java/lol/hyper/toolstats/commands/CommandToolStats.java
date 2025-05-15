@@ -30,7 +30,6 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -64,8 +63,8 @@ public class CommandToolStats implements TabExecutor {
                 if (sender.hasPermission("toolstats.reload")) {
                     boolean oldTokensStatus = toolStats.tokens;
                     toolStats.loadConfig();
-                    toolStats.tokenCrafting.getRecipes().clear();
-                    toolStats.tokenCrafting.setup();
+                    toolStats.tokenData.getRecipes().clear();
+                    toolStats.tokenData.setup();
                     // if the server went from tokens off -> on, add the recipes
                     // if the server went from tokens on -> off, remove the recipes
                     if (toolStats.tokens != oldTokensStatus) {
@@ -73,14 +72,14 @@ public class CommandToolStats implements TabExecutor {
                         if (toolStats.tokens) {
                             sender.sendMessage(Component.text("It looks like you ENABLED the token system. While this is fine, it can break. Please restart your server instead.", NamedTextColor.YELLOW));
                             if (toolStats.config.getBoolean("tokens.craft-token")) {
-                                for (ShapedRecipe recipe : toolStats.tokenCrafting.getRecipes()) {
+                                for (ShapedRecipe recipe : toolStats.tokenData.getRecipes()) {
                                     Bukkit.addRecipe(recipe);
                                 }
                             }
                         } else {
                             // tokens are now disabled
                             sender.sendMessage(Component.text("It looks like you DISABLED the token system. While this is fine, it can break. Please restart your server instead.", NamedTextColor.YELLOW));
-                            for (ShapedRecipe recipe : toolStats.tokenCrafting.getRecipes()) {
+                            for (ShapedRecipe recipe : toolStats.tokenData.getRecipes()) {
                                 Bukkit.removeRecipe(recipe.getKey());
                             }
                         }
@@ -172,7 +171,7 @@ public class CommandToolStats implements TabExecutor {
                     return true;
                 }
                 String tokenType = args[2];
-                if (!toolStats.tokenCrafting.getTokenTypes().contains(tokenType)) {
+                if (!toolStats.tokenData.getTokenTypes().contains(tokenType)) {
                     sender.sendMessage(Component.text("Invalid token type.", NamedTextColor.RED));
                     return true;
                 }
@@ -458,80 +457,9 @@ public class CommandToolStats implements TabExecutor {
      * @param tokenType The token type.
      */
     private void giveToken(Player target, String tokenType, int amount) {
-        switch (tokenType) {
-            case "crops-mined": {
-                ItemStack itemStack = toolStats.tokenItems.cropsMined();
-                itemStack.setAmount(amount);
-                target.getInventory().addItem(itemStack);
-                break;
-            }
-            case "blocks-mined": {
-                ItemStack itemStack = toolStats.tokenItems.blocksMined();
-                itemStack.setAmount(amount);
-                target.getInventory().addItem(itemStack);
-                break;
-            }
-            case "damage-taken": {
-                ItemStack itemStack = toolStats.tokenItems.damageTaken();
-                itemStack.setAmount(amount);
-                target.getInventory().addItem(itemStack);
-                break;
-            }
-            case "damage-done": {
-                ItemStack itemStack = toolStats.tokenItems.damageDone();
-                itemStack.setAmount(amount);
-                target.getInventory().addItem(itemStack);
-                break;
-            }
-            case "mob-kills": {
-                ItemStack itemStack = toolStats.tokenItems.mobKills();
-                itemStack.setAmount(amount);
-                target.getInventory().addItem(itemStack);
-                break;
-            }
-            case "player-kills": {
-                ItemStack itemStack = toolStats.tokenItems.playerKills();
-                itemStack.setAmount(amount);
-                target.getInventory().addItem(itemStack);
-                break;
-            }
-            case "arrows-shot": {
-                ItemStack itemStack = toolStats.tokenItems.arrowsShot();
-                itemStack.setAmount(amount);
-                target.getInventory().addItem(itemStack);
-                break;
-            }
-            case "sheep-sheared": {
-                ItemStack itemStack = toolStats.tokenItems.sheepSheared();
-                itemStack.setAmount(amount);
-                target.getInventory().addItem(itemStack);
-                break;
-            }
-            case "flight-time": {
-                ItemStack itemStack = toolStats.tokenItems.flightTime();
-                itemStack.setAmount(amount);
-                target.getInventory().addItem(itemStack);
-                break;
-            }
-            case "fish-caught": {
-                ItemStack itemStack = toolStats.tokenItems.fishCaught();
-                itemStack.setAmount(amount);
-                target.getInventory().addItem(itemStack);
-                break;
-            }
-            case "reset": {
-                ItemStack itemStack = toolStats.tokenItems.resetToken();
-                itemStack.setAmount(amount);
-                target.getInventory().addItem(itemStack);
-                break;
-            }
-            case "remove": {
-                ItemStack itemStack = toolStats.tokenItems.removeToken();
-                itemStack.setAmount(amount);
-                target.getInventory().addItem(itemStack);
-                break;
-            }
-        }
+        ItemStack token = toolStats.tokenData.createToken(tokenType);
+        token.setAmount(amount);
+        target.getInventory().addItem(token);
     }
 
     /**
@@ -1154,20 +1082,20 @@ public class CommandToolStats implements TabExecutor {
         }
         if (args.length == 2 && args[0].equalsIgnoreCase("edit") && sender.hasPermission("toolstats.edit")) {
             // yes I am lazy
-            return toolStats.tokenCrafting.getTokenTypes().stream()
+            return toolStats.tokenData.getTokenTypes().stream()
                     .filter(s -> !s.equals("remove") && !s.equals("reset"))
                     .map(s -> s.equals("crops-mined") ? "crops-harvested" : s)
                     .collect(Collectors.toList());
         }
         if (args.length == 2 && args[0].equalsIgnoreCase("remove") && sender.hasPermission("toolstats.remove")) {
             // yes I am lazy
-            return toolStats.tokenCrafting.getTokenTypes().stream()
+            return toolStats.tokenData.getTokenTypes().stream()
                     .filter(s -> !s.equals("remove") && !s.equals("reset"))
                     .map(s -> s.equals("crops-mined") ? "crops-harvested" : s)
                     .collect(Collectors.toList());
         }
         if (args.length == 3 && args[0].equalsIgnoreCase("givetokens") && sender.hasPermission("toolstats.givetokens")) {
-            return toolStats.tokenCrafting.getTokenTypes();
+            return toolStats.tokenData.getTokenTypes();
         }
 
         return null;

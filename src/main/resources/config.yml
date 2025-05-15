@@ -9,61 +9,109 @@ tokens:
       lore:
         - "&8Combine with a melee or ranged weapon in an anvil to track player kills."
       levels: 1
+      custom-model-data:
+        enabled: false
+        type: float
+        value: 1001
     mob-kills:
       title: "&7ToolStats: &8Mob Kills Token"
       lore:
         - "&8Combine with a melee or ranged weapon in an anvil to track mob kills."
       levels: 1
+      custom-model-data:
+        enabled: false
+        type: float
+        value: 1001
     blocks-mined:
       title: "&7ToolStats: &8Blocks Mined Token"
       lore:
         - "&8Combine with a pickaxe, axe, shovel, or shears in an anvil to track blocks mined."
       levels: 1
+      custom-model-data:
+        enabled: false
+        type: float
+        value: 1001
     crops-mined:
       title: "&7ToolStats: &8Crops Mined Token"
       lore:
         - "&8Combine with a hoe in an anvil to track crops broken."
       levels: 1
+      custom-model-data:
+        enabled: false
+        type: float
+        value: 1001
     fish-caught:
       title: "&7ToolStats: &8Fish Caught Token"
       lore:
         - "&8Combine with a fishing rod in an anvil to track fish caught."
       levels: 1
+      custom-model-data:
+        enabled: false
+        type: float
+        value: 1001
     sheep-sheared:
       title: "&7ToolStats: &8Sheep Sheared Token"
       lore:
         - "&8Combine with shears in an anvil to track sheep sheared."
       levels: 1
+      custom-model-data:
+        enabled: false
+        type: float
+        value: 1001
     damage-taken:
       title: "&7ToolStats: &8Damage Taken Token"
       lore:
         - "&8Combine with an armor piece in an anvil to track damage taken."
       levels: 1
+      custom-model-data:
+        enabled: false
+        type: float
+        value: 1001
     damage-done:
       title: "&7ToolStats: &8Damage Done Token"
       lore:
         - "&8Combine with a melee or ranged weapon in an anvil to track damage done."
       levels: 1
+      custom-model-data:
+        enabled: false
+        type: float
+        value: 1001
     arrows-shot:
       title: "&7ToolStats: &8Arrows Shot Token"
       lore:
         - "&8Combine with a bow or crossbow in an anvil to track arrows shot."
       levels: 1
+      custom-model-data:
+        enabled: false
+        type: float
+        value: 1001
     flight-time:
       title: "&7ToolStats: &8Flight Time Token"
       lore:
         - "&8Combine with an elytra in an anvil to track flight time."
       levels: 1
+      custom-model-data:
+        enabled: false
+        type: float
+        value: 1001
     reset:
       title: "&7ToolStats: &8Reset Token"
       lore:
         - "&8Combine in an anvil with to reset ALL stats for this item. Tokens on this item stay."
       levels: 1
+      custom-model-data:
+        enabled: false
+        type: float
+        value: 1001
     remove:
       title: "&7ToolStats: &8Remove Token"
       lore:
         - "&8Combine in an anvil with to REMOVE ALL stats and tokens for this item."
       levels: 1
+      custom-model-data:
+        enabled: false
+        type: float
+        value: 1001
 
 enabled:
   # Will show "Crafted by <player>"

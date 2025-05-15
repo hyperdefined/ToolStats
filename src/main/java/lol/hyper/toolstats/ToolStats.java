@@ -25,7 +25,6 @@ import lol.hyper.toolstats.events.*;
 import lol.hyper.toolstats.tools.*;
 import lol.hyper.toolstats.tools.config.ConfigTools;
 import lol.hyper.toolstats.tools.config.ConfigUpdater;
-import lol.hyper.toolstats.tools.config.TokenItems;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -150,8 +149,7 @@ public final class ToolStats extends JavaPlugin {
     public ItemChecker itemChecker;
     public ShootBow shootBow;
     public ConfigTools configTools;
-    public TokenItems tokenItems;
-    public TokenCrafting tokenCrafting;
+    public TokenData tokenData;
     public AnvilEvent anvilEvent;
     public PrepareCraft prepareCraft;
 
@@ -164,10 +162,9 @@ public final class ToolStats extends JavaPlugin {
 
         loadConfig();
         configTools = new ConfigTools(this);
-        tokenItems = new TokenItems(this);
-        tokenCrafting = new TokenCrafting(this);
-        tokenCrafting.setup();
-        for (ShapedRecipe recipe : tokenCrafting.getRecipes()) {
+        tokenData = new TokenData(this);
+        tokenData.setup();
+        for (ShapedRecipe recipe : tokenData.getRecipes()) {
             if (tokens && config.getBoolean("tokens.craft-tokens")) {
                 Bukkit.addRecipe(recipe);
             }
