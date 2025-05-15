@@ -156,12 +156,14 @@ public class TokenData {
         String materialFromConfig = tokenConfig.getString("material");
         if (materialFromConfig == null) {
             toolStats.logger.warning("Could not find material config for token " + tokenType);
-            return null;
+            toolStats.logger.warning("Using PAPER as default.");
+            materialFromConfig = "PAPER";
         }
         Material material = Material.getMaterial(materialFromConfig);
         if (material == null) {
             toolStats.logger.warning("Material " + materialFromConfig + " is not a valid Minecraft material.");
-            return null;
+            toolStats.logger.warning("Using PAPER as default.");
+            material = Material.PAPER;
         }
 
         ItemStack token = new ItemStack(material);
