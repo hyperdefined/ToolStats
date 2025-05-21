@@ -4,7 +4,7 @@
 	<a href="https://modrinth.com/plugin/ToolStats"><img alt="modrinth" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/available/modrinth_vector.svg"></a>
 	<a href="https://hangar.papermc.io/hyperdefined/ToolStats"><img alt="hangar" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/available/hangar_vector.svg"></a>
 	<a href="https://papermc.io"><img alt="paper" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/supported/paper_vector.svg"></a>
-	<a href="https://github.com/hyperdefined/ToolStats/wiki"><img alt="ghpages" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/documentation/ghpages_vector.svg"></a>
+	<a href="https://docs.hyper.lol/plugins/toolstats/about/"><img alt="ghpages" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/documentation/ghpages_vector.svg"></a>
 	<a href="https://discord.gg/rJuQXVcJz8"><img alt="discord-singular" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/social/discord-singular_vector.svg"></a>
 	<a href="https://buymeacoffee.com/hyperdefined"><img alt="buymeacoffee-singular" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/donate/buymeacoffee-singular_vector.svg"></a>
 </p>
@@ -27,23 +27,23 @@ The best part is, this data is stored on the item itself.
 
 If item lore is ever incorrect/missing, you can run `/toolstats reset`. This command fixes the lore on whatever item you are holding.
 
-![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image.png)
-![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image2.png)
-![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image3.png)
-![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image4.png)
-![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image5.png)
-![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image6.png)
-![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image7.png)
-![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image8.png)
-![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image9.png)
-![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image10.png)
-![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image11.png)
-![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image13.png)
-![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image14.png)
-![Image](https://raw.githubusercontent.com/hyperdefined/ToolStats/master/images/image12.png)
+![Image](https://docs.hyper.lol/plugins/toolstats/assets/image.png)
+![Image](https://docs.hyper.lol/plugins/toolstats/assets/image2.png)
+![Image](https://docs.hyper.lol/plugins/toolstats/assets/image3.png)
+![Image](https://docs.hyper.lol/plugins/toolstats/assets/image4.png)
+![Image](https://docs.hyper.lol/plugins/toolstats/assets/image5.png)
+![Image](https://docs.hyper.lol/plugins/toolstats/assets/image6.png)
+![Image](https://docs.hyper.lol/plugins/toolstats/assets/image7.png)
+![Image](https://docs.hyper.lol/plugins/toolstats/assets/image8.png)
+![Image](https://docs.hyper.lol/plugins/toolstats/assets/image9.png)
+![Image](https://docs.hyper.lol/plugins/toolstats/assets/image10.png)
+![Image](https://docs.hyper.lol/plugins/toolstats/assets/image11.png)
+![Image](https://docs.hyper.lol/plugins/toolstats/assets/image13.png)
+![Image](https://docs.hyper.lol/plugins/toolstats/assets/image14.png)
+![Image](https://docs.hyper.lol/plugins/toolstats/assets/image12.png)
 
 ## Documentation
-Visit the [wiki](https://github.com/hyperdefined/ToolStats/wiki) for help.
+Visit the [wiki](https://docs.hyper.lol/plugins/toolstats/about/) for help.
 
 ## License
 This plugin is released under GNU General Public License v3. See [LICENSE](https://github.com/hyperdefined/ToolStats/blob/master/LICENSE).
