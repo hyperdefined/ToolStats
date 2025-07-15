@@ -122,6 +122,10 @@ public class AnvilEvent implements Listener {
                     addToken(event, tokenType, "mob-kills", clone);
                     return;
                 }
+                if (tokenType.equalsIgnoreCase("damage-done")) {
+                    addToken(event, tokenType, "damage-done", clone);
+                    return;
+                }
             }
             return;
         }

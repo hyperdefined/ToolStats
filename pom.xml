@@ -23,7 +23,7 @@
 
     <groupId>lol.hyper</groupId>
     <artifactId>toolstats</artifactId>
-    <version>1.9.7</version>
+    <version>1.9.8</version>
     <packaging>jar</packaging>
 
     <name>ToolStats</name>
@@ -105,7 +105,7 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.21.5-R0.1-SNAPSHOT</version>
+            <version>1.21.7-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
