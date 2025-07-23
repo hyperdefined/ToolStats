@@ -17,6 +17,8 @@
 
 package lol.hyper.toolstats.tools;
 
+import io.papermc.paper.datacomponent.DataComponentType;
+import io.papermc.paper.datacomponent.DataComponentTypes;
 import lol.hyper.toolstats.ToolStats;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -114,6 +116,22 @@ public class ItemChecker {
      */
     public boolean isMineTool(Material itemType) {
         return mineItems.contains(itemType);
+    }
+
+    /**
+     * In newer versions of Minecraft, you can make items glide, which works
+     * like an Elytra.
+     *
+     * @param itemStack The item to check.
+     * @return True/false if the item can glide like an Elytra.
+     */
+    public boolean canGlide(ItemStack itemStack) {
+        // if it's an elytra, we are good
+        if (itemStack.getType() == Material.ELYTRA) {
+            return true;
+        }
+        // otherwise if it has the GLIDER data
+        return itemStack.hasData(DataComponentTypes.GLIDER);
     }
 
     /**

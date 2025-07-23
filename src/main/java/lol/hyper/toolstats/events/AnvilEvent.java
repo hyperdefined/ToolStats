@@ -169,7 +169,7 @@ public class AnvilEvent implements Listener {
             }
             return;
         }
-        if (firstSlotMaterial == Material.ELYTRA) {
+        if (toolStats.itemChecker.canGlide(clone)) {
             addToken(event, tokenType, "flight-time", clone);
             return;
         }
