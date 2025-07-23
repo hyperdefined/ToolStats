@@ -131,6 +131,10 @@ public class AnvilEvent implements Listener {
             }
             return;
         }
+        if (toolStats.itemChecker.canGlide(clone)) {
+            addToken(event, tokenType, "flight-time", clone);
+            return;
+        }
         if (toolStats.itemChecker.isArmor(firstSlotMaterial)) {
             addToken(event, tokenType, "damage-taken", clone);
             return;
@@ -167,10 +171,6 @@ public class AnvilEvent implements Listener {
                 addToken(event, tokenType, "damage-done", clone);
                 return;
             }
-            return;
-        }
-        if (toolStats.itemChecker.canGlide(clone)) {
-            addToken(event, tokenType, "flight-time", clone);
             return;
         }
         if (firstSlotMaterial == Material.FISHING_ROD) {
