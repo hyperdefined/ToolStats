@@ -155,6 +155,37 @@ public class CommandToolStats implements TabExecutor {
                 sender.sendMessage(Component.text("Type /toolstats reset confirm to confirm this.", NamedTextColor.GREEN));
                 return true;
             }
+            case "purge": {
+                if (!sender.hasPermission("toolstats.purge")) {
+                    sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
+                    return true;
+                }
+                if (sender instanceof ConsoleCommandSender) {
+                    sender.sendMessage(Component.text("You must be a player for this command.", NamedTextColor.RED));
+                    return true;
+                }
+                if (args.length == 2 && args[1].equalsIgnoreCase("confirm")) {
+                    if (!sender.hasPermission("toolstats.purge.confirm")) {
+                        sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
+                        return true;
+                    }
+                    Player player = (Player) sender;
+                    ItemStack heldItem = player.getInventory().getItemInMainHand();
+                    if (!toolStats.itemChecker.isValidItem(heldItem.getType())) {
+                        sender.sendMessage(Component.text("You must hold a valid item.", NamedTextColor.RED));
+                        return true;
+                    }
+                    ItemStack purgedItem = toolStats.itemLore.removeAll(heldItem, true);
+                    player.getInventory().setItemInMainHand(purgedItem);
+                    sender.sendMessage(Component.text("The item was purged!", NamedTextColor.GREEN));
+                    return true;
+                }
+                sender.sendMessage(Component.text("This will purge ALL ToolStats data from this item.", NamedTextColor.GREEN));
+                sender.sendMessage(Component.text("This includes all stats, ownership, and creation time.", NamedTextColor.GREEN));
+                sender.sendMessage(Component.text("THIS CANNOT BE UNDONE!", NamedTextColor.GREEN));
+                sender.sendMessage(Component.text("Type /toolstats purge confirm to confirm this.", NamedTextColor.GREEN));
+                return true;
+            }
             case "givetokens": {
                 if (!sender.hasPermission("toolstats.givetokens")) {
                     sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
@@ -992,10 +1023,16 @@ public class CommandToolStats implements TabExecutor {
             if (sender.hasPermission("toolstats.remove")) {
                 suggestions.add("remove");
             }
+            if (sender.hasPermission("toolstats.purge")) {
+                suggestions.add("purge");
+            }
             return suggestions.isEmpty() ? null : suggestions;
         }
 
         if (args.length == 2 && args[0].equalsIgnoreCase("reset") && sender.hasPermission("toolstats.reset.confirm")) {
+            return Collections.singletonList("confirm");
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("purge") && sender.hasPermission("toolstats.purge.confirm")) {
             return Collections.singletonList("confirm");
         }
         if (args.length == 2 && args[0].equalsIgnoreCase("edit") && sender.hasPermission("toolstats.edit")) {

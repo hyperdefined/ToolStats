@@ -23,6 +23,12 @@ permissions:
   toolstats.reset.confirm:
     description: Allows the usage of /toolstats reset confirm.
     default: true
+  toolstats.purge:
+    description: Allows the usage of /toolstats purge.
+    default: true
+  toolstats.purge.confirm:
+    description: Allows the usage of /toolstats purge confirm.
+    default: true
   toolstats.givetokens:
     description: Allows the usage of /toolstats givetoken.
     default: op
