@@ -92,8 +92,6 @@ public class CreativeEvent implements Listener {
         if (toolStats.config.getBoolean("normalize-time-creation")) {
             finalDate = toolStats.numberFormat.normalizeTime(timeCreated);
             timeCreated = finalDate.getTime();
-        } else {
-            finalDate = new Date(timeCreated);
         }
         PersistentDataContainer container = meta.getPersistentDataContainer();
 
@@ -111,28 +109,21 @@ public class CreativeEvent implements Listener {
             lore = new ArrayList<>();
         }
 
-        if (toolStats.configTools.checkConfig(itemStack.getType(), "spawned-in-on")) {
+        // if creation date is enabled, add it
+        Component creationDate = toolStats.itemLore.formatCreationTime(timeCreated, 6, newSpawnedItem);
+        if (creationDate != null) {
             container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
             container.set(toolStats.originType, PersistentDataType.INTEGER, 6);
-
-            String date = toolStats.numberFormat.formatDate(finalDate);
-            Component newLine = toolStats.configTools.formatLore("spawned-in.spawned-on", "{date}", date);
-            if (newLine == null) {
-                return null;
-            }
-            lore.add(newLine);
+            lore.add(creationDate);
             meta.lore(lore);
         }
 
-        if (toolStats.configTools.checkConfig(itemStack.getType(), "spawned-in-by")) {
+        // if ownership is enabled, add it
+        Component itemOwner = toolStats.itemLore.formatOwner(owner.getName(), 6, newSpawnedItem);
+        if (itemOwner != null) {
             container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
             container.set(toolStats.originType, PersistentDataType.INTEGER, 6);
-
-            Component newLine = toolStats.configTools.formatLore("spawned-in.spawned-by", "{player}", owner.getName());
-            if (newLine == null) {
-                return null;
-            }
-            lore.add(newLine);
+            lore.add(itemOwner);
             meta.lore(lore);
         }
 

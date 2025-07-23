@@ -233,38 +233,6 @@ public class CommandToolStats implements TabExecutor {
             origin = -1;
         }
 
-        // hard code elytras
-        if (finalItem.getType() == Material.ELYTRA) {
-            Long flightTime = null;
-            Long timeCreated = null;
-            if (container.has(toolStats.timeCreated, PersistentDataType.LONG)) {
-                timeCreated = container.get(toolStats.timeCreated, PersistentDataType.LONG);
-            }
-            if (container.has(toolStats.flightTime, PersistentDataType.LONG)) {
-                flightTime = container.get(toolStats.flightTime, PersistentDataType.LONG);
-            }
-
-            if (flightTime != null) {
-                if (toolStats.config.getBoolean("enabled.flight-time")) {
-                    Map<String, String> flightTimeFormatted = toolStats.numberFormat.formatTime(flightTime);
-                    Component line = toolStats.configTools.formatLoreMultiplePlaceholders("flight-time", flightTimeFormatted);
-                    lore.add(line);
-                }
-            }
-
-            if (timeCreated != null) {
-                Component timeCreatedLine = toolStats.configTools.formatLore("looted.found-by", "{player}", player.getName());
-                Component playerOwnerLine = toolStats.configTools.formatLore("looted.found-on", "{date}", toolStats.numberFormat.formatDate(new Date(timeCreated)));
-                lore.add(timeCreatedLine);
-                lore.add(playerOwnerLine);
-            }
-
-            finalMeta.lore(lore);
-            finalItem.setItemMeta(finalMeta);
-            int slot = player.getInventory().getHeldItemSlot();
-            player.getInventory().setItem(slot, finalItem);
-        }
-
         if (container.has(toolStats.droppedBy, PersistentDataType.STRING)) {
             if (toolStats.config.getBoolean("enabled.dropped-by")) {
                 if (container.has(toolStats.droppedBy)) {
@@ -293,82 +261,30 @@ public class CommandToolStats implements TabExecutor {
                 container.set(toolStats.itemOwner, new UUIDDataType(), player.getUniqueId());
             }
 
-            // show how the item was created based on the previous lore
-            switch (origin) {
-                case 0: {
-                    if (toolStats.configTools.checkConfig(original.getType(), "crafted-by")) {
-                        lore.add(toolStats.configTools.formatLore("crafted.crafted-by", "{player}", ownerName));
-                    }
-                    break;
-                }
-                case 2: {
-                    if (toolStats.configTools.checkConfig(original.getType(), "looted-by")) {
-                        lore.add(toolStats.configTools.formatLore("looted.looted-by", "{player}", ownerName));
-                    }
-                    break;
-                }
-                case 3: {
-                    if (toolStats.configTools.checkConfig(original.getType(), "traded-by")) {
-                        lore.add(toolStats.configTools.formatLore("traded.traded-by", "{player}", ownerName));
-                    }
-                    break;
-                }
-                case 5: {
-                    if (toolStats.configTools.checkConfig(original.getType(), "fished-by")) {
-                        lore.add(toolStats.configTools.formatLore("fished.caught-by", "{player}", ownerName));
-                    }
-                    break;
-                }
-                case 6: {
-                    if (toolStats.configTools.checkConfig(original.getType(), "spawned-in-by")) {
-                        lore.add(toolStats.configTools.formatLore("spawned-in.spawned-by", "{player}", ownerName));
-                    }
-                    break;
-                }
+            // add the ownership lore
+            Component ownerLore = toolStats.itemLore.formatOwner(ownerName, origin, original);
+            if (ownerLore != null) {
+                lore.add(ownerLore);
             }
+
         }
         if (container.has(toolStats.timeCreated, PersistentDataType.LONG)) {
             Long time = container.get(toolStats.timeCreated, PersistentDataType.LONG);
             if (time != null) {
-                String date = toolStats.numberFormat.formatDate(new Date(time));
-                // show how when the item was created based on the previous lore
-                switch (origin) {
-                    case 0: {
-                        if (toolStats.configTools.checkConfig(original.getType(), "crafted-on")) {
-                            lore.add(toolStats.configTools.formatLore("crafted.crafted-on", "{date}", date));
-                        }
-                        break;
-                    }
-                    case 1: {
-                        if (toolStats.config.getBoolean("enabled.dropped-on")) {
-                            lore.add(toolStats.configTools.formatLore("dropped-on", "{date}", date));
-                        }
-                        break;
-                    }
-                    case 2: {
-                        if (toolStats.configTools.checkConfig(original.getType(), "looted-on")) {
-                            lore.add(toolStats.configTools.formatLore("looted.looted-on", "{date}", date));
-                        }
-                        break;
-                    }
-                    case 3: {
-                        if (toolStats.configTools.checkConfig(original.getType(), "traded-on")) {
-                            lore.add(toolStats.configTools.formatLore("traded.traded-on", "{date}", date));
-                        }
-                        break;
-                    }
-                    case 5: {
-                        if (toolStats.configTools.checkConfig(original.getType(), "fished-on")) {
-                            lore.add(toolStats.configTools.formatLore("fished.caught-on", "{date}", date));
-                        }
-                        break;
-                    }
-                    case 6: {
-                        if (toolStats.configTools.checkConfig(original.getType(), "spawned-in-on")) {
-                            lore.add(toolStats.configTools.formatLore("spawned-in.spawned-on", "{date}", date));
-                        }
-                        break;
-                    }
+                // add the creation time lore
+                Component creationTimeLore = toolStats.itemLore.formatCreationTime(time, origin, original);
+                if (creationTimeLore != null) {
+                    lore.add(creationTimeLore);
+                }
+            }
+        }
+        if (toolStats.config.getBoolean("enabled.flight-time")) {
+            if (container.has(toolStats.flightTime, PersistentDataType.LONG)) {
+                Long flightTime = container.get(toolStats.flightTime, PersistentDataType.LONG);
+                if (flightTime != null) {
+                    Map<String, String> flightTimeFormatted = toolStats.numberFormat.formatTime(flightTime);
+                    Component line = toolStats.configTools.formatLoreMultiplePlaceholders("flight-time", flightTimeFormatted);
+                    lore.add(line);
                 }
             }
         }

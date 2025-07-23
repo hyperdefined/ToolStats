@@ -131,8 +131,6 @@ public class VillagerTrade implements Listener {
         if (toolStats.config.getBoolean("normalize-time-creation")) {
             finalDate = toolStats.numberFormat.normalizeTime(timeCreated);
             timeCreated = finalDate.getTime();
-        } else {
-            finalDate = new Date(timeCreated);
         }
         PersistentDataContainer container = meta.getPersistentDataContainer();
 
@@ -148,28 +146,22 @@ public class VillagerTrade implements Listener {
             lore = new ArrayList<>();
         }
 
-        if (toolStats.configTools.checkConfig(newItem.getType(), "traded-on")) {
+
+        // if creation date is enabled, add it
+        Component creationDate = toolStats.itemLore.formatCreationTime(timeCreated, 3, newItem);
+        if (creationDate != null) {
             container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
             container.set(toolStats.originType, PersistentDataType.INTEGER, 3);
-
-            String date = toolStats.numberFormat.formatDate(finalDate);
-            Component newLine = toolStats.configTools.formatLore("traded.traded-on", "{date}", date);
-            if (newLine == null) {
-                return null;
-            }
-            lore.add(newLine);
+            lore.add(creationDate);
             meta.lore(lore);
         }
 
-        if (toolStats.configTools.checkConfig(newItem.getType(), "traded-by")) {
+        // if ownership is enabled, add it
+        Component itemOwner = toolStats.itemLore.formatOwner(owner.getName(), 3, newItem);
+        if (itemOwner != null) {
             container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
             container.set(toolStats.originType, PersistentDataType.INTEGER, 3);
-
-            Component newLine = toolStats.configTools.formatLore("traded.traded-by", "{player}", owner.getName());
-            if (newLine == null) {
-                return null;
-            }
-            lore.add(newLine);
+            lore.add(itemOwner);
             meta.lore(lore);
         }
 

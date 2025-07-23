@@ -20,12 +20,14 @@ package lol.hyper.toolstats.tools;
 import lol.hyper.toolstats.ToolStats;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -1118,5 +1120,112 @@ public class ItemLore {
         List<Component> newLore = toolStats.itemLore.updateItemLore(meta, oldLine, newLine);
         meta.lore(newLore);
         return meta;
+    }
+
+    /**
+     * Format the item owner lore.
+     *
+     * @param playerName The player's name who owns the items.
+     * @param origin     The origin type.
+     * @param item       The item.
+     * @return A component with the lore.
+     */
+    public Component formatOwner(String playerName, int origin, ItemStack item) {
+        switch (origin) {
+            case 0: {
+                if (toolStats.configTools.checkConfig(item.getType(), "crafted-by")) {
+                    return toolStats.configTools.formatLore("crafted.crafted-by", "{player}", playerName);
+                }
+                break;
+            }
+            case 2: {
+                if (toolStats.configTools.checkConfig(item.getType(), "looted-by")) {
+                    return toolStats.configTools.formatLore("looted.looted-by", "{player}", playerName);
+                }
+                break;
+            }
+            case 3: {
+                if (toolStats.configTools.checkConfig(item.getType(), "traded-by")) {
+                    return toolStats.configTools.formatLore("traded.traded-by", "{player}", playerName);
+                }
+                break;
+            }
+            case 4: {
+                if (toolStats.config.getBoolean("enabled.elytra-tag")) {
+                    return toolStats.configTools.formatLore("looted.found-by", "{player}", playerName);
+                }
+                break;
+            }
+            case 5: {
+                if (toolStats.configTools.checkConfig(item.getType(), "fished-by")) {
+                    return toolStats.configTools.formatLore("fished.caught-by", "{player}", playerName);
+                }
+                break;
+            }
+            case 6: {
+                if (toolStats.configTools.checkConfig(item.getType(), "spawned-in-by")) {
+                    return toolStats.configTools.formatLore("spawned-in.spawned-by", "{player}", playerName);
+                }
+                break;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Format the item creation time.
+     *
+     * @param creationDate When the item was created.
+     * @param origin       The origin type.
+     * @param item         The item.
+     * @return A component with the lore.
+     */
+    public Component formatCreationTime(long creationDate, int origin, ItemStack item) {
+        String date = toolStats.numberFormat.formatDate(new Date(creationDate));
+        switch (origin) {
+            case 0: {
+                if (toolStats.configTools.checkConfig(item.getType(), "crafted-on")) {
+                    return toolStats.configTools.formatLore("crafted.crafted-on", "{date}", date);
+                }
+                break;
+            }
+            case 1: {
+                if (toolStats.config.getBoolean("enabled.dropped-on")) {
+                    return toolStats.configTools.formatLore("dropped-on", "{date}", date);
+                }
+                break;
+            }
+            case 2: {
+                if (toolStats.configTools.checkConfig(item.getType(), "looted-on")) {
+                    return toolStats.configTools.formatLore("looted.looted-on", "{date}", date);
+                }
+                break;
+            }
+            case 3: {
+                if (toolStats.configTools.checkConfig(item.getType(), "traded-on")) {
+                    return toolStats.configTools.formatLore("traded.traded-on", "{date}", date);
+                }
+                break;
+            }
+            case 4: {
+                if (toolStats.config.getBoolean("enabled.elytra-tag")) {
+                    return toolStats.configTools.formatLore("looted.found-on", "{date}", date);
+                }
+                break;
+            }
+            case 5: {
+                if (toolStats.configTools.checkConfig(item.getType(), "fished-on")) {
+                    return toolStats.configTools.formatLore("fished.caught-on", "{date}", date);
+                }
+                break;
+            }
+            case 6: {
+                if (toolStats.configTools.checkConfig(item.getType(), "spawned-in-on")) {
+                    return toolStats.configTools.formatLore("spawned-in.spawned-on", "{date}", date);
+                }
+                break;
+            }
+        }
+        return null;
     }
 }

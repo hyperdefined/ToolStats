@@ -95,8 +95,6 @@ public class PickupItem implements Listener {
         if (toolStats.config.getBoolean("normalize-time-creation")) {
             finalDate = toolStats.numberFormat.normalizeTime(timeCreated);
             timeCreated = finalDate.getTime();
-        } else {
-            finalDate = new Date(timeCreated);
         }
         PersistentDataContainer container = meta.getPersistentDataContainer();
 
@@ -123,12 +121,22 @@ public class PickupItem implements Listener {
         container.set(toolStats.originType, PersistentDataType.INTEGER, 4);
         container.remove(toolStats.newElytra);
 
-        String formattedDate = toolStats.numberFormat.formatDate(finalDate);
-        Component dateCreatedLore = toolStats.configTools.formatLore("looted.found-on", "{date}", formattedDate);
-        Component itemOwnerLore = toolStats.configTools.formatLore("looted.found-by", "{player}", owner.getName());
-        lore.add(dateCreatedLore);
-        lore.add(itemOwnerLore);
-        meta.lore(lore);
+        Component creationDate = toolStats.itemLore.formatCreationTime(timeCreated, 4, finalItem);
+        if (creationDate != null) {
+            container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
+            container.set(toolStats.originType, PersistentDataType.INTEGER, 4);
+            lore.add(creationDate);
+            meta.lore(lore);
+        }
+
+        Component itemOwner = toolStats.itemLore.formatOwner(owner.getName(), 4, finalItem);
+        if (itemOwner != null) {
+            container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
+            container.set(toolStats.originType, PersistentDataType.INTEGER, 4);
+            lore.add(itemOwner);
+            meta.lore(lore);
+        }
+
         finalItem.setItemMeta(meta);
         return finalItem;
     }
