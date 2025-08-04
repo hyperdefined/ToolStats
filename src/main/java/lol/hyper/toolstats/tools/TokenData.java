@@ -170,7 +170,8 @@ public class TokenData {
         PersistentDataContainer tokenData = tokenMeta.getPersistentDataContainer();
 
         // set the title and lore
-        Component title = toolStats.configTools.format("tokens.data." + tokenType + ".title");
+        String titleFromConfig = toolStats.config.getString("tokens.data." + tokenType + ".title");
+        Component title = toolStats.textUtils.format(titleFromConfig);
         List<Component> lore = toolStats.configTools.getTokenLore(tokenType);
         tokenMeta.displayName(title);
         tokenMeta.lore(lore);

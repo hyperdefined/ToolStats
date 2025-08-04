@@ -17,15 +17,17 @@
 
 package lol.hyper.toolstats;
 
-import lol.hyper.githubreleaseapi.GitHubRelease;
-import lol.hyper.githubreleaseapi.GitHubReleaseAPI;
-import lol.hyper.githubreleaseapi.ReleaseNotFoundException;
+import lol.hyper.hyperlib.HyperLib;
+import lol.hyper.hyperlib.bstats.bStats;
+import lol.hyper.hyperlib.releases.hangar.HangarRelease;
+import lol.hyper.hyperlib.releases.modrinth.ModrinthPlugin;
+import lol.hyper.hyperlib.releases.modrinth.ModrinthRelease;
+import lol.hyper.hyperlib.utils.TextUtils;
 import lol.hyper.toolstats.commands.CommandToolStats;
 import lol.hyper.toolstats.events.*;
 import lol.hyper.toolstats.tools.*;
 import lol.hyper.toolstats.tools.config.ConfigTools;
 import lol.hyper.toolstats.tools.config.ConfigUpdater;
-import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -33,7 +35,6 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -152,9 +153,19 @@ public final class ToolStats extends JavaPlugin {
     public TokenData tokenData;
     public AnvilEvent anvilEvent;
     public PrepareCraft prepareCraft;
+    public HyperLib hyperLib;
+    public TextUtils textUtils;
 
     @Override
     public void onEnable() {
+        hyperLib = new HyperLib(this);
+        hyperLib.setup();
+
+        bStats bstats = new bStats(hyperLib, 14110);
+        bstats.setup();
+
+        textUtils = new TextUtils(hyperLib);
+
         if (!configFile.exists()) {
             this.saveResource("config.yml", true);
             logger.info("Copying default config!");
@@ -225,8 +236,27 @@ public final class ToolStats extends JavaPlugin {
 
         this.getCommand("toolstats").setExecutor(commandToolStats);
 
-        new Metrics(this, 14110);
-        Bukkit.getAsyncScheduler().runNow(this, scheduledTask -> checkForUpdates());
+        Bukkit.getAsyncScheduler().runNow(this, scheduledTask -> {
+            ModrinthPlugin modrinthPlugin = new ModrinthPlugin("oBZj9E15");
+            modrinthPlugin.get();
+
+            ModrinthRelease release = modrinthPlugin.getReleaseByVersion(this.getPluginMeta().getVersion());
+            if (release == null) {
+                logger.warning("You are running a version not published.");
+            } else {
+                int buildsBehind = modrinthPlugin.buildsVersionsBehind(release);
+                if (buildsBehind > 0) {
+                    ModrinthRelease latest = modrinthPlugin.getLatestRelease();
+                    if (latest != null) {
+                        logger.info("You are " + buildsBehind + " versions behind. Please update!");
+                        logger.info("The latest version is " + latest.getVersion());
+                        logger.info(latest.getVersionPage());
+                    }
+                } else {
+                    logger.info("Yay! You are running the latest version.");
+                }
+            }
+        });
     }
 
     public void loadConfig() {
@@ -246,30 +276,5 @@ public final class ToolStats extends JavaPlugin {
         tokens = config.getBoolean("tokens.enabled");
 
         numberFormat = new NumberFormat(this);
-    }
-
-    public void checkForUpdates() {
-        GitHubReleaseAPI api;
-        try {
-            api = new GitHubReleaseAPI("ToolStats", "hyperdefined");
-        } catch (IOException e) {
-            logger.warning("Unable to check updates!");
-            e.printStackTrace();
-            return;
-        }
-        GitHubRelease current;
-        try {
-            current = api.getReleaseByTag(this.getPluginMeta().getVersion());
-        } catch (ReleaseNotFoundException e) {
-            logger.warning("You are running a version that does not exist on GitHub. If you are in a dev environment, you can ignore this. Otherwise, this is a bug!");
-            return;
-        }
-        GitHubRelease latest = api.getLatestVersion();
-        int buildsBehind = api.getBuildsBehind(current);
-        if (buildsBehind == 0) {
-            logger.info("You are running the latest version.");
-        } else {
-            logger.warning("A new version is available (" + latest.getTagVersion() + ")! You are running version " + current.getTagVersion() + ". You are " + buildsBehind + " version(s) behind.");
-        }
     }
 }

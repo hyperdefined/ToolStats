@@ -17,8 +17,8 @@
 
 package lol.hyper.toolstats.events;
 
+import lol.hyper.hyperlib.datatypes.UUIDDataType;
 import lol.hyper.toolstats.ToolStats;
-import lol.hyper.toolstats.tools.UUIDDataType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

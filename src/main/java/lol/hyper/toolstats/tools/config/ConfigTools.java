@@ -20,8 +20,6 @@ package lol.hyper.toolstats.tools.config;
 import lol.hyper.toolstats.ToolStats;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
@@ -34,8 +32,6 @@ import java.util.regex.Pattern;
 public class ConfigTools {
 
     private final ToolStats toolStats;
-    public static final Pattern COLOR_CODES = Pattern.compile("[&§]([0-9a-fk-or])");
-    public static final Pattern CONFIG_HEX_PATTERN = Pattern.compile("[&§]#([A-Fa-f0-9]{6})");
 
     public ConfigTools(ToolStats toolStats) {
         this.toolStats = toolStats;
@@ -125,16 +121,7 @@ public class ConfigTools {
             lore = lore.replace(placeHolder, String.valueOf(value));
         }
 
-        // if we match the old color codes, then format them as so
-        Matcher hexMatcher = CONFIG_HEX_PATTERN.matcher(lore);
-        Matcher colorMatcher = COLOR_CODES.matcher(lore);
-        if (hexMatcher.find() || colorMatcher.find()) {
-            component = LegacyComponentSerializer.legacyAmpersand().deserialize(lore);
-        } else {
-            // otherwise format them normally
-            component = MiniMessage.miniMessage().deserialize(lore);
-        }
-
+        component = toolStats.textUtils.format(lore);
         return component.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
     }
 
@@ -183,49 +170,7 @@ public class ConfigTools {
         Component component;
         // Clean output text
         String outputText = result.toString().replaceAll("\\s+", " ").trim();
-
-        // if we match the old color codes, then format them as so
-        Matcher hexMatcher = CONFIG_HEX_PATTERN.matcher(outputText);
-        Matcher colorMatcher = COLOR_CODES.matcher(outputText);
-        if (hexMatcher.find() || colorMatcher.find()) {
-            component = LegacyComponentSerializer.legacyAmpersand().deserialize(outputText);
-        } else {
-            // otherwise format them normally
-            component = MiniMessage.miniMessage().deserialize(outputText);
-        }
-
-        return component.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
-    }
-
-    /**
-     * Format a string from the config.
-     *
-     * @param configName The config to format.
-     * @return Formatted string, null if the configName doesn't exist.
-     */
-    public Component format(String configName) {
-        String message = toolStats.config.getString(configName);
-        if (message == null) {
-            toolStats.logger.warning("Unable to find config message for: " + configName);
-            return null;
-        }
-
-        // if the config message is empty, don't send it
-        if (message.isEmpty()) {
-            return null;
-        }
-
-        // the final component for this lore
-        Component component;
-        // if we match the old color codes, then format them as so
-        Matcher hexMatcher = CONFIG_HEX_PATTERN.matcher(message);
-        Matcher colorMatcher = COLOR_CODES.matcher(message);
-        if (hexMatcher.find() || colorMatcher.find()) {
-            component = LegacyComponentSerializer.legacyAmpersand().deserialize(message);
-        } else {
-            // otherwise format them normally
-            component = MiniMessage.miniMessage().deserialize(message);
-        }
+        component = toolStats.textUtils.format(outputText);
 
         return component.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
     }
@@ -251,16 +196,7 @@ public class ConfigTools {
                     line = line.replace("{levels}", String.valueOf(levels));
                 }
             }
-            Component component;
-            // if we match the old color codes, then format them as so
-            Matcher hexMatcher = CONFIG_HEX_PATTERN.matcher(line);
-            Matcher colorMatcher = COLOR_CODES.matcher(line);
-            if (hexMatcher.find() || colorMatcher.find()) {
-                component = LegacyComponentSerializer.legacyAmpersand().deserialize(line);
-            } else {
-                // otherwise format them normally
-                component = MiniMessage.miniMessage().deserialize(line);
-            }
+            Component component = toolStats.textUtils.format(line);
             component = component.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
             finalLore.add(component);
         }
