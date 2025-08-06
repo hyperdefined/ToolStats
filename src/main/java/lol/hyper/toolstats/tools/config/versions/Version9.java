@@ -45,8 +45,7 @@ public class Version9 {
         try {
             toolStats.config.save("plugins" + File.separator + "ToolStats" + File.separator + "config-8.yml");
         } catch (IOException exception) {
-            toolStats.logger.severe("Unable to save config-8.yml!");
-            throw new RuntimeException(exception);
+            toolStats.logger.error("Unable to save config-8.yml!", exception);
         }
 
         toolStats.logger.info("Updating config.yml to version 9.");
@@ -78,8 +77,7 @@ public class Version9 {
         try {
             toolStats.config.save("plugins" + File.separator + "ToolStats" + File.separator + "config.yml");
         } catch (IOException exception) {
-            toolStats.logger.severe("Unable to save config.yml!");
-            throw new RuntimeException(exception);
+            toolStats.logger.error("Unable to save config.yml!", exception);
         }
         toolStats.loadConfig();
         toolStats.logger.info("Config has been updated to version 9. A copy of version 8 has been saved as config-8.yml");
