@@ -18,10 +18,8 @@
 package lol.hyper.toolstats;
 
 import lol.hyper.hyperlib.HyperLib;
-import lol.hyper.hyperlib.bstats.bStats;
-import lol.hyper.hyperlib.releases.hangar.HangarRelease;
-import lol.hyper.hyperlib.releases.modrinth.ModrinthPlugin;
-import lol.hyper.hyperlib.releases.modrinth.ModrinthRelease;
+import lol.hyper.hyperlib.bstats.HyperStats;
+import lol.hyper.hyperlib.releases.HyperUpdater;
 import lol.hyper.hyperlib.utils.TextUtils;
 import lol.hyper.toolstats.commands.CommandToolStats;
 import lol.hyper.toolstats.events.*;
@@ -161,8 +159,8 @@ public final class ToolStats extends JavaPlugin {
         hyperLib = new HyperLib(this);
         hyperLib.setup();
 
-        bStats bstats = new bStats(hyperLib, 14110);
-        bstats.setup();
+        HyperStats stats = new HyperStats(hyperLib, 14110);
+        stats.setup();
 
         textUtils = new TextUtils(hyperLib);
 
@@ -236,27 +234,11 @@ public final class ToolStats extends JavaPlugin {
 
         this.getCommand("toolstats").setExecutor(commandToolStats);
 
-        Bukkit.getAsyncScheduler().runNow(this, scheduledTask -> {
-            ModrinthPlugin modrinthPlugin = new ModrinthPlugin("oBZj9E15");
-            modrinthPlugin.get();
-
-            ModrinthRelease release = modrinthPlugin.getReleaseByVersion(this.getPluginMeta().getVersion());
-            if (release == null) {
-                logger.warning("You are running a version not published.");
-            } else {
-                int buildsBehind = modrinthPlugin.buildsVersionsBehind(release);
-                if (buildsBehind > 0) {
-                    ModrinthRelease latest = modrinthPlugin.getLatestRelease();
-                    if (latest != null) {
-                        logger.info("You are " + buildsBehind + " versions behind. Please update!");
-                        logger.info("The latest version is " + latest.getVersion());
-                        logger.info(latest.getVersionPage());
-                    }
-                } else {
-                    logger.info("Yay! You are running the latest version.");
-                }
-            }
-        });
+        HyperUpdater updater = new HyperUpdater(hyperLib);
+        updater.setGitHub("hyperdefined", "ToolStats");
+        updater.setModrinth("oBZj9E15");
+        updater.setHangar("ToolStats", "paper");
+        updater.check();
     }
 
     public void loadConfig() {
