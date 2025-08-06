@@ -123,7 +123,7 @@ public class VillagerTrade implements Listener {
         ItemStack newItem = oldItem.clone();
         ItemMeta meta = newItem.getItemMeta();
         if (meta == null) {
-            toolStats.logger.warning(newItem + " does NOT have any meta! Unable to update stats.");
+            toolStats.logger.warn("{} does NOT have any meta! Unable to update stats.", newItem);
             return null;
         }
         long timeCreated = System.currentTimeMillis();

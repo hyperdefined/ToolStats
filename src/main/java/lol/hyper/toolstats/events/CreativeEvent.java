@@ -83,7 +83,7 @@ public class CreativeEvent implements Listener {
         ItemStack newSpawnedItem = itemStack.clone();
         ItemMeta meta = newSpawnedItem.getItemMeta();
         if (meta == null) {
-            toolStats.logger.warning(itemStack + " does NOT have any meta! Unable to update stats.");
+            toolStats.logger.warn("{} does NOT have any meta! Unable to update stats.", itemStack);
             return null;
         }
         // get the current time

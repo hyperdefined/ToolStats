@@ -17,7 +17,6 @@
 
 package lol.hyper.toolstats.tools;
 
-import io.papermc.paper.datacomponent.DataComponentType;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import lol.hyper.toolstats.ToolStats;
 import org.bukkit.Material;

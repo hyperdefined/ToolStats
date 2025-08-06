@@ -46,7 +46,7 @@ public class ConfigTools {
      */
     public boolean checkConfig(Material material, String configName) {
         if (toolStats.config.getConfigurationSection("enabled." + configName) == null) {
-            toolStats.logger.warning("Missing config section for enabled" + configName);
+            toolStats.logger.warn("Missing config section for enabled{}", configName);
             return false;
         }
 
@@ -104,7 +104,7 @@ public class ConfigTools {
     public Component formatLore(String configName, String placeHolder, Object value) {
         String lore = toolStats.config.getString("messages." + configName);
         if (lore == null) {
-            toolStats.logger.warning("Unable to find config message for: messages." + configName);
+            toolStats.logger.warn("Unable to find config message for: messages.{}", configName);
             return null;
         }
 
@@ -135,7 +135,7 @@ public class ConfigTools {
     public Component formatLoreMultiplePlaceholders(String configName, Map<String, String> placeHoldersValues) {
         String lore = toolStats.config.getString("messages." + configName);
         if (lore == null) {
-            toolStats.logger.warning("Unable to find config message for: messages." + configName);
+            toolStats.logger.warn("Unable to find config message for: messages.{}", configName);
             return null;
         }
 

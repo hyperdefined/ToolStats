@@ -26,6 +26,7 @@ import lol.hyper.toolstats.events.*;
 import lol.hyper.toolstats.tools.*;
 import lol.hyper.toolstats.tools.config.ConfigTools;
 import lol.hyper.toolstats.tools.config.ConfigUpdater;
+import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -35,7 +36,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Logger;
 
 public final class ToolStats extends JavaPlugin {
 
@@ -120,7 +120,7 @@ public final class ToolStats extends JavaPlugin {
     public final NamespacedKey originType = new NamespacedKey(this, "origin");
 
     public final int CONFIG_VERSION = 13;
-    public final Logger logger = this.getLogger();
+    public final ComponentLogger logger = this.getComponentLogger();
     public final File configFile = new File(this.getDataFolder(), "config.yml");
     public boolean tokens = false;
     public final Set<NamespacedKey> tokenKeys = new HashSet<>();
@@ -244,7 +244,7 @@ public final class ToolStats extends JavaPlugin {
     public void loadConfig() {
         config = YamlConfiguration.loadConfiguration(configFile);
         if (config.getInt("config-version") != CONFIG_VERSION) {
-            logger.warning("Your config file is outdated! We will try to update it, but you should regenerate it!");
+            logger.warn("Your config file is outdated! We will try to update it, but you should regenerate it!");
             ConfigUpdater configUpdater = new ConfigUpdater(this);
             configUpdater.updateConfig();
         }

@@ -110,7 +110,7 @@ public class Version12 {
     }
 
     private void transfer(String oldSection, String newSection) {
-        toolStats.logger.info("Moving " + oldSection + " to " + newSection);
+        toolStats.logger.info("Moving {} to {}", oldSection, newSection);
         ConfigurationSection old = toolStats.config.getConfigurationSection(oldSection);
         toolStats.config.set(newSection, old);
     }

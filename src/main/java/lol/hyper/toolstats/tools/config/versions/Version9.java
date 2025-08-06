@@ -93,7 +93,7 @@ public class Version9 {
      * @param lore      The lore of the item.
      */
     private void addToken(String tokenType, String title, String lore) {
-        toolStats.logger.info("Adding token type configuration for " + tokenType);
+        toolStats.logger.info("Adding token type configuration for {}", tokenType);
         toolStats.config.set("tokens.data." + tokenType + ".title", title);
         List<String> loreList = new ArrayList<>();
         loreList.add(lore);

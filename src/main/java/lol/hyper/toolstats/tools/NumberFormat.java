@@ -53,35 +53,35 @@ public class NumberFormat {
         // if these config values are missing, use the default ones
         if (dateFormat == null) {
             dateFormat = "M/dd/yyyy";
-            toolStats.logger.warning("date-format is missing! Using default American English format.");
+            toolStats.logger.warn("date-format is missing! Using default American English format.");
         }
 
         if (decimalSeparator == null) {
             decimalSeparator = ".";
-            toolStats.logger.warning("number-formats.decimal-separator is missing! Using default \".\" instead.");
+            toolStats.logger.warn("number-formats.decimal-separator is missing! Using default \".\" instead.");
         }
 
         if (commaSeparator == null) {
             commaSeparator = ",";
-            toolStats.logger.warning("number-formats.comma-separator is missing! Using default \",\" instead.");
+            toolStats.logger.warn("number-formats.comma-separator is missing! Using default \",\" instead.");
         }
 
         if (commaFormat == null) {
             commaFormat = "#,###";
-            toolStats.logger.warning("number-formats.comma-format is missing! Using default #,### instead.");
+            toolStats.logger.warn("number-formats.comma-format is missing! Using default #,### instead.");
         }
 
         if (decimalFormat == null) {
             decimalFormat = "#,##0.00";
-            toolStats.logger.warning("number-formats.comma-separator is missing! Using default #,###.00 instead.");
+            toolStats.logger.warn("number-formats.comma-separator is missing! Using default #,###.00 instead.");
         }
 
         // test the date format
         try {
             DATE_FORMAT = new SimpleDateFormat(dateFormat, Locale.getDefault());
         } catch (NullPointerException | IllegalArgumentException exception) {
-            toolStats.logger.warning("date-format is NOT a valid format! Using default American English format.");
-            exception.printStackTrace();
+            toolStats.logger.error("Invalid format or missing format", exception);
+            toolStats.logger.warn("date-format is NOT a valid format! Using default American English format.");
             DATE_FORMAT = new SimpleDateFormat("M/dd/yyyy", Locale.ENGLISH);
         }
 
@@ -95,8 +95,8 @@ public class NumberFormat {
         try {
             COMMA_FORMAT = new DecimalFormat(commaFormat, formatSymbols);
         } catch (NullPointerException | IllegalArgumentException exception) {
-            toolStats.logger.warning("number-formats.comma-format is NOT a valid format! Using default #,### instead.");
-            exception.printStackTrace();
+            toolStats.logger.error("Invalid comma or missing format", exception);
+            toolStats.logger.warn("number-formats.comma-format is NOT a valid format! Using default #,### instead.");
             COMMA_FORMAT = new DecimalFormat("#,###", formatSymbols);
         }
 
@@ -104,8 +104,8 @@ public class NumberFormat {
         try {
             DECIMAL_FORMAT = new DecimalFormat(decimalFormat, formatSymbols);
         } catch (NullPointerException | IllegalArgumentException exception) {
-            toolStats.logger.warning("number-formats.decimal-format is NOT a valid format! Using default #,###.00 instead.");
-            exception.printStackTrace();
+            toolStats.logger.error("Invalid decimal or missing format", exception);
+            toolStats.logger.warn("number-formats.decimal-format is NOT a valid format! Using default #,###.00 instead.");
             DECIMAL_FORMAT = new DecimalFormat("#,###.00", formatSymbols);
         }
     }

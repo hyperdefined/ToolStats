@@ -51,13 +51,13 @@ public class Version13 {
         toolStats.config.set("config-version", 13);
 
         for (String key : toolStats.config.getConfigurationSection("tokens.data").getKeys(false)) {
-            toolStats.logger.info("Adding tokens.data." + key + ".material");
+            toolStats.logger.info("Adding tokens.data.{}.material", key);
             toolStats.config.set("tokens.data." + key + ".material", "PAPER");
-            toolStats.logger.info("Adding tokens.data." + key + ".custom-model-data.enabled");
+            toolStats.logger.info("Adding tokens.data.{}.custom-model-data.enabled", key);
             toolStats.config.set("tokens.data." + key + ".custom-model-data.enabled", false);
-            toolStats.logger.info("Adding tokens.data." + key + ".custom-model-data.type");
+            toolStats.logger.info("Adding tokens.data.{}.custom-model-data.type", key);
             toolStats.config.set("tokens.data." + key + ".custom-model-data.type", "float");
-            toolStats.logger.info("Adding tokens.data." + key + ".custom-model-data.value");
+            toolStats.logger.info("Adding tokens.data.{}.custom-model-data.value", key);
             toolStats.config.set("tokens.data." + key + ".custom-model-data.value", 1001);
         }
 

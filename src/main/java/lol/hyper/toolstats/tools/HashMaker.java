@@ -51,9 +51,9 @@ public class HashMaker {
 
             return hexString.toString();
         } catch (NoSuchAlgorithmException exception) {
-            toolStats.logger.warning("Unable to generate hash for " + player + "!");
-            toolStats.logger.warning("Generating a random UUID instead.");
-            exception.printStackTrace();
+            toolStats.logger.error("Unable to generate hash", exception);
+            toolStats.logger.warn("Unable to generate hash for {}!", player);
+            toolStats.logger.warn("Generating a random UUID instead.");
             return java.util.UUID.randomUUID().toString();
         }
     }

@@ -154,14 +154,14 @@ public class TokenData {
 
         String materialFromConfig = tokenConfig.getString("material");
         if (materialFromConfig == null) {
-            toolStats.logger.warning("Could not find material config for token " + tokenType);
-            toolStats.logger.warning("Using PAPER as default.");
+            toolStats.logger.warn("Could not find material config for token {}", tokenType);
+            toolStats.logger.warn("Using PAPER as default.");
             materialFromConfig = "PAPER";
         }
         Material material = Material.getMaterial(materialFromConfig);
         if (material == null) {
-            toolStats.logger.warning("Material " + materialFromConfig + " is not a valid Minecraft material.");
-            toolStats.logger.warning("Using PAPER as default.");
+            toolStats.logger.warn("Material {} is not a valid Minecraft material.", materialFromConfig);
+            toolStats.logger.warn("Using PAPER as default.");
             material = Material.PAPER;
         }
 
@@ -185,9 +185,9 @@ public class TokenData {
             String type = tokenConfig.getString("custom-model-data.type");
             Object value = tokenConfig.get("custom-model-data.value");
             if (type == null || value == null) {
-                toolStats.logger.info("Could not find custom model data for token " + tokenType);
-                toolStats.logger.info("Type: " + type);
-                toolStats.logger.info("Value: " + value);
+                toolStats.logger.info("Could not find custom model data for token {}", tokenType);
+                toolStats.logger.info("Type: {}", type);
+                toolStats.logger.info("Value: {}", value);
                 return null;
             }
             CustomModelData data = setData(type, value);
@@ -208,7 +208,7 @@ public class TokenData {
                 try {
                     f = Float.parseFloat(data.toString());
                 } catch (NumberFormatException e) {
-                    toolStats.logger.info(data + " is not a valid float!");
+                    toolStats.logger.info("{} is not a valid float!", data);
                     return null;
                 }
                 return CustomModelData.customModelData().addFloat(f).build();
@@ -217,7 +217,7 @@ public class TokenData {
                 return CustomModelData.customModelData().addString(data.toString()).build();
             }
             default: {
-                toolStats.logger.info(data + " is not a valid data type!");
+                toolStats.logger.info("{} is not a valid data type!", data);
                 return null;
             }
         }

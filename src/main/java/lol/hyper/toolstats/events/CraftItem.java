@@ -116,7 +116,7 @@ public class CraftItem implements Listener {
         ItemStack newItem = itemStack.clone();
         ItemMeta meta = newItem.getItemMeta();
         if (meta == null) {
-            toolStats.logger.warning(itemStack + " does NOT have any meta! Unable to update stats.");
+            toolStats.logger.warn("{} does NOT have any meta! Unable to update stats.", itemStack);
             return null;
         }
         // get the current time

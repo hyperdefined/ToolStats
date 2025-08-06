@@ -71,25 +71,6 @@ public class ItemLore {
     }
 
     /**
-     * Add lore to a given item.
-     *
-     * @param itemMeta The item's meta.
-     * @param newLine  The new line to add to the lore.
-     * @return The new item's lore.
-     */
-    public List<Component> addItemLore(ItemMeta itemMeta, Component newLine) {
-        List<Component> itemLore;
-        if (itemMeta.hasLore()) {
-            itemLore = itemMeta.lore();
-            itemLore.add(newLine);
-        } else {
-            itemLore = new ArrayList<>();
-            itemLore.add(newLine);
-        }
-        return itemLore;
-    }
-
-    /**
      * Remove a given lore from an item.
      *
      * @param inputLore The item's lore.
@@ -114,7 +95,7 @@ public class ItemLore {
         ItemStack clone = playerTool.clone();
         ItemMeta meta = clone.getItemMeta();
         if (meta == null) {
-            toolStats.logger.warning(clone + " does NOT have any meta! Unable to update stats.");
+            toolStats.logger.warn("{} does NOT have any meta! Unable to update stats.", clone);
             return null;
         }
         // read the current stats from the item
@@ -188,7 +169,7 @@ public class ItemLore {
 
         if (cropsMined == null) {
             cropsMined = 0;
-            toolStats.logger.warning(clone + " does not have valid crops-mined set! Resting to zero. This should NEVER happen.");
+            toolStats.logger.warn("{} does not have valid crops-mined set! Resting to zero. This should NEVER happen.", clone);
         }
 
         container.set(toolStats.cropsHarvested, PersistentDataType.INTEGER, cropsMined + add);
@@ -213,7 +194,7 @@ public class ItemLore {
         ItemStack clone = playerTool.clone();
         ItemMeta meta = clone.getItemMeta();
         if (meta == null) {
-            toolStats.logger.warning(clone + " does NOT have any meta! Unable to update stats.");
+            toolStats.logger.warn("{} does NOT have any meta! Unable to update stats.", clone);
             return null;
         }
 
@@ -287,7 +268,7 @@ public class ItemLore {
 
         if (blocksMined == null) {
             blocksMined = 0;
-            toolStats.logger.warning(clone + " does not have valid generic-mined set! Resting to zero. This should NEVER happen.");
+            toolStats.logger.warn("{} does not have valid generic-mined set! Resting to zero. This should NEVER happen.", clone);
         }
 
         container.set(toolStats.blocksMined, PersistentDataType.INTEGER, blocksMined + add);
@@ -312,7 +293,7 @@ public class ItemLore {
         ItemStack clone = playerWeapon.clone();
         ItemMeta meta = clone.getItemMeta();
         if (meta == null) {
-            toolStats.logger.warning(clone + " does NOT have any meta! Unable to update stats.");
+            toolStats.logger.warn("{} does NOT have any meta! Unable to update stats.", clone);
             return null;
         }
 
@@ -385,7 +366,7 @@ public class ItemLore {
 
         if (playerKills == null) {
             playerKills = 0;
-            toolStats.logger.warning(clone + " does not have valid player-kills set! Resting to zero. This should NEVER happen.");
+            toolStats.logger.warn("{} does not have valid player-kills set! Resting to zero. This should NEVER happen.", clone);
         }
 
         container.set(toolStats.playerKills, PersistentDataType.INTEGER, playerKills + add);
@@ -410,7 +391,7 @@ public class ItemLore {
         ItemStack clone = playerWeapon.clone();
         ItemMeta meta = clone.getItemMeta();
         if (meta == null) {
-            toolStats.logger.warning(clone + " does NOT have any meta! Unable to update stats.");
+            toolStats.logger.warn("{} does NOT have any meta! Unable to update stats.", clone);
             return null;
         }
 
@@ -483,7 +464,7 @@ public class ItemLore {
 
         if (mobKills == null) {
             mobKills = 0;
-            toolStats.logger.warning(clone + " does not have valid mob-kills set! Resting to zero. This should NEVER happen.");
+            toolStats.logger.warn("{} does not have valid mob-kills set! Resting to zero. This should NEVER happen.", clone);
         }
 
         container.set(toolStats.mobKills, PersistentDataType.INTEGER, mobKills + add);
@@ -516,7 +497,7 @@ public class ItemLore {
         ItemStack clone = armorPiece.clone();
         ItemMeta meta = clone.getItemMeta();
         if (meta == null) {
-            toolStats.logger.warning(clone + " does NOT have any meta! Unable to update stats.");
+            toolStats.logger.warn("{} does NOT have any meta! Unable to update stats.", clone);
             return null;
         }
 
@@ -589,7 +570,7 @@ public class ItemLore {
 
         if (damageTaken == null) {
             damageTaken = 0.0;
-            toolStats.logger.warning(clone + " does not have valid damage-taken set! Resting to zero. This should NEVER happen.");
+            toolStats.logger.warn("{} does not have valid damage-taken set! Resting to zero. This should NEVER happen.", clone);
         }
 
         container.set(toolStats.armorDamage, PersistentDataType.DOUBLE, damageTaken + damage);
@@ -622,7 +603,7 @@ public class ItemLore {
         ItemStack clone = weapon.clone();
         ItemMeta meta = clone.getItemMeta();
         if (meta == null) {
-            toolStats.logger.warning(clone + " does NOT have any meta! Unable to update stats.");
+            toolStats.logger.warn("{} does NOT have any meta! Unable to update stats.", clone);
             return null;
         }
 
@@ -695,7 +676,7 @@ public class ItemLore {
 
         if (damageDone == null) {
             damageDone = 0.0;
-            toolStats.logger.warning(clone + " does not have valid damage-done set! Resting to zero. This should NEVER happen.");
+            toolStats.logger.warn("{} does not have valid damage-done set! Resting to zero. This should NEVER happen.", clone);
         }
 
         container.set(toolStats.damageDone, PersistentDataType.DOUBLE, damageDone + damage);
@@ -720,7 +701,7 @@ public class ItemLore {
         ItemStack clone = elytra.clone();
         ItemMeta meta = clone.getItemMeta();
         if (meta == null) {
-            toolStats.logger.warning(clone + " does NOT have any meta! Unable to update stats.");
+            toolStats.logger.warn("{} does NOT have any meta! Unable to update stats.", clone);
             return null;
         }
 
@@ -803,7 +784,7 @@ public class ItemLore {
 
         if (flightTime == null) {
             flightTime = 0L;
-            toolStats.logger.warning(flightTime + " does not have valid flight-time set! Resting to zero. This should NEVER happen.");
+            toolStats.logger.warn("{} does not have valid flight-time set! Resting to zero. This should NEVER happen.", flightTime);
         }
 
         container.set(toolStats.flightTime, PersistentDataType.LONG, flightTime + duration);
@@ -836,7 +817,7 @@ public class ItemLore {
         ItemStack clone = shears.clone();
         ItemMeta meta = clone.getItemMeta();
         if (meta == null) {
-            toolStats.logger.warning(clone + " does NOT have any meta! Unable to update stats.");
+            toolStats.logger.warn("{} does NOT have any meta! Unable to update stats.", clone);
             return null;
         }
 
@@ -909,7 +890,7 @@ public class ItemLore {
 
         if (sheepSheared == null) {
             sheepSheared = 0;
-            toolStats.logger.warning(clone + " does not have valid sheared set! Resting to zero. This should NEVER happen.");
+            toolStats.logger.warn("{} does not have valid sheared set! Resting to zero. This should NEVER happen.", clone);
         }
 
         container.set(toolStats.sheepSheared, PersistentDataType.INTEGER, sheepSheared + add);
@@ -934,7 +915,7 @@ public class ItemLore {
         ItemStack clone = bow.clone();
         ItemMeta meta = clone.getItemMeta();
         if (meta == null) {
-            toolStats.logger.warning(clone + " does NOT have any meta! Unable to update stats.");
+            toolStats.logger.warn("{} does NOT have any meta! Unable to update stats.", clone);
             return null;
         }
 
@@ -1009,7 +990,7 @@ public class ItemLore {
 
         if (arrowsShot == null) {
             arrowsShot = 0;
-            toolStats.logger.warning(arrowsShot + " does not have valid arrows-shot set! Resting to zero. This should NEVER happen.");
+            toolStats.logger.warn("{} does not have valid arrows-shot set! Resting to zero. This should NEVER happen.", arrowsShot);
         }
 
         container.set(toolStats.arrowsShot, PersistentDataType.INTEGER, arrowsShot + add);
@@ -1034,7 +1015,7 @@ public class ItemLore {
         ItemStack clone = fishingRod.clone();
         ItemMeta meta = clone.getItemMeta();
         if (meta == null) {
-            toolStats.logger.warning(clone + " does NOT have any meta! Unable to update stats.");
+            toolStats.logger.warn("{} does NOT have any meta! Unable to update stats.", clone);
             return null;
         }
 
@@ -1107,7 +1088,7 @@ public class ItemLore {
 
         if (fishCaught == null) {
             fishCaught = 0;
-            toolStats.logger.warning(clone + " does not have valid fish-caught set! Resting to zero. This should NEVER happen.");
+            toolStats.logger.warn("{} does not have valid fish-caught set! Resting to zero. This should NEVER happen.", clone);
         }
 
         container.set(toolStats.fishCaught, PersistentDataType.INTEGER, fishCaught + add);
