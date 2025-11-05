@@ -16,7 +16,7 @@ Here is everything it tracks:
 * Blocks mined (pickaxes, shovels, axes, hoes, shears).
 * Crops mined (hoes).
 * Player/mob kills (swords, axes, tridents, bows/crossbows, mace).
-* Ownership of items when crafted, looted (from chests), traded, spawned via creative, and caught from fishing.
+* Ownership of items when crafted, looted (from chests/vaults/barrels), traded, spawned via creative, and caught from fishing.
 * Armor damage taken.
 * Damage done with weapons.
 * Fish caught.
