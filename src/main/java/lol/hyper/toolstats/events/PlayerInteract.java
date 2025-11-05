@@ -20,8 +20,8 @@ package lol.hyper.toolstats.events;
 import lol.hyper.toolstats.ToolStats;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -31,6 +31,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.InventoryHolder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -62,7 +63,8 @@ public class PlayerInteract implements Listener {
             return;
         }
         // store when a player opens a chest
-        if (block.getType() != Material.AIR && block.getType() == Material.CHEST) {
+        BlockState state = block.getState();
+        if (state instanceof InventoryHolder) {
             openedChests.put(block, player);
             Bukkit.getGlobalRegionScheduler().runDelayed(toolStats, scheduledTask -> openedChests.remove(block), 20);
         }

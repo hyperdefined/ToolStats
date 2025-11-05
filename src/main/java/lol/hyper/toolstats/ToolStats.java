@@ -151,6 +151,7 @@ public final class ToolStats extends JavaPlugin {
     public TokenData tokenData;
     public AnvilEvent anvilEvent;
     public PrepareCraft prepareCraft;
+    public BlockDispenseEvent blockDispenseEvent;
     public HyperLib hyperLib;
     public TextUtils textUtils;
 
@@ -201,6 +202,7 @@ public final class ToolStats extends JavaPlugin {
         shootBow = new ShootBow(this);
         anvilEvent = new AnvilEvent(this);
         prepareCraft = new PrepareCraft(this);
+        blockDispenseEvent = new BlockDispenseEvent(this);
 
         // save which stat can be used by a reset token
         tokenKeys.add(blocksMined);
@@ -231,6 +233,7 @@ public final class ToolStats extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(playerMove, this);
         Bukkit.getServer().getPluginManager().registerEvents(anvilEvent, this);
         Bukkit.getServer().getPluginManager().registerEvents(prepareCraft, this);
+        Bukkit.getServer().getPluginManager().registerEvents(blockDispenseEvent, this);
 
         this.getCommand("toolstats").setExecutor(commandToolStats);
 
