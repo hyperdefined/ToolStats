@@ -20,6 +20,7 @@ package lol.hyper.toolstats.events;
 import lol.hyper.hyperlib.datatypes.UUIDDataType;
 import lol.hyper.toolstats.ToolStats;
 import net.kyori.adventure.text.Component;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -49,6 +50,10 @@ public class BlockDispenseEvent implements Listener {
         Player player = event.getPlayer();
 
         if (player == null) {
+            return;
+        }
+
+        if (player.getGameMode() == GameMode.CREATIVE && !toolStats.config.getBoolean("allow-creative")) {
             return;
         }
 
