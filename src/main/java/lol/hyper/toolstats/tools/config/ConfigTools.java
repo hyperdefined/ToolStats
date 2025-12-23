@@ -87,6 +87,7 @@ public class ConfigTools {
             case "trident" -> toolStats.config.getBoolean("enabled." + configName + ".trident");
             case "fishing-rod" -> toolStats.config.getBoolean("enabled." + configName + ".fishing-rod");
             case "mace" -> toolStats.config.getBoolean("enabled." + configName + ".mace");
+            case "spear" -> toolStats.config.getBoolean("enabled." + configName + ".spear");
             case "helmet", "chestplate", "leggings", "boots" ->
                     toolStats.config.getBoolean("enabled." + configName + ".armor");
             default -> false;

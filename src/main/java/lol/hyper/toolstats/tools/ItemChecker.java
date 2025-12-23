@@ -52,7 +52,7 @@ public class ItemChecker {
                 mineItems.add(material);
             }
 
-            if (lowerCase.contains("_sword") || lowerCase.contains("_axe")) {
+            if (lowerCase.contains("_sword") || lowerCase.contains("_axe") || lowerCase.contains("_spear")) {
                 meleeItems.add(material);
             }
 

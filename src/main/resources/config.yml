@@ -150,6 +150,7 @@ enabled:
     armor: true
     mace: true
     fishing-rod: true
+    spear: true
   # Will show "Crafted on <date>"
   crafted-on:
     pickaxe: true
@@ -162,6 +163,7 @@ enabled:
     armor: true
     mace: true
     fishing-rod: true
+    spear: true
   # Will show "Fished by <player>"
   fished-by:
     pickaxe: true
@@ -195,6 +197,7 @@ enabled:
     bow: true
     armor: true
     fishing-rod: true
+    spear: true
   # Will show "Found on <date>"
   looted-on:
     pickaxe: true
@@ -206,6 +209,7 @@ enabled:
     bow: true
     armor: true
     fishing-rod: true
+    spear: true
   # Will show "Traded by <player>"
   traded-by:
     pickaxe: true
@@ -234,18 +238,21 @@ enabled:
     trident: true
     bow: true
     mace: true
+    spear: true
   player-kills:
     sword: true
     axe: true
     trident: true
     bow: true
     mace: true
+    spear: true
   mob-kills:
     sword: true
     axe: true
     trident: true
     bow: true
     mace: true
+    spear: true
   blocks-mined:
     pickaxe: true
     shovel: true
@@ -264,6 +271,7 @@ enabled:
     armor: true
     mace: true
     fishing-rod: true
+    spear: true
   # Will show "Spawned in on <date>"
   spawned-in-on:
     pickaxe: true
@@ -276,6 +284,7 @@ enabled:
     armor: true
     mace: true
     fishing-rod: true
+    spear: true
   fish-caught: true
   sheep-sheared: true
   armor-damage: true
@@ -346,4 +355,4 @@ normalize-time-creation: false
 # Allows stats and origins to be tracked if the player is in creative mode.
 allow-creative: false
 
-config-version: 13
+config-version: 14
