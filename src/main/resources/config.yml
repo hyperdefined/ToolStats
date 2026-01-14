@@ -158,6 +158,17 @@ tokens:
         enabled: false
         type: float
         value: 1001
+    critical-strikes:
+      title: "&7ToolStats: &8Critical Strikes Token"
+      lore:
+        - "&8Combine with a melee or ranged weapon in an anvil to track critical strikes."
+        - "&8Uses &7{levels} &8level."
+      levels: 1
+      material: PAPER
+      custom-model-data:
+        enabled: false
+        type: float
+        value: 1001
 
 enabled:
   # Will show "Crafted by <player>"
@@ -319,6 +330,7 @@ enabled:
   arrows-shot: true
   flight-time: true
   crops-harvested: true
+  critical-strikes: true
 
 messages:
   crafted:
@@ -354,6 +366,7 @@ messages:
   arrows-shot: "&7Arrows shot: &8{arrows}"
   flight-time: "&7Flight time: &8{years}y {months}m {days}d {hours}h {minutes}m {seconds}s"
   damage-done: "&7Damage done: &8{damage}"
+  critical-strikes: "&7Critical strikes: &8{strikes}"
   # Set display name for mobs. See: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
   mobs:
     ZOMBIE: "Zombie"

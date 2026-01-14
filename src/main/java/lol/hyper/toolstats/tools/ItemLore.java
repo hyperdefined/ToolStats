@@ -1218,6 +1218,104 @@ public class ItemLore {
     }
 
     /**
+     * Add x to critical strikes stat.
+     *
+     * @param weapon The weapon used.
+     */
+    public ItemMeta updateCriticalStrikes(ItemStack weapon, int add) {
+        ItemStack clone = weapon.clone();
+        ItemMeta meta = clone.getItemMeta();
+        if (meta == null) {
+            toolStats.logger.warn("{} does NOT have any meta! Unable to update stats.", clone);
+            return null;
+        }
+
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+
+        // if it's disabled, don't update the stats
+        // check to see if the item has the stats, remove them if it does
+        if (!toolStats.config.getBoolean("enabled.critical-strikes")) {
+            if (container.has(toolStats.criticalStrikes)) {
+                Integer criticalStrikes = container.get(toolStats.criticalStrikes, PersistentDataType.INTEGER);
+                if (criticalStrikes == null) {
+                    return null;
+                }
+                container.remove(toolStats.criticalStrikes);
+                // remove the applied token if this stat is disabled
+                if (container.has(toolStats.tokenApplied)) {
+                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (appliedTokens != null) {
+                        // remove the token from the list
+                        // if the list is empty, remove the PDC
+                        // otherwise set the PDC back with the new list
+                        List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "critical-strikes");
+                        if (!newTokens.isEmpty()) {
+                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        } else {
+                            container.remove(toolStats.tokenApplied);
+                        }
+                    }
+                }
+                if (meta.hasLore()) {
+                    String oldCriticalStrikes = toolStats.numberFormat.formatInt(criticalStrikes);
+                    Component lineToRemove = toolStats.configTools.formatLore("critical-strikes", "{strikes}", oldCriticalStrikes);
+                    List<Component> newLore = removeLore(meta.lore(), lineToRemove);
+                    meta.lore(newLore);
+                }
+                return meta;
+            }
+            return null;
+        }
+
+        // check for tokens
+        boolean validToken = toolStats.itemChecker.checkTokens(container, "critical-strikes");
+        // check for tokens
+        if (toolStats.config.getBoolean("tokens.enabled")) {
+            // if the item has stats but no token, add the token
+            if (container.has(toolStats.criticalStrikes) && !validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
+            }
+
+            // the item does not have a valid token
+            if (!validToken) {
+                return null;
+            }
+        } else {
+            if (!validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
+            }
+        }
+
+        Integer criticalStrikes = 0;
+        if (container.has(toolStats.criticalStrikes, PersistentDataType.INTEGER)) {
+            criticalStrikes = container.get(toolStats.criticalStrikes, PersistentDataType.INTEGER);
+        }
+
+        if (criticalStrikes == null) {
+            criticalStrikes = 0;
+            toolStats.logger.warn("{} does not have valid fish-caught set! Resting to zero. This should NEVER happen.", clone);
+        }
+
+        container.set(toolStats.criticalStrikes, PersistentDataType.INTEGER, criticalStrikes + add);
+        String oldCriticalStrikesFormatted = toolStats.numberFormat.formatInt(criticalStrikes);
+        String newCriticalStrikesFormatted = toolStats.numberFormat.formatInt(criticalStrikes + add);
+        Component oldLine = toolStats.configTools.formatLore("critical-strikes", "{strikes}", oldCriticalStrikesFormatted);
+        Component newLine = toolStats.configTools.formatLore("critical-strikes", "{strikes}", newCriticalStrikesFormatted);
+        if (oldLine == null || newLine == null) {
+            return null;
+        }
+        List<Component> newLore = updateItemLore(meta, oldLine, newLine);
+        meta.lore(newLore);
+        return meta;
+    }
+
+    /**
      * Format the item owner lore.
      *
      * @param playerName The player's name who owns the items.
@@ -1457,6 +1555,16 @@ public class ItemLore {
                 container.remove(toolStats.enderDragonKills);
                 String enderDragonKillsFormatted = toolStats.numberFormat.formatInt(enderDragonKills);
                 Component lineToRemove = toolStats.configTools.formatLore("bosses-killed.enderdragon", "{kills}", enderDragonKillsFormatted);
+                meta.lore(removeLore(meta.lore(), lineToRemove));
+                finalItem.setItemMeta(meta);
+            }
+        }
+        if (container.has(toolStats.criticalStrikes)) {
+            Integer criticalStrikes = container.get(toolStats.criticalStrikes, PersistentDataType.INTEGER);
+            if (criticalStrikes != null) {
+                container.remove(toolStats.criticalStrikes);
+                String criticalStrikesFormatted = toolStats.numberFormat.formatInt(criticalStrikes);
+                Component lineToRemove = toolStats.configTools.formatLore("critical-strikes", "{strikes}", criticalStrikesFormatted);
                 meta.lore(removeLore(meta.lore(), lineToRemove));
                 finalItem.setItemMeta(meta);
             }

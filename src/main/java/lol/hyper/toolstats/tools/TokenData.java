@@ -139,6 +139,13 @@ public class TokenData {
         enderDragonKillsRecipe.setIngredient('E', Material.ENDER_PEARL);
         recipes.add(enderDragonKillsRecipe);
 
+        NamespacedKey criticalStrikesKey = new NamespacedKey(toolStats, "critical-strikes-token");
+        ShapedRecipe criticalStrikesRecipe = new ShapedRecipe(criticalStrikesKey, createToken("critical-strikes"));
+        criticalStrikesRecipe.shape(" P ", "PSP", " P ");
+        enderDragonKillsRecipe.setIngredient('P', Material.PAPER);
+        enderDragonKillsRecipe.setIngredient('S', Material.GOLDEN_SWORD);
+        recipes.add(criticalStrikesRecipe);
+
         tokenTypes.add("crops-mined");
         tokenTypes.add("blocks-mined");
         tokenTypes.add("damage-taken");

@@ -67,6 +67,7 @@ public class EntityDamage implements Listener {
         double finalDamage = event.getFinalDamage();
         boolean modDied = mobBeingAttacked.getHealth() - finalDamage <= 0;
         EntityType mobAttackedType = event.getEntityType();
+        boolean critical = event.isCritical();
 
         // player attacks something
         if (playerAttacking) {
@@ -80,6 +81,11 @@ public class EntityDamage implements Listener {
             // update their weapon's damage
             updateWeaponDamage(playerAttackingInventory, event.getFinalDamage());
 
+            // if the player crit
+            if (critical) {
+                updateCriticalStrikes(playerAttackingInventory);
+            }
+
             // the mob the player attacked died
             if (modDied) {
                 // player killed another player
@@ -88,12 +94,11 @@ public class EntityDamage implements Listener {
                 } else {
                     // player kills a regular mob
                     updateWeaponKills(playerAttackingInventory, "mob");
-                    // reget the player inventory since we updated above
                     if (mobAttackedType == EntityType.WITHER) {
-                        updateBossesKilled(player.getInventory(), "wither");
+                        updateBossesKilled(playerAttackingInventory, "wither");
                     }
                     if (mobAttackedType == EntityType.ENDER_DRAGON) {
-                        updateBossesKilled(player.getInventory(), "enderdragon");
+                        updateBossesKilled(playerAttackingInventory, "enderdragon");
                     }
                 }
             }
@@ -306,8 +311,7 @@ public class EntityDamage implements Listener {
 
     private void updateBossesKilled(PlayerInventory playerInventory, String boss) {
         ItemStack heldWeapon = playerInventory.getItemInMainHand();
-        ItemMeta newHeldWeaponMeta = null;
-        newHeldWeaponMeta = toolStats.itemLore.updateBossesKilled(heldWeapon, 1, boss);
+        ItemMeta newHeldWeaponMeta = toolStats.itemLore.updateBossesKilled(heldWeapon, 1, boss);
         if (newHeldWeaponMeta != null) {
             playerInventory.getItemInMainHand().setItemMeta(newHeldWeaponMeta);
         }
@@ -331,6 +335,14 @@ public class EntityDamage implements Listener {
             } else if (isOffHand) {
                 playerInventory.getItemInOffHand().setItemMeta(newHeldWeaponMeta);
             }
+        }
+    }
+
+    private void updateCriticalStrikes(PlayerInventory playerInventory) {
+        ItemStack heldWeapon = playerInventory.getItemInMainHand();
+        ItemMeta newHeldWeaponMeta = toolStats.itemLore.updateCriticalStrikes(heldWeapon, 1);
+        if (newHeldWeaponMeta != null) {
+            playerInventory.getItemInMainHand().setItemMeta(newHeldWeaponMeta);
         }
     }
 }

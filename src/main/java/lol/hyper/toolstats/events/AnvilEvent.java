@@ -135,6 +135,10 @@ public class AnvilEvent implements Listener {
                     addToken(event, tokenType, "enderdragon-kills", clone);
                     return;
                 }
+                if (tokenType.equalsIgnoreCase("critical-strikes")) {
+                    addToken(event, tokenType, "critical-strikes", clone);
+                    return;
+                }
             }
             return;
         }
@@ -165,6 +169,10 @@ public class AnvilEvent implements Listener {
             }
             if (tokenType.equalsIgnoreCase("enderdragon-kills")) {
                 addToken(event, tokenType, "enderdragon-kills", clone);
+                return;
+            }
+            if (tokenType.equalsIgnoreCase("critical-strikes")) {
+                addToken(event, tokenType, "critical-strikes", clone);
                 return;
             }
             return;
@@ -333,6 +341,15 @@ public class AnvilEvent implements Listener {
                 }
                 break;
             }
+            case "critical-strikes": {
+                if (toolStats.config.getBoolean("enabled.critical-strikes")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateCriticalStrikes(newItem, 0));
+                } else {
+                    event.setResult(null);
+                    return;
+                }
+                break;
+            }
         }
         event.setResult(newItem);
         event.getView().setRepairCost(toolStats.itemChecker.getCost(targetToken));
@@ -448,6 +465,14 @@ public class AnvilEvent implements Listener {
                 return;
             }
             meta = toolStats.itemLore.updateBossesKilled(finalItem, -enderDragonKills, "enderdragon");
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.criticalStrikes)) {
+            Integer criticalStrikes = container.get(toolStats.criticalStrikes, PersistentDataType.INTEGER);
+            if (criticalStrikes == null) {
+                return;
+            }
+            meta = toolStats.itemLore.updateCriticalStrikes(finalItem, -criticalStrikes);
             finalItem.setItemMeta(meta);
         }
         event.setResult(finalItem);

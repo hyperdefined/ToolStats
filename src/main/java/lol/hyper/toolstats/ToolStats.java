@@ -115,6 +115,10 @@ public final class ToolStats extends JavaPlugin {
      * Key for withers killed.
      */
     public final NamespacedKey enderDragonKills = new NamespacedKey(this, "enderdragon-kills");
+    /**
+     * Key for critical strikes.
+     */
+    public final NamespacedKey criticalStrikes = new NamespacedKey(this, "critical-strikes");
 
     /**
      * Stores how an item was created.
