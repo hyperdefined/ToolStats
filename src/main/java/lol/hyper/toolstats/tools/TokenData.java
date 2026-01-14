@@ -125,6 +125,20 @@ public class TokenData {
         removeRecipe.setIngredient('P', Material.PAPER);
         recipes.add(removeRecipe);
 
+        NamespacedKey witherKillsKey = new NamespacedKey(toolStats, "wither-kills-token");
+        ShapedRecipe witherKillsRecipe = new ShapedRecipe(witherKillsKey, createToken("wither-kills"));
+        witherKillsRecipe.shape(" P ", "PWP", " P ");
+        witherKillsRecipe.setIngredient('P', Material.PAPER);
+        witherKillsRecipe.setIngredient('W', Material.WITHER_ROSE);
+        recipes.add(witherKillsRecipe);
+
+        NamespacedKey enderDragonKillsKey = new NamespacedKey(toolStats, "enderdragon-kills-token");
+        ShapedRecipe enderDragonKillsRecipe = new ShapedRecipe(enderDragonKillsKey, createToken("enderdragon-kills"));
+        enderDragonKillsRecipe.shape(" P ", "PEP", " P ");
+        enderDragonKillsRecipe.setIngredient('P', Material.PAPER);
+        enderDragonKillsRecipe.setIngredient('W', Material.ENDER_PEARL);
+        recipes.add(enderDragonKillsRecipe);
+
         tokenTypes.add("crops-mined");
         tokenTypes.add("blocks-mined");
         tokenTypes.add("damage-taken");
@@ -137,6 +151,8 @@ public class TokenData {
         tokenTypes.add("fish-caught");
         tokenTypes.add("reset");
         tokenTypes.add("remove");
+        tokenTypes.add("wither-kills");
+        tokenTypes.add("enderdragon-kills");
     }
 
     public Set<ShapedRecipe> getRecipes() {

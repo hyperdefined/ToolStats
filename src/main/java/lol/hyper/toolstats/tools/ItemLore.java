@@ -22,6 +22,7 @@ import lol.hyper.toolstats.ToolStats;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -848,7 +849,7 @@ public class ItemLore {
                     }
                 }
                 if (meta.hasLore()) {
-                    String oldSheepShearedFormatted = toolStats.numberFormat.formatDouble(sheepSheared);
+                    String oldSheepShearedFormatted = toolStats.numberFormat.formatInt(sheepSheared);
                     Component lineToRemove = toolStats.configTools.formatLore("sheep-sheared", "{sheep}", oldSheepShearedFormatted);
                     List<Component> newLore = removeLore(meta.lore(), lineToRemove);
                     meta.lore(newLore);
@@ -946,7 +947,7 @@ public class ItemLore {
                     }
                 }
                 if (meta.hasLore()) {
-                    String oldArrowsShotFormatted = toolStats.numberFormat.formatDouble(arrowsShot);
+                    String oldArrowsShotFormatted = toolStats.numberFormat.formatInt(arrowsShot);
                     Component lineToRemove = toolStats.configTools.formatLore("arrows-shot", "{arrows}", oldArrowsShotFormatted);
                     List<Component> newLore = removeLore(meta.lore(), lineToRemove);
                     meta.lore(newLore);
@@ -1046,7 +1047,7 @@ public class ItemLore {
                     }
                 }
                 if (meta.hasLore()) {
-                    String oldFishCaught = toolStats.numberFormat.formatDouble(fishCaught);
+                    String oldFishCaught = toolStats.numberFormat.formatInt(fishCaught);
                     Component lineToRemove = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", oldFishCaught);
                     List<Component> newLore = removeLore(meta.lore(), lineToRemove);
                     meta.lore(newLore);
@@ -1096,6 +1097,118 @@ public class ItemLore {
         String newFishFormatted = toolStats.numberFormat.formatInt(fishCaught + add);
         Component oldLine = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", oldFishFormatted);
         Component newLine = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", newFishFormatted);
+        if (oldLine == null || newLine == null) {
+            return null;
+        }
+        List<Component> newLore = updateItemLore(meta, oldLine, newLine);
+        meta.lore(newLore);
+        return meta;
+    }
+
+    /**
+     * Add x to bosses killed stat.
+     *
+     * @param weapon The weapon used.
+     * @param add How many to add.
+     * @param boss The boss killed
+     */
+    public ItemMeta updateBossesKilled(ItemStack weapon, int add, String boss) {
+        ItemStack clone = weapon.clone();
+        ItemMeta meta = clone.getItemMeta();
+        if (meta == null) {
+            toolStats.logger.warn("{} does NOT have any meta! Unable to update stats.", clone);
+            return null;
+        }
+
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+
+        NamespacedKey bossesKey = null;
+        if (boss.equalsIgnoreCase("wither")) {
+            bossesKey = toolStats.witherKills;
+        }
+        if (boss.equalsIgnoreCase("enderdragon")) {
+            bossesKey = toolStats.enderDragonKills;
+        }
+
+        if (bossesKey == null) {
+            return null;
+        }
+
+        // if it's disabled, don't update the stats
+        // check to see if the item has the stats, remove them if it does
+        if (!toolStats.config.getBoolean("enabled.bosses-killed." + boss)) {
+            if (container.has(bossesKey)) {
+                Integer bossesKilled = container.get(bossesKey, PersistentDataType.INTEGER);
+                if (bossesKilled == null) {
+                    return null;
+                }
+                container.remove(bossesKey);
+                // remove the applied token if this stat is disabled
+                if (container.has(toolStats.tokenApplied)) {
+                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (appliedTokens != null) {
+                        // remove the token from the list
+                        // if the list is empty, remove the PDC
+                        // otherwise set the PDC back with the new list
+                        List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "wither-kills");
+                        if (!newTokens.isEmpty()) {
+                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        } else {
+                            container.remove(toolStats.tokenApplied);
+                        }
+                    }
+                }
+                if (meta.hasLore()) {
+                    String oldBossesKilled = toolStats.numberFormat.formatInt(bossesKilled);
+                    Component lineToRemove = toolStats.configTools.formatLore("bosses-killed." + boss, "{kills}", oldBossesKilled);
+                    List<Component> newLore = removeLore(meta.lore(), lineToRemove);
+                    meta.lore(newLore);
+                }
+                return meta;
+            }
+            return null;
+        }
+
+        // check for tokens
+        boolean validToken = toolStats.itemChecker.checkTokens(container, "wither-kills");
+        // check for tokens
+        if (toolStats.config.getBoolean("tokens.enabled")) {
+            // if the item has stats but no token, add the token
+            if (container.has(bossesKey) && !validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
+            }
+
+            // the item does not have a valid token
+            if (!validToken) {
+                return null;
+            }
+        } else {
+            if (!validToken) {
+                String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
+                if (newTokens != null) {
+                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                }
+            }
+        }
+
+        Integer bossesKilled = 0;
+        if (container.has(bossesKey, PersistentDataType.INTEGER)) {
+            bossesKilled = container.get(bossesKey, PersistentDataType.INTEGER);
+        }
+
+        if (bossesKilled == null) {
+            bossesKilled = 0;
+            toolStats.logger.warn("{} does not have valid {} set! Resting to zero. This should NEVER happen.", clone, boss);
+        }
+
+        container.set(bossesKey, PersistentDataType.INTEGER, bossesKilled + add);
+        String oldBossesKilledFormatted = toolStats.numberFormat.formatInt(bossesKilled);
+        String newBossesKilledFormatted = toolStats.numberFormat.formatInt(bossesKilled + add);
+        Component oldLine = toolStats.configTools.formatLore("bosses-killed." + boss, "{kills}", oldBossesKilledFormatted);
+        Component newLine = toolStats.configTools.formatLore("bosses-killed." + boss, "{kills}", newBossesKilledFormatted);
         if (oldLine == null || newLine == null) {
             return null;
         }
@@ -1312,7 +1425,6 @@ public class ItemLore {
             Integer arrowsShot = container.get(toolStats.arrowsShot, PersistentDataType.INTEGER);
             if (arrowsShot != null) {
                 container.remove(toolStats.arrowsShot);
-
                 String arrowsShotFormatted = toolStats.numberFormat.formatInt(arrowsShot);
                 Component lineToRemove = toolStats.configTools.formatLore("arrows-shot", "{arrows}", arrowsShotFormatted);
                 meta.lore(removeLore(meta.lore(), lineToRemove));
@@ -1325,6 +1437,26 @@ public class ItemLore {
                 container.remove(toolStats.flightTime);
                 Map<String, String> flightTimeFormatted = toolStats.numberFormat.formatTime(flightTime);
                 Component lineToRemove = toolStats.configTools.formatLoreMultiplePlaceholders("flight-time", flightTimeFormatted);
+                meta.lore(removeLore(meta.lore(), lineToRemove));
+                finalItem.setItemMeta(meta);
+            }
+        }
+        if (container.has(toolStats.witherKills)) {
+            Integer witherKills = container.get(toolStats.witherKills, PersistentDataType.INTEGER);
+            if (witherKills != null) {
+                container.remove(toolStats.witherKills);
+                String witherKillsFormatted = toolStats.numberFormat.formatInt(witherKills);
+                Component lineToRemove = toolStats.configTools.formatLore("bosses-killed.wither", "{kills}", witherKillsFormatted);
+                meta.lore(removeLore(meta.lore(), lineToRemove));
+                finalItem.setItemMeta(meta);
+            }
+        }
+        if (container.has(toolStats.enderDragonKills)) {
+            Integer enderDragonKills = container.get(toolStats.enderDragonKills, PersistentDataType.INTEGER);
+            if (enderDragonKills != null) {
+                container.remove(toolStats.enderDragonKills);
+                String enderDragonKillsFormatted = toolStats.numberFormat.formatInt(enderDragonKills);
+                Component lineToRemove = toolStats.configTools.formatLore("bosses-killed.enderdragon", "{kills}", enderDragonKillsFormatted);
                 meta.lore(removeLore(meta.lore(), lineToRemove));
                 finalItem.setItemMeta(meta);
             }

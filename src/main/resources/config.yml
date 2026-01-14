@@ -136,6 +136,28 @@ tokens:
         enabled: false
         type: float
         value: 1001
+    wither-kills:
+      title: "&7ToolStats: &8Wither Kills Token"
+      lore:
+        - "&8Combine with a melee or ranged weapon in an anvil to track wither kills."
+        - "&8Uses &7{levels} &8level."
+      levels: 1
+      material: PAPER
+      custom-model-data:
+        enabled: false
+        type: float
+        value: 1001
+    enderdragon-kills:
+      title: "&7ToolStats: &8Ender Dragon Kills Token"
+      lore:
+        - "&8Combine with a melee or ranged weapon in an anvil to track Ender Dragon kills."
+        - "&8Uses &7{levels} &8level."
+      levels: 1
+      material: PAPER
+      custom-model-data:
+        enabled: false
+        type: float
+        value: 1001
 
 enabled:
   # Will show "Crafted by <player>"
@@ -285,6 +307,9 @@ enabled:
     mace: true
     fishing-rod: true
     spear: true
+  bosses-killed:
+    wither: true
+    enderdragon: true
   fish-caught: true
   sheep-sheared: true
   armor-damage: true
@@ -317,6 +342,9 @@ messages:
   spawned-in:
     spawned-by: "&7Spawned in by: &8{player}"
     spawned-on: "&7Spawned on: &8{date}"
+  bosses-killed:
+    wither: "&7Withers killed: &8{kills}"
+    enderdragon: "&7Ender Dragons killed: &8{kills}"
   blocks-mined: "&7Blocks mined: &8{blocks}"
   crops-harvested: "&7Crops harvested: &8{crops}"
   sheep-sheared: "&7Sheep sheared: &8{sheep}"

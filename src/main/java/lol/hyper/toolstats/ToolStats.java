@@ -108,6 +108,15 @@ public final class ToolStats extends JavaPlugin {
      */
     public final NamespacedKey tokenApplied = new NamespacedKey(this, "token-applied");
     /**
+     * Key for withers killed.
+     */
+    public final NamespacedKey witherKills = new NamespacedKey(this, "wither-kills");
+    /**
+     * Key for withers killed.
+     */
+    public final NamespacedKey enderDragonKills = new NamespacedKey(this, "enderdragon-kills");
+
+    /**
      * Stores how an item was created.
      * 0 = crafted.
      * 1 = dropped.

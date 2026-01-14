@@ -127,6 +127,14 @@ public class AnvilEvent implements Listener {
                     addToken(event, tokenType, "damage-done", clone);
                     return;
                 }
+                if (tokenType.equalsIgnoreCase("wither-kills")) {
+                    addToken(event, tokenType, "wither-kills", clone);
+                    return;
+                }
+                if (tokenType.equalsIgnoreCase("enderdragon-kills")) {
+                    addToken(event, tokenType, "enderdragon-kills", clone);
+                    return;
+                }
             }
             return;
         }
@@ -151,6 +159,14 @@ public class AnvilEvent implements Listener {
                 addToken(event, tokenType, "damage-done", clone);
                 return;
             }
+            if (tokenType.equalsIgnoreCase("wither-kills")) {
+                addToken(event, tokenType, "wither-kills", clone);
+                return;
+            }
+            if (tokenType.equalsIgnoreCase("enderdragon-kills")) {
+                addToken(event, tokenType, "enderdragon-kills", clone);
+                return;
+            }
             return;
         }
         if (firstSlotMaterial == Material.BOW || firstSlotMaterial == Material.CROSSBOW) {
@@ -168,6 +184,14 @@ public class AnvilEvent implements Listener {
             }
             if (tokenType.equalsIgnoreCase("damage-done")) {
                 addToken(event, tokenType, "damage-done", clone);
+                return;
+            }
+            if (tokenType.equalsIgnoreCase("wither-kills")) {
+                addToken(event, tokenType, "wither-kills", clone);
+                return;
+            }
+            if (tokenType.equalsIgnoreCase("enderdragon-kills")) {
+                addToken(event, tokenType, "enderdragon-kills", clone);
                 return;
             }
             return;
@@ -291,6 +315,24 @@ public class AnvilEvent implements Listener {
                 }
                 break;
             }
+            case "wither-kills": {
+                if (toolStats.config.getBoolean("enabled.bosses-killed.wither")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateBossesKilled(newItem, 0, "wither"));
+                } else {
+                    event.setResult(null);
+                    return;
+                }
+                break;
+            }
+            case "enderdragon-kills": {
+                if (toolStats.config.getBoolean("enabled.bosses-killed.enderdragon")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateBossesKilled(newItem, 0, "enderdragon"));
+                } else {
+                    event.setResult(null);
+                    return;
+                }
+                break;
+            }
         }
         event.setResult(newItem);
         event.getView().setRepairCost(toolStats.itemChecker.getCost(targetToken));
@@ -390,6 +432,22 @@ public class AnvilEvent implements Listener {
                 return;
             }
             meta = toolStats.itemLore.updateFlightTime(finalItem, -flightTime);
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.witherKills)) {
+            Integer witherKills = container.get(toolStats.witherKills, PersistentDataType.INTEGER);
+            if (witherKills == null) {
+                return;
+            }
+            meta = toolStats.itemLore.updateBossesKilled(finalItem, -witherKills, "wither");
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.enderDragonKills)) {
+            Integer enderDragonKills = container.get(toolStats.enderDragonKills, PersistentDataType.INTEGER);
+            if (enderDragonKills == null) {
+                return;
+            }
+            meta = toolStats.itemLore.updateBossesKilled(finalItem, -enderDragonKills, "enderdragon");
             finalItem.setItemMeta(meta);
         }
         event.setResult(finalItem);
