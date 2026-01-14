@@ -142,8 +142,8 @@ public class TokenData {
         NamespacedKey criticalStrikesKey = new NamespacedKey(toolStats, "critical-strikes-token");
         ShapedRecipe criticalStrikesRecipe = new ShapedRecipe(criticalStrikesKey, createToken("critical-strikes"));
         criticalStrikesRecipe.shape(" P ", "PSP", " P ");
-        enderDragonKillsRecipe.setIngredient('P', Material.PAPER);
-        enderDragonKillsRecipe.setIngredient('S', Material.GOLDEN_SWORD);
+        criticalStrikesRecipe.setIngredient('P', Material.PAPER);
+        criticalStrikesRecipe.setIngredient('S', Material.GOLDEN_SWORD);
         recipes.add(criticalStrikesRecipe);
 
         tokenTypes.add("crops-mined");
