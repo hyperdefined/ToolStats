@@ -66,10 +66,12 @@ public class EntityDamage implements Listener {
         boolean playerBeingAttacked = mobBeingAttacked instanceof Player;
         double finalDamage = event.getFinalDamage();
         boolean modDied = mobBeingAttacked.getHealth() - finalDamage <= 0;
+        EntityType mobAttackedType = event.getEntityType();
 
         // player attacks something
         if (playerAttacking) {
-            PlayerInventory playerAttackingInventory = ((Player) damager).getInventory();
+            Player player = (Player) damager;
+            PlayerInventory playerAttackingInventory = player.getInventory();
             // make sure the item the player used is an item we want
             if (!toolStats.itemChecker.isMeleeWeapon(playerAttackingInventory.getItemInMainHand().getType())) {
                 return;
@@ -86,6 +88,13 @@ public class EntityDamage implements Listener {
                 } else {
                     // player kills a regular mob
                     updateWeaponKills(playerAttackingInventory, "mob");
+                    // reget the player inventory since we updated above
+                    if (mobAttackedType == EntityType.WITHER) {
+                        updateBossesKilled(player.getInventory(), "wither");
+                    }
+                    if (mobAttackedType == EntityType.ENDER_DRAGON) {
+                        updateBossesKilled(player.getInventory(), "enderdragon");
+                    }
                 }
             }
 
@@ -96,7 +105,7 @@ public class EntityDamage implements Listener {
         // something was hit by a trident
         if (damager instanceof Trident trident) {
             ProjectileSource source = trident.getShooter();
-            if (source instanceof Player) {
+            if (source instanceof Player player) {
                 // update the trident's tracked damage
                 updateTridentDamage(trident, finalDamage);
 
@@ -108,6 +117,12 @@ public class EntityDamage implements Listener {
                     } else {
                         // the trident killed a mob, update the kills
                         updateTridentKills(trident, "mob");
+                        if (mobAttackedType == EntityType.WITHER) {
+                            updateBossesKilled(player.getInventory(), "wither");
+                        }
+                        if (mobAttackedType == EntityType.ENDER_DRAGON) {
+                            updateBossesKilled(player.getInventory(), "enderdragon");
+                        }
                     }
                 }
 
@@ -133,6 +148,12 @@ public class EntityDamage implements Listener {
                     } else {
                         // player killed mob with an arrow
                         updateBowKills(shootingPlayer.getInventory(), "mob");
+                        if (mobAttackedType == EntityType.WITHER) {
+                            updateBossesKilledByBow(shootingPlayer.getInventory(), "wither");
+                        }
+                        if (mobAttackedType == EntityType.ENDER_DRAGON) {
+                            updateBossesKilledByBow(shootingPlayer.getInventory(), "enderdragon");
+                        }
                     }
                 }
 
@@ -188,7 +209,6 @@ public class EntityDamage implements Listener {
         boolean isMain = playerInventory.getItemInMainHand().getType() == Material.BOW || playerInventory.getItemInMainHand().getType() == Material.CROSSBOW;
         boolean isOffHand = playerInventory.getItemInOffHand().getType() == Material.BOW || playerInventory.getItemInOffHand().getType() == Material.CROSSBOW;
         ItemMeta newBowDamage = toolStats.itemLore.updateWeaponDamage(heldBow, damage, false);
-        //toolStats.logger.info(newBowDamage.toString());
 
         // player is shooting another player
         if (newBowDamage != null) {
@@ -281,6 +301,36 @@ public class EntityDamage implements Listener {
         }
         if (newHeldWeaponMeta != null) {
             playerInventory.getItemInMainHand().setItemMeta(newHeldWeaponMeta);
+        }
+    }
+
+    private void updateBossesKilled(PlayerInventory playerInventory, String boss) {
+        ItemStack heldWeapon = playerInventory.getItemInMainHand();
+        ItemMeta newHeldWeaponMeta = null;
+        newHeldWeaponMeta = toolStats.itemLore.updateBossesKilled(heldWeapon, 1, boss);
+        if (newHeldWeaponMeta != null) {
+            playerInventory.getItemInMainHand().setItemMeta(newHeldWeaponMeta);
+        }
+    }
+
+    private void updateBossesKilledByBow(PlayerInventory playerInventory, String boss) {
+        ItemStack heldBow = toolStats.itemChecker.getBow(playerInventory);
+        if (heldBow == null) {
+            return;
+        }
+
+        boolean isMain = playerInventory.getItemInMainHand().getType() == Material.BOW || playerInventory.getItemInMainHand().getType() == Material.CROSSBOW;
+        boolean isOffHand = playerInventory.getItemInOffHand().getType() == Material.BOW || playerInventory.getItemInOffHand().getType() == Material.CROSSBOW;
+
+        ItemMeta newHeldWeaponMeta = toolStats.itemLore.updateBossesKilled(heldBow, 1, boss);
+        if (newHeldWeaponMeta != null) {
+            if (isMain && isOffHand) {
+                playerInventory.getItemInMainHand().setItemMeta(newHeldWeaponMeta);
+            } else if (isMain) {
+                playerInventory.getItemInMainHand().setItemMeta(newHeldWeaponMeta);
+            } else if (isOffHand) {
+                playerInventory.getItemInOffHand().setItemMeta(newHeldWeaponMeta);
+            }
         }
     }
 }

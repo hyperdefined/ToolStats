@@ -136,7 +136,7 @@ public class TokenData {
         ShapedRecipe enderDragonKillsRecipe = new ShapedRecipe(enderDragonKillsKey, createToken("enderdragon-kills"));
         enderDragonKillsRecipe.shape(" P ", "PEP", " P ");
         enderDragonKillsRecipe.setIngredient('P', Material.PAPER);
-        enderDragonKillsRecipe.setIngredient('W', Material.ENDER_PEARL);
+        enderDragonKillsRecipe.setIngredient('E', Material.ENDER_PEARL);
         recipes.add(enderDragonKillsRecipe);
 
         tokenTypes.add("crops-mined");
