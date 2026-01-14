@@ -390,6 +390,22 @@ public class CommandToolStats implements TabExecutor {
                 }
             }
         }
+        if (toolStats.config.getBoolean("enabled.bosses-killed.wither")) {
+            if (container.has(toolStats.witherKills, PersistentDataType.INTEGER)) {
+                Integer kills = container.get(toolStats.witherKills, PersistentDataType.INTEGER);
+                if (kills != null) {
+                    lore.add(toolStats.configTools.formatLore("bosses-killed.wither", "{kills}", toolStats.numberFormat.formatInt(kills)));
+                }
+            }
+        }
+        if (toolStats.config.getBoolean("enabled.bosses-killed.enderdragon")) {
+            if (container.has(toolStats.enderDragonKills, PersistentDataType.INTEGER)) {
+                Integer kills = container.get(toolStats.enderDragonKills, PersistentDataType.INTEGER);
+                if (kills != null) {
+                    lore.add(toolStats.configTools.formatLore("bosses-killed.enderdragon", "{kills}", toolStats.numberFormat.formatInt(kills)));
+                }
+            }
+        }
         finalMeta.lore(lore);
         finalItem.setItemMeta(finalMeta);
         int slot = player.getInventory().getHeldItemSlot();
@@ -714,6 +730,64 @@ public class CommandToolStats implements TabExecutor {
                 }
                 break;
             }
+            case "wither-kills": {
+                if (!toolStats.config.getBoolean("enabled.bosses-killed.wither")) {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                if (container.has(toolStats.witherKills)) {
+                    int value;
+                    try {
+                        value = Integer.parseInt((String) userValue);
+                    } catch (NumberFormatException exception) {
+                        player.sendMessage(Component.text("That is not a valid number.", NamedTextColor.RED));
+                        return;
+                    }
+                    if (value < 0) {
+                        player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
+                        return;
+                    }
+                    Integer statValue = container.get(toolStats.witherKills, PersistentDataType.INTEGER);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    int difference = value - statValue;
+                    editedItemMeta = toolStats.itemLore.updateBossesKilled(editedItem, difference, "wither");
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "enderdragon-kills": {
+                if (!toolStats.config.getBoolean("enabled.bosses-killed.enderdragon")) {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                if (container.has(toolStats.enderDragonKills)) {
+                    int value;
+                    try {
+                        value = Integer.parseInt((String) userValue);
+                    } catch (NumberFormatException exception) {
+                        player.sendMessage(Component.text("That is not a valid number.", NamedTextColor.RED));
+                        return;
+                    }
+                    if (value < 0) {
+                        player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
+                        return;
+                    }
+                    Integer statValue = container.get(toolStats.enderDragonKills, PersistentDataType.INTEGER);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    int difference = value - statValue;
+                    editedItemMeta = toolStats.itemLore.updateBossesKilled(editedItem, difference, "enderdragon");
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
             default: {
                 player.sendMessage(Component.text("That is not a valid stat to update.", NamedTextColor.RED));
                 return;
@@ -985,6 +1059,62 @@ public class CommandToolStats implements TabExecutor {
                     }
 
                     Component oldLine = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", toolStats.numberFormat.formatInt(statValue));
+                    List<Component> newLore = toolStats.itemLore.removeLore(editedItemMeta.lore(), oldLine);
+                    editedItemMeta.lore(newLore);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "wither-kills": {
+                if (container.has(toolStats.witherKills)) {
+                    Integer statValue = container.get(toolStats.witherKills, PersistentDataType.INTEGER);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (tokens == null) {
+                        player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    container.remove(toolStats.witherKills);
+                    List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "wither-kills");
+                    if (newTokens.isEmpty()) {
+                        container.remove(toolStats.tokenApplied);
+                    } else {
+                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                    }
+
+                    Component oldLine = toolStats.configTools.formatLore("bosses-killed.wither", "{kills}", toolStats.numberFormat.formatInt(statValue));
+                    List<Component> newLore = toolStats.itemLore.removeLore(editedItemMeta.lore(), oldLine);
+                    editedItemMeta.lore(newLore);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "enderdragon-kills": {
+                if (container.has(toolStats.enderDragonKills)) {
+                    Integer statValue = container.get(toolStats.enderDragonKills, PersistentDataType.INTEGER);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (tokens == null) {
+                        player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    container.remove(toolStats.enderDragonKills);
+                    List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "enderdragon-kills");
+                    if (newTokens.isEmpty()) {
+                        container.remove(toolStats.tokenApplied);
+                    } else {
+                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                    }
+
+                    Component oldLine = toolStats.configTools.formatLore("bosses-killed.enderdragon", "{kills}", toolStats.numberFormat.formatInt(statValue));
                     List<Component> newLore = toolStats.itemLore.removeLore(editedItemMeta.lore(), oldLine);
                     editedItemMeta.lore(newLore);
                 } else {
