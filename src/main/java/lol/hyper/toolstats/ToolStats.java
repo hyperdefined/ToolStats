@@ -119,6 +119,10 @@ public final class ToolStats extends JavaPlugin {
      * Key for critical strikes.
      */
     public final NamespacedKey criticalStrikes = new NamespacedKey(this, "critical-strikes");
+    /**
+     * Key for trident throws.
+     */
+    public final NamespacedKey tridentThrows = new NamespacedKey(this, "trident-throws");
 
     /**
      * Stores how an item was created.
@@ -167,6 +171,7 @@ public final class ToolStats extends JavaPlugin {
     public BlockDispenseEvent blockDispenseEvent;
     public HyperLib hyperLib;
     public TextUtils textUtils;
+    public ProjectileShoot projectileShoot;
 
     @Override
     public void onEnable() {
@@ -216,6 +221,7 @@ public final class ToolStats extends JavaPlugin {
         anvilEvent = new AnvilEvent(this);
         prepareCraft = new PrepareCraft(this);
         blockDispenseEvent = new BlockDispenseEvent(this);
+        projectileShoot = new ProjectileShoot(this);
 
         // save which stat can be used by a reset token
         tokenKeys.add(blocksMined);
@@ -227,6 +233,10 @@ public final class ToolStats extends JavaPlugin {
         tokenKeys.add(flightTime);
         tokenKeys.add(arrowsShot);
         tokenKeys.add(armorDamage);
+        tokenKeys.add(witherKills);
+        tokenKeys.add(enderDragonKills);
+        tokenKeys.add(criticalStrikes);
+        tokenKeys.add(tridentThrows);
 
         Bukkit.getServer().getPluginManager().registerEvents(blockBreak, this);
         Bukkit.getServer().getPluginManager().registerEvents(chunkPopulate, this);
@@ -247,6 +257,7 @@ public final class ToolStats extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(anvilEvent, this);
         Bukkit.getServer().getPluginManager().registerEvents(prepareCraft, this);
         Bukkit.getServer().getPluginManager().registerEvents(blockDispenseEvent, this);
+        Bukkit.getServer().getPluginManager().registerEvents(projectileShoot, this);
 
         this.getCommand("toolstats").setExecutor(commandToolStats);
 

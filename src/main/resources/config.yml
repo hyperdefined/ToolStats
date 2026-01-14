@@ -169,6 +169,17 @@ tokens:
         enabled: false
         type: float
         value: 1001
+    trident-throws:
+      title: "&7ToolStats: &8Trident Throws Token"
+      lore:
+        - "&8Combine with a trident in an anvil to track times thrown."
+        - "&8Uses &7{levels} &8level."
+      levels: 1
+      material: PAPER
+      custom-model-data:
+        enabled: false
+        type: float
+        value: 1001
 
 enabled:
   # Will show "Crafted by <player>"
@@ -331,6 +342,7 @@ enabled:
   flight-time: true
   crops-harvested: true
   critical-strikes: true
+  trident-throws: true
 
 messages:
   crafted:
@@ -367,6 +379,7 @@ messages:
   flight-time: "&7Flight time: &8{years}y {months}m {days}d {hours}h {minutes}m {seconds}s"
   damage-done: "&7Damage done: &8{damage}"
   critical-strikes: "&7Critical strikes: &8{strikes}"
+  trident-throws: "&7Times thrown: &8{times}"
   # Set display name for mobs. See: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
   mobs:
     ZOMBIE: "Zombie"

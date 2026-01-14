@@ -146,6 +146,13 @@ public class TokenData {
         criticalStrikesRecipe.setIngredient('S', Material.GOLDEN_SWORD);
         recipes.add(criticalStrikesRecipe);
 
+        NamespacedKey tridentThrowsKey = new NamespacedKey(toolStats, "trident-throws-token");
+        ShapedRecipe tridentThrowsRecipe = new ShapedRecipe(tridentThrowsKey, createToken("trident-throws"));
+        tridentThrowsRecipe.shape(" P ", "PSP", " P ");
+        tridentThrowsRecipe.setIngredient('P', Material.PAPER);
+        tridentThrowsRecipe.setIngredient('S', Material.PRISMARINE_SHARD);
+        recipes.add(tridentThrowsRecipe);
+
         tokenTypes.add("crops-mined");
         tokenTypes.add("blocks-mined");
         tokenTypes.add("damage-taken");
@@ -161,6 +168,7 @@ public class TokenData {
         tokenTypes.add("wither-kills");
         tokenTypes.add("enderdragon-kills");
         tokenTypes.add("critical-strikes");
+        tokenTypes.add("trident-throws");
     }
 
     public Set<ShapedRecipe> getRecipes() {

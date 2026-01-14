@@ -175,6 +175,10 @@ public class AnvilEvent implements Listener {
                 addToken(event, tokenType, "critical-strikes", clone);
                 return;
             }
+            if (tokenType.equalsIgnoreCase("trident-throws")) {
+                addToken(event, tokenType, "trident-throws", clone);
+                return;
+            }
             return;
         }
         if (firstSlotMaterial == Material.BOW || firstSlotMaterial == Material.CROSSBOW) {
@@ -350,6 +354,15 @@ public class AnvilEvent implements Listener {
                 }
                 break;
             }
+            case "trident-throws": {
+                if (toolStats.config.getBoolean("enabled.trident-throws")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateTridentThrows(newItem, 0));
+                } else {
+                    event.setResult(null);
+                    return;
+                }
+                break;
+            }
         }
         event.setResult(newItem);
         event.getView().setRepairCost(toolStats.itemChecker.getCost(targetToken));
@@ -473,6 +486,14 @@ public class AnvilEvent implements Listener {
                 return;
             }
             meta = toolStats.itemLore.updateCriticalStrikes(finalItem, -criticalStrikes);
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.tridentThrows)) {
+            Integer tridentThrows = container.get(toolStats.tridentThrows, PersistentDataType.INTEGER);
+            if (tridentThrows == null) {
+                return;
+            }
+            meta = toolStats.itemLore.updateTridentThrows(finalItem, -tridentThrows);
             finalItem.setItemMeta(meta);
         }
         event.setResult(finalItem);

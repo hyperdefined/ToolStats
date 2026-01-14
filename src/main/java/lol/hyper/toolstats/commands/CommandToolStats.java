@@ -414,6 +414,14 @@ public class CommandToolStats implements TabExecutor {
                 }
             }
         }
+        if (toolStats.config.getBoolean("enabled.trident-throws")) {
+            if (container.has(toolStats.tridentThrows, PersistentDataType.INTEGER)) {
+                Integer tridentThrows = container.get(toolStats.tridentThrows, PersistentDataType.INTEGER);
+                if (tridentThrows != null) {
+                    lore.add(toolStats.configTools.formatLore("trident-throws", "{times}", toolStats.numberFormat.formatInt(tridentThrows)));
+                }
+            }
+        }
         finalMeta.lore(lore);
         finalItem.setItemMeta(finalMeta);
         int slot = player.getInventory().getHeldItemSlot();
@@ -825,6 +833,35 @@ public class CommandToolStats implements TabExecutor {
                 }
                 break;
             }
+            case "trident-throws": {
+                if (!toolStats.config.getBoolean("enabled.trident-throws")) {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                if (container.has(toolStats.tridentThrows)) {
+                    int value;
+                    try {
+                        value = Integer.parseInt((String) userValue);
+                    } catch (NumberFormatException exception) {
+                        player.sendMessage(Component.text("That is not a valid number.", NamedTextColor.RED));
+                        return;
+                    }
+                    if (value < 0) {
+                        player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
+                        return;
+                    }
+                    Integer statValue = container.get(toolStats.tridentThrows, PersistentDataType.INTEGER);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    int difference = value - statValue;
+                    editedItemMeta = toolStats.itemLore.updateTridentThrows(editedItem, difference);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
             default: {
                 player.sendMessage(Component.text("That is not a valid stat to update.", NamedTextColor.RED));
                 return;
@@ -1180,6 +1217,34 @@ public class CommandToolStats implements TabExecutor {
                     }
 
                     Component oldLine = toolStats.configTools.formatLore("critical-strikes", "{strikes}", toolStats.numberFormat.formatInt(statValue));
+                    List<Component> newLore = toolStats.itemLore.removeLore(editedItemMeta.lore(), oldLine);
+                    editedItemMeta.lore(newLore);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "trident-throws": {
+                if (container.has(toolStats.tridentThrows)) {
+                    Integer statValue = container.get(toolStats.tridentThrows, PersistentDataType.INTEGER);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    if (tokens == null) {
+                        player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    container.remove(toolStats.tridentThrows);
+                    List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "trident-throws");
+                    if (newTokens.isEmpty()) {
+                        container.remove(toolStats.tokenApplied);
+                    } else {
+                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                    }
+
+                    Component oldLine = toolStats.configTools.formatLore("trident-throws", "{times}", toolStats.numberFormat.formatInt(statValue));
                     List<Component> newLore = toolStats.itemLore.removeLore(editedItemMeta.lore(), oldLine);
                     editedItemMeta.lore(newLore);
                 } else {
