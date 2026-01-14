@@ -160,6 +160,7 @@ public class TokenData {
         tokenTypes.add("remove");
         tokenTypes.add("wither-kills");
         tokenTypes.add("enderdragon-kills");
+        tokenTypes.add("critical-strikes");
     }
 
     public Set<ShapedRecipe> getRecipes() {
