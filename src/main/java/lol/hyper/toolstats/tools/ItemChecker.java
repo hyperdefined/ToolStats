@@ -143,12 +143,12 @@ public class ItemChecker {
      */
     public boolean checkTokens(PersistentDataContainer container, String targetToken) {
         // make sure the item has tokens
-        if (!container.has(toolStats.tokenApplied, PersistentDataType.STRING)) {
+        if (!container.has(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING)) {
             return false;
         }
 
         // get the tokens for this item
-        String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+        String tokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
         if (tokens == null) {
             return false;
         }
@@ -169,12 +169,12 @@ public class ItemChecker {
             return new String[0];
         }
         PersistentDataContainer container = meta.getPersistentDataContainer();
-        if (!container.has(toolStats.tokenApplied, PersistentDataType.STRING)) {
+        if (!container.has(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING)) {
             return new String[0];
         }
 
         // get the tokens for this item
-        String tokensRaw = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+        String tokensRaw = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
         if (tokensRaw == null) {
             return new String[0];
         }
@@ -198,12 +198,12 @@ public class ItemChecker {
         String[] tokens = getTokens(item);
         // there are no tokens
         if (tokens.length == 0) {
-            container.set(toolStats.tokenApplied, PersistentDataType.STRING, token);
+            container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, token);
         } else {
             // other tokens exist, so add
             String[] newTokens = Arrays.copyOf(tokens, tokens.length + 1);
             newTokens[tokens.length] = token;
-            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+            container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
         }
         item.setItemMeta(meta);
         return item;
@@ -321,35 +321,47 @@ public class ItemChecker {
         }
         PersistentDataContainer container = meta.getPersistentDataContainer();
         ArrayList<String> tokens = new ArrayList<>();
-        if (container.has(toolStats.playerKills)) {
+        if (container.has(toolStats.toolStatsKeys.getPlayerKills())) {
             tokens.add("player-kills");
         }
-        if (container.has(toolStats.mobKills)) {
+        if (container.has(toolStats.toolStatsKeys.getMobKills())) {
             tokens.add("mob-kills");
         }
-        if (container.has(toolStats.blocksMined)) {
+        if (container.has(toolStats.toolStatsKeys.getBlocksMined())) {
             tokens.add("blocks-mined");
         }
-        if (container.has(toolStats.cropsHarvested)) {
+        if (container.has(toolStats.toolStatsKeys.getCropsHarvested())) {
             tokens.add("crops-mined");
         }
-        if (container.has(toolStats.fishCaught)) {
+        if (container.has(toolStats.toolStatsKeys.getFishCaught())) {
             tokens.add("fish-caught");
         }
-        if (container.has(toolStats.sheepSheared)) {
+        if (container.has(toolStats.toolStatsKeys.getSheepSheared())) {
             tokens.add("sheep-sheared");
         }
-        if (container.has(toolStats.armorDamage)) {
+        if (container.has(toolStats.toolStatsKeys.getArmorDamage())) {
             tokens.add("damage-taken");
         }
-        if (container.has(toolStats.arrowsShot)) {
+        if (container.has(toolStats.toolStatsKeys.getArrowsShot())) {
             tokens.add("arrows-shot");
         }
-        if (container.has(toolStats.flightTime)) {
+        if (container.has(toolStats.toolStatsKeys.getFlightTime())) {
             tokens.add("flight-time");
         }
-        if (container.has(toolStats.damageDone)) {
+        if (container.has(toolStats.toolStatsKeys.getDamageDone())) {
             tokens.add("damage-done");
+        }
+        if (container.has(toolStats.toolStatsKeys.getWitherKills())) {
+            tokens.add("wither-kills");
+        }
+        if (container.has(toolStats.toolStatsKeys.getEnderDragonKills())) {
+            tokens.add("enderdragon-kills");
+        }
+        if (container.has(toolStats.toolStatsKeys.getCriticalStrikes())) {
+            tokens.add("critical-strikes");
+        }
+        if (container.has(toolStats.toolStatsKeys.getTridentThrows())) {
+            tokens.add("trident-throws");
         }
         if (tokens.isEmpty()) {
             return null;
@@ -387,6 +399,6 @@ public class ItemChecker {
     public boolean keyCheck(PersistentDataContainer container) {
         return container.getKeys().stream()
                 .map(NamespacedKey::getKey)
-                .anyMatch(key -> toolStats.tokenKeys.stream().anyMatch(tokenKey -> tokenKey.getKey().equalsIgnoreCase(key)));
+                .anyMatch(key -> toolStats.toolStatsKeys.getTokenKeys().stream().anyMatch(tokenKey -> tokenKey.getKey().equalsIgnoreCase(key)));
     }
 }

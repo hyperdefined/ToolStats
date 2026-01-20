@@ -254,8 +254,8 @@ public class CommandToolStats implements TabExecutor {
 
         // set how the item was obtained
         Integer origin = -1;
-        if (container.has(toolStats.originType, PersistentDataType.INTEGER)) {
-            origin = container.get(toolStats.originType, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getOriginType(), PersistentDataType.INTEGER)) {
+            origin = container.get(toolStats.toolStatsKeys.getOriginType(), PersistentDataType.INTEGER);
         }
 
         // set to -1 if it's invalid
@@ -263,10 +263,10 @@ public class CommandToolStats implements TabExecutor {
             origin = -1;
         }
 
-        if (container.has(toolStats.droppedBy, PersistentDataType.STRING)) {
+        if (container.has(toolStats.toolStatsKeys.getDroppedBy(), PersistentDataType.STRING)) {
             if (toolStats.config.getBoolean("enabled.dropped-by")) {
-                if (container.has(toolStats.droppedBy)) {
-                    String droppedBy = container.get(toolStats.droppedBy, PersistentDataType.STRING);
+                if (container.has(toolStats.toolStatsKeys.getDroppedBy())) {
+                    String droppedBy = container.get(toolStats.toolStatsKeys.getDroppedBy(), PersistentDataType.STRING);
                     lore.add(toolStats.configTools.formatLore("dropped-by", "{name}", droppedBy));
                 } else {
                     player.sendMessage(Component.text("Unable to set 'dropped-by', as this item has no record of it."));
@@ -274,8 +274,8 @@ public class CommandToolStats implements TabExecutor {
             }
         }
 
-        if (container.has(toolStats.itemOwner, new UUIDDataType())) {
-            UUID owner = container.get(toolStats.itemOwner, new UUIDDataType());
+        if (container.has(toolStats.toolStatsKeys.getItemOwner(), new UUIDDataType())) {
+            UUID owner = container.get(toolStats.toolStatsKeys.getItemOwner(), new UUIDDataType());
             String ownerName = null;
             // if we can read the current owner
             if (owner != null) {
@@ -288,7 +288,7 @@ public class CommandToolStats implements TabExecutor {
             if (ownerName == null) {
                 player.sendMessage(Component.text("The owner of this item is null. Setting to " + player.getName() + ".", NamedTextColor.RED));
                 ownerName = player.getName();
-                container.set(toolStats.itemOwner, new UUIDDataType(), player.getUniqueId());
+                container.set(toolStats.toolStatsKeys.getItemOwner(), new UUIDDataType(), player.getUniqueId());
             }
 
             // add the ownership lore
@@ -298,8 +298,8 @@ public class CommandToolStats implements TabExecutor {
             }
 
         }
-        if (container.has(toolStats.timeCreated, PersistentDataType.LONG)) {
-            Long time = container.get(toolStats.timeCreated, PersistentDataType.LONG);
+        if (container.has(toolStats.toolStatsKeys.getTimeCreated(), PersistentDataType.LONG)) {
+            Long time = container.get(toolStats.toolStatsKeys.getTimeCreated(), PersistentDataType.LONG);
             if (time != null) {
                 // add the creation time lore
                 Component creationTimeLore = toolStats.itemLore.formatCreationTime(time, origin, original);
@@ -309,8 +309,8 @@ public class CommandToolStats implements TabExecutor {
             }
         }
         if (toolStats.config.getBoolean("enabled.flight-time")) {
-            if (container.has(toolStats.flightTime, PersistentDataType.LONG)) {
-                Long flightTime = container.get(toolStats.flightTime, PersistentDataType.LONG);
+            if (container.has(toolStats.toolStatsKeys.getFlightTime(), PersistentDataType.LONG)) {
+                Long flightTime = container.get(toolStats.toolStatsKeys.getFlightTime(), PersistentDataType.LONG);
                 if (flightTime != null) {
                     Map<String, String> flightTimeFormatted = toolStats.numberFormat.formatTime(flightTime);
                     Component line = toolStats.configTools.formatLoreMultiplePlaceholders("flight-time", flightTimeFormatted);
@@ -319,16 +319,16 @@ public class CommandToolStats implements TabExecutor {
             }
         }
         if (toolStats.configTools.checkConfig(original.getType(), "player-kills")) {
-            if (container.has(toolStats.playerKills, PersistentDataType.INTEGER)) {
-                Integer kills = container.get(toolStats.playerKills, PersistentDataType.INTEGER);
+            if (container.has(toolStats.toolStatsKeys.getPlayerKills(), PersistentDataType.INTEGER)) {
+                Integer kills = container.get(toolStats.toolStatsKeys.getPlayerKills(), PersistentDataType.INTEGER);
                 if (kills != null) {
                     lore.add(toolStats.configTools.formatLore("kills.player", "{kills}", toolStats.numberFormat.formatInt(kills)));
                 }
             }
         }
         if (toolStats.configTools.checkConfig(original.getType(), "mob-kills")) {
-            if (container.has(toolStats.mobKills, PersistentDataType.INTEGER)) {
-                Integer kills = container.get(toolStats.mobKills, PersistentDataType.INTEGER);
+            if (container.has(toolStats.toolStatsKeys.getMobKills(), PersistentDataType.INTEGER)) {
+                Integer kills = container.get(toolStats.toolStatsKeys.getMobKills(), PersistentDataType.INTEGER);
                 if (kills != null) {
                     lore.add(toolStats.configTools.formatLore("kills.mob", "{kills}", toolStats.numberFormat.formatInt(kills)));
                 }
@@ -336,87 +336,87 @@ public class CommandToolStats implements TabExecutor {
         }
         if (toolStats.configTools.checkConfig(original.getType(), "blocks-mined")) {
             if (original.getType().toString().toLowerCase(Locale.ROOT).contains("hoe")) {
-                if (container.has(toolStats.cropsHarvested, PersistentDataType.INTEGER)) {
-                    Integer crops = container.get(toolStats.cropsHarvested, PersistentDataType.INTEGER);
+                if (container.has(toolStats.toolStatsKeys.getCropsHarvested(), PersistentDataType.INTEGER)) {
+                    Integer crops = container.get(toolStats.toolStatsKeys.getCropsHarvested(), PersistentDataType.INTEGER);
                     if (crops != null) {
                         lore.add(toolStats.configTools.formatLore("crops-harvested", "{crops}", toolStats.numberFormat.formatInt(crops)));
                     }
                 }
             }
-            if (container.has(toolStats.blocksMined, PersistentDataType.INTEGER)) {
-                Integer blocksMined = container.get(toolStats.blocksMined, PersistentDataType.INTEGER);
+            if (container.has(toolStats.toolStatsKeys.getBlocksMined(), PersistentDataType.INTEGER)) {
+                Integer blocksMined = container.get(toolStats.toolStatsKeys.getBlocksMined(), PersistentDataType.INTEGER);
                 if (blocksMined != null) {
                     lore.add(toolStats.configTools.formatLore("blocks-mined", "{blocks}", toolStats.numberFormat.formatInt(blocksMined)));
                 }
             }
         }
         if (toolStats.config.getBoolean("enabled.fish-caught")) {
-            if (container.has(toolStats.fishCaught, PersistentDataType.INTEGER)) {
-                Integer fish = container.get(toolStats.fishCaught, PersistentDataType.INTEGER);
+            if (container.has(toolStats.toolStatsKeys.getFishCaught(), PersistentDataType.INTEGER)) {
+                Integer fish = container.get(toolStats.toolStatsKeys.getFishCaught(), PersistentDataType.INTEGER);
                 if (fish != null) {
                     lore.add(toolStats.configTools.formatLore("fished.fish-caught", "{fish}", toolStats.numberFormat.formatInt(fish)));
                 }
             }
         }
         if (toolStats.config.getBoolean("enabled.sheep-sheared")) {
-            if (container.has(toolStats.sheepSheared, PersistentDataType.INTEGER)) {
-                Integer sheep = container.get(toolStats.sheepSheared, PersistentDataType.INTEGER);
+            if (container.has(toolStats.toolStatsKeys.getSheepSheared(), PersistentDataType.INTEGER)) {
+                Integer sheep = container.get(toolStats.toolStatsKeys.getSheepSheared(), PersistentDataType.INTEGER);
                 if (sheep != null) {
                     lore.add(toolStats.configTools.formatLore("sheep-sheared", "{sheep}", toolStats.numberFormat.formatInt(sheep)));
                 }
             }
         }
         if (toolStats.config.getBoolean("enabled.armor-damage")) {
-            if (container.has(toolStats.armorDamage, PersistentDataType.DOUBLE)) {
-                Double damage = container.get(toolStats.armorDamage, PersistentDataType.DOUBLE);
+            if (container.has(toolStats.toolStatsKeys.getArmorDamage(), PersistentDataType.DOUBLE)) {
+                Double damage = container.get(toolStats.toolStatsKeys.getArmorDamage(), PersistentDataType.DOUBLE);
                 if (damage != null) {
                     lore.add(toolStats.configTools.formatLore("damage-taken", "{damage}", toolStats.numberFormat.formatDouble(damage)));
                 }
             }
         }
         if (toolStats.configTools.checkConfig(original.getType(), "damage-done")) {
-            if (container.has(toolStats.damageDone, PersistentDataType.DOUBLE)) {
-                Double damage = container.get(toolStats.damageDone, PersistentDataType.DOUBLE);
+            if (container.has(toolStats.toolStatsKeys.getDamageDone(), PersistentDataType.DOUBLE)) {
+                Double damage = container.get(toolStats.toolStatsKeys.getDamageDone(), PersistentDataType.DOUBLE);
                 if (damage != null) {
                     lore.add(toolStats.configTools.formatLore("damage-done", "{damage}", toolStats.numberFormat.formatDouble(damage)));
                 }
             }
         }
         if (toolStats.config.getBoolean("enabled.arrows-shot")) {
-            if (container.has(toolStats.arrowsShot, PersistentDataType.INTEGER)) {
-                Integer arrows = container.get(toolStats.arrowsShot, PersistentDataType.INTEGER);
+            if (container.has(toolStats.toolStatsKeys.getArrowsShot(), PersistentDataType.INTEGER)) {
+                Integer arrows = container.get(toolStats.toolStatsKeys.getArrowsShot(), PersistentDataType.INTEGER);
                 if (arrows != null) {
                     lore.add(toolStats.configTools.formatLore("arrows-shot", "{arrows}", toolStats.numberFormat.formatInt(arrows)));
                 }
             }
         }
         if (toolStats.config.getBoolean("enabled.bosses-killed.wither")) {
-            if (container.has(toolStats.witherKills, PersistentDataType.INTEGER)) {
-                Integer kills = container.get(toolStats.witherKills, PersistentDataType.INTEGER);
+            if (container.has(toolStats.toolStatsKeys.getWitherKills(), PersistentDataType.INTEGER)) {
+                Integer kills = container.get(toolStats.toolStatsKeys.getWitherKills(), PersistentDataType.INTEGER);
                 if (kills != null) {
                     lore.add(toolStats.configTools.formatLore("bosses-killed.wither", "{kills}", toolStats.numberFormat.formatInt(kills)));
                 }
             }
         }
         if (toolStats.config.getBoolean("enabled.bosses-killed.enderdragon")) {
-            if (container.has(toolStats.enderDragonKills, PersistentDataType.INTEGER)) {
-                Integer kills = container.get(toolStats.enderDragonKills, PersistentDataType.INTEGER);
+            if (container.has(toolStats.toolStatsKeys.getEnderDragonKills(), PersistentDataType.INTEGER)) {
+                Integer kills = container.get(toolStats.toolStatsKeys.getEnderDragonKills(), PersistentDataType.INTEGER);
                 if (kills != null) {
                     lore.add(toolStats.configTools.formatLore("bosses-killed.enderdragon", "{kills}", toolStats.numberFormat.formatInt(kills)));
                 }
             }
         }
         if (toolStats.config.getBoolean("enabled.critical-strikes")) {
-            if (container.has(toolStats.criticalStrikes, PersistentDataType.INTEGER)) {
-                Integer strikes = container.get(toolStats.criticalStrikes, PersistentDataType.INTEGER);
+            if (container.has(toolStats.toolStatsKeys.getCriticalStrikes(), PersistentDataType.INTEGER)) {
+                Integer strikes = container.get(toolStats.toolStatsKeys.getCriticalStrikes(), PersistentDataType.INTEGER);
                 if (strikes != null) {
                     lore.add(toolStats.configTools.formatLore("critical-strikes", "{strikes}", toolStats.numberFormat.formatInt(strikes)));
                 }
             }
         }
         if (toolStats.config.getBoolean("enabled.trident-throws")) {
-            if (container.has(toolStats.tridentThrows, PersistentDataType.INTEGER)) {
-                Integer tridentThrows = container.get(toolStats.tridentThrows, PersistentDataType.INTEGER);
+            if (container.has(toolStats.toolStatsKeys.getTridentThrows(), PersistentDataType.INTEGER)) {
+                Integer tridentThrows = container.get(toolStats.toolStatsKeys.getTridentThrows(), PersistentDataType.INTEGER);
                 if (tridentThrows != null) {
                     lore.add(toolStats.configTools.formatLore("trident-throws", "{times}", toolStats.numberFormat.formatInt(tridentThrows)));
                 }
@@ -461,7 +461,7 @@ public class CommandToolStats implements TabExecutor {
                     player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
                     return;
                 }
-                if (container.has(toolStats.cropsHarvested)) {
+                if (container.has(toolStats.toolStatsKeys.getCropsHarvested())) {
                     int value;
                     try {
                         value = Integer.parseInt((String) userValue);
@@ -473,7 +473,7 @@ public class CommandToolStats implements TabExecutor {
                         player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
                         return;
                     }
-                    Integer statValue = container.get(toolStats.cropsHarvested, PersistentDataType.INTEGER);
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getCropsHarvested(), PersistentDataType.INTEGER);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
@@ -490,7 +490,7 @@ public class CommandToolStats implements TabExecutor {
                     player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
                     return;
                 }
-                if (container.has(toolStats.blocksMined)) {
+                if (container.has(toolStats.toolStatsKeys.getBlocksMined())) {
                     int value;
                     try {
                         value = Integer.parseInt((String) userValue);
@@ -502,7 +502,7 @@ public class CommandToolStats implements TabExecutor {
                         player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
                         return;
                     }
-                    Integer statValue = container.get(toolStats.blocksMined, PersistentDataType.INTEGER);
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getBlocksMined(), PersistentDataType.INTEGER);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
@@ -519,7 +519,7 @@ public class CommandToolStats implements TabExecutor {
                     player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
                     return;
                 }
-                if (container.has(toolStats.armorDamage)) {
+                if (container.has(toolStats.toolStatsKeys.getArmorDamage())) {
                     double value;
                     try {
                         value = Double.parseDouble((String) userValue);
@@ -531,7 +531,7 @@ public class CommandToolStats implements TabExecutor {
                         player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
                         return;
                     }
-                    Double statValue = container.get(toolStats.armorDamage, PersistentDataType.DOUBLE);
+                    Double statValue = container.get(toolStats.toolStatsKeys.getArmorDamage(), PersistentDataType.DOUBLE);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
@@ -548,7 +548,7 @@ public class CommandToolStats implements TabExecutor {
                     player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
                     return;
                 }
-                if (container.has(toolStats.damageDone)) {
+                if (container.has(toolStats.toolStatsKeys.getDamageDone())) {
                     double value;
                     try {
                         value = Double.parseDouble((String) userValue);
@@ -560,7 +560,7 @@ public class CommandToolStats implements TabExecutor {
                         player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
                         return;
                     }
-                    Double statValue = container.get(toolStats.damageDone, PersistentDataType.DOUBLE);
+                    Double statValue = container.get(toolStats.toolStatsKeys.getDamageDone(), PersistentDataType.DOUBLE);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
@@ -577,7 +577,7 @@ public class CommandToolStats implements TabExecutor {
                     player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
                     return;
                 }
-                if (container.has(toolStats.mobKills)) {
+                if (container.has(toolStats.toolStatsKeys.getMobKills())) {
                     int value;
                     try {
                         value = Integer.parseInt((String) userValue);
@@ -589,7 +589,7 @@ public class CommandToolStats implements TabExecutor {
                         player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
                         return;
                     }
-                    Integer statValue = container.get(toolStats.mobKills, PersistentDataType.INTEGER);
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getMobKills(), PersistentDataType.INTEGER);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
@@ -606,7 +606,7 @@ public class CommandToolStats implements TabExecutor {
                     player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
                     return;
                 }
-                if (container.has(toolStats.playerKills)) {
+                if (container.has(toolStats.toolStatsKeys.getPlayerKills())) {
                     int value;
                     try {
                         value = Integer.parseInt((String) userValue);
@@ -618,7 +618,7 @@ public class CommandToolStats implements TabExecutor {
                         player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
                         return;
                     }
-                    Integer statValue = container.get(toolStats.playerKills, PersistentDataType.INTEGER);
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getPlayerKills(), PersistentDataType.INTEGER);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
@@ -635,7 +635,7 @@ public class CommandToolStats implements TabExecutor {
                     player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
                     return;
                 }
-                if (container.has(toolStats.arrowsShot)) {
+                if (container.has(toolStats.toolStatsKeys.getArrowsShot())) {
                     int value;
                     try {
                         value = Integer.parseInt((String) userValue);
@@ -647,7 +647,7 @@ public class CommandToolStats implements TabExecutor {
                         player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
                         return;
                     }
-                    Integer statValue = container.get(toolStats.arrowsShot, PersistentDataType.INTEGER);
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getArrowsShot(), PersistentDataType.INTEGER);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
@@ -664,7 +664,7 @@ public class CommandToolStats implements TabExecutor {
                     player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
                     return;
                 }
-                if (container.has(toolStats.sheepSheared)) {
+                if (container.has(toolStats.toolStatsKeys.getSheepSheared())) {
                     int value;
                     try {
                         value = Integer.parseInt((String) userValue);
@@ -676,7 +676,7 @@ public class CommandToolStats implements TabExecutor {
                         player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
                         return;
                     }
-                    Integer statValue = container.get(toolStats.sheepSheared, PersistentDataType.INTEGER);
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getSheepSheared(), PersistentDataType.INTEGER);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
@@ -693,7 +693,7 @@ public class CommandToolStats implements TabExecutor {
                     player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
                     return;
                 }
-                if (container.has(toolStats.flightTime)) {
+                if (container.has(toolStats.toolStatsKeys.getFlightTime())) {
                     int value;
                     try {
                         value = Integer.parseInt((String) userValue);
@@ -705,7 +705,7 @@ public class CommandToolStats implements TabExecutor {
                         player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
                         return;
                     }
-                    Long statValue = container.get(toolStats.flightTime, PersistentDataType.LONG);
+                    Long statValue = container.get(toolStats.toolStatsKeys.getFlightTime(), PersistentDataType.LONG);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
@@ -722,7 +722,7 @@ public class CommandToolStats implements TabExecutor {
                     player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
                     return;
                 }
-                if (container.has(toolStats.fishCaught)) {
+                if (container.has(toolStats.toolStatsKeys.getFishCaught())) {
                     int value;
                     try {
                         value = Integer.parseInt((String) userValue);
@@ -734,7 +734,7 @@ public class CommandToolStats implements TabExecutor {
                         player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
                         return;
                     }
-                    Integer statValue = container.get(toolStats.fishCaught, PersistentDataType.INTEGER);
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getFishCaught(), PersistentDataType.INTEGER);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
@@ -751,7 +751,7 @@ public class CommandToolStats implements TabExecutor {
                     player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
                     return;
                 }
-                if (container.has(toolStats.witherKills)) {
+                if (container.has(toolStats.toolStatsKeys.getWitherKills())) {
                     int value;
                     try {
                         value = Integer.parseInt((String) userValue);
@@ -763,7 +763,7 @@ public class CommandToolStats implements TabExecutor {
                         player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
                         return;
                     }
-                    Integer statValue = container.get(toolStats.witherKills, PersistentDataType.INTEGER);
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getWitherKills(), PersistentDataType.INTEGER);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
@@ -780,7 +780,7 @@ public class CommandToolStats implements TabExecutor {
                     player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
                     return;
                 }
-                if (container.has(toolStats.enderDragonKills)) {
+                if (container.has(toolStats.toolStatsKeys.getEnderDragonKills())) {
                     int value;
                     try {
                         value = Integer.parseInt((String) userValue);
@@ -792,7 +792,7 @@ public class CommandToolStats implements TabExecutor {
                         player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
                         return;
                     }
-                    Integer statValue = container.get(toolStats.enderDragonKills, PersistentDataType.INTEGER);
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getEnderDragonKills(), PersistentDataType.INTEGER);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
@@ -809,7 +809,7 @@ public class CommandToolStats implements TabExecutor {
                     player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
                     return;
                 }
-                if (container.has(toolStats.criticalStrikes)) {
+                if (container.has(toolStats.toolStatsKeys.getCriticalStrikes())) {
                     int value;
                     try {
                         value = Integer.parseInt((String) userValue);
@@ -821,7 +821,7 @@ public class CommandToolStats implements TabExecutor {
                         player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
                         return;
                     }
-                    Integer statValue = container.get(toolStats.criticalStrikes, PersistentDataType.INTEGER);
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getCriticalStrikes(), PersistentDataType.INTEGER);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
@@ -838,7 +838,7 @@ public class CommandToolStats implements TabExecutor {
                     player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
                     return;
                 }
-                if (container.has(toolStats.tridentThrows)) {
+                if (container.has(toolStats.toolStatsKeys.getTridentThrows())) {
                     int value;
                     try {
                         value = Integer.parseInt((String) userValue);
@@ -850,7 +850,7 @@ public class CommandToolStats implements TabExecutor {
                         player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
                         return;
                     }
-                    Integer statValue = container.get(toolStats.tridentThrows, PersistentDataType.INTEGER);
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getTridentThrows(), PersistentDataType.INTEGER);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
@@ -888,23 +888,23 @@ public class CommandToolStats implements TabExecutor {
         PersistentDataContainer container = editedItemMeta.getPersistentDataContainer();
         switch (stat) {
             case "crops-harvested": {
-                if (container.has(toolStats.cropsHarvested)) {
-                    Integer statValue = container.get(toolStats.cropsHarvested, PersistentDataType.INTEGER);
+                if (container.has(toolStats.toolStatsKeys.getCropsHarvested())) {
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getCropsHarvested(), PersistentDataType.INTEGER);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
                     }
-                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    String tokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (tokens == null) {
                         player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
                         return;
                     }
-                    container.remove(toolStats.cropsHarvested);
+                    container.remove(toolStats.toolStatsKeys.getCropsHarvested());
                     List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "crops-mined");
                     if (newTokens.isEmpty()) {
-                        container.remove(toolStats.tokenApplied);
+                        container.remove(toolStats.toolStatsKeys.getTokenApplied());
                     } else {
-                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                     }
 
                     Component oldLine = toolStats.configTools.formatLore("crops-harvested", "{crops}", toolStats.numberFormat.formatInt(statValue));
@@ -916,23 +916,23 @@ public class CommandToolStats implements TabExecutor {
                 break;
             }
             case "blocks-mined": {
-                if (container.has(toolStats.blocksMined)) {
-                    Integer statValue = container.get(toolStats.blocksMined, PersistentDataType.INTEGER);
+                if (container.has(toolStats.toolStatsKeys.getBlocksMined())) {
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getBlocksMined(), PersistentDataType.INTEGER);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
                     }
-                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    String tokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (tokens == null) {
                         player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
                         return;
                     }
-                    container.remove(toolStats.blocksMined);
+                    container.remove(toolStats.toolStatsKeys.getBlocksMined());
                     List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "blocks-mined");
                     if (newTokens.isEmpty()) {
-                        container.remove(toolStats.tokenApplied);
+                        container.remove(toolStats.toolStatsKeys.getTokenApplied());
                     } else {
-                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                     }
 
                     Component oldLine = toolStats.configTools.formatLore("blocks-mined", "{blocks}", toolStats.numberFormat.formatInt(statValue));
@@ -944,23 +944,23 @@ public class CommandToolStats implements TabExecutor {
                 break;
             }
             case "damage-taken": {
-                if (container.has(toolStats.armorDamage)) {
-                    Double statValue = container.get(toolStats.armorDamage, PersistentDataType.DOUBLE);
+                if (container.has(toolStats.toolStatsKeys.getArmorDamage())) {
+                    Double statValue = container.get(toolStats.toolStatsKeys.getArmorDamage(), PersistentDataType.DOUBLE);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
                     }
-                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    String tokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (tokens == null) {
                         player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
                         return;
                     }
-                    container.remove(toolStats.armorDamage);
+                    container.remove(toolStats.toolStatsKeys.getArmorDamage());
                     List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "damage-taken");
                     if (newTokens.isEmpty()) {
-                        container.remove(toolStats.tokenApplied);
+                        container.remove(toolStats.toolStatsKeys.getTokenApplied());
                     } else {
-                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                     }
 
                     Component oldLine = toolStats.configTools.formatLore("damage-taken", "{damage}", toolStats.numberFormat.formatDouble(statValue));
@@ -972,23 +972,23 @@ public class CommandToolStats implements TabExecutor {
                 break;
             }
             case "damage-done": {
-                if (container.has(toolStats.damageDone)) {
-                    Double statValue = container.get(toolStats.damageDone, PersistentDataType.DOUBLE);
+                if (container.has(toolStats.toolStatsKeys.getDamageDone())) {
+                    Double statValue = container.get(toolStats.toolStatsKeys.getDamageDone(), PersistentDataType.DOUBLE);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
                     }
-                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    String tokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (tokens == null) {
                         player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
                         return;
                     }
-                    container.remove(toolStats.damageDone);
+                    container.remove(toolStats.toolStatsKeys.getDamageDone());
                     List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "damage-done");
                     if (newTokens.isEmpty()) {
-                        container.remove(toolStats.tokenApplied);
+                        container.remove(toolStats.toolStatsKeys.getTokenApplied());
                     } else {
-                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                     }
 
                     Component oldLine = toolStats.configTools.formatLore("damage-done", "{damage}", toolStats.numberFormat.formatDouble(statValue));
@@ -1000,23 +1000,23 @@ public class CommandToolStats implements TabExecutor {
                 break;
             }
             case "mob-kills": {
-                if (container.has(toolStats.mobKills)) {
-                    Integer statValue = container.get(toolStats.mobKills, PersistentDataType.INTEGER);
+                if (container.has(toolStats.toolStatsKeys.getMobKills())) {
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getMobKills(), PersistentDataType.INTEGER);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
                     }
-                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    String tokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (tokens == null) {
                         player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
                         return;
                     }
-                    container.remove(toolStats.mobKills);
+                    container.remove(toolStats.toolStatsKeys.getMobKills());
                     List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "mob-kills");
                     if (newTokens.isEmpty()) {
-                        container.remove(toolStats.tokenApplied);
+                        container.remove(toolStats.toolStatsKeys.getTokenApplied());
                     } else {
-                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                     }
 
                     Component oldLine = toolStats.configTools.formatLore("kills.mob", "{kills}", toolStats.numberFormat.formatInt(statValue));
@@ -1028,23 +1028,23 @@ public class CommandToolStats implements TabExecutor {
                 break;
             }
             case "player-kills": {
-                if (container.has(toolStats.playerKills)) {
-                    Integer statValue = container.get(toolStats.playerKills, PersistentDataType.INTEGER);
+                if (container.has(toolStats.toolStatsKeys.getPlayerKills())) {
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getPlayerKills(), PersistentDataType.INTEGER);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
                     }
-                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    String tokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (tokens == null) {
                         player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
                         return;
                     }
-                    container.remove(toolStats.playerKills);
+                    container.remove(toolStats.toolStatsKeys.getPlayerKills());
                     List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "player-kills");
                     if (newTokens.isEmpty()) {
-                        container.remove(toolStats.tokenApplied);
+                        container.remove(toolStats.toolStatsKeys.getTokenApplied());
                     } else {
-                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                     }
 
                     Component oldLine = toolStats.configTools.formatLore("kills.player", "{kills}", toolStats.numberFormat.formatInt(statValue));
@@ -1056,23 +1056,23 @@ public class CommandToolStats implements TabExecutor {
                 break;
             }
             case "sheep-sheared": {
-                if (container.has(toolStats.sheepSheared)) {
-                    Integer statValue = container.get(toolStats.sheepSheared, PersistentDataType.INTEGER);
+                if (container.has(toolStats.toolStatsKeys.getSheepSheared())) {
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getSheepSheared(), PersistentDataType.INTEGER);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
                     }
-                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    String tokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (tokens == null) {
                         player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
                         return;
                     }
-                    container.remove(toolStats.sheepSheared);
+                    container.remove(toolStats.toolStatsKeys.getSheepSheared());
                     List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "sheep-sheared");
                     if (newTokens.isEmpty()) {
-                        container.remove(toolStats.tokenApplied);
+                        container.remove(toolStats.toolStatsKeys.getTokenApplied());
                     } else {
-                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                     }
 
                     Component oldLine = toolStats.configTools.formatLore("sheep-sheared", "{sheep}", toolStats.numberFormat.formatInt(statValue));
@@ -1084,23 +1084,23 @@ public class CommandToolStats implements TabExecutor {
                 break;
             }
             case "flight-time": {
-                if (container.has(toolStats.flightTime)) {
-                    Long statValue = container.get(toolStats.flightTime, PersistentDataType.LONG);
+                if (container.has(toolStats.toolStatsKeys.getFlightTime())) {
+                    Long statValue = container.get(toolStats.toolStatsKeys.getFlightTime(), PersistentDataType.LONG);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
                     }
-                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    String tokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (tokens == null) {
                         player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
                         return;
                     }
-                    container.remove(toolStats.flightTime);
+                    container.remove(toolStats.toolStatsKeys.getFlightTime());
                     List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "flight-time");
                     if (newTokens.isEmpty()) {
-                        container.remove(toolStats.tokenApplied);
+                        container.remove(toolStats.toolStatsKeys.getTokenApplied());
                     } else {
-                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                     }
 
                     Map<String, String> timeFormatted = toolStats.numberFormat.formatTime(statValue);
@@ -1113,23 +1113,23 @@ public class CommandToolStats implements TabExecutor {
                 break;
             }
             case "fight-caught": {
-                if (container.has(toolStats.fishCaught)) {
-                    Integer statValue = container.get(toolStats.fishCaught, PersistentDataType.INTEGER);
+                if (container.has(toolStats.toolStatsKeys.getFishCaught())) {
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getFishCaught(), PersistentDataType.INTEGER);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
                     }
-                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    String tokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (tokens == null) {
                         player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
                         return;
                     }
-                    container.remove(toolStats.fishCaught);
+                    container.remove(toolStats.toolStatsKeys.getFishCaught());
                     List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "fight-caught");
                     if (newTokens.isEmpty()) {
-                        container.remove(toolStats.tokenApplied);
+                        container.remove(toolStats.toolStatsKeys.getTokenApplied());
                     } else {
-                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                     }
 
                     Component oldLine = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", toolStats.numberFormat.formatInt(statValue));
@@ -1141,23 +1141,23 @@ public class CommandToolStats implements TabExecutor {
                 break;
             }
             case "wither-kills": {
-                if (container.has(toolStats.witherKills)) {
-                    Integer statValue = container.get(toolStats.witherKills, PersistentDataType.INTEGER);
+                if (container.has(toolStats.toolStatsKeys.getWitherKills())) {
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getWitherKills(), PersistentDataType.INTEGER);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
                     }
-                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    String tokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (tokens == null) {
                         player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
                         return;
                     }
-                    container.remove(toolStats.witherKills);
+                    container.remove(toolStats.toolStatsKeys.getWitherKills());
                     List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "wither-kills");
                     if (newTokens.isEmpty()) {
-                        container.remove(toolStats.tokenApplied);
+                        container.remove(toolStats.toolStatsKeys.getTokenApplied());
                     } else {
-                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                     }
 
                     Component oldLine = toolStats.configTools.formatLore("bosses-killed.wither", "{kills}", toolStats.numberFormat.formatInt(statValue));
@@ -1169,23 +1169,23 @@ public class CommandToolStats implements TabExecutor {
                 break;
             }
             case "enderdragon-kills": {
-                if (container.has(toolStats.enderDragonKills)) {
-                    Integer statValue = container.get(toolStats.enderDragonKills, PersistentDataType.INTEGER);
+                if (container.has(toolStats.toolStatsKeys.getEnderDragonKills())) {
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getEnderDragonKills(), PersistentDataType.INTEGER);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
                     }
-                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    String tokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (tokens == null) {
                         player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
                         return;
                     }
-                    container.remove(toolStats.enderDragonKills);
+                    container.remove(toolStats.toolStatsKeys.getEnderDragonKills());
                     List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "enderdragon-kills");
                     if (newTokens.isEmpty()) {
-                        container.remove(toolStats.tokenApplied);
+                        container.remove(toolStats.toolStatsKeys.getTokenApplied());
                     } else {
-                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                     }
 
                     Component oldLine = toolStats.configTools.formatLore("bosses-killed.enderdragon", "{kills}", toolStats.numberFormat.formatInt(statValue));
@@ -1197,23 +1197,23 @@ public class CommandToolStats implements TabExecutor {
                 break;
             }
             case "critical-strikes": {
-                if (container.has(toolStats.criticalStrikes)) {
-                    Integer statValue = container.get(toolStats.criticalStrikes, PersistentDataType.INTEGER);
+                if (container.has(toolStats.toolStatsKeys.getCriticalStrikes())) {
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getCriticalStrikes(), PersistentDataType.INTEGER);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
                     }
-                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    String tokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (tokens == null) {
                         player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
                         return;
                     }
-                    container.remove(toolStats.criticalStrikes);
+                    container.remove(toolStats.toolStatsKeys.getCriticalStrikes());
                     List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "critical-strikes");
                     if (newTokens.isEmpty()) {
-                        container.remove(toolStats.tokenApplied);
+                        container.remove(toolStats.toolStatsKeys.getTokenApplied());
                     } else {
-                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                     }
 
                     Component oldLine = toolStats.configTools.formatLore("critical-strikes", "{strikes}", toolStats.numberFormat.formatInt(statValue));
@@ -1225,23 +1225,23 @@ public class CommandToolStats implements TabExecutor {
                 break;
             }
             case "trident-throws": {
-                if (container.has(toolStats.tridentThrows)) {
-                    Integer statValue = container.get(toolStats.tridentThrows, PersistentDataType.INTEGER);
+                if (container.has(toolStats.toolStatsKeys.getTridentThrows())) {
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getTridentThrows(), PersistentDataType.INTEGER);
                     if (statValue == null) {
                         player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
                         return;
                     }
-                    String tokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                    String tokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (tokens == null) {
                         player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
                         return;
                     }
-                    container.remove(toolStats.tridentThrows);
+                    container.remove(toolStats.toolStatsKeys.getTridentThrows());
                     List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "trident-throws");
                     if (newTokens.isEmpty()) {
-                        container.remove(toolStats.tokenApplied);
+                        container.remove(toolStats.toolStatsKeys.getTokenApplied());
                     } else {
-                        container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                        container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                     }
 
                     Component oldLine = toolStats.configTools.formatLore("trident-throws", "{times}", toolStats.numberFormat.formatInt(statValue));

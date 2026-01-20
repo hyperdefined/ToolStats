@@ -57,7 +57,7 @@ public class EntityDeath implements Listener {
                 ItemMeta droppedItemMeta = droppedItem.getItemMeta();
                 if (droppedItemMeta != null) {
                     PersistentDataContainer container = droppedItemMeta.getPersistentDataContainer();
-                    if (container.has(toolStats.originType, PersistentDataType.INTEGER)) {
+                    if (container.has(toolStats.toolStatsKeys.getOriginType(), PersistentDataType.INTEGER)) {
                         continue; // ignore any items that have our tags
                     }
 
@@ -109,15 +109,15 @@ public class EntityDeath implements Listener {
         // if creation date is enabled, add it
         Component creationDate = toolStats.itemLore.formatCreationTime(timeCreated, 1, newItem);
         if (creationDate != null) {
-            container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
-            container.set(toolStats.originType, PersistentDataType.INTEGER, 1);
+            container.set(toolStats.toolStatsKeys.getTimeCreated(), PersistentDataType.LONG, timeCreated);
+            container.set(toolStats.toolStatsKeys.getOriginType(), PersistentDataType.INTEGER, 1);
             lore.add(creationDate);
             meta.lore(lore);
         }
 
         if (toolStats.config.getBoolean("enabled.dropped-by")) {
-            container.set(toolStats.originType, PersistentDataType.INTEGER, 1);
-            container.set(toolStats.droppedBy, PersistentDataType.STRING, mobName);
+            container.set(toolStats.toolStatsKeys.getOriginType(), PersistentDataType.INTEGER, 1);
+            container.set(toolStats.toolStatsKeys.getDroppedBy(), PersistentDataType.STRING, mobName);
             Component droppedBy = toolStats.configTools.formatLore("dropped-by", "{name}", mobName);
             lore.add(droppedBy);
         }

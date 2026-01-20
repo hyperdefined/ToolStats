@@ -130,7 +130,7 @@ public class CraftItem implements Listener {
 
         // if the item already has the tag
         // this is to prevent duplicate tags
-        if (container.has(toolStats.timeCreated, PersistentDataType.LONG) || container.has(toolStats.itemOwner, PersistentDataType.LONG)) {
+        if (container.has(toolStats.toolStatsKeys.getTimeCreated(), PersistentDataType.LONG) || container.has(toolStats.toolStatsKeys.getItemOwner(), new UUIDDataType())) {
             return null;
         }
 
@@ -145,8 +145,8 @@ public class CraftItem implements Listener {
         // if creation date is enabled, add it
         Component creationDate = toolStats.itemLore.formatCreationTime(timeCreated, 0, newItem);
         if (creationDate != null) {
-            container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
-            container.set(toolStats.originType, PersistentDataType.INTEGER, 0);
+            container.set(toolStats.toolStatsKeys.getTimeCreated(), PersistentDataType.LONG, timeCreated);
+            container.set(toolStats.toolStatsKeys.getOriginType(), PersistentDataType.INTEGER, 0);
             lore.add(creationDate);
             meta.lore(lore);
         }
@@ -154,8 +154,8 @@ public class CraftItem implements Listener {
         // if ownership is enabled, add it
         Component itemOwner = toolStats.itemLore.formatOwner(owner.getName(), 0, newItem);
         if (itemOwner != null) {
-            container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
-            container.set(toolStats.originType, PersistentDataType.INTEGER, 0);
+            container.set(toolStats.toolStatsKeys.getItemOwner(), new UUIDDataType(), owner.getUniqueId());
+            container.set(toolStats.toolStatsKeys.getOriginType(), PersistentDataType.INTEGER, 0);
             lore.add(itemOwner);
             meta.lore(lore);
         }
@@ -163,7 +163,7 @@ public class CraftItem implements Listener {
         // if hash is enabled, add it
         if (toolStats.config.getBoolean("generate-hash-for-items")) {
             String hash = toolStats.hashMaker.makeHash(newItem.getType(), owner.getUniqueId(), timeCreated);
-            container.set(toolStats.hash, PersistentDataType.STRING, hash);
+            container.set(toolStats.toolStatsKeys.getHash(), PersistentDataType.STRING, hash);
         }
         newItem.setItemMeta(meta);
         return newItem;

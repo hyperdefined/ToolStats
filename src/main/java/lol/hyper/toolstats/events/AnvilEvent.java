@@ -65,12 +65,12 @@ public class AnvilEvent implements Listener {
         PersistentDataContainer secondSlotContainer = secondSlot.getItemMeta().getPersistentDataContainer();
 
         // make sure the 2nd item is one of ours
-        if (!secondSlotContainer.has(toolStats.tokenType, PersistentDataType.STRING)) {
+        if (!secondSlotContainer.has(toolStats.toolStatsKeys.getTokenType(), PersistentDataType.STRING)) {
             return;
         }
 
         // get the type from the token
-        String tokenType = secondSlotContainer.get(toolStats.tokenType, PersistentDataType.STRING);
+        String tokenType = secondSlotContainer.get(toolStats.toolStatsKeys.getTokenType(), PersistentDataType.STRING);
         if (tokenType == null) {
             return;
         }
@@ -384,112 +384,112 @@ public class AnvilEvent implements Listener {
         ItemMeta meta = finalItem.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
 
-        if (container.has(toolStats.playerKills)) {
-            Integer playerKills = container.get(toolStats.playerKills, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getPlayerKills())) {
+            Integer playerKills = container.get(toolStats.toolStatsKeys.getPlayerKills(), PersistentDataType.INTEGER);
             if (playerKills == null) {
                 return;
             }
             meta = toolStats.itemLore.updatePlayerKills(finalItem, -playerKills);
             finalItem.setItemMeta(meta);
         }
-        if (container.has(toolStats.mobKills)) {
-            Integer mobKills = container.get(toolStats.mobKills, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getMobKills())) {
+            Integer mobKills = container.get(toolStats.toolStatsKeys.getMobKills(), PersistentDataType.INTEGER);
             if (mobKills == null) {
                 return;
             }
             meta = toolStats.itemLore.updateMobKills(finalItem, -mobKills);
             finalItem.setItemMeta(meta);
         }
-        if (container.has(toolStats.blocksMined)) {
-            Integer blocksMined = container.get(toolStats.blocksMined, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getBlocksMined())) {
+            Integer blocksMined = container.get(toolStats.toolStatsKeys.getBlocksMined(), PersistentDataType.INTEGER);
             if (blocksMined == null) {
                 return;
             }
             meta = toolStats.itemLore.updateBlocksMined(finalItem, -blocksMined);
             finalItem.setItemMeta(meta);
         }
-        if (container.has(toolStats.cropsHarvested)) {
-            Integer cropsHarvested = container.get(toolStats.playerKills, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getCropsHarvested())) {
+            Integer cropsHarvested = container.get(toolStats.toolStatsKeys.getCropsHarvested(), PersistentDataType.INTEGER);
             if (cropsHarvested == null) {
                 return;
             }
             meta = toolStats.itemLore.updateCropsMined(finalItem, -cropsHarvested);
             finalItem.setItemMeta(meta);
         }
-        if (container.has(toolStats.fishCaught)) {
-            Integer fishCaught = container.get(toolStats.fishCaught, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getFishCaught())) {
+            Integer fishCaught = container.get(toolStats.toolStatsKeys.getFishCaught(), PersistentDataType.INTEGER);
             if (fishCaught == null) {
                 return;
             }
             meta = toolStats.itemLore.updateFishCaught(finalItem, -fishCaught);
             finalItem.setItemMeta(meta);
         }
-        if (container.has(toolStats.sheepSheared)) {
-            Integer sheepSheared = container.get(toolStats.sheepSheared, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getSheepSheared())) {
+            Integer sheepSheared = container.get(toolStats.toolStatsKeys.getSheepSheared(), PersistentDataType.INTEGER);
             if (sheepSheared == null) {
                 return;
             }
             meta = toolStats.itemLore.updateSheepSheared(finalItem, -sheepSheared);
             finalItem.setItemMeta(meta);
         }
-        if (container.has(toolStats.armorDamage)) {
-            Double armorDamage = container.get(toolStats.armorDamage, PersistentDataType.DOUBLE);
+        if (container.has(toolStats.toolStatsKeys.getArmorDamage())) {
+            Double armorDamage = container.get(toolStats.toolStatsKeys.getArmorDamage(), PersistentDataType.DOUBLE);
             if (armorDamage == null) {
                 return;
             }
             meta = toolStats.itemLore.updateArmorDamage(finalItem, -armorDamage, true);
             finalItem.setItemMeta(meta);
         }
-        if (container.has(toolStats.damageDone)) {
-            Double damageDone = container.get(toolStats.damageDone, PersistentDataType.DOUBLE);
+        if (container.has(toolStats.toolStatsKeys.getDamageDone())) {
+            Double damageDone = container.get(toolStats.toolStatsKeys.getDamageDone(), PersistentDataType.DOUBLE);
             if (damageDone == null) {
                 return;
             }
             meta = toolStats.itemLore.updateArmorDamage(finalItem, -damageDone, true);
             finalItem.setItemMeta(meta);
         }
-        if (container.has(toolStats.arrowsShot)) {
-            Integer arrowsShot = container.get(toolStats.arrowsShot, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getArrowsShot())) {
+            Integer arrowsShot = container.get(toolStats.toolStatsKeys.getArrowsShot(), PersistentDataType.INTEGER);
             if (arrowsShot == null) {
                 return;
             }
             meta = toolStats.itemLore.updateArrowsShot(finalItem, -arrowsShot);
             finalItem.setItemMeta(meta);
         }
-        if (container.has(toolStats.flightTime)) {
-            Long flightTime = container.get(toolStats.flightTime, PersistentDataType.LONG);
+        if (container.has(toolStats.toolStatsKeys.getFlightTime())) {
+            Long flightTime = container.get(toolStats.toolStatsKeys.getFlightTime(), PersistentDataType.LONG);
             if (flightTime == null) {
                 return;
             }
             meta = toolStats.itemLore.updateFlightTime(finalItem, -flightTime);
             finalItem.setItemMeta(meta);
         }
-        if (container.has(toolStats.witherKills)) {
-            Integer witherKills = container.get(toolStats.witherKills, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getWitherKills())) {
+            Integer witherKills = container.get(toolStats.toolStatsKeys.getWitherKills(), PersistentDataType.INTEGER);
             if (witherKills == null) {
                 return;
             }
             meta = toolStats.itemLore.updateBossesKilled(finalItem, -witherKills, "wither");
             finalItem.setItemMeta(meta);
         }
-        if (container.has(toolStats.enderDragonKills)) {
-            Integer enderDragonKills = container.get(toolStats.enderDragonKills, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getEnderDragonKills())) {
+            Integer enderDragonKills = container.get(toolStats.toolStatsKeys.getEnderDragonKills(), PersistentDataType.INTEGER);
             if (enderDragonKills == null) {
                 return;
             }
             meta = toolStats.itemLore.updateBossesKilled(finalItem, -enderDragonKills, "enderdragon");
             finalItem.setItemMeta(meta);
         }
-        if (container.has(toolStats.criticalStrikes)) {
-            Integer criticalStrikes = container.get(toolStats.criticalStrikes, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getCriticalStrikes())) {
+            Integer criticalStrikes = container.get(toolStats.toolStatsKeys.getCriticalStrikes(), PersistentDataType.INTEGER);
             if (criticalStrikes == null) {
                 return;
             }
             meta = toolStats.itemLore.updateCriticalStrikes(finalItem, -criticalStrikes);
             finalItem.setItemMeta(meta);
         }
-        if (container.has(toolStats.tridentThrows)) {
-            Integer tridentThrows = container.get(toolStats.tridentThrows, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getTridentThrows())) {
+            Integer tridentThrows = container.get(toolStats.toolStatsKeys.getTridentThrows(), PersistentDataType.INTEGER);
             if (tridentThrows == null) {
                 return;
             }

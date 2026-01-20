@@ -48,7 +48,7 @@ public class PrepareCraft implements Listener {
             }
             // if the paper item has our PDC, cancel it
             PersistentDataContainer container = meta.getPersistentDataContainer();
-            if (container.has(toolStats.tokenType)) {
+            if (container.has(toolStats.toolStatsKeys.getTokenType())) {
                 event.getInventory().setResult(null);
             }
         }

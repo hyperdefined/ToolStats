@@ -67,7 +67,7 @@ public class PickupItem implements Listener {
                 PersistentDataContainer container = meta.getPersistentDataContainer();
                 if (itemStack.getType() == Material.ELYTRA) {
                     // the elytra has the new key, set the lore to it
-                    if (container.has(toolStats.newElytra, PersistentDataType.INTEGER)) {
+                    if (container.has(toolStats.toolStatsKeys.getElytraKey(), PersistentDataType.INTEGER)) {
                         ItemStack newElytra = addElytraOrigin(itemStack, (Player) event.getEntity());
                         if (newElytra != null) {
                             item.setItemStack(newElytra);
@@ -105,7 +105,7 @@ public class PickupItem implements Listener {
         // only make the hash if it's enabled
         if (toolStats.config.getBoolean("generate-hash-for-items")) {
             String hash = toolStats.hashMaker.makeHash(finalItem.getType(), owner.getUniqueId(), timeCreated);
-            container.set(toolStats.hash, PersistentDataType.STRING, hash);
+            container.set(toolStats.toolStatsKeys.getHash(), PersistentDataType.STRING, hash);
         }
 
         // get the current lore the item
@@ -116,23 +116,23 @@ public class PickupItem implements Listener {
             lore = new ArrayList<>();
         }
 
-        container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
-        container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
-        container.set(toolStats.originType, PersistentDataType.INTEGER, 4);
-        container.remove(toolStats.newElytra);
+        container.set(toolStats.toolStatsKeys.getTimeCreated(), PersistentDataType.LONG, timeCreated);
+        container.set(toolStats.toolStatsKeys.getItemOwner(), new UUIDDataType(), owner.getUniqueId());
+        container.set(toolStats.toolStatsKeys.getOriginType(), PersistentDataType.INTEGER, 4);
+        container.remove(toolStats.toolStatsKeys.getElytraKey());
 
         Component creationDate = toolStats.itemLore.formatCreationTime(timeCreated, 4, finalItem);
         if (creationDate != null) {
-            container.set(toolStats.timeCreated, PersistentDataType.LONG, timeCreated);
-            container.set(toolStats.originType, PersistentDataType.INTEGER, 4);
+            container.set(toolStats.toolStatsKeys.getTimeCreated(), PersistentDataType.LONG, timeCreated);
+            container.set(toolStats.toolStatsKeys.getOriginType(), PersistentDataType.INTEGER, 4);
             lore.add(creationDate);
             meta.lore(lore);
         }
 
         Component itemOwner = toolStats.itemLore.formatOwner(owner.getName(), 4, finalItem);
         if (itemOwner != null) {
-            container.set(toolStats.itemOwner, new UUIDDataType(), owner.getUniqueId());
-            container.set(toolStats.originType, PersistentDataType.INTEGER, 4);
+            container.set(toolStats.toolStatsKeys.getItemOwner(), new UUIDDataType(), owner.getUniqueId());
+            container.set(toolStats.toolStatsKeys.getOriginType(), PersistentDataType.INTEGER, 4);
             lore.add(itemOwner);
             meta.lore(lore);
         }

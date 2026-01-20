@@ -106,24 +106,24 @@ public class ItemLore {
         // if it's disabled, don't update the stats
         // check to see if the item has the stats, remove them if it does
         if (!toolStats.config.getBoolean("enabled.crops-harvested")) {
-            if (container.has(toolStats.cropsHarvested)) {
-                Integer cropsMined = container.get(toolStats.cropsHarvested, PersistentDataType.INTEGER);
+            if (container.has(toolStats.toolStatsKeys.getCropsHarvested())) {
+                Integer cropsMined = container.get(toolStats.toolStatsKeys.getCropsHarvested(), PersistentDataType.INTEGER);
                 if (cropsMined == null) {
                     return null;
                 }
-                container.remove(toolStats.cropsHarvested);
+                container.remove(toolStats.toolStatsKeys.getCropsHarvested());
                 // remove the applied token if this stat is disabled
-                if (container.has(toolStats.tokenApplied)) {
-                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                if (container.has(toolStats.toolStatsKeys.getTokenApplied())) {
+                    String appliedTokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (appliedTokens != null) {
                         // remove the token from the list
                         // if the list is empty, remove the PDC
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "crops-mined");
                         if (!newTokens.isEmpty()) {
-                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                            container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
-                            container.remove(toolStats.tokenApplied);
+                            container.remove(toolStats.toolStatsKeys.getTokenApplied());
                         }
                     }
                 }
@@ -143,10 +143,10 @@ public class ItemLore {
         // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
             // if the item has stats but no token, add the token
-            if (container.has(toolStats.cropsHarvested) && !validToken) {
+            if (container.has(toolStats.toolStatsKeys.getCropsHarvested()) && !validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
 
@@ -158,14 +158,14 @@ public class ItemLore {
             if (!validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
         }
 
         Integer cropsMined = 0;
-        if (container.has(toolStats.cropsHarvested, PersistentDataType.INTEGER)) {
-            cropsMined = container.get(toolStats.cropsHarvested, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getCropsHarvested(), PersistentDataType.INTEGER)) {
+            cropsMined = container.get(toolStats.toolStatsKeys.getCropsHarvested(), PersistentDataType.INTEGER);
         }
 
         if (cropsMined == null) {
@@ -173,7 +173,7 @@ public class ItemLore {
             toolStats.logger.warn("{} does not have valid crops-mined set! Resting to zero. This should NEVER happen.", clone);
         }
 
-        container.set(toolStats.cropsHarvested, PersistentDataType.INTEGER, cropsMined + add);
+        container.set(toolStats.toolStatsKeys.getCropsHarvested(), PersistentDataType.INTEGER, cropsMined + add);
         String oldCropsMinedFormatted = toolStats.numberFormat.formatInt(cropsMined);
         String newCropsMinedFormatted = toolStats.numberFormat.formatInt(cropsMined + add);
         Component oldLine = toolStats.configTools.formatLore("crops-harvested", "{crops}", oldCropsMinedFormatted);
@@ -204,24 +204,24 @@ public class ItemLore {
         // if it's disabled, don't update the stats
         // check to see if the item has the stats, remove them if it does
         if (!toolStats.configTools.checkConfig(clone.getType(), "blocks-mined")) {
-            if (container.has(toolStats.blocksMined)) {
-                Integer blocksMined = container.get(toolStats.blocksMined, PersistentDataType.INTEGER);
+            if (container.has(toolStats.toolStatsKeys.getBlocksMined())) {
+                Integer blocksMined = container.get(toolStats.toolStatsKeys.getBlocksMined(), PersistentDataType.INTEGER);
                 if (blocksMined == null) {
                     return null;
                 }
-                container.remove(toolStats.blocksMined);
+                container.remove(toolStats.toolStatsKeys.getBlocksMined());
                 // remove the applied token if this stat is disabled
-                if (container.has(toolStats.tokenApplied)) {
-                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                if (container.has(toolStats.toolStatsKeys.getTokenApplied())) {
+                    String appliedTokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (appliedTokens != null) {
                         // remove the token from the list
                         // if the list is empty, remove the PDC
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "blocks-mined");
                         if (!newTokens.isEmpty()) {
-                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                            container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
-                            container.remove(toolStats.tokenApplied);
+                            container.remove(toolStats.toolStatsKeys.getTokenApplied());
                         }
                     }
                 }
@@ -240,10 +240,10 @@ public class ItemLore {
         // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
             // if the item has stats but no token, add the token
-            if (container.has(toolStats.blocksMined) && !validToken) {
+            if (container.has(toolStats.toolStatsKeys.getBlocksMined()) && !validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
 
@@ -255,7 +255,7 @@ public class ItemLore {
             if (!validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
         }
@@ -263,8 +263,8 @@ public class ItemLore {
         // read the current stats from the item
         // if they don't exist, then start from 0
         Integer blocksMined = 0;
-        if (container.has(toolStats.blocksMined, PersistentDataType.INTEGER)) {
-            blocksMined = container.get(toolStats.blocksMined, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getBlocksMined(), PersistentDataType.INTEGER)) {
+            blocksMined = container.get(toolStats.toolStatsKeys.getBlocksMined(), PersistentDataType.INTEGER);
         }
 
         if (blocksMined == null) {
@@ -272,7 +272,7 @@ public class ItemLore {
             toolStats.logger.warn("{} does not have valid generic-mined set! Resting to zero. This should NEVER happen.", clone);
         }
 
-        container.set(toolStats.blocksMined, PersistentDataType.INTEGER, blocksMined + add);
+        container.set(toolStats.toolStatsKeys.getBlocksMined(), PersistentDataType.INTEGER, blocksMined + add);
         String oldBlocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined);
         String newBlocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined + add);
         Component oldLine = toolStats.configTools.formatLore("blocks-mined", "{blocks}", oldBlocksMinedFormatted);
@@ -303,24 +303,24 @@ public class ItemLore {
         // if it's disabled, don't update the stats
         // check to see if the item has the stats, remove them if it does
         if (!toolStats.configTools.checkConfig(clone.getType(), "player-kills")) {
-            if (container.has(toolStats.playerKills)) {
-                Integer playerKills = container.get(toolStats.playerKills, PersistentDataType.INTEGER);
+            if (container.has(toolStats.toolStatsKeys.getPlayerKills())) {
+                Integer playerKills = container.get(toolStats.toolStatsKeys.getPlayerKills(), PersistentDataType.INTEGER);
                 if (playerKills == null) {
                     return null;
                 }
-                container.remove(toolStats.playerKills);
+                container.remove(toolStats.toolStatsKeys.getPlayerKills());
                 // remove the applied token if this stat is disabled
-                if (container.has(toolStats.tokenApplied)) {
-                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                if (container.has(toolStats.toolStatsKeys.getTokenApplied())) {
+                    String appliedTokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (appliedTokens != null) {
                         // remove the token from the list
                         // if the list is empty, remove the PDC
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "player-kills");
                         if (!newTokens.isEmpty()) {
-                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                            container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
-                            container.remove(toolStats.tokenApplied);
+                            container.remove(toolStats.toolStatsKeys.getTokenApplied());
                         }
                     }
                 }
@@ -340,10 +340,10 @@ public class ItemLore {
         // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
             // if the item has stats but no token, add the token
-            if (container.has(toolStats.playerKills) && !validToken) {
+            if (container.has(toolStats.toolStatsKeys.getPlayerKills()) && !validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
 
@@ -355,14 +355,14 @@ public class ItemLore {
             if (!validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
         }
 
         Integer playerKills = 0;
-        if (container.has(toolStats.playerKills, PersistentDataType.INTEGER)) {
-            playerKills = container.get(toolStats.playerKills, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getPlayerKills(), PersistentDataType.INTEGER)) {
+            playerKills = container.get(toolStats.toolStatsKeys.getPlayerKills(), PersistentDataType.INTEGER);
         }
 
         if (playerKills == null) {
@@ -370,7 +370,7 @@ public class ItemLore {
             toolStats.logger.warn("{} does not have valid player-kills set! Resting to zero. This should NEVER happen.", clone);
         }
 
-        container.set(toolStats.playerKills, PersistentDataType.INTEGER, playerKills + add);
+        container.set(toolStats.toolStatsKeys.getPlayerKills(), PersistentDataType.INTEGER, playerKills + add);
         String oldPlayerKillsFormatted = toolStats.numberFormat.formatInt(playerKills);
         String newPlayerKillsFormatted = toolStats.numberFormat.formatInt(playerKills + add);
         Component oldLine = toolStats.configTools.formatLore("kills.player", "{kills}", oldPlayerKillsFormatted);
@@ -401,24 +401,24 @@ public class ItemLore {
         // if it's disabled, don't update the stats
         // check to see if the item has the stats, remove them if it does
         if (!toolStats.configTools.checkConfig(clone.getType(), "mob-kills")) {
-            if (container.has(toolStats.mobKills)) {
-                Integer mobKills = container.get(toolStats.mobKills, PersistentDataType.INTEGER);
+            if (container.has(toolStats.toolStatsKeys.getMobKills())) {
+                Integer mobKills = container.get(toolStats.toolStatsKeys.getMobKills(), PersistentDataType.INTEGER);
                 if (mobKills == null) {
                     return null;
                 }
-                container.remove(toolStats.mobKills);
+                container.remove(toolStats.toolStatsKeys.getMobKills());
                 // remove the applied token if this stat is disabled
-                if (container.has(toolStats.tokenApplied)) {
-                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                if (container.has(toolStats.toolStatsKeys.getTokenApplied())) {
+                    String appliedTokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (appliedTokens != null) {
                         // remove the token from the list
                         // if the list is empty, remove the PDC
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "mob-kills");
                         if (!newTokens.isEmpty()) {
-                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                            container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
-                            container.remove(toolStats.tokenApplied);
+                            container.remove(toolStats.toolStatsKeys.getTokenApplied());
                         }
                     }
                 }
@@ -438,10 +438,10 @@ public class ItemLore {
         // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
             // if the item has stats but no token, add the token
-            if (container.has(toolStats.mobKills) && !validToken) {
+            if (container.has(toolStats.toolStatsKeys.getMobKills()) && !validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
 
@@ -453,14 +453,14 @@ public class ItemLore {
             if (!validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
         }
 
         Integer mobKills = 0;
-        if (container.has(toolStats.mobKills, PersistentDataType.INTEGER)) {
-            mobKills = container.get(toolStats.mobKills, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getMobKills(), PersistentDataType.INTEGER)) {
+            mobKills = container.get(toolStats.toolStatsKeys.getMobKills(), PersistentDataType.INTEGER);
         }
 
         if (mobKills == null) {
@@ -468,7 +468,7 @@ public class ItemLore {
             toolStats.logger.warn("{} does not have valid mob-kills set! Resting to zero. This should NEVER happen.", clone);
         }
 
-        container.set(toolStats.mobKills, PersistentDataType.INTEGER, mobKills + add);
+        container.set(toolStats.toolStatsKeys.getMobKills(), PersistentDataType.INTEGER, mobKills + add);
         String oldMobKillsFormatted = toolStats.numberFormat.formatInt(mobKills);
         String newMobKillsFormatted = toolStats.numberFormat.formatInt(mobKills + add);
         Component oldLine = toolStats.configTools.formatLore("kills.mob", "{kills}", oldMobKillsFormatted);
@@ -507,24 +507,24 @@ public class ItemLore {
         // if it's disabled, don't update the stats
         // check to see if the item has the stats, remove them if it does
         if (!toolStats.config.getBoolean("enabled.armor-damage")) {
-            if (container.has(toolStats.armorDamage)) {
-                Double armorDamage = container.get(toolStats.armorDamage, PersistentDataType.DOUBLE);
+            if (container.has(toolStats.toolStatsKeys.getArmorDamage())) {
+                Double armorDamage = container.get(toolStats.toolStatsKeys.getArmorDamage(), PersistentDataType.DOUBLE);
                 if (armorDamage == null) {
                     return null;
                 }
-                container.remove(toolStats.armorDamage);
+                container.remove(toolStats.toolStatsKeys.getArmorDamage());
                 // remove the applied token if this stat is disabled
-                if (container.has(toolStats.tokenApplied)) {
-                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                if (container.has(toolStats.toolStatsKeys.getTokenApplied())) {
+                    String appliedTokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (appliedTokens != null) {
                         // remove the token from the list
                         // if the list is empty, remove the PDC
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "damage-taken");
                         if (!newTokens.isEmpty()) {
-                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                            container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
-                            container.remove(toolStats.tokenApplied);
+                            container.remove(toolStats.toolStatsKeys.getTokenApplied());
                         }
                     }
                 }
@@ -544,10 +544,10 @@ public class ItemLore {
         // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
             // if the item has stats but no token, add the token
-            if (container.has(toolStats.armorDamage) && !validToken) {
+            if (container.has(toolStats.toolStatsKeys.getArmorDamage()) && !validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
 
@@ -559,14 +559,14 @@ public class ItemLore {
             if (!validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
         }
 
         Double damageTaken = 0.0;
-        if (container.has(toolStats.armorDamage, PersistentDataType.DOUBLE)) {
-            damageTaken = container.get(toolStats.armorDamage, PersistentDataType.DOUBLE);
+        if (container.has(toolStats.toolStatsKeys.getArmorDamage(), PersistentDataType.DOUBLE)) {
+            damageTaken = container.get(toolStats.toolStatsKeys.getArmorDamage(), PersistentDataType.DOUBLE);
         }
 
         if (damageTaken == null) {
@@ -574,7 +574,7 @@ public class ItemLore {
             toolStats.logger.warn("{} does not have valid damage-taken set! Resting to zero. This should NEVER happen.", clone);
         }
 
-        container.set(toolStats.armorDamage, PersistentDataType.DOUBLE, damageTaken + damage);
+        container.set(toolStats.toolStatsKeys.getArmorDamage(), PersistentDataType.DOUBLE, damageTaken + damage);
         String oldDamageFormatted = toolStats.numberFormat.formatDouble(damageTaken);
         String newDamageFormatted = toolStats.numberFormat.formatDouble(damageTaken + damage);
         Component oldLine = toolStats.configTools.formatLore("damage-taken", "{damage}", oldDamageFormatted);
@@ -613,24 +613,24 @@ public class ItemLore {
         // if it's disabled, don't update the stats
         // check to see if the item has the stats, remove them if it does
         if (!toolStats.configTools.checkConfig(clone.getType(), "damage-done")) {
-            if (container.has(toolStats.damageDone)) {
-                Double damageDone = container.get(toolStats.damageDone, PersistentDataType.DOUBLE);
+            if (container.has(toolStats.toolStatsKeys.getDamageDone())) {
+                Double damageDone = container.get(toolStats.toolStatsKeys.getDamageDone(), PersistentDataType.DOUBLE);
                 if (damageDone == null) {
                     return null;
                 }
-                container.remove(toolStats.damageDone);
+                container.remove(toolStats.toolStatsKeys.getDamageDone());
                 // remove the applied token if this stat is disabled
-                if (container.has(toolStats.tokenApplied)) {
-                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                if (container.has(toolStats.toolStatsKeys.getTokenApplied())) {
+                    String appliedTokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (appliedTokens != null) {
                         // remove the token from the list
                         // if the list is empty, remove the PDC
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "damage-done");
                         if (!newTokens.isEmpty()) {
-                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                            container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
-                            container.remove(toolStats.tokenApplied);
+                            container.remove(toolStats.toolStatsKeys.getTokenApplied());
                         }
                     }
                 }
@@ -650,10 +650,10 @@ public class ItemLore {
         // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
             // if the item has stats but no token, add the token
-            if (container.has(toolStats.damageDone) && !validToken) {
+            if (container.has(toolStats.toolStatsKeys.getDamageDone()) && !validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
 
@@ -665,14 +665,14 @@ public class ItemLore {
             if (!validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
         }
 
         Double damageDone = 0.0;
-        if (container.has(toolStats.damageDone, PersistentDataType.DOUBLE)) {
-            damageDone = container.get(toolStats.damageDone, PersistentDataType.DOUBLE);
+        if (container.has(toolStats.toolStatsKeys.getDamageDone(), PersistentDataType.DOUBLE)) {
+            damageDone = container.get(toolStats.toolStatsKeys.getDamageDone(), PersistentDataType.DOUBLE);
         }
 
         if (damageDone == null) {
@@ -680,7 +680,7 @@ public class ItemLore {
             toolStats.logger.warn("{} does not have valid damage-done set! Resting to zero. This should NEVER happen.", clone);
         }
 
-        container.set(toolStats.damageDone, PersistentDataType.DOUBLE, damageDone + damage);
+        container.set(toolStats.toolStatsKeys.getDamageDone(), PersistentDataType.DOUBLE, damageDone + damage);
         String oldDamageFormatted = toolStats.numberFormat.formatDouble(damageDone);
         String newDamageFormatted = toolStats.numberFormat.formatDouble(damageDone + damage);
         Component oldLine = toolStats.configTools.formatLore("damage-done", "{damage}", oldDamageFormatted);
@@ -711,24 +711,24 @@ public class ItemLore {
         // if it's disabled, don't update the stats
         // check to see if the item has the stats, remove them if it does
         if (!toolStats.config.getBoolean("enabled.flight-time")) {
-            if (container.has(toolStats.flightTime)) {
-                Long flightTime = container.get(toolStats.flightTime, PersistentDataType.LONG);
+            if (container.has(toolStats.toolStatsKeys.getFlightTime())) {
+                Long flightTime = container.get(toolStats.toolStatsKeys.getFlightTime(), PersistentDataType.LONG);
                 if (flightTime == null) {
                     return null;
                 }
-                container.remove(toolStats.flightTime);
+                container.remove(toolStats.toolStatsKeys.getFlightTime());
                 // remove the applied token if this stat is disabled
-                if (container.has(toolStats.tokenApplied)) {
-                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                if (container.has(toolStats.toolStatsKeys.getTokenApplied())) {
+                    String appliedTokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (appliedTokens != null) {
                         // remove the token from the list
                         // if the list is empty, remove the PDC
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "flight-time");
                         if (!newTokens.isEmpty()) {
-                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                            container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
-                            container.remove(toolStats.tokenApplied);
+                            container.remove(toolStats.toolStatsKeys.getTokenApplied());
                         }
                     }
                 }
@@ -756,10 +756,10 @@ public class ItemLore {
         // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
             // if the item has stats but no token, add the token
-            if (container.has(toolStats.flightTime) && !validToken) {
+            if (container.has(toolStats.toolStatsKeys.getFlightTime()) && !validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
 
@@ -771,7 +771,7 @@ public class ItemLore {
             if (!validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
         }
@@ -779,8 +779,8 @@ public class ItemLore {
         // read the current stats from the item
         // if they don't exist, then start from 0
         Long flightTime = 0L;
-        if (container.has(toolStats.flightTime, PersistentDataType.LONG)) {
-            flightTime = container.get(toolStats.flightTime, PersistentDataType.LONG);
+        if (container.has(toolStats.toolStatsKeys.getFlightTime(), PersistentDataType.LONG)) {
+            flightTime = container.get(toolStats.toolStatsKeys.getFlightTime(), PersistentDataType.LONG);
         }
 
         if (flightTime == null) {
@@ -788,7 +788,7 @@ public class ItemLore {
             toolStats.logger.warn("{} does not have valid flight-time set! Resting to zero. This should NEVER happen.", flightTime);
         }
 
-        container.set(toolStats.flightTime, PersistentDataType.LONG, flightTime + duration);
+        container.set(toolStats.toolStatsKeys.getFlightTime(), PersistentDataType.LONG, flightTime + duration);
         Map<String, String> oldFlightFormatted = toolStats.numberFormat.formatTime(flightTime);
         Map<String, String> newFlightFormatted = toolStats.numberFormat.formatTime(flightTime + duration);
         // if the old format is in the config, check to see if the old format is on the elytra
@@ -827,24 +827,24 @@ public class ItemLore {
         // if it's disabled, don't update the stats
         // check to see if the item has the stats, remove them if it does
         if (!toolStats.config.getBoolean("enabled.sheep-sheared")) {
-            if (container.has(toolStats.sheepSheared)) {
-                Integer sheepSheared = container.get(toolStats.sheepSheared, PersistentDataType.INTEGER);
+            if (container.has(toolStats.toolStatsKeys.getSheepSheared())) {
+                Integer sheepSheared = container.get(toolStats.toolStatsKeys.getSheepSheared(), PersistentDataType.INTEGER);
                 if (sheepSheared == null) {
                     return null;
                 }
-                container.remove(toolStats.sheepSheared);
+                container.remove(toolStats.toolStatsKeys.getSheepSheared());
                 // remove the applied token if this stat is disabled
-                if (container.has(toolStats.tokenApplied)) {
-                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                if (container.has(toolStats.toolStatsKeys.getTokenApplied())) {
+                    String appliedTokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (appliedTokens != null) {
                         // remove the token from the list
                         // if the list is empty, remove the PDC
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "sheep-sheared");
                         if (!newTokens.isEmpty()) {
-                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                            container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
-                            container.remove(toolStats.tokenApplied);
+                            container.remove(toolStats.toolStatsKeys.getTokenApplied());
                         }
                     }
                 }
@@ -864,10 +864,10 @@ public class ItemLore {
         // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
             // if the item has stats but no token, add the token
-            if (container.has(toolStats.sheepSheared) && !validToken) {
+            if (container.has(toolStats.toolStatsKeys.getSheepSheared()) && !validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
 
@@ -879,14 +879,14 @@ public class ItemLore {
             if (!validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
         }
 
         Integer sheepSheared = 0;
-        if (container.has(toolStats.sheepSheared, PersistentDataType.INTEGER)) {
-            sheepSheared = container.get(toolStats.sheepSheared, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getSheepSheared(), PersistentDataType.INTEGER)) {
+            sheepSheared = container.get(toolStats.toolStatsKeys.getSheepSheared(), PersistentDataType.INTEGER);
         }
 
         if (sheepSheared == null) {
@@ -894,7 +894,7 @@ public class ItemLore {
             toolStats.logger.warn("{} does not have valid sheared set! Resting to zero. This should NEVER happen.", clone);
         }
 
-        container.set(toolStats.sheepSheared, PersistentDataType.INTEGER, sheepSheared + add);
+        container.set(toolStats.toolStatsKeys.getSheepSheared(), PersistentDataType.INTEGER, sheepSheared + add);
         String oldSheepFormatted = toolStats.numberFormat.formatInt(sheepSheared);
         String newSheepFormatted = toolStats.numberFormat.formatInt(sheepSheared + add);
         Component oldLine = toolStats.configTools.formatLore("sheep-sheared", "{sheep}", oldSheepFormatted);
@@ -925,24 +925,24 @@ public class ItemLore {
         // if it's disabled, don't update the stats
         // check to see if the item has the stats, remove them if it does
         if (!toolStats.config.getBoolean("enabled.arrows-shot")) {
-            if (container.has(toolStats.arrowsShot)) {
-                Integer arrowsShot = container.get(toolStats.arrowsShot, PersistentDataType.INTEGER);
+            if (container.has(toolStats.toolStatsKeys.getArrowsShot())) {
+                Integer arrowsShot = container.get(toolStats.toolStatsKeys.getArrowsShot(), PersistentDataType.INTEGER);
                 if (arrowsShot == null) {
                     return null;
                 }
-                container.remove(toolStats.arrowsShot);
+                container.remove(toolStats.toolStatsKeys.getArrowsShot());
                 // remove the applied token if this stat is disabled
-                if (container.has(toolStats.tokenApplied)) {
-                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                if (container.has(toolStats.toolStatsKeys.getTokenApplied())) {
+                    String appliedTokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (appliedTokens != null) {
                         // remove the token from the list
                         // if the list is empty, remove the PDC
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "arrows-shot");
                         if (!newTokens.isEmpty()) {
-                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                            container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
-                            container.remove(toolStats.tokenApplied);
+                            container.remove(toolStats.toolStatsKeys.getTokenApplied());
                         }
                     }
                 }
@@ -962,10 +962,10 @@ public class ItemLore {
         // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
             // if the item has stats but no token, add the token
-            if (container.has(toolStats.arrowsShot) && !validToken) {
+            if (container.has(toolStats.toolStatsKeys.getArrowsShot()) && !validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
 
@@ -977,7 +977,7 @@ public class ItemLore {
             if (!validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
         }
@@ -985,8 +985,8 @@ public class ItemLore {
         // read the current stats from the item
         // if they don't exist, then start from 0
         Integer arrowsShot = 0;
-        if (container.has(toolStats.arrowsShot, PersistentDataType.INTEGER)) {
-            arrowsShot = container.get(toolStats.arrowsShot, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getArrowsShot(), PersistentDataType.INTEGER)) {
+            arrowsShot = container.get(toolStats.toolStatsKeys.getArrowsShot(), PersistentDataType.INTEGER);
         }
 
         if (arrowsShot == null) {
@@ -994,7 +994,7 @@ public class ItemLore {
             toolStats.logger.warn("{} does not have valid arrows-shot set! Resting to zero. This should NEVER happen.", arrowsShot);
         }
 
-        container.set(toolStats.arrowsShot, PersistentDataType.INTEGER, arrowsShot + add);
+        container.set(toolStats.toolStatsKeys.getArrowsShot(), PersistentDataType.INTEGER, arrowsShot + add);
         String oldArrowsFormatted = toolStats.numberFormat.formatInt(arrowsShot);
         String newArrowsFormatted = toolStats.numberFormat.formatInt(arrowsShot + add);
         Component oldLine = toolStats.configTools.formatLore("arrows-shot", "{arrows}", oldArrowsFormatted);
@@ -1025,24 +1025,24 @@ public class ItemLore {
         // if it's disabled, don't update the stats
         // check to see if the item has the stats, remove them if it does
         if (!toolStats.config.getBoolean("enabled.fish-caught")) {
-            if (container.has(toolStats.fishCaught)) {
-                Integer fishCaught = container.get(toolStats.fishCaught, PersistentDataType.INTEGER);
+            if (container.has(toolStats.toolStatsKeys.getFishCaught())) {
+                Integer fishCaught = container.get(toolStats.toolStatsKeys.getFishCaught(), PersistentDataType.INTEGER);
                 if (fishCaught == null) {
                     return null;
                 }
-                container.remove(toolStats.fishCaught);
+                container.remove(toolStats.toolStatsKeys.getFishCaught());
                 // remove the applied token if this stat is disabled
-                if (container.has(toolStats.tokenApplied)) {
-                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                if (container.has(toolStats.toolStatsKeys.getTokenApplied())) {
+                    String appliedTokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (appliedTokens != null) {
                         // remove the token from the list
                         // if the list is empty, remove the PDC
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "fish-caught");
                         if (!newTokens.isEmpty()) {
-                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                            container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
-                            container.remove(toolStats.tokenApplied);
+                            container.remove(toolStats.toolStatsKeys.getTokenApplied());
                         }
                     }
                 }
@@ -1062,10 +1062,10 @@ public class ItemLore {
         // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
             // if the item has stats but no token, add the token
-            if (container.has(toolStats.fishCaught) && !validToken) {
+            if (container.has(toolStats.toolStatsKeys.getFishCaught()) && !validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
 
@@ -1077,14 +1077,14 @@ public class ItemLore {
             if (!validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
         }
 
         Integer fishCaught = 0;
-        if (container.has(toolStats.fishCaught, PersistentDataType.INTEGER)) {
-            fishCaught = container.get(toolStats.fishCaught, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getFishCaught(), PersistentDataType.INTEGER)) {
+            fishCaught = container.get(toolStats.toolStatsKeys.getFishCaught(), PersistentDataType.INTEGER);
         }
 
         if (fishCaught == null) {
@@ -1092,7 +1092,7 @@ public class ItemLore {
             toolStats.logger.warn("{} does not have valid fish-caught set! Resting to zero. This should NEVER happen.", clone);
         }
 
-        container.set(toolStats.fishCaught, PersistentDataType.INTEGER, fishCaught + add);
+        container.set(toolStats.toolStatsKeys.getFishCaught(), PersistentDataType.INTEGER, fishCaught + add);
         String oldFishFormatted = toolStats.numberFormat.formatInt(fishCaught);
         String newFishFormatted = toolStats.numberFormat.formatInt(fishCaught + add);
         Component oldLine = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", oldFishFormatted);
@@ -1124,10 +1124,10 @@ public class ItemLore {
 
         NamespacedKey bossesKey = null;
         if (boss.equalsIgnoreCase("wither")) {
-            bossesKey = toolStats.witherKills;
+            bossesKey = toolStats.toolStatsKeys.getWitherKills();
         }
         if (boss.equalsIgnoreCase("enderdragon")) {
-            bossesKey = toolStats.enderDragonKills;
+            bossesKey = toolStats.toolStatsKeys.getEnderDragonKills();
         }
 
         if (bossesKey == null) {
@@ -1144,17 +1144,17 @@ public class ItemLore {
                 }
                 container.remove(bossesKey);
                 // remove the applied token if this stat is disabled
-                if (container.has(toolStats.tokenApplied)) {
-                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                if (container.has(toolStats.toolStatsKeys.getTokenApplied())) {
+                    String appliedTokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (appliedTokens != null) {
                         // remove the token from the list
                         // if the list is empty, remove the PDC
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "wither-kills");
                         if (!newTokens.isEmpty()) {
-                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                            container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
-                            container.remove(toolStats.tokenApplied);
+                            container.remove(toolStats.toolStatsKeys.getTokenApplied());
                         }
                     }
                 }
@@ -1177,7 +1177,7 @@ public class ItemLore {
             if (container.has(bossesKey) && !validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
 
@@ -1189,7 +1189,7 @@ public class ItemLore {
             if (!validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
         }
@@ -1235,24 +1235,24 @@ public class ItemLore {
         // if it's disabled, don't update the stats
         // check to see if the item has the stats, remove them if it does
         if (!toolStats.config.getBoolean("enabled.critical-strikes")) {
-            if (container.has(toolStats.criticalStrikes)) {
-                Integer criticalStrikes = container.get(toolStats.criticalStrikes, PersistentDataType.INTEGER);
+            if (container.has(toolStats.toolStatsKeys.getCriticalStrikes())) {
+                Integer criticalStrikes = container.get(toolStats.toolStatsKeys.getCriticalStrikes(), PersistentDataType.INTEGER);
                 if (criticalStrikes == null) {
                     return null;
                 }
-                container.remove(toolStats.criticalStrikes);
+                container.remove(toolStats.toolStatsKeys.getCriticalStrikes());
                 // remove the applied token if this stat is disabled
-                if (container.has(toolStats.tokenApplied)) {
-                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                if (container.has(toolStats.toolStatsKeys.getTokenApplied())) {
+                    String appliedTokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (appliedTokens != null) {
                         // remove the token from the list
                         // if the list is empty, remove the PDC
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "critical-strikes");
                         if (!newTokens.isEmpty()) {
-                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                            container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
-                            container.remove(toolStats.tokenApplied);
+                            container.remove(toolStats.toolStatsKeys.getTokenApplied());
                         }
                     }
                 }
@@ -1272,10 +1272,10 @@ public class ItemLore {
         // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
             // if the item has stats but no token, add the token
-            if (container.has(toolStats.criticalStrikes) && !validToken) {
+            if (container.has(toolStats.toolStatsKeys.getCriticalStrikes()) && !validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
 
@@ -1287,14 +1287,14 @@ public class ItemLore {
             if (!validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
         }
 
         Integer criticalStrikes = 0;
-        if (container.has(toolStats.criticalStrikes, PersistentDataType.INTEGER)) {
-            criticalStrikes = container.get(toolStats.criticalStrikes, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getCriticalStrikes(), PersistentDataType.INTEGER)) {
+            criticalStrikes = container.get(toolStats.toolStatsKeys.getCriticalStrikes(), PersistentDataType.INTEGER);
         }
 
         if (criticalStrikes == null) {
@@ -1302,7 +1302,7 @@ public class ItemLore {
             toolStats.logger.warn("{} does not have valid fish-caught set! Resting to zero. This should NEVER happen.", clone);
         }
 
-        container.set(toolStats.criticalStrikes, PersistentDataType.INTEGER, criticalStrikes + add);
+        container.set(toolStats.toolStatsKeys.getCriticalStrikes(), PersistentDataType.INTEGER, criticalStrikes + add);
         String oldCriticalStrikesFormatted = toolStats.numberFormat.formatInt(criticalStrikes);
         String newCriticalStrikesFormatted = toolStats.numberFormat.formatInt(criticalStrikes + add);
         Component oldLine = toolStats.configTools.formatLore("critical-strikes", "{strikes}", oldCriticalStrikesFormatted);
@@ -1333,24 +1333,24 @@ public class ItemLore {
         // if it's disabled, don't update the stats
         // check to see if the item has the stats, remove them if it does
         if (!toolStats.config.getBoolean("enabled.trident-throws")) {
-            if (container.has(toolStats.tridentThrows)) {
-                Integer tridentThrows = container.get(toolStats.tridentThrows, PersistentDataType.INTEGER);
+            if (container.has(toolStats.toolStatsKeys.getTridentThrows())) {
+                Integer tridentThrows = container.get(toolStats.toolStatsKeys.getTridentThrows(), PersistentDataType.INTEGER);
                 if (tridentThrows == null) {
                     return null;
                 }
-                container.remove(toolStats.tridentThrows);
+                container.remove(toolStats.toolStatsKeys.getTridentThrows());
                 // remove the applied token if this stat is disabled
-                if (container.has(toolStats.tokenApplied)) {
-                    String appliedTokens = container.get(toolStats.tokenApplied, PersistentDataType.STRING);
+                if (container.has(toolStats.toolStatsKeys.getTokenApplied())) {
+                    String appliedTokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
                     if (appliedTokens != null) {
                         // remove the token from the list
                         // if the list is empty, remove the PDC
                         // otherwise set the PDC back with the new list
                         List<String> newTokens = toolStats.itemChecker.removeToken(appliedTokens, "trident-throws");
                         if (!newTokens.isEmpty()) {
-                            container.set(toolStats.tokenApplied, PersistentDataType.STRING, String.join(",", newTokens));
+                            container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
                         } else {
-                            container.remove(toolStats.tokenApplied);
+                            container.remove(toolStats.toolStatsKeys.getTokenApplied());
                         }
                     }
                 }
@@ -1370,10 +1370,10 @@ public class ItemLore {
         // check for tokens
         if (toolStats.config.getBoolean("tokens.enabled")) {
             // if the item has stats but no token, add the token
-            if (container.has(toolStats.tridentThrows) && !validToken) {
+            if (container.has(toolStats.toolStatsKeys.getTridentThrows()) && !validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
 
@@ -1385,14 +1385,14 @@ public class ItemLore {
             if (!validToken) {
                 String newTokens = toolStats.itemChecker.addTokensToExisting(clone);
                 if (newTokens != null) {
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                 }
             }
         }
 
         Integer tridentThrows = 0;
-        if (container.has(toolStats.tridentThrows, PersistentDataType.INTEGER)) {
-            tridentThrows = container.get(toolStats.tridentThrows, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getTridentThrows(), PersistentDataType.INTEGER)) {
+            tridentThrows = container.get(toolStats.toolStatsKeys.getTridentThrows(), PersistentDataType.INTEGER);
         }
 
         if (tridentThrows == null) {
@@ -1400,7 +1400,7 @@ public class ItemLore {
             toolStats.logger.warn("{} does not have valid fish-caught set! Resting to zero. This should NEVER happen.", clone);
         }
 
-        container.set(toolStats.tridentThrows, PersistentDataType.INTEGER, tridentThrows + add);
+        container.set(toolStats.toolStatsKeys.getTridentThrows(), PersistentDataType.INTEGER, tridentThrows + add);
         String oldTridentThrowsFormatted = toolStats.numberFormat.formatInt(tridentThrows);
         String newTridentThrowsFormatted = toolStats.numberFormat.formatInt(tridentThrows + add);
         Component oldLine = toolStats.configTools.formatLore("trident-throws", "{times}", oldTridentThrowsFormatted);
@@ -1533,14 +1533,14 @@ public class ItemLore {
         PersistentDataContainer container = meta.getPersistentDataContainer();
 
         // remove the applied tokens
-        if (container.has(toolStats.tokenApplied)) {
-            container.remove(toolStats.tokenApplied);
+        if (container.has(toolStats.toolStatsKeys.getTokenApplied())) {
+            container.remove(toolStats.toolStatsKeys.getTokenApplied());
         }
 
-        if (container.has(toolStats.playerKills)) {
-            Integer playerKills = container.get(toolStats.playerKills, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getPlayerKills())) {
+            Integer playerKills = container.get(toolStats.toolStatsKeys.getPlayerKills(), PersistentDataType.INTEGER);
             if (playerKills != null) {
-                container.remove(toolStats.playerKills);
+                container.remove(toolStats.toolStatsKeys.getPlayerKills());
 
                 String playerKillsFormatted = toolStats.numberFormat.formatInt(playerKills);
                 Component lineToRemove = toolStats.configTools.formatLore("kills.player", "{kills}", playerKillsFormatted);
@@ -1548,120 +1548,120 @@ public class ItemLore {
                 finalItem.setItemMeta(meta);
             }
         }
-        if (container.has(toolStats.mobKills)) {
-            Integer mobKills = container.get(toolStats.mobKills, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getMobKills())) {
+            Integer mobKills = container.get(toolStats.toolStatsKeys.getMobKills(), PersistentDataType.INTEGER);
             if (mobKills != null) {
-                container.remove(toolStats.mobKills);
+                container.remove(toolStats.toolStatsKeys.getMobKills());
                 String mobKillsFormatted = toolStats.numberFormat.formatInt(mobKills);
                 Component lineToRemove = toolStats.configTools.formatLore("kills.mob", "{kills}", mobKillsFormatted);
                 meta.lore(removeLore(meta.lore(), lineToRemove));
                 finalItem.setItemMeta(meta);
             }
         }
-        if (container.has(toolStats.blocksMined)) {
-            Integer blocksMined = container.get(toolStats.blocksMined, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getBlocksMined())) {
+            Integer blocksMined = container.get(toolStats.toolStatsKeys.getBlocksMined(), PersistentDataType.INTEGER);
             if (blocksMined != null) {
-                container.remove(toolStats.blocksMined);
+                container.remove(toolStats.toolStatsKeys.getBlocksMined());
                 String blocksMinedFormatted = toolStats.numberFormat.formatInt(blocksMined);
                 Component lineToRemove = toolStats.configTools.formatLore("blocks-mined", "{blocks}", blocksMinedFormatted);
                 meta.lore(removeLore(meta.lore(), lineToRemove));
                 finalItem.setItemMeta(meta);
             }
         }
-        if (container.has(toolStats.cropsHarvested)) {
-            Integer cropsHarvested = container.get(toolStats.playerKills, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getCropsHarvested())) {
+            Integer cropsHarvested = container.get(toolStats.toolStatsKeys.getPlayerKills(), PersistentDataType.INTEGER);
             if (cropsHarvested != null) {
-                container.remove(toolStats.cropsHarvested);
+                container.remove(toolStats.toolStatsKeys.getCropsHarvested());
                 String cropsHarvestedFormatted = toolStats.numberFormat.formatInt(cropsHarvested);
                 Component lineToRemove = toolStats.configTools.formatLore("crops-harvested", "{crops}", cropsHarvestedFormatted);
                 meta.lore(removeLore(meta.lore(), lineToRemove));
                 finalItem.setItemMeta(meta);
             }
         }
-        if (container.has(toolStats.fishCaught)) {
-            Integer fishCaught = container.get(toolStats.fishCaught, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getFishCaught())) {
+            Integer fishCaught = container.get(toolStats.toolStatsKeys.getFishCaught(), PersistentDataType.INTEGER);
             if (fishCaught != null) {
-                container.remove(toolStats.fishCaught);
+                container.remove(toolStats.toolStatsKeys.getFishCaught());
                 String fishCaughtFormatted = toolStats.numberFormat.formatInt(fishCaught);
                 Component lineToRemove = toolStats.configTools.formatLore("fished.fish-caught", "{fish}", fishCaughtFormatted);
                 meta.lore(removeLore(meta.lore(), lineToRemove));
                 finalItem.setItemMeta(meta);
             }
         }
-        if (container.has(toolStats.sheepSheared)) {
-            Integer sheepSheared = container.get(toolStats.sheepSheared, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getSheepSheared())) {
+            Integer sheepSheared = container.get(toolStats.toolStatsKeys.getSheepSheared(), PersistentDataType.INTEGER);
             if (sheepSheared != null) {
-                container.remove(toolStats.sheepSheared);
+                container.remove(toolStats.toolStatsKeys.getSheepSheared());
                 String sheepShearedFormatted = toolStats.numberFormat.formatInt(sheepSheared);
                 Component lineToRemove = toolStats.configTools.formatLore("sheep.sheared", "{sheep}", sheepShearedFormatted);
                 meta.lore(removeLore(meta.lore(), lineToRemove));
                 finalItem.setItemMeta(meta);
             }
         }
-        if (container.has(toolStats.armorDamage)) {
-            Double armorDamage = container.get(toolStats.armorDamage, PersistentDataType.DOUBLE);
+        if (container.has(toolStats.toolStatsKeys.getArmorDamage())) {
+            Double armorDamage = container.get(toolStats.toolStatsKeys.getArmorDamage(), PersistentDataType.DOUBLE);
             if (armorDamage != null) {
-                container.remove(toolStats.armorDamage);
+                container.remove(toolStats.toolStatsKeys.getArmorDamage());
                 String armorDamageFormatted = toolStats.numberFormat.formatDouble(armorDamage);
                 Component lineToRemove = toolStats.configTools.formatLore("damage-taken", "{damage}", armorDamageFormatted);
                 meta.lore(removeLore(meta.lore(), lineToRemove));
                 finalItem.setItemMeta(meta);
             }
         }
-        if (container.has(toolStats.damageDone)) {
-            Double damageDone = container.get(toolStats.damageDone, PersistentDataType.DOUBLE);
+        if (container.has(toolStats.toolStatsKeys.getDamageDone())) {
+            Double damageDone = container.get(toolStats.toolStatsKeys.getDamageDone(), PersistentDataType.DOUBLE);
             if (damageDone != null) {
-                container.remove(toolStats.damageDone);
+                container.remove(toolStats.toolStatsKeys.getDamageDone());
                 String damageDoneFormatted = toolStats.numberFormat.formatDouble(damageDone);
                 Component lineToRemove = toolStats.configTools.formatLore("damage-done", "{damage}", damageDoneFormatted);
                 meta.lore(removeLore(meta.lore(), lineToRemove));
                 finalItem.setItemMeta(meta);
             }
         }
-        if (container.has(toolStats.arrowsShot)) {
-            Integer arrowsShot = container.get(toolStats.arrowsShot, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getArrowsShot())) {
+            Integer arrowsShot = container.get(toolStats.toolStatsKeys.getArrowsShot(), PersistentDataType.INTEGER);
             if (arrowsShot != null) {
-                container.remove(toolStats.arrowsShot);
+                container.remove(toolStats.toolStatsKeys.getArrowsShot());
                 String arrowsShotFormatted = toolStats.numberFormat.formatInt(arrowsShot);
                 Component lineToRemove = toolStats.configTools.formatLore("arrows-shot", "{arrows}", arrowsShotFormatted);
                 meta.lore(removeLore(meta.lore(), lineToRemove));
                 finalItem.setItemMeta(meta);
             }
         }
-        if (container.has(toolStats.flightTime)) {
-            Long flightTime = container.get(toolStats.flightTime, PersistentDataType.LONG);
+        if (container.has(toolStats.toolStatsKeys.getFlightTime())) {
+            Long flightTime = container.get(toolStats.toolStatsKeys.getFlightTime(), PersistentDataType.LONG);
             if (flightTime != null) {
-                container.remove(toolStats.flightTime);
+                container.remove(toolStats.toolStatsKeys.getFlightTime());
                 Map<String, String> flightTimeFormatted = toolStats.numberFormat.formatTime(flightTime);
                 Component lineToRemove = toolStats.configTools.formatLoreMultiplePlaceholders("flight-time", flightTimeFormatted);
                 meta.lore(removeLore(meta.lore(), lineToRemove));
                 finalItem.setItemMeta(meta);
             }
         }
-        if (container.has(toolStats.witherKills)) {
-            Integer witherKills = container.get(toolStats.witherKills, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getWitherKills())) {
+            Integer witherKills = container.get(toolStats.toolStatsKeys.getWitherKills(), PersistentDataType.INTEGER);
             if (witherKills != null) {
-                container.remove(toolStats.witherKills);
+                container.remove(toolStats.toolStatsKeys.getWitherKills());
                 String witherKillsFormatted = toolStats.numberFormat.formatInt(witherKills);
                 Component lineToRemove = toolStats.configTools.formatLore("bosses-killed.wither", "{kills}", witherKillsFormatted);
                 meta.lore(removeLore(meta.lore(), lineToRemove));
                 finalItem.setItemMeta(meta);
             }
         }
-        if (container.has(toolStats.enderDragonKills)) {
-            Integer enderDragonKills = container.get(toolStats.enderDragonKills, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getEnderDragonKills())) {
+            Integer enderDragonKills = container.get(toolStats.toolStatsKeys.getEnderDragonKills(), PersistentDataType.INTEGER);
             if (enderDragonKills != null) {
-                container.remove(toolStats.enderDragonKills);
+                container.remove(toolStats.toolStatsKeys.getEnderDragonKills());
                 String enderDragonKillsFormatted = toolStats.numberFormat.formatInt(enderDragonKills);
                 Component lineToRemove = toolStats.configTools.formatLore("bosses-killed.enderdragon", "{kills}", enderDragonKillsFormatted);
                 meta.lore(removeLore(meta.lore(), lineToRemove));
                 finalItem.setItemMeta(meta);
             }
         }
-        if (container.has(toolStats.criticalStrikes)) {
-            Integer criticalStrikes = container.get(toolStats.criticalStrikes, PersistentDataType.INTEGER);
+        if (container.has(toolStats.toolStatsKeys.getCriticalStrikes())) {
+            Integer criticalStrikes = container.get(toolStats.toolStatsKeys.getCriticalStrikes(), PersistentDataType.INTEGER);
             if (criticalStrikes != null) {
-                container.remove(toolStats.criticalStrikes);
+                container.remove(toolStats.toolStatsKeys.getCriticalStrikes());
                 String criticalStrikesFormatted = toolStats.numberFormat.formatInt(criticalStrikes);
                 Component lineToRemove = toolStats.configTools.formatLore("critical-strikes", "{strikes}", criticalStrikesFormatted);
                 meta.lore(removeLore(meta.lore(), lineToRemove));
@@ -1670,22 +1670,22 @@ public class ItemLore {
         }
         if (removeMeta) {
             Integer origin = null;
-            if (container.has(toolStats.originType)) {
-                origin = container.get(toolStats.originType, PersistentDataType.INTEGER);
+            if (container.has(toolStats.toolStatsKeys.getOriginType())) {
+                origin = container.get(toolStats.toolStatsKeys.getOriginType(), PersistentDataType.INTEGER);
             }
 
-            if (container.has(toolStats.timeCreated)) {
-                Long timeCreated = container.get(toolStats.timeCreated, PersistentDataType.LONG);
+            if (container.has(toolStats.toolStatsKeys.getTimeCreated())) {
+                Long timeCreated = container.get(toolStats.toolStatsKeys.getTimeCreated(), PersistentDataType.LONG);
                 if (timeCreated != null && origin != null) {
-                    container.remove(toolStats.timeCreated);
+                    container.remove(toolStats.toolStatsKeys.getTimeCreated());
                     Component timeCreatedLore = formatCreationTime(timeCreated, origin, finalItem);
                     meta.lore(removeLore(meta.lore(), timeCreatedLore));
                 }
             }
-            if (container.has(toolStats.itemOwner)) {
-                UUID owner = container.get(toolStats.itemOwner, new UUIDDataType());
+            if (container.has(toolStats.toolStatsKeys.getItemOwner())) {
+                UUID owner = container.get(toolStats.toolStatsKeys.getItemOwner(), new UUIDDataType());
                 if (owner != null && origin != null) {
-                    container.remove(toolStats.itemOwner);
+                    container.remove(toolStats.toolStatsKeys.getItemOwner());
                     String ownerName = Bukkit.getOfflinePlayer(owner).getName();
                     if (ownerName != null) {
                         Component ownerLore = formatOwner(ownerName, origin, finalItem);
@@ -1695,7 +1695,7 @@ public class ItemLore {
             }
 
             if (origin != null) {
-                container.remove(toolStats.originType);
+                container.remove(toolStats.toolStatsKeys.getOriginType());
             }
 
             finalItem.setItemMeta(meta);

@@ -28,119 +28,18 @@ import lol.hyper.toolstats.tools.config.ConfigTools;
 import lol.hyper.toolstats.tools.config.ConfigUpdater;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
 
 public final class ToolStats extends JavaPlugin {
-
-    /**
-     * Stores who created an item.
-     */
-    public final NamespacedKey itemOwner = new NamespacedKey(this, "owner");
-    /**
-     * Stores when the item was created.
-     */
-    public final NamespacedKey timeCreated = new NamespacedKey(this, "time-created");
-    /**
-     * Stores how many player kills.
-     */
-    public final NamespacedKey playerKills = new NamespacedKey(this, "player-kills");
-    /**
-     * Stores how many mob kills.
-     */
-    public final NamespacedKey mobKills = new NamespacedKey(this, "mob-kills");
-    /**
-     * Stores how many blocks were mined.
-     */
-    public final NamespacedKey blocksMined = new NamespacedKey(this, "generic-mined");
-    /**
-     * Stores how many crops were harvested.
-     */
-    public final NamespacedKey cropsHarvested = new NamespacedKey(this, "crops-mined");
-    /**
-     * Stores how many fish were caught.
-     */
-    public final NamespacedKey fishCaught = new NamespacedKey(this, "fish-caught");
-    /**
-     * Stores how many sheep were sheared.
-     */
-    public final NamespacedKey sheepSheared = new NamespacedKey(this, "sheared");
-    /**
-     * Stores how much damage an armor piece has taken.
-     */
-    public final NamespacedKey armorDamage = new NamespacedKey(this, "damage-taken");
-    /**
-     * Stores how much damage a weapon has done.
-     */
-    public final NamespacedKey damageDone = new NamespacedKey(this, "damage-done");
-    /**
-     * Key for tracking new elytras that spawn.
-     */
-    public final NamespacedKey newElytra = new NamespacedKey(this, "new");
-    /**
-     * Key for item has.
-     */
-    public final NamespacedKey hash = new NamespacedKey(this, "hash");
-    /**
-     * Key for arrows shot.
-     */
-    public final NamespacedKey arrowsShot = new NamespacedKey(this, "arrows-shot");
-    /**
-     * Key for arrows shot.
-     */
-    public final NamespacedKey droppedBy = new NamespacedKey(this, "dropped-by");
-    /**
-     * Key for tracking flight time.
-     */
-    public final NamespacedKey flightTime = new NamespacedKey(this, "flightTime");
-    /**
-     * Key for token type. This is for the token itself.
-     */
-    public final NamespacedKey tokenType = new NamespacedKey(this, "token-type");
-    /**
-     * Key for applied token. This is what goes onto the tool/armor to record the type.
-     */
-    public final NamespacedKey tokenApplied = new NamespacedKey(this, "token-applied");
-    /**
-     * Key for withers killed.
-     */
-    public final NamespacedKey witherKills = new NamespacedKey(this, "wither-kills");
-    /**
-     * Key for withers killed.
-     */
-    public final NamespacedKey enderDragonKills = new NamespacedKey(this, "enderdragon-kills");
-    /**
-     * Key for critical strikes.
-     */
-    public final NamespacedKey criticalStrikes = new NamespacedKey(this, "critical-strikes");
-    /**
-     * Key for trident throws.
-     */
-    public final NamespacedKey tridentThrows = new NamespacedKey(this, "trident-throws");
-
-    /**
-     * Stores how an item was created.
-     * 0 = crafted.
-     * 1 = dropped.
-     * 2 = looted.
-     * 3 = traded.
-     * 4 = founded (for elytras).
-     * 5 = fished.
-     * 6 = spawned in (creative).
-     */
-    public final NamespacedKey originType = new NamespacedKey(this, "origin");
 
     public final int CONFIG_VERSION = 14;
     public final ComponentLogger logger = this.getComponentLogger();
     public final File configFile = new File(this.getDataFolder(), "config.yml");
     public boolean tokens = false;
-    public final Set<NamespacedKey> tokenKeys = new HashSet<>();
 
     public BlockBreak blockBreak;
     public ChunkPopulate chunkPopulate;
@@ -172,6 +71,7 @@ public final class ToolStats extends JavaPlugin {
     public HyperLib hyperLib;
     public TextUtils textUtils;
     public ProjectileShoot projectileShoot;
+    public ToolStatsKeys toolStatsKeys;
 
     @Override
     public void onEnable() {
@@ -190,6 +90,8 @@ public final class ToolStats extends JavaPlugin {
 
         loadConfig();
         configTools = new ConfigTools(this);
+        toolStatsKeys = new ToolStatsKeys(this);
+        toolStatsKeys.make();
         tokenData = new TokenData(this);
         tokenData.setup();
         for (ShapedRecipe recipe : tokenData.getRecipes()) {
@@ -222,21 +124,6 @@ public final class ToolStats extends JavaPlugin {
         prepareCraft = new PrepareCraft(this);
         blockDispenseEvent = new BlockDispenseEvent(this);
         projectileShoot = new ProjectileShoot(this);
-
-        // save which stat can be used by a reset token
-        tokenKeys.add(blocksMined);
-        tokenKeys.add(playerKills);
-        tokenKeys.add(mobKills);
-        tokenKeys.add(cropsHarvested);
-        tokenKeys.add(sheepSheared);
-        tokenKeys.add(fishCaught);
-        tokenKeys.add(flightTime);
-        tokenKeys.add(arrowsShot);
-        tokenKeys.add(armorDamage);
-        tokenKeys.add(witherKills);
-        tokenKeys.add(enderDragonKills);
-        tokenKeys.add(criticalStrikes);
-        tokenKeys.add(tridentThrows);
 
         Bukkit.getServer().getPluginManager().registerEvents(blockBreak, this);
         Bukkit.getServer().getPluginManager().registerEvents(chunkPopulate, this);

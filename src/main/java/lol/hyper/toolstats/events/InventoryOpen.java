@@ -69,13 +69,13 @@ public class InventoryOpen implements Listener {
 
             if (toolStats.config.getBoolean("tokens.enabled")) {
                 // if the token system is on and the item doesn't have stat keys
-                if (toolStats.itemChecker.keyCheck(container) && !container.has(toolStats.tokenType)) {
+                if (toolStats.itemChecker.keyCheck(container) && !container.has(toolStats.toolStatsKeys.getTokenType())) {
                     // add the tokens
                     String newTokens = toolStats.itemChecker.addTokensToExisting(itemStack);
                     if (newTokens == null) {
                         return;
                     }
-                    container.set(toolStats.tokenApplied, PersistentDataType.STRING, newTokens);
+                    container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, newTokens);
                     itemStack.setItemMeta(itemMeta);
                 }
             }
@@ -83,29 +83,29 @@ public class InventoryOpen implements Listener {
             // generate a hash if the item doesn't have one (and enabled)
             // if hashes are disabled and the item has one, remove it.
             if (toolStats.config.getBoolean("generate-hash-for-items")) {
-                if (!container.has(toolStats.hash, PersistentDataType.STRING)) {
+                if (!container.has(toolStats.toolStatsKeys.getHash(), PersistentDataType.STRING)) {
                     UUID owner = null;
                     // get the current owner if there is one.
-                    if (container.has(toolStats.itemOwner, new UUIDDataType())) {
-                        owner = container.get(toolStats.itemOwner, new UUIDDataType());
+                    if (container.has(toolStats.toolStatsKeys.getItemOwner(), new UUIDDataType())) {
+                        owner = container.get(toolStats.toolStatsKeys.getItemOwner(), new UUIDDataType());
                     }
                     // if there is no owner, use the player holding it
                     if (owner == null) {
                         owner = player.getUniqueId();
                     }
-                    Long timestamp = container.get(toolStats.timeCreated, PersistentDataType.LONG);
+                    Long timestamp = container.get(toolStats.toolStatsKeys.getTimeCreated(), PersistentDataType.LONG);
                     if (timestamp == null) {
                         // if there is no time created, use now
                         timestamp = System.currentTimeMillis();
                     }
                     String hash = toolStats.hashMaker.makeHash(itemStack.getType(), owner, timestamp);
-                    container.set(toolStats.hash, PersistentDataType.STRING, hash);
+                    container.set(toolStats.toolStatsKeys.getHash(), PersistentDataType.STRING, hash);
                     itemStack.setItemMeta(itemMeta);
                 }
             } else {
                 // if hashes are disabled but the item has one, remove it.
-                if (container.has(toolStats.hash, PersistentDataType.STRING)) {
-                    container.remove(toolStats.hash);
+                if (container.has(toolStats.toolStatsKeys.getHash(), PersistentDataType.STRING)) {
+                    container.remove(toolStats.toolStatsKeys.getHash());
                     itemStack.setItemMeta(itemMeta);
                 }
             }

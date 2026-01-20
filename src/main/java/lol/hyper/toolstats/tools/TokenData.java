@@ -209,7 +209,7 @@ public class TokenData {
         tokenMeta.lore(lore);
 
         // set the PDC
-        tokenData.set(toolStats.tokenType, PersistentDataType.STRING, tokenType);
+        tokenData.set(toolStats.toolStatsKeys.getTokenType(), PersistentDataType.STRING, tokenType);
         token.setItemMeta(tokenMeta);
 
         // set the custom model data

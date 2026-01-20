@@ -68,7 +68,7 @@ public class ChunkPopulate implements Listener {
                     }
                     // add the new tag so we know it's new
                     PersistentDataContainer container = meta.getPersistentDataContainer();
-                    container.set(toolStats.newElytra, PersistentDataType.INTEGER, 1);
+                    container.set(toolStats.toolStatsKeys.getElytraKey(), PersistentDataType.INTEGER, 1);
                     elytraCopy.setItemMeta(meta);
                     itemFrame.setItem(elytraCopy);
                 }
