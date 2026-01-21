@@ -31,17 +31,20 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlayerInteract implements Listener {
 
     private final ToolStats toolStats;
 
-    public final Map<Block, Player> openedChests = new HashMap<>();
-    public final Map<StorageMinecart, Player> openedMineCarts = new HashMap<>();
+    public final List<Block> openedChests = new ArrayList<>();
+    public final List<StorageMinecart> openedMineCarts = new ArrayList<>();
+    public final List<Inventory> chestInventories = new ArrayList<>();
+    public final List<Inventory> mineCartChestInventories = new ArrayList<>();
 
     public PlayerInteract(ToolStats toolStats) {
         this.toolStats = toolStats;
@@ -64,8 +67,10 @@ public class PlayerInteract implements Listener {
         }
         // store when a player opens a chest
         BlockState state = block.getState();
-        if (state instanceof InventoryHolder) {
-            openedChests.put(block, player);
+        if (state instanceof InventoryHolder holder) {
+            Inventory holderInventory = holder.getInventory();
+            openedChests.add(block);
+            chestInventories.add(holderInventory);
             Bukkit.getGlobalRegionScheduler().runDelayed(toolStats, scheduledTask -> openedChests.remove(block), 20);
         }
     }
@@ -80,7 +85,9 @@ public class PlayerInteract implements Listener {
         // store when a player opens a minecart
         if (clicked.getType() == EntityType.CHEST_MINECART) {
             StorageMinecart storageMinecart = (StorageMinecart) clicked;
-            openedMineCarts.put(storageMinecart, player);
+            Inventory mineCartInventory = storageMinecart.getInventory();
+            mineCartChestInventories.add(mineCartInventory);
+            openedMineCarts.add(storageMinecart);
             Bukkit.getGlobalRegionScheduler().runDelayed(toolStats, scheduledTask -> openedMineCarts.remove(storageMinecart), 20);
         }
     }

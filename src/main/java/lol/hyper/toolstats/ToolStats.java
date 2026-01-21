@@ -72,6 +72,7 @@ public final class ToolStats extends JavaPlugin {
     public TextUtils textUtils;
     public ProjectileShoot projectileShoot;
     public ToolStatsKeys toolStatsKeys;
+    public InventoryClose inventoryClose;
 
     @Override
     public void onEnable() {
@@ -124,6 +125,7 @@ public final class ToolStats extends JavaPlugin {
         prepareCraft = new PrepareCraft(this);
         blockDispenseEvent = new BlockDispenseEvent(this);
         projectileShoot = new ProjectileShoot(this);
+        inventoryClose = new InventoryClose(this);
 
         Bukkit.getServer().getPluginManager().registerEvents(blockBreak, this);
         Bukkit.getServer().getPluginManager().registerEvents(chunkPopulate, this);
@@ -145,6 +147,7 @@ public final class ToolStats extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(prepareCraft, this);
         Bukkit.getServer().getPluginManager().registerEvents(blockDispenseEvent, this);
         Bukkit.getServer().getPluginManager().registerEvents(projectileShoot, this);
+        Bukkit.getServer().getPluginManager().registerEvents(inventoryClose, this);
 
         this.getCommand("toolstats").setExecutor(commandToolStats);
 

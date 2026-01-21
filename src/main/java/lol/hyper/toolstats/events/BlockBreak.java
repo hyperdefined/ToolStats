@@ -18,9 +18,7 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.entity.Player;
@@ -54,11 +52,6 @@ public class BlockBreak implements Listener {
         PlayerInventory inventory = player.getInventory();
         ItemStack heldItem = inventory.getItemInMainHand();
         Block block = event.getBlock();
-
-        if (block.getType() == Material.CHEST) {
-            toolStats.playerInteract.openedChests.put(block, player);
-            Bukkit.getGlobalRegionScheduler().runDelayed(toolStats, scheduledTask -> toolStats.playerInteract.openedChests.remove(block), 20);
-        }
 
         // only check certain items
         if (!toolStats.itemChecker.isMineTool(heldItem.getType())) {
