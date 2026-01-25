@@ -17,12 +17,14 @@ Here is everything it tracks:
 * Crops mined (hoes).
 * Player/mob kills (swords, axes, tridents, bows/crossbows, mace).
 * Ownership of items when crafted, looted (from chests/vaults/barrels), traded, spawned via creative, and caught from fishing.
-* Armor damage taken.
+* Armor damage taken (shields too).
 * Damage done with weapons.
 * Fish caught.
 * Sheep sheared.
 * Arrows shot (bows/crossbows).
 * Flight time with elytras.
+* Critical strikes for melee weapons.
+* Times trident thrown.
 
 The best part is, this data is stored on the item itself.
 
