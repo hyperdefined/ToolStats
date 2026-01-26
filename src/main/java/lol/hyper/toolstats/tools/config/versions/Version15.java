@@ -111,7 +111,7 @@ public class Version15 {
         // bosses-killed stuff
         toolStats.logger.info("Adding enabled.bosses-killed.wither");
         toolStats.config.set("enabled.bosses-killed.wither", true);
-        toolStats.logger.info("enabled.bosses-killed.enderdragon");
+        toolStats.logger.info("Adding enabled.bosses-killed.enderdragon");
         toolStats.config.set("enabled.bosses-killed.enderdragon", true);
 
         // critical strikes
