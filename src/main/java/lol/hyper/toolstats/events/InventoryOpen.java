@@ -47,11 +47,6 @@ public class InventoryOpen implements Listener {
         }
 
         Inventory inventory = event.getInventory();
-        // only check these
-        if (inventory.getType() != InventoryType.CHEST || inventory.getType() != InventoryType.BARREL || inventory.getType() != InventoryType.SHULKER_BOX || inventory.getType() != InventoryType.ENDER_CHEST) {
-            return;
-        }
-
         Player player = (Player) event.getPlayer();
         if (toolStats.config.getStringList("blacklist-worlds").contains(player.getWorld().getName())) {
             return;
