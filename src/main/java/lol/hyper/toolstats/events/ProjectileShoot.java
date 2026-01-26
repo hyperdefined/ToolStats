@@ -41,7 +41,7 @@ public class ProjectileShoot implements Listener {
             return;
         }
 
-        if (toolStats.config.getStringList("blacklist-worlds").contains(tridentEntity.getWorld().toString())) {
+        if (toolStats.config.getStringList("blacklist-worlds").contains(tridentEntity.getWorld().getName())) {
             return;
         }
 

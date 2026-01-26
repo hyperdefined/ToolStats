@@ -50,6 +50,9 @@ public class ChunkPopulate implements Listener {
             return;
         }
         World world = event.getChunk().getWorld();
+        if (toolStats.config.getStringList("blacklist-worlds").contains(world.getName())) {
+            return;
+        }
         // this is delayed because entities are not loaded instantly
         // we just check 1 second later
         Chunk chunk = event.getChunk();

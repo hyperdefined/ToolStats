@@ -42,7 +42,7 @@ public class PlayerMove implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        if (toolStats.config.getStringList("blacklist-worlds").contains(player.getWorld().toString())) {
+        if (toolStats.config.getStringList("blacklist-worlds").contains(player.getWorld().getName())) {
             return;
         }
         // player starts to fly

@@ -56,7 +56,7 @@ public class EntityDamage implements Listener {
             return;
         }
 
-        if (toolStats.config.getStringList("blacklist-worlds").contains(mobBeingAttacked.getWorld().toString())) {
+        if (toolStats.config.getStringList("blacklist-worlds").contains(mobBeingAttacked.getWorld().getName())) {
             return;
         }
 

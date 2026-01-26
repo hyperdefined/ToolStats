@@ -52,7 +52,7 @@ public class BlockDispenseEvent implements Listener {
             return;
         }
 
-        if (toolStats.config.getStringList("blacklist-worlds").contains(player.getWorld().toString())) {
+        if (toolStats.config.getStringList("blacklist-worlds").contains(player.getWorld().getName())) {
             return;
         }
         if (player.getGameMode() == GameMode.CREATIVE && !toolStats.config.getBoolean("allow-creative")) {

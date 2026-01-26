@@ -50,7 +50,7 @@ public class GenerateLoot implements Listener {
             return;
         }
         Location lootLocation = event.getLootContext().getLocation();
-        if (toolStats.config.getStringList("blacklist-worlds").contains(lootLocation.getWorld().toString())) {
+        if (toolStats.config.getStringList("blacklist-worlds").contains(lootLocation.getWorld().getName())) {
             return;
         }
         Chunk lootChunk = lootLocation.getChunk();
