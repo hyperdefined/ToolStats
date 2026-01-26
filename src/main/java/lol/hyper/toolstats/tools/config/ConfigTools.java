@@ -107,13 +107,13 @@ public class ConfigTools {
             return true;
         }
 
-        String mode = toolStats.config.getString("worlds.mode");
+        String mode = toolStats.config.getString("world-limit.mode");
         if (mode == null) {
-            toolStats.logger.info("worlds.mode is not set, not allowing any worlds by default.");
+            toolStats.logger.info("world-limit.mode is not set, not allowing any worlds by default.");
             return false;
         }
 
-        List<String> worlds = toolStats.config.getStringList("worlds.worlds");
+        List<String> worlds = toolStats.config.getStringList("world-limit.worlds");
         // if no worlds are defined, deny them
         if (worlds.isEmpty()) {
             return false;
