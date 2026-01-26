@@ -140,7 +140,7 @@ public class InventoryClose implements Listener {
      * @param owner     The player that found the item.
      * @return The item with the lore.
      */
-    private ItemStack addLootedOrigin(ItemStack itemStack, Player owner) {
+    public ItemStack addLootedOrigin(ItemStack itemStack, Player owner) {
         ItemStack newItem = itemStack.clone();
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) {

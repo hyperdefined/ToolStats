@@ -31,13 +31,16 @@ import org.bukkit.event.world.LootGenerateEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GenerateLoot implements Listener {
 
     private final ToolStats toolStats;
     public Map<Inventory, Location> generatedInventory = new HashMap<>();
+    public List<Location> droppedLootLocations = new ArrayList<>();
 
     public GenerateLoot(ToolStats toolStats) {
         this.toolStats = toolStats;
@@ -70,6 +73,16 @@ public class GenerateLoot implements Listener {
                         }
                     }
                 }
+                for (Block brokenChest : toolStats.blockBreak.brokenContainers) {
+                    Location brokenChestLocation = brokenChest.getLocation();
+                    if (brokenChestLocation.getWorld() == lootLocation.getWorld()) {
+                        double distance = lootLocation.distance(brokenChestLocation);
+                        if (distance <= 1.0) {
+                            droppedLootLocations.add(brokenChestLocation);
+                            Bukkit.getGlobalRegionScheduler().runDelayed(toolStats, scheduledTask2 -> droppedLootLocations.remove(brokenChestLocation), 20);
+                        }
+                    }
+                }
                 // ignore if the chest is not in the same location
                 if (openedChest != null) {
                     generatedInventory.put(inventoryHolder.getInventory(), chestLocation);
@@ -81,6 +94,6 @@ public class GenerateLoot implements Listener {
                     generatedInventory.put(mineCartInventory, mineCart.getLocation());
                 }
             }
-        }, 5);
+        }, 1);
     }
 }

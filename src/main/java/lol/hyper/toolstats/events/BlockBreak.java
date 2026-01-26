@@ -18,23 +18,28 @@
 package lol.hyper.toolstats.events;
 
 import lol.hyper.toolstats.ToolStats;
-import org.bukkit.GameMode;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class BlockBreak implements Listener {
 
     private final ToolStats toolStats;
+    public List<Block> brokenContainers = new ArrayList<>();
 
     public BlockBreak(ToolStats toolStats) {
         this.toolStats = toolStats;
@@ -55,6 +60,11 @@ public class BlockBreak implements Listener {
         PlayerInventory inventory = player.getInventory();
         ItemStack heldItem = inventory.getItemInMainHand();
         Block block = event.getBlock();
+
+        if (block.getType() == Material.CHEST || block.getType() == Material.BARREL) {
+            brokenContainers.add(block);
+            Bukkit.getGlobalRegionScheduler().runDelayed(toolStats, scheduledTask -> brokenContainers.remove(block), 20);
+        }
 
         // only check certain items
         if (!toolStats.itemChecker.isMineTool(heldItem.getType())) {
@@ -91,5 +101,42 @@ public class BlockBreak implements Listener {
                 heldItem.setItemMeta(newMeta);
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onBreak(BlockDropItemEvent event) {
+        Player player = event.getPlayer();
+        if (!toolStats.configTools.checkWorld(player.getWorld().getName())) {
+            return;
+        }
+
+        Location eventLocation = event.getBlock().getLocation();
+        Chunk eventChunk = eventLocation.getChunk();
+        Bukkit.getRegionScheduler().runDelayed(toolStats, eventLocation.getWorld(), eventChunk.getX(), eventChunk.getZ(), scheduledTask -> {
+            boolean validLootDrops = false;
+            for (Location droppedLootLocation : toolStats.generateLoot.droppedLootLocations) {
+                if (eventLocation.getWorld() == droppedLootLocation.getWorld()) {
+                    double distance = droppedLootLocation.distance(eventLocation);
+                    if (distance <= 1.0) {
+                        validLootDrops = true;
+                    }
+                }
+            }
+
+            if (validLootDrops) {
+                toolStats.generateLoot.droppedLootLocations.remove(eventLocation);
+                for (Item droppedItemEntity : event.getItems()) {
+                    ItemStack droppedItem = droppedItemEntity.getItemStack();
+                    if (!toolStats.itemChecker.isValidItem(droppedItem.getType())) {
+                        continue;
+                    }
+
+                    ItemStack newItem = toolStats.inventoryClose.addLootedOrigin(droppedItem, player);
+                    if (newItem != null) {
+                        droppedItemEntity.setItemStack(newItem);
+                    }
+                }
+            }
+        }, 1);
     }
 }
