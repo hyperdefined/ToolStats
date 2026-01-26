@@ -42,6 +42,9 @@ public class PlayerMove implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
+        if (toolStats.config.getStringList("blacklist-worlds").contains(player.getWorld().toString())) {
+            return;
+        }
         // player starts to fly
         if (player.isGliding()) {
             // if they are flying, and we don't have them tracked, add them

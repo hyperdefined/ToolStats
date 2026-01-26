@@ -56,6 +56,9 @@ public class VillagerTrade implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
+        if (toolStats.config.getStringList("blacklist-worlds").contains(player.getWorld().toString())) {
+            return;
+        }
         if (player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }

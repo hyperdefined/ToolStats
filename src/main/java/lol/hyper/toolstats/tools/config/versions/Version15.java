@@ -18,9 +18,11 @@
 package lol.hyper.toolstats.tools.config.versions;
 
 import lol.hyper.toolstats.ToolStats;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 public class Version15 {
@@ -121,10 +123,16 @@ public class Version15 {
         toolStats.logger.info("Adding enabled.trident-throws");
 
         // default for new stats
+        toolStats.logger.info("Adding new default messages");
         toolStats.config.set("messages.bosses-killed.wither", "&7Withers killed: &8{kills}");
         toolStats.config.set("messages.bosses-killed.enderdragon", "&7Ender Dragons killed: &8{kills}");
         toolStats.config.set("messages.critical-strikes", "&7Critical strikes: &8{strikes}");
         toolStats.config.set("messages.trident-throws", "&7Times thrown: &8{times}");
+
+        // blacklist feature
+        toolStats.logger.info("Adding new blacklist-worlds feature");
+        List<String> worlds = Arrays.asList("world_1", "world_2");
+        toolStats.config.set("blacklist-worlds", worlds);
 
         try {
             toolStats.config.save("plugins" + File.separator + "ToolStats" + File.separator + "config.yml");

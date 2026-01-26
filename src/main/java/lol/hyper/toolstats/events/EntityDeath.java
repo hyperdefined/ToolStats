@@ -49,6 +49,9 @@ public class EntityDeath implements Listener {
         if (livingEntity instanceof Player) {
             return;
         }
+        if (toolStats.config.getStringList("blacklist-worlds").contains(livingEntity.getWorld().toString())) {
+            return;
+        }
         UUID livingEntityUUID = event.getEntity().getUniqueId();
         // if it's a mob we are tracking that matters
         if (toolStats.mobKill.trackedMobs.contains(livingEntityUUID)) {

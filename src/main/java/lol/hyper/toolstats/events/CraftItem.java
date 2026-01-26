@@ -50,6 +50,9 @@ public class CraftItem implements Listener {
             return;
         }
         Player player = (Player) event.getWhoClicked();
+        if (toolStats.config.getStringList("blacklist-worlds").contains(player.getWorld().toString())) {
+            return;
+        }
         if (player.getGameMode() == GameMode.CREATIVE && !toolStats.config.getBoolean("allow-creative")) {
             return;
         }

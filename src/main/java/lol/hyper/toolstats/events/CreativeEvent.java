@@ -45,6 +45,9 @@ public class CreativeEvent implements Listener {
     @EventHandler
     public void onCreativeEvent(InventoryCreativeEvent event) {
         Player player = (Player) event.getWhoClicked();
+        if (toolStats.config.getStringList("blacklist-worlds").contains(player.getWorld().toString())) {
+            return;
+        }
         // make sure they are in creative mode
         if (player.getGameMode() != GameMode.CREATIVE) {
             return;

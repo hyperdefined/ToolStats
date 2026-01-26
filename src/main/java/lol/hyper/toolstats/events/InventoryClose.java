@@ -57,6 +57,9 @@ public class InventoryClose implements Listener {
         }
 
         Player player = (Player) event.getPlayer();
+        if (toolStats.config.getStringList("blacklist-worlds").contains(player.getWorld().toString())) {
+            return;
+        }
         Inventory closedInventory = event.getInventory();
         InventoryHolder holder = closedInventory.getHolder();
         if (toolStats.generateLoot.generatedInventory.containsKey(closedInventory)) {

@@ -50,6 +50,9 @@ public class GenerateLoot implements Listener {
             return;
         }
         Location lootLocation = event.getLootContext().getLocation();
+        if (toolStats.config.getStringList("blacklist-worlds").contains(lootLocation.getWorld().toString())) {
+            return;
+        }
         Chunk lootChunk = lootLocation.getChunk();
         Bukkit.getRegionScheduler().runDelayed(toolStats, lootLocation.getWorld(), lootChunk.getX(), lootChunk.getZ(), scheduledTask -> {
             if (inventoryHolder instanceof Container) {

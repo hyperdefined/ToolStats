@@ -42,6 +42,9 @@ public class PlayerJoin implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+        if (toolStats.config.getStringList("blacklist-worlds").contains(player.getWorld().toString())) {
+            return;
+        }
 
         Inventory inventory = player.getInventory();
         for (ItemStack itemStack : inventory) {

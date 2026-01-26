@@ -48,11 +48,13 @@ public class BlockDispenseEvent implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDispense(BlockDispenseLootEvent event) {
         Player player = event.getPlayer();
-
         if (player == null) {
             return;
         }
 
+        if (toolStats.config.getStringList("blacklist-worlds").contains(player.getWorld().toString())) {
+            return;
+        }
         if (player.getGameMode() == GameMode.CREATIVE && !toolStats.config.getBoolean("allow-creative")) {
             return;
         }

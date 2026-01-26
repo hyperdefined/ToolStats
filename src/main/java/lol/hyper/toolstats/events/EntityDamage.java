@@ -56,6 +56,10 @@ public class EntityDamage implements Listener {
             return;
         }
 
+        if (toolStats.config.getStringList("blacklist-worlds").contains(mobBeingAttacked.getWorld().toString())) {
+            return;
+        }
+
         // ignore void and /kill damage
         EntityDamageEvent.DamageCause cause = event.getCause();
         if (ignoredCauses.contains(cause)) {

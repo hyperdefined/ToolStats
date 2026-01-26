@@ -41,6 +41,10 @@ public class ProjectileShoot implements Listener {
             return;
         }
 
+        if (toolStats.config.getStringList("blacklist-worlds").contains(tridentEntity.getWorld().toString())) {
+            return;
+        }
+
         tridentEntity.getScheduler().runDelayed(toolStats, scheduledTask -> {
             ItemStack tridentStack = tridentEntity.getItemStack();
             ItemMeta newTridentMeta = toolStats.itemLore.updateTridentThrows(tridentStack, 1);

@@ -409,4 +409,9 @@ normalize-time-creation: false
 # Allows stats and origins to be tracked if the player is in creative mode.
 allow-creative: false
 
-config-version: 14
+# Allows you to turn off ToolStats in the worlds on the list.
+blacklist-worlds:
+  - world_1
+  - world_2
+
+config-version: 15
