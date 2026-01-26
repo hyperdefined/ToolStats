@@ -54,7 +54,7 @@ public class PickupItem implements Listener {
         }
         Entity entity = event.getEntity();
         if (entity instanceof Player player) {
-            if (toolStats.config.getStringList("blacklist-worlds").contains(player.getWorld().getName())) {
+            if (!toolStats.configTools.checkWorld(player.getWorld().getName())) {
                 return;
             }
             if (player.getGameMode() == GameMode.CREATIVE && !toolStats.config.getBoolean("allow-creative")) {

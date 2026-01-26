@@ -130,9 +130,11 @@ public class Version15 {
         toolStats.config.set("messages.trident-throws", "&7Times thrown: &8{times}");
 
         // blacklist feature
-        toolStats.logger.info("Adding new blacklist-worlds feature");
+        toolStats.logger.info("Adding new world-limit feature, which is disabled by default");
         List<String> worlds = Arrays.asList("world_1", "world_2");
-        toolStats.config.set("blacklist-worlds", worlds);
+        toolStats.config.set("world-limit.enabled", false);
+        toolStats.config.set("world-limit.mode", "blacklist");
+        toolStats.config.set("world-limit.worlds", worlds);
 
         try {
             toolStats.config.save("plugins" + File.separator + "ToolStats" + File.separator + "config.yml");

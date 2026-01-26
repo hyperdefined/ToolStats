@@ -95,6 +95,47 @@ public class ConfigTools {
     }
 
     /**
+     * Check the status of a world from the config.
+     *
+     * @param worldName The world to check.
+     * @return True if we can work in this world, false if not.
+     */
+    public boolean checkWorld(String worldName) {
+        boolean enabled = toolStats.config.getBoolean("world-limit.enabled");
+        // if the system is disabled, all worlds are allowed
+        if (!enabled) {
+            return true;
+        }
+
+        String mode = toolStats.config.getString("worlds.mode");
+        if (mode == null) {
+            toolStats.logger.info("worlds.mode is not set, not allowing any worlds by default.");
+            return false;
+        }
+
+        List<String> worlds = toolStats.config.getStringList("worlds.worlds");
+        // if no worlds are defined, deny them
+        if (worlds.isEmpty()) {
+            return false;
+        }
+
+        if (mode.equalsIgnoreCase("blacklist")) {
+            // this world is on list and mode = blacklisted
+            // don't allow this world, allow others not on list
+            return !worlds.contains(worldName);
+        }
+
+        if (mode.equalsIgnoreCase("whitelist")) {
+            // this world is on list and mode = whitelisted
+            // allow it. if the world is not on list, don't allow it
+            return worlds.contains(worldName);
+        }
+
+        toolStats.logger.warn("Unknown worlds.mode '{}', denying by default.", mode);
+        return false;
+    }
+
+    /**
      * Format a string to be ready for lore usage.
      *
      * @param configName  The message to use.

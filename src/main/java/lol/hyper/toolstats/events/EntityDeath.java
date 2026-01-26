@@ -49,7 +49,7 @@ public class EntityDeath implements Listener {
         if (livingEntity instanceof Player) {
             return;
         }
-        if (toolStats.config.getStringList("blacklist-worlds").contains(livingEntity.getWorld().getName())) {
+        if (!toolStats.configTools.checkWorld(livingEntity.getWorld().getName())) {
             return;
         }
         UUID livingEntityUUID = event.getEntity().getUniqueId();

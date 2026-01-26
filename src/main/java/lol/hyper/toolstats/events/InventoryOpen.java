@@ -48,7 +48,7 @@ public class InventoryOpen implements Listener {
 
         Inventory inventory = event.getInventory();
         Player player = (Player) event.getPlayer();
-        if (toolStats.config.getStringList("blacklist-worlds").contains(player.getWorld().getName())) {
+        if (!toolStats.configTools.checkWorld(player.getWorld().getName())) {
             return;
         }
         for (ItemStack itemStack : inventory) {
