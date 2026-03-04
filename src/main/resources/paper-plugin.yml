@@ -1,34 +1,26 @@
 name: ToolStats
-version: '${project.version}'
+version: ${project.version}
 main: lol.hyper.toolstats.ToolStats
 api-version: 1.21
+folia-supported: true
 author: hyperdefined
 description: Track various tool stats!
 website: https://github.com/hyperdefined/ToolStats
-folia-supported: true
-commands:
-  toolstats:
-    usage: /toolstats
-    permission: toolstats.command
+
+loader: lol.hyper.toolstats.ToolStatsLoader
+
 permissions:
   toolstats.command:
     description: Allows the usage of /toolstats.
     default: true
+    children:
+      toolstats.reset: true
+      toolstats.reset.confirm: true
+      toolstats.purge: true
+      toolstats.purge.confirm: true
   toolstats.reload:
     description: Allows the usage of /toolstats reload.
     default: op
-  toolstats.reset:
-    description: Allows the usage of /toolstats reset.
-    default: true
-  toolstats.reset.confirm:
-    description: Allows the usage of /toolstats reset confirm.
-    default: true
-  toolstats.purge:
-    description: Allows the usage of /toolstats purge.
-    default: true
-  toolstats.purge.confirm:
-    description: Allows the usage of /toolstats purge confirm.
-    default: true
   toolstats.givetokens:
     description: Allows the usage of /toolstats givetoken.
     default: op

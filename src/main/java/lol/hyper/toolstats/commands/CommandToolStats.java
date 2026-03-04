@@ -17,29 +17,29 @@
 
 package lol.hyper.toolstats.commands;
 
+import io.papermc.paper.command.brigadier.BasicCommand;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import lol.hyper.hyperlib.datatypes.UUIDDataType;
 import lol.hyper.toolstats.ToolStats;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CommandToolStats implements TabExecutor {
+public class CommandToolStats implements BasicCommand {
 
     private final ToolStats toolStats;
 
@@ -48,14 +48,11 @@ public class CommandToolStats implements TabExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
-        if (!sender.hasPermission("toolstats.command")) {
-            sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
-            return true;
-        }
+    public void execute(@NonNull CommandSourceStack source, String @NonNull [] args) {
+        CommandSender sender = source.getSender();
         if (args.length == 0) {
             sender.sendMessage(Component.text("ToolStats version " + toolStats.getPluginMeta().getVersion() + ". Created by hyperdefined.", NamedTextColor.GREEN));
-            return true;
+            return;
         }
         switch (args[0]) {
             case "reload": {
@@ -87,128 +84,128 @@ public class CommandToolStats implements TabExecutor {
                 } else {
                     sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
                 }
-                return true;
+                return;
             }
             // /toolstats edit stat value
             case "edit": {
                 if (!sender.hasPermission("toolstats.edit")) {
                     sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
-                    return true;
+                    return;
                 }
                 if (sender instanceof ConsoleCommandSender) {
                     sender.sendMessage(Component.text("You must be a player for this command.", NamedTextColor.RED));
-                    return true;
+                    return;
                 }
                 if (args.length < 3) {
                     sender.sendMessage(Component.text("Invalid syntax. Usage: /toolstats edit <stat> <value>", NamedTextColor.RED));
-                    return true;
+                    return;
                 }
                 handleEdit(args[1], args[2], (Player) sender);
-                return true;
+                return;
             }
             // /toolstats remove stat
             case "remove": {
                 if (!sender.hasPermission("toolstats.remove")) {
                     sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
-                    return true;
+                    return;
                 }
                 if (sender instanceof ConsoleCommandSender) {
                     sender.sendMessage(Component.text("You must be a player for this command.", NamedTextColor.RED));
-                    return true;
+                    return;
                 }
                 if (args.length < 2) {
                     sender.sendMessage(Component.text("Invalid syntax. Usage: /toolstats remove <stat>", NamedTextColor.RED));
-                    return true;
+                    return;
                 }
                 handleRemove(args[1], (Player) sender);
-                return true;
+                return;
 
             }
             case "reset": {
                 if (!sender.hasPermission("toolstats.reset")) {
                     sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
-                    return true;
+                    return;
                 }
                 if (sender instanceof ConsoleCommandSender) {
                     sender.sendMessage(Component.text("You must be a player for this command.", NamedTextColor.RED));
-                    return true;
+                    return;
                 }
                 if (args.length == 2 && args[1].equalsIgnoreCase("confirm")) {
                     if (!sender.hasPermission("toolstats.reset.confirm")) {
                         sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
-                        return true;
+                        return;
                     }
                     Player player = (Player) sender;
                     ItemStack heldItem = player.getInventory().getItemInMainHand();
                     if (!toolStats.itemChecker.isValidItem(heldItem.getType())) {
                         sender.sendMessage(Component.text("You must hold a valid item.", NamedTextColor.RED));
-                        return true;
+                        return;
                     }
                     fixItemLore(heldItem, player);
                     sender.sendMessage(Component.text("The lore was reset!", NamedTextColor.GREEN));
-                    return true;
+                    return;
                 }
                 sender.sendMessage(Component.text("This will remove ALL current lore from the held item and replace it with the correct lore.", NamedTextColor.GREEN));
                 sender.sendMessage(Component.text("If the owner of the item is broken, it will reset to the person holding it.", NamedTextColor.GREEN));
                 sender.sendMessage(Component.text("Only use this if the tags on the tool are incorrect.", NamedTextColor.GREEN));
                 sender.sendMessage(Component.text("Type /toolstats reset confirm to confirm this.", NamedTextColor.GREEN));
-                return true;
+                return;
             }
             case "purge": {
                 if (!sender.hasPermission("toolstats.purge")) {
                     sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
-                    return true;
+                    return;
                 }
                 if (sender instanceof ConsoleCommandSender) {
                     sender.sendMessage(Component.text("You must be a player for this command.", NamedTextColor.RED));
-                    return true;
+                    return;
                 }
                 if (args.length == 2 && args[1].equalsIgnoreCase("confirm")) {
                     if (!sender.hasPermission("toolstats.purge.confirm")) {
                         sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
-                        return true;
+                        return;
                     }
                     Player player = (Player) sender;
                     ItemStack heldItem = player.getInventory().getItemInMainHand();
                     if (!toolStats.itemChecker.isValidItem(heldItem.getType())) {
                         sender.sendMessage(Component.text("You must hold a valid item.", NamedTextColor.RED));
-                        return true;
+                        return;
                     }
                     ItemStack purgedItem = toolStats.itemLore.removeAll(heldItem, true);
                     player.getInventory().setItemInMainHand(purgedItem);
                     sender.sendMessage(Component.text("The item was purged!", NamedTextColor.GREEN));
-                    return true;
+                    return;
                 }
                 sender.sendMessage(Component.text("This will purge ALL ToolStats data from this item.", NamedTextColor.GREEN));
                 sender.sendMessage(Component.text("This includes all stats, ownership, and creation time.", NamedTextColor.GREEN));
                 sender.sendMessage(Component.text("THIS CANNOT BE UNDONE!", NamedTextColor.GREEN));
                 sender.sendMessage(Component.text("Type /toolstats purge confirm to confirm this.", NamedTextColor.GREEN));
-                return true;
+                return;
             }
             case "givetokens": {
                 if (!sender.hasPermission("toolstats.givetokens")) {
                     sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
-                    return true;
+                    return;
                 }
                 // Make sure /toolstats givetoken <player> <token> is present
                 if (args.length < 3) {
                     sender.sendMessage(Component.text("Invalid syntax. Usage: /toolstats givetokens <player> <token>", NamedTextColor.RED));
-                    return true;
+                    return;
                 }
                 Player target = Bukkit.getPlayerExact(args[1]);
                 if (target == null) {
                     sender.sendMessage(Component.text("Player not found.", NamedTextColor.RED));
-                    return true;
+                    return;
                 }
                 String tokenType = args[2];
                 if (!toolStats.tokenData.getTokenTypes().contains(tokenType)) {
                     sender.sendMessage(Component.text("Invalid token type.", NamedTextColor.RED));
-                    return true;
+                    return;
                 }
                 // make sure tokens are enabled before giving
                 if (!toolStats.config.getBoolean("tokens.enabled")) {
                     sender.sendMessage(Component.text("Unable to give tokens. Tokens are disabled", NamedTextColor.RED));
-                    return true;
+                    return;
                 }
                 // if the user does not send in a number, default to 1
                 int amount = 1;
@@ -217,24 +214,29 @@ public class CommandToolStats implements TabExecutor {
                         amount = Integer.parseInt(args[3]);
                         if (amount <= 0) { // Optional: Prevent negative or zero values
                             sender.sendMessage(Component.text("Token quantity must be above or 1.", NamedTextColor.RED));
-                            return true;
+                            return;
                         }
                     } catch (NumberFormatException exception) {
                         sender.sendMessage(Component.text("Invalid token quantity.", NamedTextColor.RED));
-                        return true;
+                        return;
                     }
                 }
                 giveToken(target, tokenType, amount);
                 if (sender instanceof Player) {
                     sender.sendMessage(Component.text("Gave " + target.getName() + " " + amount + " " + tokenType + " tokens.", NamedTextColor.GREEN));
                 }
-                return true;
+                return;
             }
             default: {
                 sender.sendMessage(Component.text("Invalid sub-command.", NamedTextColor.RED));
             }
         }
-        return true;
+        return;
+    }
+
+    @Override
+    public @Nullable String permission() {
+        return "toolstats.command";
     }
 
     /**
@@ -1262,9 +1264,9 @@ public class CommandToolStats implements TabExecutor {
         player.sendMessage(Component.text("Removed stat " + stat + " for held item!", NamedTextColor.GREEN));
     }
 
-    @Nullable
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NotNull [] args) {
+    public @NonNull Collection<String> suggest(@NonNull CommandSourceStack source, String[] args) {
+        CommandSender sender = source.getSender();
         if (args.length == 1) {
             List<String> suggestions = new ArrayList<>();
             if (sender.hasPermission("toolstats.reload")) {
@@ -1285,7 +1287,7 @@ public class CommandToolStats implements TabExecutor {
             if (sender.hasPermission("toolstats.purge")) {
                 suggestions.add("purge");
             }
-            return suggestions.isEmpty() ? null : suggestions;
+            return suggestions;
         }
 
         if (args.length == 2 && args[0].equalsIgnoreCase("reset") && sender.hasPermission("toolstats.reset.confirm")) {
@@ -1311,7 +1313,6 @@ public class CommandToolStats implements TabExecutor {
         if (args.length == 3 && args[0].equalsIgnoreCase("givetokens") && sender.hasPermission("toolstats.givetokens")) {
             return toolStats.tokenData.getTokenTypes();
         }
-
-        return null;
+        return Collections.emptyList();
     }
 }

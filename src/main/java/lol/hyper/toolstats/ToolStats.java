@@ -152,7 +152,7 @@ public final class ToolStats extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(inventoryClose, this);
         Bukkit.getServer().getPluginManager().registerEvents(playerDrop, this);
 
-        this.getCommand("toolstats").setExecutor(commandToolStats);
+        registerCommand("toolstats", commandToolStats);
 
         HyperUpdater updater = new HyperUpdater(hyperLib);
         updater.setGitHub("hyperdefined", "ToolStats");
