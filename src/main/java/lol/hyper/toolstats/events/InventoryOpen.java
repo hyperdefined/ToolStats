@@ -19,12 +19,14 @@ package lol.hyper.toolstats.events;
 
 import lol.hyper.hyperlib.datatypes.UUIDDataType;
 import lol.hyper.toolstats.ToolStats;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.BlockInventoryHolder;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -47,6 +49,13 @@ public class InventoryOpen implements Listener {
         }
 
         Inventory inventory = event.getInventory();
+        InventoryHolder holder = inventory.getHolder();
+        boolean isBlockInventory = holder instanceof BlockInventoryHolder || holder instanceof DoubleChest;
+        if (!(inventory.getHolder() instanceof BlockInventoryHolder)) {
+            // ignore not real inventories
+            return;
+        }
+
         Player player = (Player) event.getPlayer();
         if (!toolStats.configTools.checkWorld(player.getWorld().getName())) {
             return;
