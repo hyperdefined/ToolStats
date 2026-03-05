@@ -1114,7 +1114,7 @@ public class CommandToolStats implements BasicCommand {
                 }
                 break;
             }
-            case "fight-caught": {
+            case "fish-caught": {
                 if (container.has(toolStats.toolStatsKeys.getFishCaught())) {
                     Integer statValue = container.get(toolStats.toolStatsKeys.getFishCaught(), PersistentDataType.INTEGER);
                     if (statValue == null) {
@@ -1127,7 +1127,7 @@ public class CommandToolStats implements BasicCommand {
                         return;
                     }
                     container.remove(toolStats.toolStatsKeys.getFishCaught());
-                    List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "fight-caught");
+                    List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "fish-caught");
                     if (newTokens.isEmpty()) {
                         container.remove(toolStats.toolStatsKeys.getTokenApplied());
                     } else {
