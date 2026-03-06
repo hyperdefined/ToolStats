@@ -450,6 +450,7 @@ public class CommandToolStats implements BasicCommand {
      * @param player    The player using the command.
      */
     private void handleEdit(String stat, Object userValue, Player player) {
+        boolean updated = false;
         ItemStack editedItem = player.getInventory().getItemInMainHand().clone();
         if (!toolStats.itemChecker.isValidItem(editedItem.getType())) {
             player.sendMessage(Component.text("This is not a valid item.", NamedTextColor.RED));
@@ -482,6 +483,7 @@ public class CommandToolStats implements BasicCommand {
                     }
                     int difference = value - statValue;
                     editedItemMeta = toolStats.itemLore.updateCropsMined(editedItem, difference);
+                    updated = true;
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
                 }
@@ -511,6 +513,7 @@ public class CommandToolStats implements BasicCommand {
                     }
                     int difference = value - statValue;
                     editedItemMeta = toolStats.itemLore.updateBlocksMined(editedItem, difference);
+                    updated = true;
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
                 }
@@ -540,6 +543,7 @@ public class CommandToolStats implements BasicCommand {
                     }
                     double difference = value - statValue;
                     editedItemMeta = toolStats.itemLore.updateArmorDamage(editedItem, difference, false);
+                    updated = true;
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
                 }
@@ -569,6 +573,7 @@ public class CommandToolStats implements BasicCommand {
                     }
                     double difference = value - statValue;
                     editedItemMeta = toolStats.itemLore.updateWeaponDamage(editedItem, difference, false);
+                    updated = true;
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
                 }
@@ -598,6 +603,7 @@ public class CommandToolStats implements BasicCommand {
                     }
                     int difference = value - statValue;
                     editedItemMeta = toolStats.itemLore.updateMobKills(editedItem, difference);
+                    updated = true;
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
                 }
@@ -627,6 +633,7 @@ public class CommandToolStats implements BasicCommand {
                     }
                     int difference = value - statValue;
                     editedItemMeta = toolStats.itemLore.updatePlayerKills(editedItem, difference);
+                    updated = true;
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
                 }
@@ -656,6 +663,7 @@ public class CommandToolStats implements BasicCommand {
                     }
                     int difference = value - statValue;
                     editedItemMeta = toolStats.itemLore.updateArrowsShot(editedItem, difference);
+                    updated = true;
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
                 }
@@ -685,6 +693,7 @@ public class CommandToolStats implements BasicCommand {
                     }
                     int difference = value - statValue;
                     editedItemMeta = toolStats.itemLore.updateSheepSheared(editedItem, difference);
+                    updated = true;
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
                 }
@@ -714,6 +723,7 @@ public class CommandToolStats implements BasicCommand {
                     }
                     long difference = value - statValue;
                     editedItemMeta = toolStats.itemLore.updateFlightTime(editedItem, difference);
+                    updated = true;
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
                 }
@@ -743,6 +753,7 @@ public class CommandToolStats implements BasicCommand {
                     }
                     int difference = value - statValue;
                     editedItemMeta = toolStats.itemLore.updateFishCaught(editedItem, difference);
+                    updated = true;
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
                 }
@@ -772,6 +783,7 @@ public class CommandToolStats implements BasicCommand {
                     }
                     int difference = value - statValue;
                     editedItemMeta = toolStats.itemLore.updateBossesKilled(editedItem, difference, "wither");
+                    updated = true;
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
                 }
@@ -801,6 +813,7 @@ public class CommandToolStats implements BasicCommand {
                     }
                     int difference = value - statValue;
                     editedItemMeta = toolStats.itemLore.updateBossesKilled(editedItem, difference, "enderdragon");
+                    updated = true;
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
                 }
@@ -830,6 +843,7 @@ public class CommandToolStats implements BasicCommand {
                     }
                     int difference = value - statValue;
                     editedItemMeta = toolStats.itemLore.updateCriticalStrikes(editedItem, difference);
+                    updated = true;
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
                 }
@@ -859,6 +873,7 @@ public class CommandToolStats implements BasicCommand {
                     }
                     int difference = value - statValue;
                     editedItemMeta = toolStats.itemLore.updateTridentThrows(editedItem, difference);
+                    updated = true;
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
                 }
@@ -869,9 +884,12 @@ public class CommandToolStats implements BasicCommand {
                 return;
             }
         }
-        editedItem.setItemMeta(editedItemMeta);
-        player.getInventory().setItemInMainHand(editedItem);
-        player.sendMessage(Component.text("Updated stat " + stat + " for held item!", NamedTextColor.GREEN));
+
+        if (updated) {
+            editedItem.setItemMeta(editedItemMeta);
+            player.getInventory().setItemInMainHand(editedItem);
+            player.sendMessage(Component.text("Updated stat " + stat + " for held item!", NamedTextColor.GREEN));
+        }
     }
 
     /**
@@ -1267,7 +1285,8 @@ public class CommandToolStats implements BasicCommand {
     @Override
     public @NonNull Collection<String> suggest(@NonNull CommandSourceStack source, String[] args) {
         CommandSender sender = source.getSender();
-        if (args.length == 1) {
+        // suggest basic sub commands
+        if (args.length == 0) {
             List<String> suggestions = new ArrayList<>();
             if (sender.hasPermission("toolstats.reload")) {
                 suggestions.add("reload");
@@ -1290,12 +1309,16 @@ public class CommandToolStats implements BasicCommand {
             return suggestions;
         }
 
+        // suggest confirm for reset
         if (args.length == 2 && args[0].equalsIgnoreCase("reset") && sender.hasPermission("toolstats.reset.confirm")) {
             return Collections.singletonList("confirm");
         }
+        // suggest confirm for purge
         if (args.length == 2 && args[0].equalsIgnoreCase("purge") && sender.hasPermission("toolstats.purge.confirm")) {
             return Collections.singletonList("confirm");
         }
+
+        // suggest keys for edit
         if (args.length == 2 && args[0].equalsIgnoreCase("edit") && sender.hasPermission("toolstats.edit")) {
             // yes I am lazy
             return toolStats.tokenData.getTokenTypes().stream()
@@ -1303,6 +1326,8 @@ public class CommandToolStats implements BasicCommand {
                     .map(s -> s.equals("crops-mined") ? "crops-harvested" : s)
                     .collect(Collectors.toList());
         }
+
+        // suggest keys for remove
         if (args.length == 2 && args[0].equalsIgnoreCase("remove") && sender.hasPermission("toolstats.remove")) {
             // yes I am lazy
             return toolStats.tokenData.getTokenTypes().stream()
@@ -1310,6 +1335,13 @@ public class CommandToolStats implements BasicCommand {
                     .map(s -> s.equals("crops-mined") ? "crops-harvested" : s)
                     .collect(Collectors.toList());
         }
+
+        // suggest players for givetokens
+        if (args.length == 2 && args[0].equalsIgnoreCase("givetokens") && sender.hasPermission("toolstats.givetokens")) {
+            return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
+        }
+
+        // suggest token types for givetokens
         if (args.length == 3 && args[0].equalsIgnoreCase("givetokens") && sender.hasPermission("toolstats.givetokens")) {
             return toolStats.tokenData.getTokenTypes();
         }
