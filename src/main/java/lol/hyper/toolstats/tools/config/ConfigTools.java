@@ -53,7 +53,7 @@ public class ConfigTools {
         String itemName = material.toString().toLowerCase();
         String itemType = null;
         // hardcode these
-        if (material == Material.BOW || material == Material.CROSSBOW || material == Material.SHEARS || material == Material.TRIDENT || material == Material.FISHING_ROD) {
+        if (material == Material.BOW || material == Material.CROSSBOW || material == Material.SHEARS || material == Material.TRIDENT || material == Material.FISHING_ROD || material == Material.SHIELD) {
             switch (material) {
                 case CROSSBOW:
                 case BOW: {
@@ -72,6 +72,10 @@ public class ConfigTools {
                     itemType = "fishing-rod";
                     break;
                 }
+                case SHIELD: {
+                    itemType = "shield";
+                    break;
+                }
             }
         } else {
             itemType = itemName.substring(itemName.indexOf('_') + 1);
@@ -88,6 +92,7 @@ public class ConfigTools {
             case "fishing-rod" -> toolStats.config.getBoolean("enabled." + configName + ".fishing-rod");
             case "mace" -> toolStats.config.getBoolean("enabled." + configName + ".mace");
             case "spear" -> toolStats.config.getBoolean("enabled." + configName + ".spear");
+            case "shield" -> toolStats.config.getBoolean("enabled." + configName + ".shield");
             case "helmet", "chestplate", "leggings", "boots" ->
                     toolStats.config.getBoolean("enabled." + configName + ".armor");
             default -> false;

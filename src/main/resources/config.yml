@@ -242,6 +242,8 @@ enabled:
     armor: true
     fishing-rod: true
     spear: true
+    shield: true
+    elytra: true
   # Will show "Found on <date>"
   looted-on:
     pickaxe: true
@@ -254,6 +256,8 @@ enabled:
     armor: true
     fishing-rod: true
     spear: true
+    shield: true
+    elytra: true
   # Will show "Traded by <player>"
   traded-by:
     pickaxe: true

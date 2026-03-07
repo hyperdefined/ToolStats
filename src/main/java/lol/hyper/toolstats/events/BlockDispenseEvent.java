@@ -113,6 +113,29 @@ public class BlockDispenseEvent implements Listener {
             lore = new ArrayList<>();
         }
 
+        // by request
+        if (newItem.getType() == Material.ELYTRA) {
+            if (!toolStats.config.getBoolean("enabled.elytra-tag")) {
+                return null;
+            }
+
+            Component creationDate = toolStats.itemLore.formatCreationTime(timeCreated, 4, newItem);
+            if (creationDate != null) {
+                container.set(toolStats.toolStatsKeys.getTimeCreated(), PersistentDataType.LONG, timeCreated);
+                container.set(toolStats.toolStatsKeys.getOriginType(), PersistentDataType.INTEGER, 4);
+                lore.add(creationDate);
+                meta.lore(lore);
+            }
+
+            Component itemOwner = toolStats.itemLore.formatOwner(owner.getName(), 4, newItem);
+            if (itemOwner != null) {
+                container.set(toolStats.toolStatsKeys.getItemOwner(), new UUIDDataType(), owner.getUniqueId());
+                container.set(toolStats.toolStatsKeys.getOriginType(), PersistentDataType.INTEGER, 4);
+                lore.add(itemOwner);
+                meta.lore(lore);
+            }
+        }
+
         // if creation date is enabled, add it
         Component creationDate = toolStats.itemLore.formatCreationTime(timeCreated, 2, newItem);
         if (creationDate != null) {
