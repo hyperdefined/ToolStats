@@ -62,6 +62,11 @@ public class SheepShear implements Listener {
             return;
         }
 
+        // make sure they are not a baby
+        if (!sheep.isAdult()) {
+            return;
+        }
+
         // make sure the sheep is not sheared
         if (sheep.isSheared()) {
             return;
