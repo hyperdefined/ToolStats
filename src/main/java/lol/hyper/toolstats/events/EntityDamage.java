@@ -77,6 +77,9 @@ public class EntityDamage implements Listener {
 
         if (playerBeingAttacked) {
             Player player = (Player) event.getEntity();
+            if (player.getGameMode() == GameMode.CREATIVE && !toolStats.config.getBoolean("allow-creative")) {
+                return;
+            }
             if (player.isBlocking()) {
                 double blockedDamage = -event.getDamage(EntityDamageEvent.DamageModifier.BLOCKING);
                 updateShieldDamage(player.getInventory(), blockedDamage);
@@ -86,6 +89,9 @@ public class EntityDamage implements Listener {
         // player attacks something
         if (playerAttacking) {
             Player player = (Player) damager;
+            if (player.getGameMode() == GameMode.CREATIVE && !toolStats.config.getBoolean("allow-creative")) {
+                return;
+            }
             PlayerInventory playerAttackingInventory = player.getInventory();
             // make sure the item the player used is an item we want
             if (!toolStats.itemChecker.isMeleeWeapon(playerAttackingInventory.getItemInMainHand().getType())) {
@@ -125,6 +131,9 @@ public class EntityDamage implements Listener {
         if (damager instanceof Trident trident) {
             ProjectileSource source = trident.getShooter();
             if (source instanceof Player player) {
+                if (player.getGameMode() == GameMode.CREATIVE && !toolStats.config.getBoolean("allow-creative")) {
+                    return;
+                }
                 // update the trident's tracked damage
                 updateTridentDamage(trident, finalDamage);
 
@@ -156,6 +165,9 @@ public class EntityDamage implements Listener {
 
             // a player shot the arrow
             if (source instanceof Player shootingPlayer) {
+                if (shootingPlayer.getGameMode() == GameMode.CREATIVE && !toolStats.config.getBoolean("allow-creative")) {
+                    return;
+                }
                 // update the player's bow damage
                 updateBowDamage(shootingPlayer.getInventory(), finalDamage);
 
