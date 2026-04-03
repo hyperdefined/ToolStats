@@ -1410,7 +1410,6 @@ public class ItemLore {
         }
         List<Component> newLore = updateItemLore(meta, oldLine, newLine);
         meta.lore(newLore);
-        toolStats.logger.info(meta.toString());
         return meta;
     }
 

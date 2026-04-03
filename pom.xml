@@ -75,6 +75,10 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>rosewood-repo</id>
+            <url>https://repo.rosewooddev.io/repository/public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -88,6 +92,12 @@
             <groupId>com.github.hyperdefined</groupId>
             <artifactId>hyperlib</artifactId>
             <version>1.0.10</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.rosewood</groupId>
+            <artifactId>rosestacker</artifactId>
+            <version>1.5.39</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

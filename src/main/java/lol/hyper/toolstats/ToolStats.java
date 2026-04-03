@@ -23,6 +23,7 @@ import lol.hyper.hyperlib.releases.HyperUpdater;
 import lol.hyper.hyperlib.utils.TextUtils;
 import lol.hyper.toolstats.commands.CommandToolStats;
 import lol.hyper.toolstats.events.*;
+import lol.hyper.toolstats.support.rosestacker.RoseStacker;
 import lol.hyper.toolstats.tools.*;
 import lol.hyper.toolstats.tools.config.ConfigTools;
 import lol.hyper.toolstats.tools.config.ConfigUpdater;
@@ -74,6 +75,7 @@ public final class ToolStats extends JavaPlugin {
     public ToolStatsKeys toolStatsKeys;
     public InventoryClose inventoryClose;
     public PlayerDrop playerDrop;
+    public RoseStacker roseStacker = null;
 
     @Override
     public void onEnable() {
@@ -128,6 +130,10 @@ public final class ToolStats extends JavaPlugin {
         projectileShoot = new ProjectileShoot(this);
         inventoryClose = new InventoryClose(this);
         playerDrop = new PlayerDrop(this);
+        if (Bukkit.getPluginManager().isPluginEnabled("RoseStacker")) {
+            logger.info("RoseStacker has been detected, adding support!");
+            roseStacker = new RoseStacker();
+        }
 
         Bukkit.getServer().getPluginManager().registerEvents(blockBreak, this);
         Bukkit.getServer().getPluginManager().registerEvents(chunkPopulate, this);

@@ -34,6 +34,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class EntityDamage implements Listener {
 
@@ -103,15 +104,15 @@ public class EntityDamage implements Listener {
             if (modDied) {
                 // player killed another player
                 if (playerBeingAttacked) {
-                    updateWeaponKills(playerAttackingInventory, "player");
+                    updateWeaponKills(playerAttackingInventory, "player", null);
                 } else {
                     // player kills a regular mob
-                    updateWeaponKills(playerAttackingInventory, "mob");
+                    updateWeaponKills(playerAttackingInventory, "mob", mobBeingAttacked);
                     if (mobAttackedType == EntityType.WITHER) {
-                        updateBossesKilled(playerAttackingInventory, "wither");
+                        updateBossesKilled(playerAttackingInventory, "wither", mobBeingAttacked);
                     }
                     if (mobAttackedType == EntityType.ENDER_DRAGON) {
-                        updateBossesKilled(playerAttackingInventory, "enderdragon");
+                        updateBossesKilled(playerAttackingInventory, "enderdragon", mobBeingAttacked);
                     }
                 }
             }
@@ -131,15 +132,15 @@ public class EntityDamage implements Listener {
                 if (modDied) {
                     // if the trident killed a player, update the kills
                     if (playerBeingAttacked) {
-                        updateTridentKills(trident, "player");
+                        updateTridentKills(trident, "player", null);
                     } else {
                         // the trident killed a mob, update the kills
-                        updateTridentKills(trident, "mob");
+                        updateTridentKills(trident, "mob", mobBeingAttacked);
                         if (mobAttackedType == EntityType.WITHER) {
-                            updateBossesKilled(player.getInventory(), "wither");
+                            updateBossesKilled(player.getInventory(), "wither", mobBeingAttacked);
                         }
                         if (mobAttackedType == EntityType.ENDER_DRAGON) {
-                            updateBossesKilled(player.getInventory(), "enderdragon");
+                            updateBossesKilled(player.getInventory(), "enderdragon", mobBeingAttacked);
                         }
                     }
                 }
@@ -162,15 +163,15 @@ public class EntityDamage implements Listener {
                 if (modDied) {
                     if (playerBeingAttacked) {
                         // player killed another player with an arrow
-                        updateBowKills(shootingPlayer.getInventory(), "player");
+                        updateBowKills(shootingPlayer.getInventory(), "player", null);
                     } else {
                         // player killed mob with an arrow
-                        updateBowKills(shootingPlayer.getInventory(), "mob");
+                        updateBowKills(shootingPlayer.getInventory(), "mob", mobBeingAttacked);
                         if (mobAttackedType == EntityType.WITHER) {
-                            updateBossesKilledByBow(shootingPlayer.getInventory(), "wither");
+                            updateBossesKilledByBow(shootingPlayer.getInventory(), "wither", mobBeingAttacked);
                         }
                         if (mobAttackedType == EntityType.ENDER_DRAGON) {
-                            updateBossesKilledByBow(shootingPlayer.getInventory(), "enderdragon");
+                            updateBossesKilledByBow(shootingPlayer.getInventory(), "enderdragon", mobBeingAttacked);
                         }
                     }
                 }
@@ -240,7 +241,7 @@ public class EntityDamage implements Listener {
         }
     }
 
-    private void updateBowKills(PlayerInventory playerInventory, String type) {
+    private void updateBowKills(PlayerInventory playerInventory, String type, LivingEntity entity) {
         ItemStack heldBow = toolStats.itemChecker.getBow(playerInventory);
         if (heldBow == null) {
             return;
@@ -251,7 +252,12 @@ public class EntityDamage implements Listener {
 
         if (type.equalsIgnoreCase("mob")) {
             // player is shooting a mob
-            ItemMeta newBow = toolStats.itemLore.updateMobKills(heldBow, 1);
+            ItemMeta newBow;
+            int count = 1;
+            if (toolStats.roseStacker != null) {
+                count = toolStats.roseStacker.countMobs(entity);
+            }
+            newBow = toolStats.itemLore.updateMobKills(heldBow, count);
             if (newBow != null) {
                 if (isMain && isOffHand) {
                     playerInventory.getItemInMainHand().setItemMeta(newBow);
@@ -277,16 +283,20 @@ public class EntityDamage implements Listener {
         }
     }
 
-    private void updateTridentKills(Trident trident, String type) {
+    private void updateTridentKills(Trident trident, String type, LivingEntity entity) {
         ItemStack newTrident = trident.getItemStack();
-        ItemMeta newKills;
+        ItemMeta newTridentMeta;
         if (type.equalsIgnoreCase("player")) {
-            newKills = toolStats.itemLore.updatePlayerKills(trident.getItemStack(), 1);
+            newTridentMeta = toolStats.itemLore.updatePlayerKills(trident.getItemStack(), 1);
         } else {
-            newKills = toolStats.itemLore.updateMobKills(trident.getItemStack(), 1);
+            int count = 1;
+            if (toolStats.roseStacker != null) {
+                count = toolStats.roseStacker.countMobs(entity);
+            }
+            newTridentMeta = toolStats.itemLore.updateMobKills(newTrident, count);
         }
-        if (newKills != null) {
-            newTrident.setItemMeta(newKills);
+        if (newTridentMeta != null) {
+            newTrident.setItemMeta(newTridentMeta);
             trident.setItemStack(newTrident);
         }
     }
@@ -308,29 +318,37 @@ public class EntityDamage implements Listener {
         }
     }
 
-    private void updateWeaponKills(PlayerInventory playerInventory, String type) {
+    private void updateWeaponKills(PlayerInventory playerInventory, String type, LivingEntity entity) {
         ItemStack heldWeapon = playerInventory.getItemInMainHand();
         ItemMeta newHeldWeaponMeta = null;
         if (type.equalsIgnoreCase("player")) {
             newHeldWeaponMeta = toolStats.itemLore.updatePlayerKills(heldWeapon, 1);
         }
         if (type.equalsIgnoreCase("mob")) {
-            newHeldWeaponMeta = toolStats.itemLore.updateMobKills(heldWeapon, 1);
+            int count = 1;
+            if (toolStats.roseStacker != null) {
+                count = toolStats.roseStacker.countMobs(entity);
+            }
+            newHeldWeaponMeta = toolStats.itemLore.updateMobKills(heldWeapon, count);
         }
         if (newHeldWeaponMeta != null) {
             playerInventory.getItemInMainHand().setItemMeta(newHeldWeaponMeta);
         }
     }
 
-    private void updateBossesKilled(PlayerInventory playerInventory, String boss) {
+    private void updateBossesKilled(PlayerInventory playerInventory, String boss, LivingEntity entity) {
         ItemStack heldWeapon = playerInventory.getItemInMainHand();
-        ItemMeta newHeldWeaponMeta = toolStats.itemLore.updateBossesKilled(heldWeapon, 1, boss);
+        int count = 1;
+        if (toolStats.roseStacker != null) {
+            count = toolStats.roseStacker.countMobs(entity);
+        }
+        ItemMeta newHeldWeaponMeta = toolStats.itemLore.updateBossesKilled(heldWeapon, count, boss);
         if (newHeldWeaponMeta != null) {
             playerInventory.getItemInMainHand().setItemMeta(newHeldWeaponMeta);
         }
     }
 
-    private void updateBossesKilledByBow(PlayerInventory playerInventory, String boss) {
+    private void updateBossesKilledByBow(PlayerInventory playerInventory, String boss, LivingEntity entity) {
         ItemStack heldBow = toolStats.itemChecker.getBow(playerInventory);
         if (heldBow == null) {
             return;
@@ -339,7 +357,12 @@ public class EntityDamage implements Listener {
         boolean isMain = playerInventory.getItemInMainHand().getType() == Material.BOW || playerInventory.getItemInMainHand().getType() == Material.CROSSBOW;
         boolean isOffHand = playerInventory.getItemInOffHand().getType() == Material.BOW || playerInventory.getItemInOffHand().getType() == Material.CROSSBOW;
 
-        ItemMeta newHeldWeaponMeta = toolStats.itemLore.updateBossesKilled(heldBow, 1, boss);
+        int count = 1;
+        if (toolStats.roseStacker != null) {
+            count = toolStats.roseStacker.countMobs(entity);
+        }
+
+        ItemMeta newHeldWeaponMeta = toolStats.itemLore.updateBossesKilled(heldBow, count, boss);
         if (newHeldWeaponMeta != null) {
             if (isMain && isOffHand) {
                 playerInventory.getItemInMainHand().setItemMeta(newHeldWeaponMeta);

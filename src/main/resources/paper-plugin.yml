@@ -30,3 +30,9 @@ permissions:
   toolstats.remove:
     description: Allows the usage of /toolstats remove.
     default: op
+
+dependencies:
+  server:
+    RoseStacker:
+      load: BEFORE
+      required: false
