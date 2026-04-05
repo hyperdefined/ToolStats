@@ -1,7 +1,7 @@
 name: ToolStats
 version: ${version}
 main: lol.hyper.toolstats.ToolStats
-api-version: 1.21
+api-version: '26.1.1'
 folia-supported: true
 author: hyperdefined
 description: Track various tool stats!
