@@ -231,7 +231,6 @@ public class CommandToolStats implements BasicCommand {
                 sender.sendMessage(Component.text("Invalid sub-command.", NamedTextColor.RED));
             }
         }
-        return;
     }
 
     @Override
