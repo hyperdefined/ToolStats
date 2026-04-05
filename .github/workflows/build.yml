@@ -21,5 +21,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 25
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
       - name: Build with Gradle
         run: ./gradlew build
