@@ -1,7 +1,7 @@
 # This workflow will build a Java project with Maven
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-name: Build with Maven
+name: Build with Gradle
 
 on:
   push:
@@ -21,5 +21,5 @@ jobs:
         with:
           distribution: temurin
           java-version: 25
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
+      - name: Build with Gradle
+        run: ./gradlew build
