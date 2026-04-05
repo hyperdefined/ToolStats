@@ -4,32 +4,19 @@
 
 plugins {
     `java-library`
-    `maven-publish`
 }
 
 repositories {
-    mavenLocal()
-    maven {
-        url = uri("https://repo.papermc.io/repository/maven-public/")
-    }
-
-    maven {
-        url = uri("https://jitpack.io")
-    }
-
-    maven {
-        url = uri("https://repo.rosewooddev.io/repository/public/")
-    }
-
-    maven {
-        url = uri("https://repo.maven.apache.org/maven2/")
-    }
+    maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://repo.rosewooddev.io/repository/public/")
+    mavenCentral()
+    maven("https://jitpack.io")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:26.1.1.build.+")
-    compileOnly("com.github.hyperdefined:hyperlib:1.0.10")
     compileOnly("dev.rosewood:rosestacker:1.5.39")
+    compileOnly("com.github.hyperdefined:hyperlib:1.0.14:all")
 }
 
 group = "lol.hyper"
@@ -43,4 +30,17 @@ tasks.withType<JavaCompile> {
 
 tasks.withType<Javadoc> {
     options.encoding = "UTF-8"
+}
+
+val pluginVersion = version.toString()
+
+tasks.processResources {
+    filteringCharset = "UTF-8"
+
+    val props = mapOf("version" to pluginVersion)
+    inputs.properties(props)
+
+    filesMatching("paper-plugin.yml") {
+        expand(props)
+    }
 }

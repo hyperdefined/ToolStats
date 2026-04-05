@@ -1,5 +1,5 @@
 name: ToolStats
-version: ${project.version}
+version: ${version}
 main: lol.hyper.toolstats.ToolStats
 api-version: 1.21
 folia-supported: true
