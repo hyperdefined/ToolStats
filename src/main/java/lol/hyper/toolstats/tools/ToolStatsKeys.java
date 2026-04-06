@@ -37,6 +37,7 @@ public class ToolStatsKeys {
     private NamespacedKey criticalStrikes;
     private NamespacedKey tridentThrows;
     private NamespacedKey originType;
+    private NamespacedKey logsStripped;
 
     public void make() {
         itemOwner = new NamespacedKey(toolStats, "owner");
@@ -61,6 +62,7 @@ public class ToolStatsKeys {
         criticalStrikes = new NamespacedKey(toolStats, "critical-strikes");
         tridentThrows = new NamespacedKey(toolStats, "trident-throws");
         originType = new NamespacedKey(toolStats, "origin");
+        logsStripped = new NamespacedKey(toolStats, "logs-stripped");
 
         // save which stat can be used by a reset token
         tokenKeys.add(blocksMined);
@@ -76,6 +78,7 @@ public class ToolStatsKeys {
         tokenKeys.add(enderDragonKills);
         tokenKeys.add(criticalStrikes);
         tokenKeys.add(tridentThrows);
+        tokenKeys.add(logsStripped);
     }
 
     public NamespacedKey getItemOwner() {
@@ -160,6 +163,10 @@ public class ToolStatsKeys {
 
     public NamespacedKey getTridentThrows() {
         return tridentThrows;
+    }
+
+    public NamespacedKey getLogsStripped() {
+        return logsStripped;
     }
 
     /**

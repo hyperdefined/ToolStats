@@ -423,6 +423,14 @@ public class CommandToolStats implements BasicCommand {
                 }
             }
         }
+        if (toolStats.config.getBoolean("enabled.logs-stripped")) {
+            if (container.has(toolStats.toolStatsKeys.getLogsStripped(), PersistentDataType.INTEGER)) {
+                Integer logsStripped = container.get(toolStats.toolStatsKeys.getLogsStripped(), PersistentDataType.INTEGER);
+                if (logsStripped != null) {
+                    lore.add(toolStats.configTools.formatLore("logs-stripped", "{logs}", toolStats.numberFormat.formatInt(logsStripped)));
+                }
+            }
+        }
         finalMeta.lore(lore);
         finalItem.setItemMeta(finalMeta);
         int slot = player.getInventory().getHeldItemSlot();
@@ -878,6 +886,36 @@ public class CommandToolStats implements BasicCommand {
                 }
                 break;
             }
+            case "logs-stripped": {
+                if (!toolStats.config.getBoolean("enabled.logs-stripped")) {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                if (container.has(toolStats.toolStatsKeys.getLogsStripped())) {
+                    int value;
+                    try {
+                        value = Integer.parseInt((String) userValue);
+                    } catch (NumberFormatException exception) {
+                        player.sendMessage(Component.text("That is not a valid number.", NamedTextColor.RED));
+                        return;
+                    }
+                    if (value < 0) {
+                        player.sendMessage(Component.text("Number must be positive.", NamedTextColor.RED));
+                        return;
+                    }
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getLogsStripped(), PersistentDataType.INTEGER);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    int difference = value - statValue;
+                    editedItemMeta = toolStats.itemLore.updateLogsStripped(editedItem, difference);
+                    updated = true;
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
             default: {
                 player.sendMessage(Component.text("That is not a valid stat to update.", NamedTextColor.RED));
                 return;
@@ -1264,6 +1302,34 @@ public class CommandToolStats implements BasicCommand {
                     }
 
                     Component oldLine = toolStats.configTools.formatLore("trident-throws", "{times}", toolStats.numberFormat.formatInt(statValue));
+                    List<Component> newLore = toolStats.itemLore.removeLore(editedItemMeta.lore(), oldLine);
+                    editedItemMeta.lore(newLore);
+                } else {
+                    player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                }
+                break;
+            }
+            case "logs-stripped": {
+                if (container.has(toolStats.toolStatsKeys.getLogsStripped())) {
+                    Integer statValue = container.get(toolStats.toolStatsKeys.getLogsStripped(), PersistentDataType.INTEGER);
+                    if (statValue == null) {
+                        player.sendMessage(Component.text("Unable to get stat from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    String tokens = container.get(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING);
+                    if (tokens == null) {
+                        player.sendMessage(Component.text("Unable to get tokens from item.", NamedTextColor.RED));
+                        return;
+                    }
+                    container.remove(toolStats.toolStatsKeys.getLogsStripped());
+                    List<String> newTokens = toolStats.itemChecker.removeToken(tokens, "logs-stripped");
+                    if (newTokens.isEmpty()) {
+                        container.remove(toolStats.toolStatsKeys.getTokenApplied());
+                    } else {
+                        container.set(toolStats.toolStatsKeys.getTokenApplied(), PersistentDataType.STRING, String.join(",", newTokens));
+                    }
+
+                    Component oldLine = toolStats.configTools.formatLore("logs-stripped", "{logs}", toolStats.numberFormat.formatInt(statValue));
                     List<Component> newLore = toolStats.itemLore.removeLore(editedItemMeta.lore(), oldLine);
                     editedItemMeta.lore(newLore);
                 } else {

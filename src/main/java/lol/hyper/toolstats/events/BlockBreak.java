@@ -39,7 +39,7 @@ import java.util.Locale;
 public class BlockBreak implements Listener {
 
     private final ToolStats toolStats;
-    public List<Block> brokenContainers = new ArrayList<>();
+    public final List<Block> brokenContainers = new ArrayList<>();
 
     public BlockBreak(ToolStats toolStats) {
         this.toolStats = toolStats;

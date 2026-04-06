@@ -307,6 +307,35 @@ public class ItemChecker {
     }
 
     /**
+     * Get the player's axe.
+     *
+     * @param inventory Their inventory.
+     * @return Their axe, either main or offhand.
+     */
+    public @Nullable ItemStack getAxe(PlayerInventory inventory) {
+        ItemStack main = inventory.getItemInMainHand();
+        ItemStack offHand = inventory.getItemInOffHand();
+
+        boolean isMain = main.getType().toString().endsWith("_AXE");
+        boolean isOffHand = offHand.getType().toString().endsWith("_AXE");
+
+        // if the player is holding an axe in their main hand, use that one
+        // if the axe is in their offhand instead, use that one after checking main hand
+        // Minecraft prioritizes main hand if the player holds in both hands
+        if (isMain && isOffHand) {
+            return main;
+        }
+        if (isMain) {
+            return main;
+        }
+        if (isOffHand) {
+            return offHand;
+        }
+
+        return null;
+    }
+
+    /**
      * Checks the keys of the item and returns the tokens we should add.
      * If the server swaps token systems this should allow compatability.
      *
@@ -362,6 +391,9 @@ public class ItemChecker {
         }
         if (container.has(toolStats.toolStatsKeys.getTridentThrows())) {
             tokens.add("trident-throws");
+        }
+        if (container.has(toolStats.toolStatsKeys.getLogsStripped())) {
+            tokens.add("logs-stripped");
         }
         if (tokens.isEmpty()) {
             return null;

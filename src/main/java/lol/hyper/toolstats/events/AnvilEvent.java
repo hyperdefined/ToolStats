@@ -139,6 +139,10 @@ public class AnvilEvent implements Listener {
                     addToken(event, tokenType, "critical-strikes", clone);
                     return;
                 }
+                if (tokenType.equalsIgnoreCase("logs-stripped")) {
+                    addToken(event, tokenType, "logs-stripped", clone);
+                    return;
+                }
             }
             return;
         }
@@ -363,6 +367,15 @@ public class AnvilEvent implements Listener {
                 }
                 break;
             }
+            case "logs-stripped": {
+                if (toolStats.config.getBoolean("enabled.logs-stripped")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateLogsStripped(newItem, 0));
+                } else {
+                    event.setResult(null);
+                    return;
+                }
+                break;
+            }
         }
         event.setResult(newItem);
         event.getView().setRepairCost(toolStats.itemChecker.getCost(targetToken));
@@ -494,6 +507,14 @@ public class AnvilEvent implements Listener {
                 return;
             }
             meta = toolStats.itemLore.updateTridentThrows(finalItem, -tridentThrows);
+            finalItem.setItemMeta(meta);
+        }
+        if (container.has(toolStats.toolStatsKeys.getLogsStripped())) {
+            Integer logsStripped = container.get(toolStats.toolStatsKeys.getLogsStripped(), PersistentDataType.INTEGER);
+            if (logsStripped == null) {
+                return;
+            }
+            meta = toolStats.itemLore.updateLogsStripped(finalItem, -logsStripped);
             finalItem.setItemMeta(meta);
         }
         event.setResult(finalItem);

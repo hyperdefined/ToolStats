@@ -34,7 +34,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class EntityDamage implements Listener {
 

@@ -39,8 +39,8 @@ import java.util.Map;
 public class GenerateLoot implements Listener {
 
     private final ToolStats toolStats;
-    public Map<Inventory, Location> generatedInventory = new HashMap<>();
-    public List<Location> droppedLootLocations = new ArrayList<>();
+    public final Map<Inventory, Location> generatedInventory = new HashMap<>();
+    public final List<Location> droppedLootLocations = new ArrayList<>();
 
     public GenerateLoot(ToolStats toolStats) {
         this.toolStats = toolStats;

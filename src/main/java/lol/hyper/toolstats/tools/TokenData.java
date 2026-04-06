@@ -153,6 +153,13 @@ public class TokenData {
         tridentThrowsRecipe.setIngredient('S', Material.PRISMARINE_SHARD);
         recipes.add(tridentThrowsRecipe);
 
+        NamespacedKey logsStrippedKey = new NamespacedKey(toolStats, "logs-stripped-token");
+        ShapedRecipe logsStrippedRecipe = new ShapedRecipe(logsStrippedKey, createToken("logs-stripped"));
+        logsStrippedRecipe.shape(" P ", "PSP", " P ");
+        logsStrippedRecipe.setIngredient('P', Material.PAPER);
+        logsStrippedRecipe.setIngredient('S', Material.WOODEN_AXE);
+        recipes.add(logsStrippedRecipe);
+
         tokenTypes.add("crops-mined");
         tokenTypes.add("blocks-mined");
         tokenTypes.add("damage-taken");
@@ -169,6 +176,7 @@ public class TokenData {
         tokenTypes.add("enderdragon-kills");
         tokenTypes.add("critical-strikes");
         tokenTypes.add("trident-throws");
+        tokenTypes.add("logs-stripped");
     }
 
     public Set<ShapedRecipe> getRecipes() {

@@ -33,9 +33,13 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class PlayerInteract implements Listener {
 
@@ -74,7 +78,31 @@ public class PlayerInteract implements Listener {
             Inventory holderInventory = holder.getInventory();
             openedChests.add(block);
             chestInventories.add(holderInventory);
-            Bukkit.getGlobalRegionScheduler().runDelayed(toolStats, scheduledTask -> openedChests.remove(block), 20);
+            Bukkit.getGlobalRegionScheduler().runDelayed(toolStats, _ -> openedChests.remove(block), 20);
+        }
+        // player right-clicked a log
+        String blockType = block.getType().toString().toLowerCase(Locale.ROOT);
+        if (blockType.endsWith("_log") && !blockType.contains("stripped")) {
+            PlayerInventory playerInventory = player.getInventory();
+            ItemStack axe = toolStats.itemChecker.getAxe(playerInventory);
+
+            // not holding an axe
+            if (axe == null) {
+                return;
+            }
+
+            ItemMeta newAxe = toolStats.itemLore.updateLogsStripped(axe, 1);
+            if (newAxe != null) {
+                boolean isMain = playerInventory.getItemInMainHand().getType().toString().endsWith("_AXE");
+                boolean isOffHand = playerInventory.getItemInOffHand().getType().toString().endsWith("_AXE");
+                if (isMain && isOffHand) {
+                    playerInventory.getItemInMainHand().setItemMeta(newAxe);
+                } else if (isMain) {
+                    playerInventory.getItemInMainHand().setItemMeta(newAxe);
+                } else if (isOffHand) {
+                    playerInventory.getItemInOffHand().setItemMeta(newAxe);
+                }
+            }
         }
     }
 
@@ -91,7 +119,7 @@ public class PlayerInteract implements Listener {
             Inventory mineCartInventory = storageMinecart.getInventory();
             mineCartChestInventories.add(mineCartInventory);
             openedMineCarts.add(storageMinecart);
-            Bukkit.getGlobalRegionScheduler().runDelayed(toolStats, scheduledTask -> openedMineCarts.remove(storageMinecart), 20);
+            Bukkit.getGlobalRegionScheduler().runDelayed(toolStats, _ -> openedMineCarts.remove(storageMinecart), 20);
         }
     }
 }
