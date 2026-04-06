@@ -25,8 +25,12 @@ Here is everything it tracks:
 * Flight time with elytras.
 * Critical strikes for melee weapons.
 * Times trident thrown.
+* Logs stripped.
 
 The best part is, this data is stored on the item itself.
+
+This plugin also has compatibility for:
+* [RoseStacker](https://modrinth.com/plugin/rosestacker)
 
 If item lore is ever incorrect/missing, you can run `/toolstats reset`. This command fixes the lore on whatever item you are holding.
 
