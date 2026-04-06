@@ -47,11 +47,8 @@ public class PickupItem implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPickup(EntityPickupItemEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         Entity entity = event.getEntity();
         if (entity instanceof Player player) {
             if (!toolStats.configTools.checkWorld(player.getWorld().getName())) {

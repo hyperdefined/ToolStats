@@ -34,7 +34,7 @@ public class PlayerDrop implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onDrop(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
         if (!toolStats.configTools.checkWorld(player.getWorld().getName())) {

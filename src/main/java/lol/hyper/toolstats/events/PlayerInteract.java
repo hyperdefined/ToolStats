@@ -54,7 +54,7 @@ public class PlayerInteract implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onInteract(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
@@ -106,7 +106,7 @@ public class PlayerInteract implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onInteract(PlayerInteractEntityEvent event) {
         Entity clicked = event.getRightClicked();
         Player player = event.getPlayer();

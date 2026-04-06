@@ -44,11 +44,8 @@ public class CraftItem implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onCraft(CraftItemEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         Player player = (Player) event.getWhoClicked();
         if (!toolStats.configTools.checkWorld(player.getWorld().getName())) {
             return;

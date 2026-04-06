@@ -50,7 +50,7 @@ public class InventoryClose implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onClose(InventoryCloseEvent event) {
         if (toolStats.generateLoot.generatedInventory.isEmpty()) {
             return;
@@ -106,7 +106,7 @@ public class InventoryClose implements Listener {
                 }, null, 1);
             }
 
-            if (holder instanceof Container container) {
+            if (holder instanceof Container) {
                 Chunk chestChunk = chestLocation.getChunk();
                 Bukkit.getRegionScheduler().runDelayed(toolStats, chestLocation.getWorld(), chestChunk.getX(), chestChunk.getZ(), scheduledTask -> {
                     BlockState blockState = chestLocation.getWorld().getBlockAt(chestLocation).getState();

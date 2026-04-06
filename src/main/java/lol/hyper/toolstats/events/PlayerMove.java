@@ -39,7 +39,7 @@ public class PlayerMove implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         if (!toolStats.configTools.checkWorld(player.getWorld().getName())) {

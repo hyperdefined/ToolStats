@@ -46,12 +46,8 @@ public class EntityDamage implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onDamage(EntityDamageByEntityEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
         if (!(event.getEntity() instanceof LivingEntity mobBeingAttacked)) {
             return;
         }

@@ -42,12 +42,8 @@ public class InventoryOpen implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onOpen(InventoryOpenEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
         Inventory inventory = event.getInventory();
         InventoryHolder holder = inventory.getHolder();
         boolean isBlockInventory = holder instanceof BlockInventoryHolder || holder instanceof DoubleChest;

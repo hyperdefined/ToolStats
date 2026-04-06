@@ -39,7 +39,7 @@ public class AnvilEvent implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onAnvilEvent(PrepareAnvilEvent event) {
         // only listen if the token system is enabled
         if (!toolStats.config.getBoolean("tokens.enabled")) {

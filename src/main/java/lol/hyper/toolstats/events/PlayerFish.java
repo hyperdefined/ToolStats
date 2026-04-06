@@ -46,11 +46,8 @@ public class PlayerFish implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onFish(PlayerFishEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         // only listen to when a player catches a fish
         if (event.getState() != PlayerFishEvent.State.CAUGHT_FISH) {
             return;

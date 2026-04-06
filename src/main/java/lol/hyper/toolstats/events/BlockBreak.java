@@ -45,11 +45,8 @@ public class BlockBreak implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBreak(BlockBreakEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         Player player = event.getPlayer();
         if (!toolStats.configTools.checkWorld(player.getWorld().getName())) {
             return;

@@ -39,7 +39,7 @@ public class SheepShear implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onShear(PlayerInteractEntityEvent event) {
         if (event.isCancelled()) {
             return;

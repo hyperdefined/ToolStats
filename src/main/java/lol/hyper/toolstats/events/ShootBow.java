@@ -38,7 +38,7 @@ public class ShootBow implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onShoot(EntityShootBowEvent event) {
         Entity shooter = event.getEntity();
         // only listen for players

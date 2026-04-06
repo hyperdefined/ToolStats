@@ -45,7 +45,7 @@ public class BlockDispenseEvent implements Listener {
         this.toolStats = toolStats;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDispense(BlockDispenseLootEvent event) {
         Player player = event.getPlayer();
         if (player == null) {
