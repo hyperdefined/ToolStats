@@ -43,6 +43,7 @@ public class ConfigUpdater {
             case 13 -> new Version14(toolStats).update(); // 13 to 14
             case 14 -> new Version15(toolStats).update(); // 14 to 15
             case 15 -> new Version16(toolStats).update(); // 15 to 16
+            case 16 -> new Version17(toolStats).update(); // 16 to 17
         }
     }
 }
