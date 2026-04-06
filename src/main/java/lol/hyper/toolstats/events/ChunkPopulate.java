@@ -56,7 +56,7 @@ public class ChunkPopulate implements Listener {
         // this is delayed because entities are not loaded instantly
         // we just check 1 second later
         Chunk chunk = event.getChunk();
-        Bukkit.getRegionScheduler().runDelayed(toolStats, world, chunk.getX(), chunk.getZ(), scheduledTask -> {
+        Bukkit.getRegionScheduler().runDelayed(toolStats, world, chunk.getX(), chunk.getZ(), _ -> {
             for (Entity entity : chunk.getEntities()) {
                 // if there is a new item frame
                 if (!(entity instanceof ItemFrame itemFrame)) {

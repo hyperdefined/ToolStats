@@ -132,7 +132,7 @@ public final class ToolStats extends JavaPlugin {
         playerDrop = new PlayerDrop(this);
         if (Bukkit.getPluginManager().isPluginEnabled("RoseStacker")) {
             logger.info("RoseStacker has been detected, adding support!");
-            roseStacker = new RoseStacker();
+            roseStacker = new RoseStacker(this);
         }
 
         Bukkit.getServer().getPluginManager().registerEvents(blockBreak, this);

@@ -36,32 +36,61 @@ package lol.hyper.toolstats.support.rosestacker;
 
 import dev.rosewood.rosestacker.api.RoseStackerAPI;
 import dev.rosewood.rosestacker.stack.StackedEntity;
+import lol.hyper.toolstats.ToolStats;
+import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
+
+import java.util.function.Consumer;
 
 public class RoseStacker {
 
+    private final ToolStats toolStats;
     private final RoseStackerAPI rsAPI;
 
-    public RoseStacker() {
+    public RoseStacker(ToolStats toolStats) {
+        this.toolStats = toolStats;
         this.rsAPI = RoseStackerAPI.getInstance();
     }
 
-    public int countMobs(LivingEntity entity) {
+    public void countMobs(LivingEntity entity, Consumer<Integer> callback) {
         if (!rsAPI.isEntityStacked(entity)) {
             // if the entity is not stacked, ignore
-            return 1;
+            callback.accept(1);
+            return;
         }
         StackedEntity stackedEntity = rsAPI.getStackedEntity(entity);
         if (stackedEntity == null) {
-            return 1;
+            callback.accept(1);
+            return;
         }
 
+        int before = stackedEntity.getStackSize();
         boolean killAll = stackedEntity.getStackSettings().shouldKillEntireStackOnDeath();
         // if we kill the entire stack, add the entire stack to the count
         if (killAll) {
-            return stackedEntity.getStackSize();
+            callback.accept(before);
+            return;
         }
 
-        return 1;
+        Location stackedLocation = stackedEntity.getLocation();
+        Chunk stackedChunk = stackedEntity.getLocation().getChunk();
+        // check the stack size after a tick to see the difference
+        Bukkit.getRegionScheduler().runDelayed(toolStats, stackedLocation.getWorld(), stackedChunk.getX(), stackedChunk.getZ(), _ -> {
+            int after = stackedEntity.getStackSize();
+            int difference = before - after;
+            // if the diff goes negative, we killed more than the stack
+            // we killed the entire stack, so return the size
+            if (difference <= 0) {
+                difference = before;
+            }
+
+            toolStats.logger.info("before: {}", before);
+            toolStats.logger.info("after: {}", after);
+            toolStats.logger.info("difference: {}", difference);
+
+            callback.accept(difference);
+        }, 1);
     }
 }

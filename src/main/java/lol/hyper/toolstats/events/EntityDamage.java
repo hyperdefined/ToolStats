@@ -259,12 +259,22 @@ public class EntityDamage implements Listener {
 
         if (type.equalsIgnoreCase("mob")) {
             // player is shooting a mob
-            ItemMeta newBow;
-            int count = 1;
             if (toolStats.roseStacker != null) {
-                count = toolStats.roseStacker.countMobs(entity);
+                toolStats.roseStacker.countMobs(entity, count -> {
+                    ItemMeta newBow = toolStats.itemLore.updateMobKills(heldBow, count);
+                    if (newBow != null) {
+                        if (isMain && isOffHand) {
+                            playerInventory.getItemInMainHand().setItemMeta(newBow);
+                        } else if (isMain) {
+                            playerInventory.getItemInMainHand().setItemMeta(newBow);
+                        } else if (isOffHand) {
+                            playerInventory.getItemInOffHand().setItemMeta(newBow);
+                        }
+                    }
+                });
+                return;
             }
-            newBow = toolStats.itemLore.updateMobKills(heldBow, count);
+            ItemMeta newBow = toolStats.itemLore.updateMobKills(heldBow, 1);
             if (newBow != null) {
                 if (isMain && isOffHand) {
                     playerInventory.getItemInMainHand().setItemMeta(newBow);
@@ -292,19 +302,30 @@ public class EntityDamage implements Listener {
 
     private void updateTridentKills(Trident trident, String type, LivingEntity entity) {
         ItemStack newTrident = trident.getItemStack();
-        ItemMeta newTridentMeta;
         if (type.equalsIgnoreCase("player")) {
-            newTridentMeta = toolStats.itemLore.updatePlayerKills(trident.getItemStack(), 1);
-        } else {
-            int count = 1;
-            if (toolStats.roseStacker != null) {
-                count = toolStats.roseStacker.countMobs(entity);
+            ItemMeta newTridentMeta = toolStats.itemLore.updatePlayerKills(trident.getItemStack(), 1);
+            if (newTridentMeta != null) {
+                newTrident.setItemMeta(newTridentMeta);
+                trident.setItemStack(newTrident);
             }
-            newTridentMeta = toolStats.itemLore.updateMobKills(newTrident, count);
+            return;
         }
-        if (newTridentMeta != null) {
-            newTrident.setItemMeta(newTridentMeta);
-            trident.setItemStack(newTrident);
+        if (type.equalsIgnoreCase("mob")) {
+            if (toolStats.roseStacker != null) {
+                toolStats.roseStacker.countMobs(entity, count -> {
+                    ItemMeta newTridentMeta = toolStats.itemLore.updateMobKills(newTrident, count);
+                    if (newTridentMeta != null) {
+                        newTrident.setItemMeta(newTridentMeta);
+                        trident.setItemStack(newTrident);
+                    }
+                });
+                return;
+            }
+            ItemMeta newTridentMeta = toolStats.itemLore.updateMobKills(trident.getItemStack(), 1);
+            if (newTridentMeta != null) {
+                newTrident.setItemMeta(newTridentMeta);
+                trident.setItemStack(newTrident);
+            }
         }
     }
 
@@ -327,19 +348,28 @@ public class EntityDamage implements Listener {
 
     private void updateWeaponKills(PlayerInventory playerInventory, String type, LivingEntity entity) {
         ItemStack heldWeapon = playerInventory.getItemInMainHand();
-        ItemMeta newHeldWeaponMeta = null;
         if (type.equalsIgnoreCase("player")) {
-            newHeldWeaponMeta = toolStats.itemLore.updatePlayerKills(heldWeapon, 1);
+            ItemMeta newHeldWeaponMeta = toolStats.itemLore.updatePlayerKills(heldWeapon, 1);
+            if (newHeldWeaponMeta != null) {
+                playerInventory.getItemInMainHand().setItemMeta(newHeldWeaponMeta);
+            }
+            return;
         }
         if (type.equalsIgnoreCase("mob")) {
-            int count = 1;
             if (toolStats.roseStacker != null) {
-                count = toolStats.roseStacker.countMobs(entity);
+                toolStats.roseStacker.countMobs(entity, count -> {
+                    ItemStack currentHeldWeapon = playerInventory.getItemInMainHand();
+                    ItemMeta newHeldWeaponMeta = toolStats.itemLore.updateMobKills(currentHeldWeapon, count);
+                    if (newHeldWeaponMeta != null) {
+                        currentHeldWeapon.setItemMeta(newHeldWeaponMeta);
+                    }
+                });
+            } else {
+                ItemMeta newHeldWeaponMeta = toolStats.itemLore.updateMobKills(heldWeapon, 1);
+                if (newHeldWeaponMeta != null) {
+                    playerInventory.getItemInMainHand().setItemMeta(newHeldWeaponMeta);
+                }
             }
-            newHeldWeaponMeta = toolStats.itemLore.updateMobKills(heldWeapon, count);
-        }
-        if (newHeldWeaponMeta != null) {
-            playerInventory.getItemInMainHand().setItemMeta(newHeldWeaponMeta);
         }
     }
 
@@ -347,7 +377,7 @@ public class EntityDamage implements Listener {
         ItemStack heldWeapon = playerInventory.getItemInMainHand();
         int count = 1;
         if (toolStats.roseStacker != null) {
-            count = toolStats.roseStacker.countMobs(entity);
+            //count = toolStats.roseStacker.countMobs(entity);
         }
         ItemMeta newHeldWeaponMeta = toolStats.itemLore.updateBossesKilled(heldWeapon, count, boss);
         if (newHeldWeaponMeta != null) {
@@ -364,12 +394,23 @@ public class EntityDamage implements Listener {
         boolean isMain = playerInventory.getItemInMainHand().getType() == Material.BOW || playerInventory.getItemInMainHand().getType() == Material.CROSSBOW;
         boolean isOffHand = playerInventory.getItemInOffHand().getType() == Material.BOW || playerInventory.getItemInOffHand().getType() == Material.CROSSBOW;
 
-        int count = 1;
         if (toolStats.roseStacker != null) {
-            count = toolStats.roseStacker.countMobs(entity);
+            toolStats.roseStacker.countMobs(entity, count -> {
+                ItemMeta newHeldWeaponMeta = toolStats.itemLore.updateBossesKilled(heldBow, count, boss);
+                if (newHeldWeaponMeta != null) {
+                    if (isMain && isOffHand) {
+                        playerInventory.getItemInMainHand().setItemMeta(newHeldWeaponMeta);
+                    } else if (isMain) {
+                        playerInventory.getItemInMainHand().setItemMeta(newHeldWeaponMeta);
+                    } else if (isOffHand) {
+                        playerInventory.getItemInOffHand().setItemMeta(newHeldWeaponMeta);
+                    }
+                }
+            });
+            return;
         }
 
-        ItemMeta newHeldWeaponMeta = toolStats.itemLore.updateBossesKilled(heldBow, count, boss);
+        ItemMeta newHeldWeaponMeta = toolStats.itemLore.updateBossesKilled(heldBow, 1, boss);
         if (newHeldWeaponMeta != null) {
             if (isMain && isOffHand) {
                 playerInventory.getItemInMainHand().setItemMeta(newHeldWeaponMeta);
