@@ -29,6 +29,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -225,6 +226,29 @@ public class CommandToolStats implements BasicCommand {
                 if (sender instanceof Player) {
                     sender.sendMessage(Component.text("Gave " + target.getName() + " " + amount + " " + tokenType + " tokens.", NamedTextColor.GREEN));
                 }
+                return;
+            }
+            case "add": {
+                if (!sender.hasPermission("toolstats.add")) {
+                    sender.sendMessage(Component.text("You do not have permission for this command.", NamedTextColor.RED));
+                    return;
+                }
+                if (sender instanceof ConsoleCommandSender) {
+                    sender.sendMessage(Component.text("You must be a player for this command.", NamedTextColor.RED));
+                    return;
+                }
+                // Make sure /toolstats add <stat> is present
+                if (args.length < 2) {
+                    sender.sendMessage(Component.text("Invalid syntax. Usage: /toolstats add <stat>", NamedTextColor.RED));
+                    return;
+                }
+                //Make sure they typed in a valid stat
+                String stat = args[1];
+                if (!toolStats.tokenData.getTokenTypes().contains(stat)) {
+                    sender.sendMessage(Component.text("That is not a valid stat.", NamedTextColor.RED));
+                    return;
+                }
+                addStat(stat, (Player) sender);
                 return;
             }
             default: {
@@ -447,6 +471,169 @@ public class CommandToolStats implements BasicCommand {
         ItemStack token = toolStats.tokenData.createToken(tokenType);
         token.setAmount(amount);
         target.getInventory().addItem(token);
+    }
+
+    /**
+     * Add a stat to an item, setting it to zero.
+     * @param stat The stat to add.
+     * @param player The player running the command.
+     */
+    private void addStat(String stat, Player player) {
+        PlayerInventory playerInventory = player.getInventory();
+        ItemStack heldItem = playerInventory.getItemInMainHand();
+        ItemMeta heldItemMeta = heldItem.getItemMeta();
+        if (heldItemMeta == null) {
+            return;
+        }
+        if (toolStats.itemChecker.checkTokens(heldItemMeta.getPersistentDataContainer(), stat)) {
+            player.sendMessage(Component.text("This item already has this stat.", NamedTextColor.RED));
+            return;
+        }
+
+        if (stat.equalsIgnoreCase("remove") || stat.equalsIgnoreCase("reset")) {
+            player.sendMessage(Component.text("That is not a valid stat.", NamedTextColor.RED));
+            return;
+        }
+
+        ItemStack newItem = toolStats.itemChecker.addToken(heldItem, stat);
+        switch (stat) {
+            case "crops-mined": {
+                if (toolStats.config.getBoolean("enabled.crops-harvested")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateCropsMined(newItem, 0));
+                } else {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                break;
+            }
+            case "blocks-mined": {
+                if (toolStats.configTools.checkConfig(newItem.getType(), "blocks-mined")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateBlocksMined(newItem, 0));
+                } else {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                break;
+            }
+            case "damage-taken": {
+                if (toolStats.config.getBoolean("enabled.armor-damage")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateArmorDamage(newItem, 0.0, false));
+                } else {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                break;
+            }
+            case "damage-done": {
+                if (toolStats.configTools.checkConfig(newItem.getType(), "damage-done")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateWeaponDamage(newItem, 0.0, false));
+                } else {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                break;
+            }
+            case "mob-kills": {
+                if (toolStats.configTools.checkConfig(newItem.getType(), "mob-kills")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateMobKills(newItem, 0));
+                } else {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                break;
+            }
+            case "player-kills": {
+                if (toolStats.configTools.checkConfig(newItem.getType(), "player-kills")) {
+                    newItem.setItemMeta(toolStats.itemLore.updatePlayerKills(newItem, 0));
+                } else {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                break;
+            }
+            case "arrows-shot": {
+                if (toolStats.config.getBoolean("enabled.arrows-shot")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateArrowsShot(newItem, 0));
+                } else {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                break;
+            }
+            case "sheep-sheared": {
+                if (toolStats.config.getBoolean("enabled.sheep-sheared")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateSheepSheared(newItem, 0));
+                } else {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                break;
+            }
+            case "flight-time": {
+                if (toolStats.config.getBoolean("enabled.flight-time")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateFlightTime(newItem, 0));
+                } else {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                break;
+            }
+            case "fish-caught": {
+                if (toolStats.config.getBoolean("enabled.fish-caught")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateFishCaught(newItem, 0));
+                } else {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                break;
+            }
+            case "wither-kills": {
+                if (toolStats.config.getBoolean("enabled.bosses-killed.wither")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateBossesKilled(newItem, 0, "wither"));
+                } else {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                break;
+            }
+            case "enderdragon-kills": {
+                if (toolStats.config.getBoolean("enabled.bosses-killed.enderdragon")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateBossesKilled(newItem, 0, "enderdragon"));
+                } else {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                break;
+            }
+            case "critical-strikes": {
+                if (toolStats.config.getBoolean("enabled.critical-strikes")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateCriticalStrikes(newItem, 0));
+                } else {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                break;
+            }
+            case "trident-throws": {
+                if (toolStats.config.getBoolean("enabled.trident-throws")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateTridentThrows(newItem, 0));
+                } else {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                break;
+            }
+            case "logs-stripped": {
+                if (toolStats.config.getBoolean("enabled.logs-stripped")) {
+                    newItem.setItemMeta(toolStats.itemLore.updateLogsStripped(newItem, 0));
+                } else {
+                    player.sendMessage(Component.text("This stat is disabled.", NamedTextColor.RED));
+                    return;
+                }
+                break;
+            }
+        }
+        player.sendMessage(Component.text(stat + " has been added!", NamedTextColor.GREEN));
     }
 
     /**
@@ -969,6 +1156,7 @@ public class CommandToolStats implements BasicCommand {
                     editedItemMeta.lore(newLore);
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                    return;
                 }
                 break;
             }
@@ -997,6 +1185,7 @@ public class CommandToolStats implements BasicCommand {
                     editedItemMeta.lore(newLore);
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                    return;
                 }
                 break;
             }
@@ -1025,6 +1214,7 @@ public class CommandToolStats implements BasicCommand {
                     editedItemMeta.lore(newLore);
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                    return;
                 }
                 break;
             }
@@ -1053,6 +1243,7 @@ public class CommandToolStats implements BasicCommand {
                     editedItemMeta.lore(newLore);
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                    return;
                 }
                 break;
             }
@@ -1081,6 +1272,7 @@ public class CommandToolStats implements BasicCommand {
                     editedItemMeta.lore(newLore);
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                    return;
                 }
                 break;
             }
@@ -1109,6 +1301,7 @@ public class CommandToolStats implements BasicCommand {
                     editedItemMeta.lore(newLore);
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                    return;
                 }
                 break;
             }
@@ -1137,6 +1330,7 @@ public class CommandToolStats implements BasicCommand {
                     editedItemMeta.lore(newLore);
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                    return;
                 }
                 break;
             }
@@ -1166,6 +1360,7 @@ public class CommandToolStats implements BasicCommand {
                     editedItemMeta.lore(newLore);
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                    return;
                 }
                 break;
             }
@@ -1194,6 +1389,7 @@ public class CommandToolStats implements BasicCommand {
                     editedItemMeta.lore(newLore);
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                    return;
                 }
                 break;
             }
@@ -1222,6 +1418,7 @@ public class CommandToolStats implements BasicCommand {
                     editedItemMeta.lore(newLore);
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                    return;
                 }
                 break;
             }
@@ -1250,6 +1447,7 @@ public class CommandToolStats implements BasicCommand {
                     editedItemMeta.lore(newLore);
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                    return;
                 }
                 break;
             }
@@ -1278,6 +1476,7 @@ public class CommandToolStats implements BasicCommand {
                     editedItemMeta.lore(newLore);
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                    return;
                 }
                 break;
             }
@@ -1306,6 +1505,7 @@ public class CommandToolStats implements BasicCommand {
                     editedItemMeta.lore(newLore);
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                    return;
                 }
                 break;
             }
@@ -1334,6 +1534,7 @@ public class CommandToolStats implements BasicCommand {
                     editedItemMeta.lore(newLore);
                 } else {
                     player.sendMessage(Component.text("This item does not have that stat.", NamedTextColor.RED));
+                    return;
                 }
                 break;
             }
@@ -1346,6 +1547,8 @@ public class CommandToolStats implements BasicCommand {
         player.getInventory().setItemInMainHand(editedItem);
         player.sendMessage(Component.text("Removed stat " + stat + " for held item!", NamedTextColor.GREEN));
     }
+
+
 
     @Override
     public @NonNull Collection<String> suggest(@NonNull CommandSourceStack source, String[] args) {
@@ -1371,6 +1574,9 @@ public class CommandToolStats implements BasicCommand {
             if (sender.hasPermission("toolstats.purge")) {
                 suggestions.add("purge");
             }
+            if (sender.hasPermission("toolstats.add")) {
+                suggestions.add("add");
+            }
             return suggestions;
         }
 
@@ -1385,6 +1591,15 @@ public class CommandToolStats implements BasicCommand {
 
         // suggest keys for edit
         if (args.length == 2 && args[0].equalsIgnoreCase("edit") && sender.hasPermission("toolstats.edit")) {
+            // yes I am lazy
+            return toolStats.tokenData.getTokenTypes().stream()
+                    .filter(s -> !s.equals("remove") && !s.equals("reset"))
+                    .map(s -> s.equals("crops-mined") ? "crops-harvested" : s)
+                    .collect(Collectors.toList());
+        }
+
+        // suggest keys for add
+        if (args.length == 2 && args[0].equalsIgnoreCase("add") && sender.hasPermission("toolstats.add")) {
             // yes I am lazy
             return toolStats.tokenData.getTokenTypes().stream()
                     .filter(s -> !s.equals("remove") && !s.equals("reset"))

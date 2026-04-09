@@ -30,6 +30,9 @@ permissions:
   toolstats.remove:
     description: Allows the usage of /toolstats remove.
     default: op
+  toolstats.add:
+    description: Allows the usage of /toolstats add.
+    default: op
 
 dependencies:
   server:

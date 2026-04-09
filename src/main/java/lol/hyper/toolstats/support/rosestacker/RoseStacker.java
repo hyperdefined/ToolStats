@@ -69,10 +69,6 @@ public class RoseStacker {
                 difference = before;
             }
 
-            toolStats.logger.info("before: {}", before);
-            toolStats.logger.info("after: {}", after);
-            toolStats.logger.info("difference: {}", difference);
-
             callback.accept(difference);
         }, 1);
     }
