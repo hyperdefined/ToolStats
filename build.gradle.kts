@@ -20,7 +20,7 @@ dependencies {
 }
 
 group = "lol.hyper"
-version = "2.0.3"
+version = "2.0.4"
 description = "ToolStats"
 java.sourceCompatibility = JavaVersion.VERSION_25
 
