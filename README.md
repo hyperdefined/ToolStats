@@ -10,11 +10,12 @@
     <a href="https://patreon.com/hyperdefined"><img alt="patreon-singular" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/donate/patreon-singular_vector.svg"></a>
 </p>
 
-ToolStats is a Paper plugin that display various stats about tools. This plugin is inspired off of [GearStats](https://www.spigotmc.org/resources/gearstats.12960/). You can either track all statistics by default, or a use a token system to add statistics to tool/armor. You can configure how each statistic is shown on the item, or disable it!
+ToolStats is a Paper plugin that displays various stats about tools. This plugin is inspired off of [GearStats](https://www.spigotmc.org/resources/gearstats.12960/). You can either track all statistics by default, or a use a token system to add statistics to tool/armor. You can configure how each statistic is shown on the item, or disable it!
 
 Here is everything it tracks:
+
 * Blocks mined (pickaxes, shovels, axes, hoes, shears).
-* Crops mined (hoes).
+* Crops harvested (hoes).
 * Player/mob kills (swords, axes, tridents, bows/crossbows, mace).
 * Ownership of items when crafted, looted (from chests/vaults/barrels), traded, spawned via creative, and caught from fishing.
 * Armor damage taken (shields too).
@@ -30,24 +31,34 @@ Here is everything it tracks:
 The best part is, this data is stored on the item itself.
 
 This plugin also has compatibility for:
+
 * [RoseStacker](https://modrinth.com/plugin/rosestacker)
 
-If item lore is ever incorrect/missing, you can run `/toolstats reset`. This command fixes the lore on whatever item you are holding.
+You can see some of the stats below as examples:
 
-![Image](https://docs.hyper.lol/plugins/toolstats/assets/image.png)
-![Image](https://docs.hyper.lol/plugins/toolstats/assets/image2.png)
-![Image](https://docs.hyper.lol/plugins/toolstats/assets/image3.png)
-![Image](https://docs.hyper.lol/plugins/toolstats/assets/image4.png)
-![Image](https://docs.hyper.lol/plugins/toolstats/assets/image5.png)
-![Image](https://docs.hyper.lol/plugins/toolstats/assets/image6.png)
-![Image](https://docs.hyper.lol/plugins/toolstats/assets/image7.png)
-![Image](https://docs.hyper.lol/plugins/toolstats/assets/image8.png)
-![Image](https://docs.hyper.lol/plugins/toolstats/assets/image9.png)
-![Image](https://docs.hyper.lol/plugins/toolstats/assets/image10.png)
-![Image](https://docs.hyper.lol/plugins/toolstats/assets/image11.png)
-![Image](https://docs.hyper.lol/plugins/toolstats/assets/image13.png)
-![Image](https://docs.hyper.lol/plugins/toolstats/assets/image14.png)
-![Image](https://docs.hyper.lol/plugins/toolstats/assets/image12.png)
+| Crafted Origin | Player/Mob Kills | Fish Caught |
+|---|---|---|
+| ![Image](https://docs.hyper.lol/plugins/toolstats/assets/image.png) | ![Image](https://docs.hyper.lol/plugins/toolstats/assets/image2.png) | ![Image](https://docs.hyper.lol/plugins/toolstats/assets/image3.png) |
+
+| Sheep Sheared | Dropped By | Damage Taken |
+|---|---|---|
+| ![Image](https://docs.hyper.lol/plugins/toolstats/assets/image4.png) | ![Image](https://docs.hyper.lol/plugins/toolstats/assets/image5.png) | ![Image](https://docs.hyper.lol/plugins/toolstats/assets/image6.png) |
+
+| Mob Kills | Elytra | Looted Origin |
+|---|---|---|
+| ![Image](https://docs.hyper.lol/plugins/toolstats/assets/image7.png) | ![Image](https://docs.hyper.lol/plugins/toolstats/assets/image8.png) | ![Image](https://docs.hyper.lol/plugins/toolstats/assets/image9.png) |
+
+| Traded Origin | Spawned Origin | Raw NBT Data |
+|---|---|---|
+| ![Image](https://docs.hyper.lol/plugins/toolstats/assets/image10.png) | ![Image](https://docs.hyper.lol/plugins/toolstats/assets/image11.png) | ![Image](https://docs.hyper.lol/plugins/toolstats/assets/image12.png) |
+
+| Crops Harvested | Flight Time | Arrows Shot |
+|---|---|---|
+| ![Image](https://docs.hyper.lol/plugins/toolstats/assets/image13.png) | ![Image](https://docs.hyper.lol/plugins/toolstats/assets/image14.png) | ![Image](https://docs.hyper.lol/plugins/toolstats/assets/image15.png) |
+
+| Critical Strikes | Trident Throws | Logs Stripped |
+|---|---|---|
+| ![Image](https://docs.hyper.lol/plugins/toolstats/assets/image16.png) | ![Image](https://docs.hyper.lol/plugins/toolstats/assets/image17.png) | ![Image](https://docs.hyper.lol/plugins/toolstats/assets/image18.png) |
 
 ## Documentation
 Visit the [wiki](https://docs.hyper.lol/plugins/toolstats/about/) for help.
