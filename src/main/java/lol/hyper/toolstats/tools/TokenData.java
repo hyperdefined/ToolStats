@@ -238,6 +238,21 @@ public class TokenData {
             }
         }
 
+        // set the item model
+        if (tokenConfig.getBoolean("item-model.enabled")) {
+            String itemModelValue = tokenConfig.getString("item-model.value");
+            if (itemModelValue == null || itemModelValue.isEmpty()) {
+                toolStats.logger.info("Could not find item model value for token {}", tokenType);
+                return null;
+            }
+            NamespacedKey itemModelKey = NamespacedKey.fromString(itemModelValue);
+            if (itemModelKey == null) {
+                toolStats.logger.info("{} is not a valid namespaced key!", itemModelValue);
+                return null;
+            }
+            token.setData(DataComponentTypes.ITEM_MODEL, itemModelKey);
+        }
+
         return token;
     }
 

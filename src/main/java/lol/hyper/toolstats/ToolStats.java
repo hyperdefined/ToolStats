@@ -37,7 +37,7 @@ import java.io.File;
 
 public final class ToolStats extends JavaPlugin {
 
-    public final int CONFIG_VERSION = 17;
+    public final int CONFIG_VERSION = 18;
     public final ComponentLogger logger = this.getComponentLogger();
     public final File configFile = new File(this.getDataFolder(), "config.yml");
     public boolean tokens = false;
