@@ -15,6 +15,9 @@ tokens:
         enabled: false
         type: float
         value: 1001
+      item-model:
+        enabled: false
+        value: "minecraft:paper"
     mob-kills:
       title: "&7ToolStats: &8Mob Kills Token"
       lore:
@@ -26,6 +29,9 @@ tokens:
         enabled: false
         type: float
         value: 1001
+      item-model:
+        enabled: false
+        value: "minecraft:paper"
     blocks-mined:
       title: "&7ToolStats: &8Blocks Mined Token"
       lore:
@@ -37,6 +43,9 @@ tokens:
         enabled: false
         type: float
         value: 1001
+      item-model:
+        enabled: false
+        value: "minecraft:paper"
     crops-mined:
       title: "&7ToolStats: &8Crops Mined Token"
       lore:
@@ -48,6 +57,9 @@ tokens:
         enabled: false
         type: float
         value: 1001
+      item-model:
+        enabled: false
+        value: "minecraft:paper"
     fish-caught:
       title: "&7ToolStats: &8Fish Caught Token"
       lore:
@@ -59,6 +71,9 @@ tokens:
         enabled: false
         type: float
         value: 1001
+      item-model:
+        enabled: false
+        value: "minecraft:paper"
     sheep-sheared:
       title: "&7ToolStats: &8Sheep Sheared Token"
       lore:
@@ -70,6 +85,9 @@ tokens:
         enabled: false
         type: float
         value: 1001
+      item-model:
+        enabled: false
+        value: "minecraft:paper"
     damage-taken:
       title: "&7ToolStats: &8Damage Taken Token"
       lore:
@@ -81,6 +99,9 @@ tokens:
         enabled: false
         type: float
         value: 1001
+      item-model:
+        enabled: false
+        value: "minecraft:paper"
     damage-done:
       title: "&7ToolStats: &8Damage Done Token"
       lore:
@@ -92,6 +113,9 @@ tokens:
         enabled: false
         type: float
         value: 1001
+      item-model:
+        enabled: false
+        value: "minecraft:paper"
     arrows-shot:
       title: "&7ToolStats: &8Arrows Shot Token"
       lore:
@@ -103,6 +127,9 @@ tokens:
         enabled: false
         type: float
         value: 1001
+      item-model:
+        enabled: false
+        value: "minecraft:paper"
     flight-time:
       title: "&7ToolStats: &8Flight Time Token"
       lore:
@@ -114,6 +141,9 @@ tokens:
         enabled: false
         type: float
         value: 1001
+      item-model:
+        enabled: false
+        value: "minecraft:paper"
     reset:
       title: "&7ToolStats: &8Reset Token"
       lore:
@@ -125,6 +155,9 @@ tokens:
         enabled: false
         type: float
         value: 1001
+      item-model:
+        enabled: false
+        value: "minecraft:paper"
     remove:
       title: "&7ToolStats: &8Remove Token"
       lore:
@@ -136,6 +169,9 @@ tokens:
         enabled: false
         type: float
         value: 1001
+      item-model:
+        enabled: false
+        value: "minecraft:paper"
     wither-kills:
       title: "&7ToolStats: &8Wither Kills Token"
       lore:
@@ -147,6 +183,9 @@ tokens:
         enabled: false
         type: float
         value: 1001
+      item-model:
+        enabled: false
+        value: "minecraft:paper"
     enderdragon-kills:
       title: "&7ToolStats: &8Ender Dragon Kills Token"
       lore:
@@ -158,6 +197,9 @@ tokens:
         enabled: false
         type: float
         value: 1001
+      item-model:
+        enabled: false
+        value: "minecraft:paper"
     critical-strikes:
       title: "&7ToolStats: &8Critical Strikes Token"
       lore:
@@ -169,6 +211,9 @@ tokens:
         enabled: false
         type: float
         value: 1001
+      item-model:
+        enabled: false
+        value: "minecraft:paper"
     trident-throws:
       title: "&7ToolStats: &8Trident Throws Token"
       lore:
@@ -180,6 +225,9 @@ tokens:
         enabled: false
         type: float
         value: 1001
+      item-model:
+        enabled: false
+        value: "minecraft:paper"
     logs-stripped:
       title: "&7ToolStats: &8Logs Stripped Token"
       lore:
@@ -191,6 +239,9 @@ tokens:
         enabled: false
         type: float
         value: 1001
+      item-model:
+        enabled: false
+        value: "minecraft:paper"
 
 enabled:
   # Will show "Crafted by <player>"
@@ -437,4 +488,4 @@ world-limit:
     - world_1
     - world_2
 
-config-version: 17
+config-version: 18

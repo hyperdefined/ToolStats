@@ -44,6 +44,7 @@ public class ConfigUpdater {
             case 14 -> new Version15(toolStats).update(); // 14 to 15
             case 15 -> new Version16(toolStats).update(); // 15 to 16
             case 16 -> new Version17(toolStats).update(); // 16 to 17
+            case 17 -> new Version18(toolStats).update(); // 17 to 18
         }
     }
 }
