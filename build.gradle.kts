@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:26.1.1.build.+")
+    compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
     compileOnly("dev.rosewood:rosestacker:1.5.39")
     compileOnly("com.github.hyperdefined:hyperlib:1.0.14:all")
 }
