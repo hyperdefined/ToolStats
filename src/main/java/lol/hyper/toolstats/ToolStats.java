@@ -161,7 +161,7 @@ public final class ToolStats extends JavaPlugin {
         registerCommand("toolstats", commandToolStats);
 
         HyperUpdater updater = new HyperUpdater(hyperLib);
-        updater.setGitHub("hyperdefined", "ToolStats");
+        updater.setRepository("hyperdefined", "ToolStats");
         updater.setModrinth("oBZj9E15");
         updater.setHangar("ToolStats", "paper");
         updater.check();

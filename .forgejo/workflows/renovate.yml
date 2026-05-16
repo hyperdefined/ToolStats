@@ -1,0 +1,41 @@
+name: Renovate
+
+on:
+  schedule:
+    - cron: '@daily'
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  renovate:
+    runs-on: ubuntu-fat
+    container: ghcr.io/renovatebot/renovate:latest
+    steps:
+      - name: Checkout renovate-config repo
+        run: |
+          git clone https://codeberg.org/hyperdefined/renovate-config.git renovate-config
+
+      - name: Show workspace (debug)
+        run: |
+          echo "WORKSPACE: $GITHUB_WORKSPACE"
+          ls -la "$GITHUB_WORKSPACE"
+          ls -la "$GITHUB_WORKSPACE/renovate-config"
+          test -f "$GITHUB_WORKSPACE/renovate-config/config.js" || (echo "config.js missing" && exit 1)
+
+      - name: Run Renovate
+        run: renovate
+        env:
+          RENOVATE_CONFIG_FILE: renovate-config/config.js
+          LOG_LEVEL: debug
+          RENOVATE_GIT_PRIVATE_KEY: ${{ secrets.WOLF_BOT_KEY }}
+          RENOVATE_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
+          GITHUB_COM_TOKEN: ${{ secrets.CODEBERG_PAT }}
+          GIT_AUTHOR_NAME: 'wolf-bot'
+          GIT_AUTHOR_EMAIL: 'wolf@hyper.lol'
+          GIT_COMMITTER_NAME: 'wolf-bot'
+          GIT_COMMITTER_EMAIL: 'wolf@hyper.lol'
